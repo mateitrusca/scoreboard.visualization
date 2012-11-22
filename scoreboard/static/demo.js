@@ -16,10 +16,18 @@ App.Indicator = can.Control({
 });
 
 
+App.Chart = can.Control({
+    'route': function(data) {
+        this.element.html(can.view('chart_ejs', data));
+    }
+});
+
+
 App.initialize = function() {
     var view = can.view('chart_ejs');
     $('#the-chart').empty().append(view);
     var indicator_control = new App.Indicator('#the-indicator', {});
+    var chart_control = new App.Chart('#the-chart', {});
 };
 
 
