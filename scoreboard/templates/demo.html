@@ -16,7 +16,7 @@ in.</p>
 <section>
 
   <div>
-    Select one Indicator: {% include 'indicators.html' %}
+    Select one Indicator: <span id="the-indicator"></span>
   </div>
 
   <div>
@@ -85,6 +85,26 @@ in.</p>
 
   <script type="text/ejs" id="chart_ejs">
     hello chart!
+  </script>
+
+  <script type="text/ejs" id="indicator_ejs">
+    <select>
+    <% indicators.each(function(indicator_group) { %>
+      <optgroup label="<%= indicator_group.attr('label') %>">
+      <% indicator_group.attr('options').each(function(indicator) { %>
+        <option value="<%= indicator.attr('value') %>">
+          <%= indicator.attr('label') %>
+        </option>
+      <% }) %>
+      </optgroup>
+    <% }) %>
+    </select>
+  </script>
+
+  <script>
+    window.App = {
+      STATIC: {{ STATIC|json }}
+    };
   </script>
 
   <script src="{{ STATIC }}/demo.js"></script>
