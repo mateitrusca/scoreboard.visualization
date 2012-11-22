@@ -1,4 +1,13 @@
 from zope.interface import Interface
+import jinja2
+
+
+jinja_env = jinja2.Environment(
+    loader=jinja2.PackageLoader(__name__, 'templates'))
+
+
+def render_template(name, **kwargs):
+    return jinja_env.get_template(name).render(**kwargs)
 
 
 class IDemo(Interface):
@@ -8,4 +17,4 @@ class IDemo(Interface):
 class DemoView(object):
 
     def __call__(self):
-        return "hello world!\n"
+        return render_template('demo.html')

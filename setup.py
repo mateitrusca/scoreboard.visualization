@@ -5,4 +5,5 @@ setup(
     name='scoreboard',
     version='0.1',
     py_modules=['scoreboard'],
+    install_requires=['Jinja2'],
 )
