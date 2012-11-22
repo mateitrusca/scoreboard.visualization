@@ -1,5 +1,8 @@
 (function() {
 
+
+App.initialize = function() {
+
     var view = can.view('chart_ejs');
     $('#the-chart').empty().append(view);
 
@@ -17,5 +20,11 @@
         }
     });
     var indicator_control = new Indicator('#the-indicator', {});
+
+};
+
+
+$(document).ready(App.initialize);
+
 
 })();
