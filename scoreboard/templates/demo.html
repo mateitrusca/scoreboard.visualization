@@ -1,5 +1,11 @@
 {% extends "layout.html" %}
 
+
 {% block content %}
 hello scoreboard!
+{% endblock %}
+
+{% block script %}
+  <script src="{{ STATIC }}/lib/jquery-1.8.3/jquery-1.8.3.min.js"></script>
+  <script src="{{ STATIC }}/lib/can-1.1.1/can.jquery-1.1.1.js"></script>
 {% endblock %}

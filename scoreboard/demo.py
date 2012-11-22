@@ -4,6 +4,7 @@ import jinja2
 
 jinja_env = jinja2.Environment(
     loader=jinja2.PackageLoader(__name__, 'templates'))
+jinja_env.globals['STATIC'] = '/++resource++scoreboard'
 
 
 def render_template(name, **kwargs):

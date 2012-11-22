@@ -9,4 +9,9 @@
     permission="zope2.View"
     />
 
+  <browser:resourceDirectory
+    name="scoreboard"
+    directory="./static"
+    />
+
 </configure>
