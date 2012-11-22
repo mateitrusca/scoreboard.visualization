@@ -2,7 +2,79 @@
 
 
 {% block content %}
-hello scoreboard!
+
+<h1>1. Analyse one indicator and compare countries</h1>
+
+<p>This bar-chart allows you to select one indicator, one year, and see
+which countries are leading the league. You can also check if the
+ranking of countries has changed over the last few years. Countries are
+always ordered according to their score. You can also select or
+de-select countries in order to visualise only those you are interested
+in.</p>
+
+
+<section>
+
+  <div>
+    Select one Indicator: {% include 'indicators.html' %}
+  </div>
+
+  <div>
+    Select the Year:
+    <label><input type="radio" name="year"> 2011</label>
+    <label><input type="radio" name="year"> 2010</label>
+    <label><input type="radio" name="year"> 2009</label>
+    <label><input type="radio" name="year"> 2008</label>
+    <label><input type="radio" name="year"> 2007</label>
+  </div>
+
+  <div>
+    Select the Country: toggle country selector
+  </div>
+
+</section>
+
+
+<section>
+
+  <h2>EC effective cofinancing rate for SMEs partner in FP7-ICT
+  projects</h2>
+
+  <p>[chart]</p>
+
+</section>
+
+
+<section>
+
+  <h2>Definitions and scopes:</h2>
+
+  <h3>EC effective cofinancing rate for SMEs partner in FP7-ICT
+  projects</h3>
+
+  <ul>
+
+    <li>
+      <strong>Definition and scope:</strong>
+      The cofinancing rate is the % of projects total costs which are
+      covered by EC funding grants. Figures include all partners and
+      third parties (as subcontractors). SMEs are defined as Small and
+      medium individual private enterprises with less than 250 employed
+      persons and a turnover less than or equal 50 millions euro or a
+      balance sheet total less than or equal 43 millions euro.
+    </li>
+
+    <li>
+      <strong>Source:</strong>
+      EC database of ICT research projects under the EU’s Seventh
+      Framework Programme (FP7) - Cooperation program. Projects under
+      the Capacities program or the CIP ICT PSP are not included.
+    </li>
+
+  </ul>
+
+</section>
+
 {% endblock %}
 
 {% block script %}
