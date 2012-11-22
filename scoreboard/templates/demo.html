@@ -40,7 +40,7 @@ in.</p>
   <h2>EC effective cofinancing rate for SMEs partner in FP7-ICT
   projects</h2>
 
-  <p>[chart]</p>
+  <div id="the-chart">[chart]</div>
 
 </section>
 
@@ -77,7 +77,16 @@ in.</p>
 
 {% endblock %}
 
+
 {% block script %}
+
   <script src="{{ STATIC }}/lib/jquery-1.8.3/jquery-1.8.3.min.js"></script>
   <script src="{{ STATIC }}/lib/can-1.1.1/can.jquery-1.1.1.js"></script>
+
+  <script type="text/ejs" id="chart_ejs">
+    hello chart!
+  </script>
+
+  <script src="{{ STATIC }}/demo.js"></script>
+
 {% endblock %}
