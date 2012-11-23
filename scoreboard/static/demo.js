@@ -1,25 +1,28 @@
 (function() {
 
 
-App.Indicator = can.Control({
-    'init': function(element, options) {
-        $.getJSON(App.STATIC + '/indicators.json', function(data) {
-            element.html(can.view('indicator_ejs', new can.Observe(data)));
-            var value = can.route.attr()['indicator'];
-            element.find('select').val(value);
-        });
+App.IndicatorView = Backbone.View.extend({
+
+    events: {
+        'change select': 'update_filters'
     },
-    'select change': function(element, evt) {
-        var value = $(element).val();
-        can.route.attr({indicator: value});
-    }
-});
 
+    'initialize': function(options) {
+        this.indicators_data = options['indicators_data'];
+        this.render();
+    },
 
-App.Chart = can.Control({
-    'route': function(data) {
-        App.filters.set(data);
+    'render': function() {
+        this.$el.html(can.view('indicator_ejs',
+                               new can.Observe(this.indicators_data)));
+    },
+
+    'update_filters': function() {
+        this.model.set({
+            'indicator': this.$el.find('select').val()
+        });
     }
+
 });
 
 
@@ -39,14 +42,20 @@ App.ChartView = Backbone.View.extend({
 
 App.initialize = function() {
     App.filters = new Backbone.Model();
-    var view = can.view('chart_ejs');
-    $('#the-chart').empty().append(view);
-    var indicator_control = new App.Indicator('#the-indicator', {});
-    var chart_control = new App.Chart();
+
     new App.ChartView({
         model: App.filters,
         el: $('#the-chart')
     });
+
+    $.getJSON(App.STATIC + '/indicators.json', function(data) {
+        new App.IndicatorView({
+            model: App.filters,
+            el: $('#the-indicator'),
+            indicators_data: data
+        });
+    });
+
 };
 
 
