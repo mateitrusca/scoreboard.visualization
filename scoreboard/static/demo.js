@@ -1,6 +1,13 @@
 (function() {
 
 
+App.render = function(name, vars) {
+    template_id = name + '-template';
+    var template = $('script#' + template_id).text();
+    return Mustache.render(template, vars);
+};
+
+
 App.IndicatorView = Backbone.View.extend({
 
     events: {
