@@ -20,8 +20,7 @@ App.IndicatorView = Backbone.View.extend({
     },
 
     'render': function() {
-        this.$el.html(can.view('indicator_ejs',
-                               new can.Observe(this.indicators_data)));
+        this.$el.html(App.render('indicator', this.indicators_data));
     },
 
     'update_filters': function() {
@@ -41,7 +40,7 @@ App.ChartView = Backbone.View.extend({
     },
 
     'render': function() {
-        this.$el.html(can.view('chart_ejs', this.model.toJSON()));
+        this.$el.html(App.render('chart', this.model.toJSON()));
     }
 
 });

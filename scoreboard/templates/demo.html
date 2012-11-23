@@ -86,22 +86,24 @@ in.</p>
   <script src="{{ STATIC }}/lib/underscore-1.4.2/underscore.js"></script>
   <script src="{{ STATIC }}/lib/backbone-0.9.2/backbone.js"></script>
 
-  <script type="text/ejs" id="chart_ejs">
-    hello chart! indicator: <%= this.indicator %>
+  <script type="text/x-mustache" id="chart-template">
+  {% raw %}
+    hello chart! indicator: {{ indicator }}
+  {% endraw %}
   </script>
 
-  <script type="text/ejs" id="indicator_ejs">
+  <script type="text/x-mustache" id="indicator-template">
+  {% raw %}
     <select>
-    <% indicators.each(function(indicator_group) { %>
-      <optgroup label="<%= indicator_group.attr('label') %>">
-      <% indicator_group.attr('options').each(function(indicator) { %>
-        <option value="<%= indicator.attr('value') %>">
-          <%= indicator.attr('label') %>
-        </option>
-      <% }) %>
+    {{# indicators }}
+      <optgroup label="{{ label }}">
+      {{# options }}
+        <option value="{{ value }}">{{ label }}</option>
+      {{/ options }}
       </optgroup>
-    <% }) %>
+    {{/ indicators }}
     </select>
+  {% endraw %}
   </script>
 
   <script>
