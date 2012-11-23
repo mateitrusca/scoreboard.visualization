@@ -1,6 +1,5 @@
 (function() {
 
-
 App.render = function(name, vars) {
     var template_id = name + '-template';
     var template = $('script#' + template_id).text();
@@ -63,9 +62,5 @@ App.initialize = function() {
     });
 
 };
-
-
-$(document).ready(App.initialize);
-
 
 })();
