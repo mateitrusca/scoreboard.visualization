@@ -1,0 +1,12 @@
+<div>
+  Select one Indicator:
+  <select>
+  {{# indicators }}
+    <optgroup label="{{ label }}">
+    {{# options }}
+      <option value="{{ value }}">{{ label }}</option>
+    {{/ options }}
+    </optgroup>
+  {{/ indicators }}
+  </select>
+</div>

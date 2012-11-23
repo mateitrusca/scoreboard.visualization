@@ -8,19 +8,19 @@ App.render = function(name, vars) {
 };
 
 
-App.IndicatorView = Backbone.View.extend({
+App.FiltersView = Backbone.View.extend({
 
     events: {
         'change select': 'update_filters'
     },
 
     'initialize': function(options) {
-        this.indicators_data = options['indicators_data'];
+        this.filters_data = options['filters_data'];
         this.render();
     },
 
     'render': function() {
-        this.$el.html(App.render('indicator', this.indicators_data));
+        this.$el.html(App.render('filters', this.filters_data));
     },
 
     'update_filters': function() {
@@ -54,11 +54,11 @@ App.initialize = function() {
         el: $('#the-chart')
     });
 
-    $.getJSON(App.STATIC + '/indicators.json', function(data) {
-        new App.IndicatorView({
+    $.getJSON(App.STATIC + '/filters.json', function(data) {
+        new App.FiltersView({
             model: App.filters,
-            el: $('#the-indicator'),
-            indicators_data: data
+            el: $('#the-filters'),
+            filters_data: data
         });
     });
 
