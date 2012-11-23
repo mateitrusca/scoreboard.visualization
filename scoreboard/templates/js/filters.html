@@ -10,3 +10,17 @@
   {{/ indicators }}
   </select>
 </div>
+
+<div>
+  Select the Year:
+  {{# years }}
+    <label>
+      <input type="radio" name="year" value="{{ value }}">
+      {{ value }}
+    </label>
+  {{/ years }}
+</div>
+
+<div>
+  Select the Country: toggle country selector
+</div>

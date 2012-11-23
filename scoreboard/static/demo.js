@@ -10,7 +10,8 @@ App.render = function(name, vars) {
 App.FiltersView = Backbone.View.extend({
 
     events: {
-        'change select': 'update_filters'
+        'change select': 'update_filters',
+        'change input[name=year]': 'update_filters'
     },
 
     'initialize': function(options) {
@@ -24,7 +25,8 @@ App.FiltersView = Backbone.View.extend({
 
     'update_filters': function() {
         this.model.set({
-            'indicator': this.$el.find('select').val()
+            'indicator': this.$el.find('select').val(),
+            'year': this.$el.find('input[name=year]:checked').val()
         });
     }
 
