@@ -85,25 +85,9 @@ in.</p>
   <script src="{{ STATIC }}/lib/underscore-1.4.2/underscore.js"></script>
   <script src="{{ STATIC }}/lib/backbone-0.9.2/backbone.js"></script>
 
-  <script type="text/x-mustache" id="chart-template">
-  {% raw %}
-    hello chart! indicator: {{ indicator }}
-  {% endraw %}
-  </script>
-
-  <script type="text/x-mustache" id="indicator-template">
-  {% raw %}
-    <select>
-    {{# indicators }}
-      <optgroup label="{{ label }}">
-      {{# options }}
-        <option value="{{ value }}">{{ label }}</option>
-      {{/ options }}
-      </optgroup>
-    {{/ indicators }}
-    </select>
-  {% endraw %}
-  </script>
+  {% for name, text in get_templates().items() %}
+    <script type="text/x-mustache" id="{{ name }}-template">{{ text }}</script>
+  {% endfor %}
 
   <script>
     window.App = {
