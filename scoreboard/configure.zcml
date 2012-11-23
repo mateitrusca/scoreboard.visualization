@@ -9,6 +9,13 @@
     permission="zope2.View"
     />
 
+  <browser:page
+    name="tests"
+    for=".demo.IDemo"
+    class=".demo.TestsView"
+    permission="zope2.View"
+    />
+
   <browser:resourceDirectory
     name="scoreboard"
     directory="./static"

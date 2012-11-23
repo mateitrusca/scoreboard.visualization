@@ -28,3 +28,9 @@ class DemoView(object):
 
     def __call__(self):
         return render_template('demo.html')
+
+
+class TestsView(object):
+
+    def __call__(self):
+        return render_template('tests.html')
