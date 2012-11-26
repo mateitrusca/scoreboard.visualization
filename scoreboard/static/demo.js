@@ -22,6 +22,11 @@ App.FiltersView = Backbone.View.extend({
 
     'render': function() {
         this.$el.html(App.render('filters', this.filters_data));
+        var value = this.model.toJSON();
+        this.$el.find('select').val(value['indicator']);
+        this.$el.find('input[name=year]')
+                .filter('[value=' + value['year'] + ']')
+                .attr('checked', 'checked');
     },
 
     'update_filters': function() {
