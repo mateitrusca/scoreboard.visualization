@@ -58,6 +58,11 @@ App.Router = Backbone.Router.extend({
     initialize: function(model) {
         this.model = model;
         this.route(/^chart\?(.*)$/, 'chart');
+        var router = this;
+        this.model.on('change', function(filters) {
+            var state = encodeURIComponent(JSON.stringify(filters.toJSON()));
+            router.navigate('chart?' + state);
+        });
     },
 
     chart: function(state) {
@@ -83,11 +88,6 @@ App.initialize = function() {
             el: $('#the-filters'),
             filters_data: data
         });
-    });
-
-    App.filters.on('change', function(filters) {
-        var state = encodeURIComponent(JSON.stringify(filters.toJSON()));
-        App.router.navigate('chart?' + state);
     });
 
     Backbone.history.start();
