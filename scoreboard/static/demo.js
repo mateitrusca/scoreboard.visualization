@@ -1,4 +1,5 @@
 (function() {
+"use strict";
 
 App.render = function(name, vars) {
     var template_id = name + '-template';

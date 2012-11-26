@@ -1,4 +1,5 @@
 describe('FiltersView', function() {
+    "use strict";
 
     describe('indicators selector', function() {
 
