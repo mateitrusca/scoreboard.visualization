@@ -48,8 +48,24 @@ App.ChartView = Backbone.View.extend({
 });
 
 
+App.Router = Backbone.Router.extend({
+
+    initialize: function(model) {
+        this.model = model;
+        this.route(/^chart\?(.*)$/, 'chart');
+    },
+
+    chart: function(state) {
+        var value = JSON.parse(decodeURIComponent(state));
+        this.model.set(value);
+    }
+
+});
+
+
 App.initialize = function() {
     App.filters = new Backbone.Model();
+    App.router = new App.Router(App.filters);
 
     new App.ChartView({
         model: App.filters,
@@ -64,6 +80,12 @@ App.initialize = function() {
         });
     });
 
+    App.filters.on('change', function(filters) {
+        var state = encodeURIComponent(JSON.stringify(filters.toJSON()));
+        App.router.navigate('chart?' + state);
+    });
+
+    Backbone.history.start();
 };
 
 })();
