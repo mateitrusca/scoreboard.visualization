@@ -8,6 +8,10 @@ App.render = function(name, vars) {
 };
 
 
+App.render_highcharts = function() {
+};
+
+
 App.FiltersView = Backbone.View.extend({
 
     events: {
@@ -49,9 +53,11 @@ App.ChartView = Backbone.View.extend({
     'render': function() {
         var args = _.extend({'method': 'get_one_indicator_year'},
                             this.model.toJSON());
-        $.get(App.URL + '/data', args, function() {
-        })
         this.$el.html(App.render('chart', this.model.toJSON()));
+        var container = this.$el.find('.highcharts-chart')[0];
+        $.get(App.URL + '/data', args, function(data) {
+            App.render_highcharts(container, data);
+        })
     }
 
 });

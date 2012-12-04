@@ -51,14 +51,16 @@ describe('ChartView', function() {
 
     describe('event handler', function() {
 
-        var server;
+        var server, render_highcharts;
 
         beforeEach(function() {
             server = sinon.fakeServer.create();
+            render_highcharts = sinon.spy(App, 'render_highcharts');
         });
 
         afterEach(function () {
             server.restore();
+            render_highcharts.restore();
         });
 
         it('should fetch data from server', function() {
@@ -76,6 +78,28 @@ describe('ChartView', function() {
                 '?method=get_one_indicator_year' +
                 '&indicator=asdf' +
                 '&year=2002');
+        });
+
+        it('should render chart with the data received', function() {
+            var model = new Backbone.Model;
+            var chart = new App.ChartView({model: model});
+            server.requests.splice(0);
+            model.set({
+                'indicator': 'asdf',
+                'year': '2002'
+            });
+
+            var ajax_data = [{'country_name': "Austria", 'value': 0.18},
+                             {'country_name': "Belgium", 'value': 0.14}];
+            server.requests[0].respond(
+                200, {'Content-Type': 'application/json'},
+                JSON.stringify(ajax_data));
+
+            var container = chart.$el.find('.highcharts-chart')[0];
+            expect(render_highcharts.calledOnce).to.equal(true);
+            var call_args = render_highcharts.getCall(0).args;
+            expect(call_args[0]).to.equal(container);
+            expect(call_args[1]).to.deep.equal(ajax_data);
         });
 
     });
