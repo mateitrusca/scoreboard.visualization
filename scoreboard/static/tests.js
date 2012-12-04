@@ -66,7 +66,6 @@ describe('ChartView', function() {
         it('should fetch data from server', function() {
             var model = new Backbone.Model;
             var chart = new App.ChartView({model: model});
-            server.requests.splice(0);
             model.set({
                 'indicator': 'asdf',
                 'year': '2002'
@@ -83,7 +82,6 @@ describe('ChartView', function() {
         it('should render chart with the data received', function() {
             var model = new Backbone.Model;
             var chart = new App.ChartView({model: model});
-            server.requests.splice(0);
             model.set({
                 'indicator': 'asdf',
                 'year': '2002'

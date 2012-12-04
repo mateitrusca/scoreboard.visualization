@@ -51,13 +51,15 @@ App.ChartView = Backbone.View.extend({
     },
 
     'render': function() {
-        var args = _.extend({'method': 'get_one_indicator_year'},
-                            this.model.toJSON());
         this.$el.html(App.render('chart', this.model.toJSON()));
-        var container = this.$el.find('.highcharts-chart')[0];
-        $.get(App.URL + '/data', args, function(data) {
-            App.render_highcharts(container, data);
-        })
+        var args = this.model.toJSON();
+        if(args['indicator'] && args['year']) {
+            args = _.extend({'method': 'get_one_indicator_year'}, args);
+            var container = this.$el.find('.highcharts-chart')[0];
+            $.get(App.URL + '/data', args, function(data) {
+                App.render_highcharts(container, data);
+            })
+        }
     }
 
 });
