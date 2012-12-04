@@ -3,6 +3,18 @@
 
 
 App.render_highcharts = function(container, data) {
+    data = _(data).sortBy(function(item) {
+        return - item['value'];
+    });
+
+    var country_names = _(data).map(function(item) {
+        return item['country_name'];
+    });
+
+    var values = _(data).map(function(item) {
+        return item['value'];
+    });
+
     var chartOptions = {
         chart: {
             renderTo: container,
@@ -33,14 +45,7 @@ App.render_highcharts = function(container, data) {
 
         },
         xAxis: {
-            categories: ['Romania','Bulgaria','Greece','Cyprus','Portugal',
-                         'Italy','Lithuania','Poland','Malta','Spain',
-                         'Slovenia','Hungary','Latvia',
-                         'European Union - 27 countries','Czech Republic',
-                         'Ireland','Estonia','Slovak Republic',
-                         'Austria','France','Germany','Belgium','United Kingdom',
-                         'Finland','Luxembourg','Denmark','Netherlands','Norway',
-                         'Sweden','Iceland'],
+            categories: country_names,
             labels: {
                 rotation: -45,
                 align: 'right',
@@ -77,9 +82,7 @@ App.render_highcharts = function(container, data) {
             {
                 name: '% of population who have never used the internet',
                 color: '#7FB2F0',
-                data: [54.21,45.81,44.77,40.72,40.5,38.58,33.1,32.71,29.71,29.16,
-                       29.1,28.01,26.61,24.27,23.83,21.24,20.01,19.54,18.49,17.83,
-                       15.84,14.11,11.23,8.89,8.13,7.24,6.97,4.63,4.62,4.2]
+                data: values
             }
         ]
     };
