@@ -47,6 +47,10 @@ App.ChartView = Backbone.View.extend({
     },
 
     'render': function() {
+        var args = _.extend({'method': 'get_one_indicator_year'},
+                            this.model.toJSON());
+        $.get(App.URL + '/data', args, function() {
+        })
         this.$el.html(App.render('chart', this.model.toJSON()));
     }
 

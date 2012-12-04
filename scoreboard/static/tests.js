@@ -44,3 +44,40 @@ describe('FiltersView', function() {
     });
 
 });
+
+
+describe('ChartView', function() {
+    "use strict";
+
+    describe('event handler', function() {
+
+        var server;
+
+        beforeEach(function() {
+            server = sinon.fakeServer.create();
+        });
+
+        afterEach(function () {
+            server.restore();
+        });
+
+        it('should fetch data from server', function() {
+            var model = new Backbone.Model;
+            var chart = new App.ChartView({model: model});
+            server.requests.splice(0);
+            model.set({
+                'indicator': 'asdf',
+                'year': '2002'
+            });
+
+            expect(server.requests.length).to.equal(1);
+            expect(server.requests[0].url).to.equal(
+                App.URL + '/data' +
+                '?method=get_one_indicator_year' +
+                '&indicator=asdf' +
+                '&year=2002');
+        });
+
+    });
+
+});
