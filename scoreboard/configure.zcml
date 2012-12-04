@@ -10,6 +10,13 @@
     />
 
   <browser:page
+    name="data"
+    for=".demo.IDemo"
+    class=".demo.DataView"
+    permission="zope2.View"
+    />
+
+  <browser:page
     name="tests"
     for=".demo.IDemo"
     class=".demo.TestsView"

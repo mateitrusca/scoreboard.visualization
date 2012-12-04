@@ -2,6 +2,7 @@ import simplejson as json
 from zope.interface import Interface
 import jinja2
 from path import path
+from sparql import unpack_row
 
 
 def get_templates():
@@ -34,3 +35,18 @@ class TestsView(object):
 
     def __call__(self):
         return render_template('tests.html')
+
+
+class DataView(object):
+
+    def __call__(self):
+        args = dict(self.request.form)
+        method_name = args.pop('method')
+        method = self.context[method_name]
+
+        result = method(**args)
+        out = [dict(zip(result.var_names, unpack_row(row)))
+               for row in result.rdfterm_rows]
+
+        self.request.RESPONSE.setHeader("Content-Type", "application/json")
+        return json.dumps(out, indent=2, sort_keys=True)
