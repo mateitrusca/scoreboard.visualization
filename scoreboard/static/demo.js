@@ -8,10 +8,6 @@ App.render = function(name, vars) {
 };
 
 
-App.render_highcharts = function() {
-};
-
-
 App.FiltersView = Backbone.View.extend({
 
     events: {

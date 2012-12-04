@@ -62,7 +62,7 @@ describe('ChartView', function() {
 
         beforeEach(function() {
             server = sinon.fakeServer.create();
-            render_highcharts = sinon.spy(App, 'render_highcharts');
+            render_highcharts = sinon.stub(App, 'render_highcharts');
         });
 
         afterEach(function () {
