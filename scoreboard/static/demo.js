@@ -51,13 +51,18 @@ App.ChartView = Backbone.View.extend({
     },
 
     'render': function() {
+        var fix_indicator = function(value) {
+            // TODO this is a hack. we should pass around the correct
+            // indicator ID instead of recomputing it on the fly like this.
+            return value.replace(/ /g, '_').replace(/%/g, '');
+        };
         this.$el.html(App.render('chart', this.model.toJSON()));
         var args = this.model.toJSON();
         if(args['indicator'] && args['year']) {
             args = {
                 'method': 'get_one_indicator_year',
                 'indicator': 'http://data.lod2.eu/scoreboard/indicators/' +
-                             args['indicator'],
+                             fix_indicator(args['indicator']),
                 'year': 'http://data.lod2.eu/scoreboard/year/' + args['year']
             }
             var container = this.$el.find('.highcharts-chart')[0];
