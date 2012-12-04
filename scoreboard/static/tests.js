@@ -46,6 +46,13 @@ describe('FiltersView', function() {
 });
 
 
+var url_param = function(url, name){
+    var results = new RegExp('[\\?&]' + name + '=([^&#]*)').exec(url);
+    if (!results) { return null; }
+    return decodeURIComponent(results[1]);
+}
+
+
 describe('ChartView', function() {
     "use strict";
 
@@ -72,11 +79,14 @@ describe('ChartView', function() {
             });
 
             expect(server.requests.length).to.equal(1);
-            expect(server.requests[0].url).to.equal(
-                App.URL + '/data' +
-                '?method=get_one_indicator_year' +
-                '&indicator=asdf' +
-                '&year=2002');
+            var url = server.requests[0].url;
+            expect(url).to.have.string(App.URL + '/data?')
+            expect(url_param(url, 'method')).to.equal(
+                'get_one_indicator_year');
+            expect(url_param(url, 'indicator')).to.equal(
+                'http://data.lod2.eu/scoreboard/indicators/asdf');
+            expect(url_param(url, 'year')).to.equal(
+                'http://data.lod2.eu/scoreboard/year/2002');
         });
 
         it('should render chart with the data received', function() {
