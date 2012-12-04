@@ -28,13 +28,13 @@ class IDemo(Interface):
 class DemoView(object):
 
     def __call__(self):
-        return render_template('demo.html')
+        return render_template('demo.html', URL=self.context.absolute_url())
 
 
 class TestsView(object):
 
     def __call__(self):
-        return render_template('tests.html')
+        return render_template('tests.html', URL=self.context.absolute_url())
 
 
 class DataView(object):

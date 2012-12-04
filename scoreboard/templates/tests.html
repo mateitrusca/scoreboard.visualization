@@ -29,7 +29,8 @@
   {% endfor %}
   <script>
     window.App = {
-      STATIC: {{ STATIC|json }}
+      STATIC: {{ STATIC|json }},
+      URL: {{ URL|json }}
     };
   </script>
   <script src="{{ STATIC }}/demo.js"></script>
