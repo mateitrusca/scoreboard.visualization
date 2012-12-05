@@ -21,6 +21,12 @@ def render_template(name, **kwargs):
     return jinja_env.get_template(name).render(**kwargs)
 
 
+def run_query(method_ob, **kwargs):
+    result = method_ob(**kwargs)
+    return [dict(zip(result.var_names, unpack_row(row)))
+           for row in result.rdfterm_rows]
+
+
 class IDemo(Interface):
     """ Marker interface for demo page """
 
@@ -42,11 +48,7 @@ class DataView(object):
     def __call__(self):
         args = dict(self.request.form)
         method_name = args.pop('method')
-        method = self.context[method_name]
-
-        result = method(**args)
-        out = [dict(zip(result.var_names, unpack_row(row)))
-               for row in result.rdfterm_rows]
+        out = run_query(self.context[method_name], **args)
 
         self.request.RESPONSE.setHeader("Content-Type", "application/json")
         return json.dumps(out, indent=2, sort_keys=True)
