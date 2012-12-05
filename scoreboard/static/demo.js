@@ -71,6 +71,19 @@ App.ChartView = Backbone.View.extend({
 });
 
 
+App.MetadataView = Backbone.View.extend({
+
+    initialize: function() {
+        this.render();
+    },
+
+    render: function() {
+        this.$el.html(App.render('metadata', {}));
+    }
+
+});
+
+
 App.Router = Backbone.Router.extend({
 
     initialize: function(model) {
@@ -106,6 +119,10 @@ App.initialize = function() {
             el: $('#the-filters'),
             filters_data: data
         });
+    });
+
+    new App.MetadataView({
+        el: $('#the-metadata')
     });
 
     Backbone.history.start();
