@@ -1,3 +1,4 @@
+from collections import defaultdict
 import simplejson as json
 from zope.interface import Interface
 import jinja2
@@ -35,6 +36,26 @@ class DemoView(object):
 
     def __call__(self):
         return render_template('demo.html', URL=self.context.absolute_url())
+
+
+class GetFiltersView(object):
+
+    def __call__(self):
+        years = defaultdict(list)
+        for row in run_query(self.context['get_all_indicators_to_years']):
+            years[row['indicator']].append(row['year_label'])
+
+        indicators = []
+        for row in run_query(self.context['get_all_indicator_labels']):
+            indicators.append({
+                'uri': row['indicator'],
+                'label': row['label'],
+                'years': years[row['indicator']],
+            })
+
+        self.request.RESPONSE.setHeader("Content-Type", "application/json")
+        out = {'indicators': indicators}
+        return json.dumps(out, indent=2, sort_keys=True)
 
 
 class TestsView(object):

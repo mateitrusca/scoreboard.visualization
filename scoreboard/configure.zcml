@@ -10,6 +10,13 @@
     />
 
   <browser:page
+    name="get_filters"
+    for=".demo.IDemo"
+    class=".demo.GetFiltersView"
+    permission="zope2.View"
+    />
+
+  <browser:page
     name="data"
     for=".demo.IDemo"
     class=".demo.DataView"
