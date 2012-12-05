@@ -20,6 +20,22 @@ describe('FiltersView', function() {
             expect(model.get('indicator')).to.equal('one');
         });
 
+        it('should select the current indicator', function() {
+            var filters_data = {
+                indicators: [
+                    {label: "Telecom sector",
+                     options: [ {value: "one", label: "The One"},
+                                {value: "two", label: "The Two"} ]}
+                ]
+            };
+            var view = new App.FiltersView({
+                model: new Backbone.Model({'indicator': 'two'}),
+                filters_data: filters_data
+            });
+            var option_two = view.$el.find('option[value=two]');
+            expect(option_two.attr('selected')).to.equal('selected');
+        });
+
     });
 
     describe('year radio buttons', function() {
@@ -39,6 +55,21 @@ describe('FiltersView', function() {
             var year = view.$el.find('input[value=2010]');
             year.attr('checked', 'checked').change();
             expect(model.get('year')).to.equal('2010');
+        });
+
+        it('should select the current year', function() {
+            var filters_data = {
+                years: [
+                    {value: "2009"},
+                    {value: "2010"}
+                ]
+            };
+            var view = new App.FiltersView({
+                model: new Backbone.Model({'year': '2010'}),
+                filters_data: filters_data
+            });
+            var year_two = view.$el.find('input[name=year][value=2010]');
+            expect(year_two.attr('checked')).to.equal('checked');
         });
 
     });
