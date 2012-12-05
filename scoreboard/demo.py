@@ -7,7 +7,7 @@ from sparql import unpack_row
 
 def get_templates():
     templates_dir = path(__file__).abspath().parent / 'templates' / 'js'
-    return {t.namebase: t.text() for t in templates_dir.listdir()}
+    return {t.namebase: t.text('utf-8') for t in templates_dir.listdir()}
 
 
 jinja_env = jinja2.Environment(
