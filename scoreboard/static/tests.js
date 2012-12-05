@@ -55,6 +55,27 @@ describe('FiltersView', function() {
             expect(year_two.attr('checked')).to.equal('checked');
         });
 
+        it('should update list of years when indicator changes', function() {
+            var filters_data = {'indicators': [
+                {'uri': 'ind1', 'years': ["2009", "2010"]},
+                {'uri': 'ind2', 'years': ["2010", "2011"]},
+            ]};
+            var model = new Backbone.Model({
+                'indicator': 'ind1',
+                'year': '2010'
+            });
+            var view = new App.FiltersView({
+                model: model,
+                filters_data: filters_data
+            });
+            model.set({'indicator': 'ind2'});
+
+            var years = view.$el.find('input[name=year]').map(function() {
+                return $(this).val();
+            }).get();
+            expect(years).to.deep.equal(['2010', '2011']);
+        });
+
     });
 
 });

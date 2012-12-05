@@ -18,6 +18,7 @@ App.FiltersView = Backbone.View.extend({
 
     initialize: function(options) {
         this.filters_data = JSON.stringify(options['filters_data']);
+        this.model.on('change', this.render, this);
         this.render();
     },
 
