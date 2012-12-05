@@ -15,12 +15,12 @@ App.FiltersView = Backbone.View.extend({
         'change input[name=year]': 'update_filters'
     },
 
-    'initialize': function(options) {
+    initialize: function(options) {
         this.filters_data = options['filters_data'];
         this.render();
     },
 
-    'render': function() {
+    render: function() {
         this.$el.html(App.render('filters', this.filters_data));
         var value = this.model.toJSON();
         this.$el.find('select').val(value['indicator']);
@@ -29,7 +29,7 @@ App.FiltersView = Backbone.View.extend({
                 .attr('checked', 'checked');
     },
 
-    'update_filters': function() {
+    update_filters: function() {
         this.model.set({
             'indicator': this.$el.find('select').val(),
             'year': this.$el.find('input[name=year]:checked').val()
@@ -41,12 +41,12 @@ App.FiltersView = Backbone.View.extend({
 
 App.ChartView = Backbone.View.extend({
 
-    'initialize': function() {
+    initialize: function() {
         this.model.on('change', this.render, this);
         this.render();
     },
 
-    'render': function() {
+    render: function() {
         var fix_indicator = function(value) {
             // TODO this is a hack. we should pass around the correct
             // indicator ID instead of recomputing it on the fly like this.
