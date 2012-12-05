@@ -17,17 +17,26 @@ App.FiltersView = Backbone.View.extend({
     },
 
     initialize: function(options) {
-        this.filters_data = options['filters_data'];
+        this.filters_data = JSON.stringify(options['filters_data']);
         this.render();
     },
 
     render: function() {
-        this.$el.html(App.render('filters', this.filters_data));
         var value = this.model.toJSON();
-        this.$el.find('select').val(value['indicator']);
-        this.$el.find('input[name=year]')
-                .filter('[value=' + value['year'] + ']')
-                .attr('checked', 'checked');
+        var data = JSON.parse(this.filters_data);
+        _(data['indicators']).forEach(function(group) {
+            _(group['options']).forEach(function(option) {
+                if(option['value'] == value['indicator']) {
+                    option['selected'] = true;
+                }
+            });
+        });
+        _(data['years']).forEach(function(year) {
+            if(year['value'] == value['year']) {
+                year['selected'] = true;
+            }
+        });
+        this.$el.html(App.render('filters', data));
     },
 
     update_filters: function() {

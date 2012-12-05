@@ -4,7 +4,8 @@
   {{# indicators }}
     <optgroup label="{{ label }}">
     {{# options }}
-      <option value="{{ value }}">{{ label }}</option>
+      <option {{# if selected }} selected="selected" {{/ if }}
+              value="{{ value }}">{{ label }}</option>
     {{/ options }}
     </optgroup>
   {{/ indicators }}
@@ -15,7 +16,8 @@
   Select the Year:
   {{# years }}
     <label>
-      <input type="radio" name="year" value="{{ value }}">
+      <input type="radio" name="year" value="{{ value }}"
+             {{# if selected}} checked="checked" {{/ if }}>
       {{ value }}
     </label>
   {{/ years }}
