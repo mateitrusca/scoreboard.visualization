@@ -79,10 +79,8 @@ describe('ChartView', function() {
         expect(server.requests.length).to.equal(1);
         var url = server.requests[0].url;
         expect(url).to.have.string(App.URL + '/data?')
-        expect(url_param(url, 'method')).to.equal(
-            'get_one_indicator_year');
-        expect(url_param(url, 'indicator')).to.equal(
-            'http://data.lod2.eu/scoreboard/indicators/asdf');
+        expect(url_param(url, 'method')).to.equal('get_one_indicator_year');
+        expect(url_param(url, 'indicator')).to.equal('asdf');
         expect(url_param(url, 'year')).to.equal(
             'http://data.lod2.eu/scoreboard/year/2002');
     });
@@ -131,10 +129,8 @@ describe('MetadataView', function() {
 
         expect(server.requests.length).to.equal(1);
         var url = server.requests[0].url;
-        expect(url_param(url, 'method')).to.equal(
-            'get_indicator_meta');
-        expect(url_param(url, 'indicator')).to.equal(
-            'http://data.lod2.eu/scoreboard/indicators/asdf');
+        expect(url_param(url, 'method')).to.equal('get_indicator_meta');
+        expect(url_param(url, 'indicator')).to.equal('asdf');
         expect(url_param(url, 'year')).to.equal(
             'http://data.lod2.eu/scoreboard/year/2002');
 

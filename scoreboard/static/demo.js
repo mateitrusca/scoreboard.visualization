@@ -40,18 +40,12 @@ App.FiltersView = Backbone.View.extend({
 
 
 App.make_filter_args = function(model) {
-    var fix_indicator = function(value) {
-        // TODO this is a hack. we should pass around the correct
-        // indicator ID instead of recomputing it on the fly like this.
-        return value.replace(/ /g, '_').replace(/%/g, '');
-    };
     var args = model.toJSON();
     if(!(args['indicator'] && args['year'])) {
         return null;
     }
     return {
-        'indicator': 'http://data.lod2.eu/scoreboard/indicators/' +
-                     fix_indicator(args['indicator']),
+        'indicator': args['indicator'],
         'year': 'http://data.lod2.eu/scoreboard/year/' + args['year']
     };
 };
@@ -131,6 +125,15 @@ App.initialize = function() {
     });
 
     $.getJSON(App.STATIC + '/filters.json', function(data) {
+        var fix_indicator = function(value) {
+            return 'http://data.lod2.eu/scoreboard/indicators/' +
+                   value.replace(/ /g, '_').replace(/%/g, '');
+        };
+        _(data['indicators']).forEach(function(group) {
+            _(group['options']).forEach(function(option) {
+                option['value'] = fix_indicator(option['value']);
+            });
+        });
         new App.FiltersView({
             model: App.filters,
             el: $('#the-filters'),
