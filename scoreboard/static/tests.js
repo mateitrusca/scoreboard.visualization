@@ -25,6 +25,24 @@ describe('FiltersView', function() {
             expect(option_two.attr('selected')).to.equal('selected');
         });
 
+        it('should set year=null if missing from new indicator', function() {
+            var filters_data = {'indicators': [
+                {'uri': 'ind1', 'years': ["2009", "2010"]},
+                {'uri': 'ind2', 'years': ["2010", "2011"]},
+            ]};
+            var model = new Backbone.Model({
+                'indicator': 'ind1',
+                'year': '2009'
+            });
+            var view = new App.FiltersView({
+                model: model,
+                filters_data: filters_data
+            });
+            var opt = view.$el.find('select option[value=ind2]');
+            opt.attr('selected', 'selected').change();
+            expect(model.get('year')).to.equal(null);
+        });
+
     });
 
     describe('year radio buttons', function() {
