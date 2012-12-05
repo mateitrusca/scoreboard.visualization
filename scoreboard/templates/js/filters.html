@@ -2,12 +2,8 @@
   Select one Indicator:
   <select>
   {{# indicators }}
-    <optgroup label="{{ label }}">
-    {{# options }}
-      <option {{# if selected }} selected="selected" {{/ if }}
-              value="{{ value }}">{{ label }}</option>
-    {{/ options }}
-    </optgroup>
+    <option {{# if selected }} selected="selected" {{/ if }}
+            value="{{ uri }}">{{ label }}</option>
   {{/ indicators }}
   </select>
 </div>

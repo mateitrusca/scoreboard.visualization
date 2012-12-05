@@ -24,18 +24,19 @@ App.FiltersView = Backbone.View.extend({
     render: function() {
         var value = this.model.toJSON();
         var data = JSON.parse(this.filters_data);
-        _(data['indicators']).forEach(function(group) {
-            _(group['options']).forEach(function(option) {
-                if(option['value'] == value['indicator']) {
-                    option['selected'] = true;
+        var indicator_by_uri = _.object(_(data['indicators']).pluck('uri'),
+                                        data['indicators']);
+        var current_indicator = indicator_by_uri[value['indicator']];
+        if(current_indicator) {
+            data['years'] = _(current_indicator['years']).map(function(year) {
+                return {
+                    'value': year,
+                    'selected': (year == value['year'])
                 }
             });
-        });
-        _(data['years']).forEach(function(year) {
-            if(year['value'] == value['year']) {
-                year['selected'] = true;
-            }
-        });
+            current_indicator['selected'] = true;
+        }
+
         this.$el.html(App.render('filters', data));
     },
 
@@ -134,7 +135,7 @@ App.initialize = function() {
         el: $('#the-chart')
     });
 
-    $.getJSON(App.STATIC + '/filters.json', function(data) {
+    $.getJSON(App.URL + '/get_filters', function(data) {
         var fix_indicator = function(value) {
             return 'http://data.lod2.eu/scoreboard/indicators/' +
                    value.replace(/ /g, '_').replace(/%/g, '');

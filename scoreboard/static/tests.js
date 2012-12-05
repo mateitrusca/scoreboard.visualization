@@ -5,12 +5,7 @@ describe('FiltersView', function() {
 
         it('should update model', function() {
             var model = new Backbone.Model;
-            var filters_data = {
-                indicators: [
-                    {label: "Telecom sector",
-                     options: [ {value: "one", label: ""} ]}
-                ]
-            };
+            var filters_data = {'indicators': [{'uri': "one"}]};
             var view = new App.FiltersView({
                 model: model,
                 filters_data: filters_data
@@ -21,13 +16,7 @@ describe('FiltersView', function() {
         });
 
         it('should select the current indicator', function() {
-            var filters_data = {
-                indicators: [
-                    {label: "Telecom sector",
-                     options: [ {value: "one", label: "The One"},
-                                {value: "two", label: "The Two"} ]}
-                ]
-            };
+            var filters_data = {'indicators': [{'uri': "one"}, {'uri': "two"}]};
             var view = new App.FiltersView({
                 model: new Backbone.Model({'indicator': 'two'}),
                 filters_data: filters_data
@@ -41,13 +30,10 @@ describe('FiltersView', function() {
     describe('year radio buttons', function() {
 
         it('should update model', function() {
-            var model = new Backbone.Model;
-            var filters_data = {
-                years: [
-                    {value: "2009"},
-                    {value: "2010"}
-                ]
-            };
+            var model = new Backbone.Model({'indicator': 'i'});
+            var filters_data = {'indicators': [
+                {'uri': 'i', 'years': ["2009", "2010"]}
+            ]};
             var view = new App.FiltersView({
                 model: model,
                 filters_data: filters_data
@@ -58,14 +44,11 @@ describe('FiltersView', function() {
         });
 
         it('should select the current year', function() {
-            var filters_data = {
-                years: [
-                    {value: "2009"},
-                    {value: "2010"}
-                ]
-            };
+            var filters_data = {'indicators': [
+                {'uri': 'i', 'years': ["2009", "2010"]}
+            ]};
             var view = new App.FiltersView({
-                model: new Backbone.Model({'year': '2010'}),
+                model: new Backbone.Model({'indicator': 'i', 'year': '2010'}),
                 filters_data: filters_data
             });
             var year_two = view.$el.find('input[name=year][value=2010]');
