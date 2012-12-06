@@ -16,17 +16,9 @@ App.render_highcharts = function(container, data) {
         }
     };
 
-    data = _(data).sortBy(function(item) {
-        return - item['value'];
-    });
-
-    var country_names = _(data).map(function(item) {
-        return item['country_name'];
-    });
-
-    var values = _(data).map(function(item) {
-        return item['value'];
-    });
+    var data = _(data).sortBy('value').reverse();
+    var country_names = _(data).pluck('country_name');
+    var values = _(data).pluck('value');
 
     var chartOptions = {
         chart: {
