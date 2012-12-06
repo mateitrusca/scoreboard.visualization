@@ -7,6 +7,9 @@ from path import path
 from sparql import unpack_row
 
 
+ZSPARQLMETHOD = 'Z SPARQL Method'
+
+
 def get_templates():
     templates_dir = path(__file__).abspath().parent / 'templates' / 'js'
     return {t.namebase: t.text('utf-8') for t in templates_dir.listdir()}
@@ -87,7 +90,7 @@ class FixturesView(object):
                     "SCOREBOARD_FIXTURES_DUMP=on to enable.\n")
 
         fixtures = []
-        for ob in self.context.objectValues(['Z SPARQL Method']):
+        for ob in self.context.objectValues([ZSPARQLMETHOD]):
             fixtures.append({
                 'id': ob.getId(),
                 'title': ob.title,
@@ -102,4 +105,20 @@ class FixturesView(object):
         return 'ok, %d objects dumped\n' % len(fixtures)
 
     def load(self):
-        return 'load'
+        from Products.ZSPARQLMethod.Method import manage_addZSPARQLMethod
+        with (self.get_fixtures_path()).open('rb') as f:
+            fixtures = json.load(f)
+        n = 0
+        for data in fixtures:
+            old_ob = self.context.get(data['id'], None)
+            if old_ob is not None:
+                assert old_ob.meta_type == ZSPARQLMETHOD
+                del self.context[data['id']]
+            manage_addZSPARQLMethod(self.context, data['id'],
+                                    data['title'], data['endpoint_url'])
+            ob = self.context[data['id']]
+            ob.timeout = data['timeout']
+            ob.arg_spec = data['arg_spec']
+            ob.query = data['query']
+            n += 1
+        return '%d objects loaded\n' % (n)
