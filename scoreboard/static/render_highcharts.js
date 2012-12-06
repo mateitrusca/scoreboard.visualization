@@ -2,21 +2,7 @@
 "use strict";
 
 
-App.render_highcharts = function(container, data) {
-    var options = {
-        'data': data,
-        'year_text': "Year 2011",
-        'indicator_label': "% of population who have never used the internet",
-        'credits': {
-            'href': 'http://ec.europa.eu/digital-agenda/en/graphs/',
-            'text': 'European Commission, Digital Agenda Scoreboard'
-        },
-        'tooltip_formatter': function() {
-            return '<b>'+ this.x +'</b><br>: ' +
-                   Math.round(this.y*10)/10 + ' %_ind';
-        }
-    };
-
+App.render_highcharts = function(container, options) {
     var data = _(options['data']).sortBy('value').reverse();
     var country_names = _(data).pluck('country_name');
     var values = _(data).pluck('value');

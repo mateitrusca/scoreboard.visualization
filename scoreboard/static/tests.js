@@ -156,7 +156,7 @@ describe('ChartView', function() {
         expect(render_highcharts.calledOnce).to.equal(true);
         var call_args = render_highcharts.getCall(0).args;
         expect(call_args[0]).to.equal(container);
-        expect(call_args[1]).to.deep.equal(ajax_data);
+        expect(call_args[1]['data']).to.deep.equal(ajax_data);
     });
 
 });

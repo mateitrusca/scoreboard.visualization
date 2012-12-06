@@ -88,7 +88,21 @@ App.ChartView = Backbone.View.extend({
         if(args) {
             _(args).extend({'method': 'get_one_indicator_year'});
             $.get(App.URL + '/data', args, function(data) {
-                App.render_highcharts(container, data);
+                var options = {
+                    'data': data,
+                    'year_text': "Year 2011",
+                    'indicator_label': ("% of population who have " +
+                                        "never used the internet"),
+                    'credits': {
+                        'href': 'http://ec.europa.eu/digital-agenda/en/graphs/',
+                        'text': 'European Commission, Digital Agenda Scoreboard'
+                    },
+                    'tooltip_formatter': function() {
+                        return '<b>'+ this.x +'</b><br>: ' +
+                               Math.round(this.y*10)/10 + ' %_ind';
+                    }
+                };
+                App.render_highcharts(container, options);
             });
         }
     }
