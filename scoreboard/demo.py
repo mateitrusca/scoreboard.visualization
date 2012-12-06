@@ -1,5 +1,6 @@
 import os
 from collections import defaultdict
+from functools import wraps
 import simplejson as json
 from zope.interface import Interface
 import jinja2
@@ -79,11 +80,21 @@ class DataView(object):
         return json.dumps(out, indent=2, sort_keys=True)
 
 
+def GET_confirmation(view):
+    @wraps(view)
+    def wrapper(self):
+        if self.request.method == 'GET':
+            return render_template('confirm.html')
+        return view(self)
+    return wrapper
+
+
 class FixturesView(object):
 
     def get_fixtures_path(self):
         return path(__file__).parent / 'fixtures.json'
 
+    @GET_confirmation
     def dump(self):
         if os.environ.get('SCOREBOARD_FIXTURES_DUMP', '') != 'on':
             return ("Dumping fixtures not allowed. Set environment variable "
@@ -104,6 +115,7 @@ class FixturesView(object):
             json.dump(fixtures, f, indent=2, sort_keys=True)
         return 'ok, %d objects dumped\n' % len(fixtures)
 
+    @GET_confirmation
     def load(self):
         from Products.ZSPARQLMethod.Method import manage_addZSPARQLMethod
         with (self.get_fixtures_path()).open('rb') as f:
