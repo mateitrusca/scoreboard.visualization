@@ -78,11 +78,28 @@ class DataView(object):
 
 class FixturesView(object):
 
+    def get_fixtures_path(self):
+        return path(__file__).parent / 'fixtures.json'
+
     def dump(self):
         if os.environ.get('SCOREBOARD_FIXTURES_DUMP', '') != 'on':
             return ("Dumping fixtures not allowed. Set environment variable "
                     "SCOREBOARD_FIXTURES_DUMP=on to enable.\n")
-        return 'dump'
+
+        fixtures = []
+        for ob in self.context.objectValues(['Z SPARQL Method']):
+            fixtures.append({
+                'id': ob.getId(),
+                'title': ob.title,
+                'endpoint_url': ob.endpoint_url,
+                'timeout': ob.timeout,
+                'arg_spec': ob.arg_spec,
+                'query': ob.query,
+            })
+
+        with (self.get_fixtures_path()).open('wb') as f:
+            json.dump(fixtures, f, indent=2, sort_keys=True)
+        return 'ok, %d objects dumped\n' % len(fixtures)
 
     def load(self):
         return 'load'
