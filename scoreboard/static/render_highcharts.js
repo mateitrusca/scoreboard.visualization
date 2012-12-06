@@ -3,6 +3,19 @@
 
 
 App.render_highcharts = function(container, data) {
+    var options = {
+        'year_text': "Year 2011",
+        'indicator_label': "% of population who have never used the internet",
+        'credits': {
+            'href': 'http://ec.europa.eu/digital-agenda/en/graphs/',
+            'text': 'European Commission, Digital Agenda Scoreboard'
+        },
+        'tooltip_formatter': function() {
+            return '<b>'+ this.x +'</b><br>: ' +
+                   Math.round(this.y*10)/10 + ' %_ind';
+        }
+    };
+
     data = _(data).sortBy(function(item) {
         return - item['value'];
     });
@@ -22,8 +35,8 @@ App.render_highcharts = function(container, data) {
             marginBottom: 150
         },
         credits: {
-            href: 'http://ec.europa.eu/digital-agenda/en/graphs/',
-            text: 'European Commission, Digital Agenda Scoreboard',
+            href: options['credits']['href'],
+            text: options['credits']['text'],
             position: {
                 align: 'right',
                 x: -10,
@@ -32,7 +45,7 @@ App.render_highcharts = function(container, data) {
             }
         },
         title: {
-            text: '<br>% of population who have never used the internet',
+            text: options['indicator_label'],
             style: {
                 color: '#000000',
                 fontWeight: 'bold',
@@ -40,7 +53,7 @@ App.render_highcharts = function(container, data) {
             }
         },
         subtitle: {
-            text: 'Year 2011',
+            text: options['year_text'],
             align: 'left'
 
         },
@@ -68,10 +81,7 @@ App.render_highcharts = function(container, data) {
             enabled:false
         },
         tooltip: {
-            formatter: function() {
-                return '<b>'+ this.x +'</b><br>: ' +
-                       Math.round(this.y*10)/10 + ' %_ind';
-            }
+            formatter: options['tooltip_formatter']
         },
         plotOptions: {
             column: {
@@ -80,7 +90,7 @@ App.render_highcharts = function(container, data) {
         },
         series: [
             {
-                name: '% of population who have never used the internet',
+                name: options['indicator_label'],
                 color: '#7FB2F0',
                 data: values
             }
