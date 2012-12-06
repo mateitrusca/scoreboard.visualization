@@ -1,3 +1,4 @@
+import os
 from collections import defaultdict
 import simplejson as json
 from zope.interface import Interface
@@ -73,3 +74,15 @@ class DataView(object):
 
         self.request.RESPONSE.setHeader("Content-Type", "application/json")
         return json.dumps(out, indent=2, sort_keys=True)
+
+
+class FixturesView(object):
+
+    def dump(self):
+        if os.environ.get('SCOREBOARD_FIXTURES_DUMP', '') != 'on':
+            return ("Dumping fixtures not allowed. Set environment variable "
+                    "SCOREBOARD_FIXTURES_DUMP=on to enable.\n")
+        return 'dump'
+
+    def load(self):
+        return 'load'

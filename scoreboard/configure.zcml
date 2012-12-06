@@ -30,6 +30,22 @@
     permission="zope2.View"
     />
 
+  <browser:page
+    name="fixtures-dump"
+    for=".demo.IDemo"
+    class=".demo.FixturesView"
+    attribute="dump"
+    permission="zope2.ViewManagementScreens"
+    />
+
+  <browser:page
+    name="fixtures-load"
+    for=".demo.IDemo"
+    class=".demo.FixturesView"
+    attribute="load"
+    permission="zope2.ViewManagementScreens"
+    />
+
   <browser:resourceDirectory
     name="scoreboard"
     directory="./static"
