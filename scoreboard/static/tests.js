@@ -1,7 +1,14 @@
+function choose_option(select, value) {
+    var options = $('option', select).filter('[value=' + value + ']');
+    options.attr('selected', 'selected').change();
+}
+
+
 function choose_radio(inputs, value) {
     inputs.attr('checked', null);
     inputs.filter('[value=' + value + ']').attr('checked', 'checked').change();
 }
+
 
 describe('FiltersView', function() {
     "use strict";
@@ -21,20 +28,17 @@ describe('FiltersView', function() {
     describe('indicators selector', function() {
 
         it('should update model', function() {
-            var opt = this.view.$el.find('select option[value=ind1]');
-            opt.attr('selected', 'selected').change();
+            choose_option(this.view.$el.find('select'), 'ind1');
             expect(this.model.get('indicator')).to.equal('ind1');
         });
 
         it('should select the current indicator', function() {
             this.model.set({'indicator': 'ind2'});
-            var option_two = this.view.$el.find('option[value=ind2]');
-            expect(option_two.attr('selected')).to.equal('selected');
+            choose_option(this.view.$el.find('select'), 'ind2');
         });
 
         it('should set year=null if missing from new indicator', function() {
-            var opt = this.view.$el.find('select option[value=ind2]');
-            opt.attr('selected', 'selected').change();
+            choose_option(this.view.$el.find('select'), 'ind2');
             expect(this.model.get('year')).to.equal(null);
         });
 
