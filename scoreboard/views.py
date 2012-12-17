@@ -49,13 +49,16 @@ class IScoreboard(Interface):
 
 class ScenarioView(object):
 
-    def render(self, **kwargs):
+    def render_template(self, name='scenario.html', **kwargs):
         data = {'URL': self.context.absolute_url()}
         data.update(kwargs)
-        return render_template('scenario.html', **data)
+        return render_template(name, **data)
+
+    def index(self):
+        return self.render_template('index.html')
 
     def scenario1(self):
-        return self.render(entry_point='App.scenario1_initialize')
+        return self.render_template(entry_point='App.scenario1_initialize')
 
 
 class GetFiltersView(object):

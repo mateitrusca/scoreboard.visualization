@@ -2,6 +2,19 @@
   xmlns="http://namespaces.zope.org/zope"
   xmlns:browser="http://namespaces.zope.org/browser">
 
+  <browser:defaultView
+    for=".views.IScoreboard"
+    name="index"
+    />
+
+  <browser:page
+    name="index"
+    for=".views.IScoreboard"
+    class=".views.ScenarioView"
+    attribute="index"
+    permission="zope2.View"
+    />
+
   <browser:page
     name="scenario1"
     for=".views.IScoreboard"
