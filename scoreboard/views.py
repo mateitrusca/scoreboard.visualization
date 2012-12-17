@@ -43,7 +43,7 @@ def run_query(method_ob, **kwargs):
            for row in result.rdfterm_rows]
 
 
-class IDemo(Interface):
+class IScoreboard(Interface):
     """ Marker interface for demo page """
 
 
