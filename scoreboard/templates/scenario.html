@@ -27,7 +27,7 @@ in.</p>
   {{ include_js_app() }}
 
   <script>
-    $(document).ready(App.scenario1_initialize);
+    $(document).ready({{ entry_point }});
   </script>
 
 {% endblock %}

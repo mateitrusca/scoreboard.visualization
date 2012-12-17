@@ -47,10 +47,15 @@ class IDemo(Interface):
     """ Marker interface for demo page """
 
 
-class DemoView(object):
+class ScenarioView(object):
 
-    def __call__(self):
-        return render_template('demo.html', URL=self.context.absolute_url())
+    def render(self, **kwargs):
+        data = {'URL': self.context.absolute_url()}
+        data.update(kwargs)
+        return render_template('scenario.html', **data)
+
+    def scenario1(self):
+        return self.render(entry_point='App.scenario1_initialize')
 
 
 class GetFiltersView(object):

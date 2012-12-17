@@ -5,7 +5,8 @@
   <browser:page
     name="demo"
     for=".demo.IDemo"
-    class=".demo.DemoView"
+    class=".demo.ScenarioView"
+    attribute="scenario1"
     permission="zope2.View"
     />
 
