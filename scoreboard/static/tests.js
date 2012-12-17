@@ -1,42 +1,43 @@
 describe('FiltersView', function() {
     "use strict";
 
+    beforeEach(function() {
+        this.filters_data = {'indicators': [
+            {'uri': 'ind1', 'years': ["2009", "2010"]},
+            {'uri': 'ind2', 'years': ["2010", "2011"]}
+        ]};
+    });
+
     describe('indicators selector', function() {
 
         it('should update model', function() {
             var model = new Backbone.Model;
-            var filters_data = {'indicators': [{'uri': "one"}]};
             var view = new App.FiltersView({
                 model: model,
-                filters_data: filters_data
+                filters_data: this.filters_data
             });
-            var opt = view.$el.find('select option[value=one]');
+            var opt = view.$el.find('select option[value=ind1]');
             opt.attr('selected', 'selected').change();
-            expect(model.get('indicator')).to.equal('one');
+            expect(model.get('indicator')).to.equal('ind1');
         });
 
         it('should select the current indicator', function() {
-            var filters_data = {'indicators': [{'uri': "one"}, {'uri': "two"}]};
             var view = new App.FiltersView({
-                model: new Backbone.Model({'indicator': 'two'}),
-                filters_data: filters_data
+                model: new Backbone.Model({'indicator': 'ind2'}),
+                filters_data: this.filters_data
             });
-            var option_two = view.$el.find('option[value=two]');
+            var option_two = view.$el.find('option[value=ind2]');
             expect(option_two.attr('selected')).to.equal('selected');
         });
 
         it('should set year=null if missing from new indicator', function() {
-            var filters_data = {'indicators': [
-                {'uri': 'ind1', 'years': ["2009", "2010"]},
-                {'uri': 'ind2', 'years': ["2010", "2011"]},
-            ]};
             var model = new Backbone.Model({
                 'indicator': 'ind1',
                 'year': '2009'
             });
             var view = new App.FiltersView({
                 model: model,
-                filters_data: filters_data
+                filters_data: this.filters_data
             });
             var opt = view.$el.find('select option[value=ind2]');
             opt.attr('selected', 'selected').change();
@@ -48,13 +49,10 @@ describe('FiltersView', function() {
     describe('year radio buttons', function() {
 
         it('should update model', function() {
-            var model = new Backbone.Model({'indicator': 'i'});
-            var filters_data = {'indicators': [
-                {'uri': 'i', 'years': ["2009", "2010"]}
-            ]};
+            var model = new Backbone.Model({'indicator': 'ind1'});
             var view = new App.FiltersView({
                 model: model,
-                filters_data: filters_data
+                filters_data: this.filters_data
             });
             var year = view.$el.find('input[value=2010]');
             year.attr('checked', 'checked').change();
@@ -62,29 +60,22 @@ describe('FiltersView', function() {
         });
 
         it('should select the current year', function() {
-            var filters_data = {'indicators': [
-                {'uri': 'i', 'years': ["2009", "2010"]}
-            ]};
             var view = new App.FiltersView({
-                model: new Backbone.Model({'indicator': 'i', 'year': '2010'}),
-                filters_data: filters_data
+                model: new Backbone.Model({'indicator': 'ind1', 'year': '2010'}),
+                filters_data: this.filters_data
             });
             var year_two = view.$el.find('input[name=year][value=2010]');
             expect(year_two.attr('checked')).to.equal('checked');
         });
 
         it('should update list of years when indicator changes', function() {
-            var filters_data = {'indicators': [
-                {'uri': 'ind1', 'years': ["2009", "2010"]},
-                {'uri': 'ind2', 'years': ["2010", "2011"]},
-            ]};
             var model = new Backbone.Model({
                 'indicator': 'ind1',
                 'year': '2010'
             });
             var view = new App.FiltersView({
                 model: model,
-                filters_data: filters_data
+                filters_data: this.filters_data
             });
             model.set({'indicator': 'ind2'});
 
