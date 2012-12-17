@@ -1,16 +1,4 @@
-function choose_option(select, value) {
-    var options = $('option', select).filter('[value=' + value + ']');
-    options.attr('selected', 'selected').change();
-}
-
-
-function choose_radio(inputs, value) {
-    inputs.attr('checked', null);
-    inputs.filter('[value=' + value + ']').attr('checked', 'checked').change();
-}
-
-
-describe('FiltersView', function() {
+describe('Scenario1FiltersView', function() {
     "use strict";
 
     beforeEach(function() {
@@ -19,7 +7,7 @@ describe('FiltersView', function() {
             {'uri': 'ind2', 'years': ["2010", "2011"]}
         ]};
         this.model = new Backbone.Model;
-        this.view = new App.FiltersView({
+        this.view = new App.Scenario1FiltersView({
             model: this.model,
             filters_data: this.filters_data
         });
@@ -28,17 +16,17 @@ describe('FiltersView', function() {
     describe('indicators selector', function() {
 
         it('should update model', function() {
-            choose_option(this.view.$el.find('select'), 'ind1');
+            App.testing.choose_option(this.view.$el.find('select'), 'ind1');
             expect(this.model.get('indicator')).to.equal('ind1');
         });
 
         it('should select the current indicator', function() {
             this.model.set({'indicator': 'ind2'});
-            choose_option(this.view.$el.find('select'), 'ind2');
+            App.testing.choose_option(this.view.$el.find('select'), 'ind2');
         });
 
         it('should set year=null if missing from new indicator', function() {
-            choose_option(this.view.$el.find('select'), 'ind2');
+            App.testing.choose_option(this.view.$el.find('select'), 'ind2');
             expect(this.model.get('year')).to.equal(null);
         });
 
@@ -52,7 +40,8 @@ describe('FiltersView', function() {
 
         it('should update model', function() {
             this.model.set({'indicator': 'ind1'});
-            choose_radio(this.view.$el.find('input[name=year]'), '2010');
+            App.testing.choose_radio(this.view.$el.find('input[name=year]'),
+                                     '2010');
             expect(this.model.get('year')).to.equal('2010');
         });
 
@@ -88,7 +77,7 @@ var url_param = function(url, name){
 }
 
 
-describe('ChartView', function() {
+describe('Scenario1ChartView', function() {
     "use strict";
 
     var server, render_highcharts;
@@ -98,7 +87,7 @@ describe('ChartView', function() {
         render_highcharts = sinon.stub(App, 'render_highcharts');
 
         this.model = new Backbone.Model;
-        this.chart = new App.ChartView({model: this.model});
+        this.chart = new App.Scenario1ChartView({model: this.model});
         this.model.set({
             'indicator': 'asdf',
             'year': '2002'
@@ -148,49 +137,6 @@ describe('ChartView', function() {
         expect(call_args[1]['data']).to.deep.equal(ajax_data);
         expect(call_args[1]['indicator_label']).to.equal(
             ajax_metadata[0]['label']);
-    });
-
-});
-
-
-describe('MetadataView', function() {
-    "use strict";
-
-    var server;
-
-    beforeEach(function() {
-        server = sinon.fakeServer.create();
-    });
-
-    afterEach(function () {
-        server.restore();
-    });
-
-    it('should display data from server', function() {
-        var view = new App.MetadataView({
-            model: new Backbone.Model({'indicator': 'asdf', 'year': '2002'})
-        });
-
-        expect(server.requests.length).to.equal(1);
-        var url = server.requests[0].url;
-        expect(url_param(url, 'method')).to.equal('get_indicator_meta');
-        expect(url_param(url, 'indicator')).to.equal('asdf');
-        expect(url_param(url, 'year')).to.equal(
-            'http://data.lod2.eu/scoreboard/year/2002');
-
-        var ajax_data = [{
-            'label': "The Label!",
-            'comment': "The Definition!",
-            'publisher': "The Source!"
-        }];
-        server.requests[0].respond(200, {'Content-Type': 'application/json'},
-                                   JSON.stringify(ajax_data));
-
-        expect(view.$el.find('h3').text()).to.equal("The Label!");
-        expect(view.$el.find('li:first').text()).to.contain.string(
-            "The Definition!");
-        expect(view.$el.find('li:last').text()).to.contain.string(
-            "The Source!");
     });
 
 });

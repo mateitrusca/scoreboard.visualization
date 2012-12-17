@@ -1,15 +1,8 @@
 (function() {
 "use strict";
 
-App.render = function(name, vars) {
-    var template_id = name + '-template';
-    var template_src = $('script#' + template_id).text();
-    var template = Handlebars.compile(template_src);
-    return template(vars);
-};
 
-
-App.FiltersView = Backbone.View.extend({
+App.Scenario1FiltersView = Backbone.View.extend({
 
     events: {
         'change select': 'update_filters',
@@ -45,7 +38,7 @@ App.FiltersView = Backbone.View.extend({
             current_indicator['selected'] = true;
         }
 
-        this.$el.html(App.render('filters', data));
+        this.$el.html(App.render('scoreboard/scenario1/filters.html', data));
     },
 
     update_filters: function() {
@@ -69,7 +62,7 @@ App.FiltersView = Backbone.View.extend({
 });
 
 
-App.make_filter_args = function(model) {
+App.make_scenario1_filter_args = function(model) {
     var args = model.toJSON();
     if(!(args['indicator'] && args['year'])) {
         return null;
@@ -81,7 +74,7 @@ App.make_filter_args = function(model) {
 };
 
 
-App.ChartView = Backbone.View.extend({
+App.Scenario1ChartView = Backbone.View.extend({
 
     initialize: function() {
         this.model.on('change', this.render, this);
@@ -89,9 +82,10 @@ App.ChartView = Backbone.View.extend({
     },
 
     render: function() {
-        this.$el.html(App.render('chart', this.model.toJSON()));
+        this.$el.html(App.render('scoreboard/scenario1/chart.html',
+                                 this.model.toJSON()));
         var container = this.$el.find('.highcharts-chart')[0];
-        var args = App.make_filter_args(this.model);
+        var args = App.make_scenario1_filter_args(this.model);
         if(args) {
             var data_ajax = $.get(App.URL + '/data',
                 _({'method': 'get_one_indicator_year'}).extend(args));
@@ -121,29 +115,8 @@ App.ChartView = Backbone.View.extend({
 });
 
 
-App.MetadataView = Backbone.View.extend({
 
-    initialize: function() {
-        this.model.on('change', this.render, this);
-        this.render();
-    },
-
-    render: function() {
-        this.$el.html("loading ...");
-        var args = App.make_filter_args(this.model);
-        var $el = this.$el;
-        if(args) {
-            _(args).extend({'method': 'get_indicator_meta'});
-            $.get(App.URL + '/data', args, function(data) {
-                $el.html(App.render('metadata', data[0]));
-            });
-        }
-    }
-
-});
-
-
-App.Router = Backbone.Router.extend({
+App.Scenario1Router = Backbone.Router.extend({
 
     initialize: function(model) {
         this.model = model;
@@ -163,16 +136,19 @@ App.Router = Backbone.Router.extend({
 });
 
 
-App.initialize = function() {
-    App.filters = new Backbone.Model();
-    App.router = new App.Router(App.filters);
+App.scenario1_initialize = function() {
+    var box = $('#scenario-box');
+    box.html(App.render('scoreboard/scenario1/scenario1.html'));
 
-    new App.ChartView({
+    App.filters = new Backbone.Model();
+    App.router = new App.Scenario1Router(App.filters);
+
+    new App.Scenario1ChartView({
         model: App.filters,
         el: $('#the-chart')
     });
 
-    $.getJSON(App.URL + '/get_filters', function(data) {
+    $.getJSON(App.URL + '/get_filters_scenario1', function(data) {
         var fix_indicator = function(value) {
             return 'http://data.lod2.eu/scoreboard/indicators/' +
                    value.replace(/ /g, '_').replace(/%/g, '');
@@ -182,7 +158,7 @@ App.initialize = function() {
                 option['value'] = fix_indicator(option['value']);
             });
         });
-        new App.FiltersView({
+        new App.Scenario1FiltersView({
             model: App.filters,
             el: $('#the-filters'),
             filters_data: data
@@ -190,7 +166,7 @@ App.initialize = function() {
 
     });
 
-    new App.MetadataView({
+    new App.IndicatorMetadataView({
         model: App.filters,
         el: $('#the-metadata')
     });

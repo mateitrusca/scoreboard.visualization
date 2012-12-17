@@ -3,45 +3,47 @@
   xmlns:browser="http://namespaces.zope.org/browser">
 
   <browser:page
-    name="demo"
-    for=".demo.IDemo"
-    class=".demo.DemoView"
+    name="scenario1"
+    for=".views.IScoreboard"
+    class=".views.ScenarioView"
+    attribute="scenario1"
     permission="zope2.View"
     />
 
   <browser:page
-    name="get_filters"
-    for=".demo.IDemo"
-    class=".demo.GetFiltersView"
+    name="get_filters_scenario1"
+    for=".views.IScoreboard"
+    class=".views.GetFiltersView"
+    attribute="scenario1"
     permission="zope2.View"
     />
 
   <browser:page
     name="data"
-    for=".demo.IDemo"
-    class=".demo.DataView"
+    for=".views.IScoreboard"
+    class=".views.DataView"
     permission="zope2.View"
     />
 
   <browser:page
     name="tests"
-    for=".demo.IDemo"
-    class=".demo.TestsView"
+    for=".views.IScoreboard"
+    class=".views.TestsView"
     permission="zope2.View"
     />
 
   <browser:page
     name="fixtures-dump"
-    for=".demo.IDemo"
-    class=".demo.FixturesView"
+    for=".views.IScoreboard"
+    class=".views.FixturesView"
     attribute="dump"
     permission="zope2.ViewManagementScreens"
     />
 
   <browser:page
     name="fixtures-load"
-    for=".demo.IDemo"
-    class=".demo.FixturesView"
+    for=".views.IScoreboard"
+    class=".views.FixturesView"
     attribute="load"
     permission="zope2.ViewManagementScreens"
     />

@@ -11,9 +11,19 @@ from sparql import unpack_row
 ZSPARQLMETHOD = 'Z SPARQL Method'
 
 
-def get_templates():
-    templates_dir = path(__file__).abspath().parent / 'templates' / 'js'
-    return {t.namebase: t.text('utf-8') for t in templates_dir.listdir()}
+def get_templates(dirglob='*', parent=None):
+    if parent is None:
+        parent = path(__file__).abspath().parent / 'static'
+
+    for tmpl in parent.glob('*.html'):
+        if tmpl.isfile():
+            yield tmpl.name, tmpl.text('utf-8')
+
+    for folder in parent.glob(dirglob):
+        if folder.isdir():
+            for sub_name, text in get_templates('*', folder):
+                name = '%s/%s' % (folder.name, sub_name)
+                yield name, text
 
 
 jinja_env = jinja2.Environment(
@@ -33,19 +43,24 @@ def run_query(method_ob, **kwargs):
            for row in result.rdfterm_rows]
 
 
-class IDemo(Interface):
+class IScoreboard(Interface):
     """ Marker interface for demo page """
 
 
-class DemoView(object):
+class ScenarioView(object):
 
-    def __call__(self):
-        return render_template('demo.html', URL=self.context.absolute_url())
+    def render(self, **kwargs):
+        data = {'URL': self.context.absolute_url()}
+        data.update(kwargs)
+        return render_template('scenario.html', **data)
+
+    def scenario1(self):
+        return self.render(entry_point='App.scenario1_initialize')
 
 
 class GetFiltersView(object):
 
-    def __call__(self):
+    def scenario1(self):
         years = defaultdict(list)
         for row in run_query(self.context['get_all_indicators_to_years']):
             years[row['indicator']].append(row['year_label'])
