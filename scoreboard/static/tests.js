@@ -114,6 +114,13 @@ describe('ChartView', function() {
     beforeEach(function() {
         server = sinon.fakeServer.create();
         render_highcharts = sinon.stub(App, 'render_highcharts');
+
+        this.model = new Backbone.Model;
+        this.chart = new App.ChartView({model: this.model});
+        this.model.set({
+            'indicator': 'asdf',
+            'year': '2002'
+        });
     });
 
     afterEach(function () {
@@ -122,13 +129,6 @@ describe('ChartView', function() {
     });
 
     it('should fetch data from server', function() {
-        var model = new Backbone.Model;
-        var chart = new App.ChartView({model: model});
-        model.set({
-            'indicator': 'asdf',
-            'year': '2002'
-        });
-
         expect(server.requests.length).to.equal(1);
         var url = server.requests[0].url;
         expect(url).to.have.string(App.URL + '/data?')
@@ -139,20 +139,13 @@ describe('ChartView', function() {
     });
 
     it('should render chart with the data received', function() {
-        var model = new Backbone.Model;
-        var chart = new App.ChartView({model: model});
-        model.set({
-            'indicator': 'asdf',
-            'year': '2002'
-        });
-
         var ajax_data = [{'country_name': "Austria", 'value': 0.18},
                          {'country_name': "Belgium", 'value': 0.14}];
         server.requests[0].respond(
             200, {'Content-Type': 'application/json'},
             JSON.stringify(ajax_data));
 
-        var container = chart.$el.find('.highcharts-chart')[0];
+        var container = this.chart.$el.find('.highcharts-chart')[0];
         expect(render_highcharts.calledOnce).to.equal(true);
         var call_args = render_highcharts.getCall(0).args;
         expect(call_args[0]).to.equal(container);
