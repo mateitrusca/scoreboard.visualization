@@ -129,7 +129,6 @@ describe('ChartView', function() {
     });
 
     it('should fetch data from server', function() {
-        expect(server.requests.length).to.equal(1);
         var url = server.requests[0].url;
         expect(url).to.have.string(App.URL + '/data?')
         expect(url_param(url, 'method')).to.equal('get_one_indicator_year');
@@ -138,18 +137,35 @@ describe('ChartView', function() {
             'http://data.lod2.eu/scoreboard/year/2002');
     });
 
-    it('should render chart with the data received', function() {
+    it('should fetch metadata from server', function() {
+        var url2 = server.requests[1].url;
+        expect(url2).to.have.string(App.URL + '/data?')
+        expect(url_param(url2, 'method')).to.equal('get_indicator_meta');
+        expect(url_param(url2, 'indicator')).to.equal('asdf');
+    });
+
+    it('should render chart with the data and metadata received', function() {
         var ajax_data = [{'country_name': "Austria", 'value': 0.18},
                          {'country_name': "Belgium", 'value': 0.14}];
         server.requests[0].respond(
             200, {'Content-Type': 'application/json'},
             JSON.stringify(ajax_data));
 
+        var ajax_metadata = [{
+            'label': "The Label!",
+            'comment': "The Definition!",
+            'publisher': "The Source!"
+        }];
+        server.requests[1].respond(200, {'Content-Type': 'application/json'},
+                                   JSON.stringify(ajax_metadata));
+
         var container = this.chart.$el.find('.highcharts-chart')[0];
         expect(render_highcharts.calledOnce).to.equal(true);
         var call_args = render_highcharts.getCall(0).args;
         expect(call_args[0]).to.equal(container);
         expect(call_args[1]['data']).to.deep.equal(ajax_data);
+        expect(call_args[1]['indicator_label']).to.equal(
+            ajax_metadata[0]['label']);
     });
 
 });

@@ -86,13 +86,17 @@ App.ChartView = Backbone.View.extend({
         var container = this.$el.find('.highcharts-chart')[0];
         var args = App.make_filter_args(this.model);
         if(args) {
-            _(args).extend({'method': 'get_one_indicator_year'});
-            $.get(App.URL + '/data', args, function(data) {
+            var data_ajax = $.get(App.URL + '/data',
+                _({'method': 'get_one_indicator_year'}).extend(args));
+            var metadata_ajax = $.get(App.URL + '/data',
+                _({'method': 'get_indicator_meta'}).extend(args));
+            $.when(data_ajax, metadata_ajax).done(
+                function(data_resp, metadata_resp) {
+                var metadata = metadata_resp[0][0];
                 var options = {
-                    'data': data,
+                    'data': data_resp[0],
                     'year_text': "Year 2011",
-                    'indicator_label': ("% of population who have " +
-                                        "never used the internet"),
+                    'indicator_label': metadata['label'],
                     'credits': {
                         'href': 'http://ec.europa.eu/digital-agenda/en/graphs/',
                         'text': 'European Commission, Digital Agenda Scoreboard'
