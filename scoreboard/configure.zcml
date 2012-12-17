@@ -10,9 +10,10 @@
     />
 
   <browser:page
-    name="get_filters"
+    name="get_filters_scenario1"
     for=".demo.IDemo"
     class=".demo.GetFiltersView"
+    attribute="scenario1"
     permission="zope2.View"
     />
 

@@ -45,7 +45,7 @@ class DemoView(object):
 
 class GetFiltersView(object):
 
-    def __call__(self):
+    def scenario1(self):
         years = defaultdict(list)
         for row in run_query(self.context['get_all_indicators_to_years']):
             years[row['indicator']].append(row['year_label'])

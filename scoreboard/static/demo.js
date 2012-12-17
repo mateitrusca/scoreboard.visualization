@@ -172,7 +172,7 @@ App.initialize = function() {
         el: $('#the-chart')
     });
 
-    $.getJSON(App.URL + '/get_filters', function(data) {
+    $.getJSON(App.URL + '/get_filters_scenario1', function(data) {
         var fix_indicator = function(value) {
             return 'http://data.lod2.eu/scoreboard/indicators/' +
                    value.replace(/ /g, '_').replace(/%/g, '');
