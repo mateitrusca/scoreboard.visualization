@@ -7,36 +7,28 @@ describe('FiltersView', function() {
             {'uri': 'ind2', 'years': ["2010", "2011"]}
         ]};
         this.model = new Backbone.Model;
+        this.view = new App.FiltersView({
+            model: this.model,
+            filters_data: this.filters_data
+        });
     });
 
     describe('indicators selector', function() {
 
         it('should update model', function() {
-            var view = new App.FiltersView({
-                model: this.model,
-                filters_data: this.filters_data
-            });
-            var opt = view.$el.find('select option[value=ind1]');
+            var opt = this.view.$el.find('select option[value=ind1]');
             opt.attr('selected', 'selected').change();
             expect(this.model.get('indicator')).to.equal('ind1');
         });
 
         it('should select the current indicator', function() {
             this.model.set({'indicator': 'ind2'});
-            var view = new App.FiltersView({
-                model: this.model,
-                filters_data: this.filters_data
-            });
-            var option_two = view.$el.find('option[value=ind2]');
+            var option_two = this.view.$el.find('option[value=ind2]');
             expect(option_two.attr('selected')).to.equal('selected');
         });
 
         it('should set year=null if missing from new indicator', function() {
-            var view = new App.FiltersView({
-                model: this.model,
-                filters_data: this.filters_data
-            });
-            var opt = view.$el.find('select option[value=ind2]');
+            var opt = this.view.$el.find('select option[value=ind2]');
             opt.attr('selected', 'selected').change();
             expect(this.model.get('year')).to.equal(null);
         });
@@ -47,37 +39,22 @@ describe('FiltersView', function() {
 
         it('should update model', function() {
             this.model.set({'indicator': 'ind1'});
-            var view = new App.FiltersView({
-                model: this.model,
-                filters_data: this.filters_data
-            });
-            var year = view.$el.find('input[value=2010]');
+            var year = this.view.$el.find('input[value=2010]');
             year.attr('checked', 'checked').change();
             expect(this.model.get('year')).to.equal('2010');
         });
 
         it('should select the current year', function() {
             this.model.set({'indicator': 'ind1', 'year': '2010'});
-            var view = new App.FiltersView({
-                model: this.model,
-                filters_data: this.filters_data
-            });
-            var year_two = view.$el.find('input[name=year][value=2010]');
+            var year_two = this.view.$el.find('input[name=year][value=2010]');
             expect(year_two.attr('checked')).to.equal('checked');
         });
 
         it('should update list of years when indicator changes', function() {
-            this.model.set({
-                'indicator': 'ind1',
-                'year': '2010'
-            });
-            var view = new App.FiltersView({
-                model: this.model,
-                filters_data: this.filters_data
-            });
+            this.model.set({'indicator': 'ind1', 'year': '2010'});
             this.model.set({'indicator': 'ind2'});
 
-            var years = view.$el.find('input[name=year]').map(function() {
+            var years = this.view.$el.find('input[name=year]').map(function() {
                 return $(this).val();
             }).get();
             expect(years).to.deep.equal(['2010', '2011']);
