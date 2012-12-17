@@ -16,7 +16,7 @@ App.IndicatorMetadataView = Backbone.View.extend({
         if(args) {
             _(args).extend({'method': 'get_indicator_meta'});
             $.get(App.URL + '/data', args, function(data) {
-                $el.html(App.render('metadata', data[0]));
+                $el.html(App.render('scoreboard/metadata', data[0]));
             });
         }
     }

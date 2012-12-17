@@ -13,7 +13,7 @@ ZSPARQLMETHOD = 'Z SPARQL Method'
 
 def get_templates(dirglob='*', parent=None):
     if parent is None:
-        parent = path(__file__).abspath().parent / 'templates' / 'js'
+        parent = path(__file__).abspath().parent / 'static'
 
     for tmpl in parent.glob('*.html'):
         if tmpl.isfile():

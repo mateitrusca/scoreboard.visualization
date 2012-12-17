@@ -38,7 +38,7 @@ App.Scenario1FiltersView = Backbone.View.extend({
             current_indicator['selected'] = true;
         }
 
-        this.$el.html(App.render('filters', data));
+        this.$el.html(App.render('scoreboard/scenario1/filters', data));
     },
 
     update_filters: function() {
@@ -82,7 +82,8 @@ App.Scenario1ChartView = Backbone.View.extend({
     },
 
     render: function() {
-        this.$el.html(App.render('chart', this.model.toJSON()));
+        this.$el.html(App.render('scoreboard/scenario1/chart',
+                                 this.model.toJSON()));
         var container = this.$el.find('.highcharts-chart')[0];
         var args = App.make_scenario1_filter_args(this.model);
         if(args) {
