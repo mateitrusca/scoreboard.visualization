@@ -20,25 +20,9 @@
     expect = chai.expect;
   </script>
 
-  <script src="{{ STATIC }}/lib/jquery-1.8.3/jquery-1.8.3.min.js"></script>
-  <script src="{{ STATIC }}/lib/handlebars-1.0.rc1/handlebars-1.0.rc.1.js"></script>
-  <script src="{{ STATIC }}/lib/underscore-1.4.2/underscore.js"></script>
-  <script src="{{ STATIC }}/lib/backbone-0.9.2/backbone.js"></script>
-  <script src="{{ STATIC }}/lib/highcharts-2.3.3/js/highcharts.js"></script>
+  {% from 'common.html' import include_js_app with context %}
+  {{ include_js_app() }}
 
-  {% for name, text in get_templates().items() %}
-    <script type="text/x-template" id="{{ name }}-template">{{ text }}</script>
-  {% endfor %}
-  <script>
-    window.App = {
-      STATIC: {{ STATIC|json }},
-      URL: {{ URL|json }}
-    };
-  </script>
-  <script src="{{ STATIC }}/scoreboard/utils.js"></script>
-  <script src="{{ STATIC }}/scoreboard/common.js"></script>
-  <script src="{{ STATIC }}/scoreboard/render_highcharts.js"></script>
-  <script src="{{ STATIC }}/scoreboard/scenario1/scenario1.js"></script>
   <script src="{{ STATIC }}/testing.js"></script>
   <script src="{{ STATIC }}/scoreboard/tests.js"></script>
   <script src="{{ STATIC }}/scoreboard/scenario1/tests.js"></script>
