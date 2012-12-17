@@ -11,9 +11,19 @@ from sparql import unpack_row
 ZSPARQLMETHOD = 'Z SPARQL Method'
 
 
-def get_templates():
-    templates_dir = path(__file__).abspath().parent / 'templates' / 'js'
-    return {t.namebase: t.text('utf-8') for t in templates_dir.listdir()}
+def get_templates(dirglob='*', parent=None):
+    if parent is None:
+        parent = path(__file__).abspath().parent / 'templates' / 'js'
+
+    for tmpl in parent.glob('*.html'):
+        if tmpl.isfile():
+            yield tmpl.name, tmpl.text('utf-8')
+
+    for folder in parent.glob(dirglob):
+        if folder.isdir():
+            for sub_name, text in get_templates('*', folder):
+                name = '%s/%s' % (folder.name, sub_name)
+                yield name, text
 
 
 jinja_env = jinja2.Environment(
