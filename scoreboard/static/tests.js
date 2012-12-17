@@ -1,3 +1,8 @@
+function choose_radio(inputs, value) {
+    inputs.attr('checked', null);
+    inputs.filter('[value=' + value + ']').attr('checked', 'checked').change();
+}
+
 describe('FiltersView', function() {
     "use strict";
 
@@ -33,14 +38,17 @@ describe('FiltersView', function() {
             expect(this.model.get('year')).to.equal(null);
         });
 
+        it('should make an initial selection', function() {
+            expect(this.model.get('indicator')).to.equal('ind1');
+        });
+
     });
 
     describe('year radio buttons', function() {
 
         it('should update model', function() {
             this.model.set({'indicator': 'ind1'});
-            var year = this.view.$el.find('input[value=2010]');
-            year.attr('checked', 'checked').change();
+            choose_radio(this.view.$el.find('input[name=year]'), '2010');
             expect(this.model.get('year')).to.equal('2010');
         });
 
@@ -58,6 +66,10 @@ describe('FiltersView', function() {
                 return $(this).val();
             }).get();
             expect(years).to.deep.equal(['2010', '2011']);
+        });
+
+        it('should make an initial selection', function() {
+            expect(this.model.get('year')).to.equal('2009');
         });
 
     });

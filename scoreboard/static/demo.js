@@ -18,6 +18,13 @@ App.FiltersView = Backbone.View.extend({
 
     initialize: function(options) {
         this.filters_data = JSON.stringify(options['filters_data']);
+        if(! this.model.get('indicator')) {
+            var first_indicator = options['filters_data']['indicators'][0];
+            this.model.set({
+                'indicator': first_indicator['uri'],
+                'year': first_indicator['years'][0]
+            });
+        }
         this.model.on('change', this.render, this);
         this.render();
     },
@@ -180,6 +187,7 @@ App.initialize = function() {
             el: $('#the-filters'),
             filters_data: data
         });
+
     });
 
     new App.MetadataView({
