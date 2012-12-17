@@ -137,6 +137,9 @@ App.Scenario1Router = Backbone.Router.extend({
 
 
 App.scenario1_initialize = function() {
+    var box = $('#scenario-box');
+    box.html(App.render('scoreboard/scenario1/scenario1'));
+
     App.filters = new Backbone.Model();
     App.router = new App.Scenario1Router(App.filters);
 
