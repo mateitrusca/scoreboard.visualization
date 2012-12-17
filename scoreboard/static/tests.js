@@ -10,7 +10,7 @@ function choose_radio(inputs, value) {
 }
 
 
-describe('FiltersView', function() {
+describe('Scenario1FiltersView', function() {
     "use strict";
 
     beforeEach(function() {
@@ -19,7 +19,7 @@ describe('FiltersView', function() {
             {'uri': 'ind2', 'years': ["2010", "2011"]}
         ]};
         this.model = new Backbone.Model;
-        this.view = new App.FiltersView({
+        this.view = new App.Scenario1FiltersView({
             model: this.model,
             filters_data: this.filters_data
         });
@@ -88,7 +88,7 @@ var url_param = function(url, name){
 }
 
 
-describe('ChartView', function() {
+describe('Scenario1ChartView', function() {
     "use strict";
 
     var server, render_highcharts;
@@ -98,7 +98,7 @@ describe('ChartView', function() {
         render_highcharts = sinon.stub(App, 'render_highcharts');
 
         this.model = new Backbone.Model;
-        this.chart = new App.ChartView({model: this.model});
+        this.chart = new App.Scenario1ChartView({model: this.model});
         this.model.set({
             'indicator': 'asdf',
             'year': '2002'
@@ -153,7 +153,7 @@ describe('ChartView', function() {
 });
 
 
-describe('MetadataView', function() {
+describe('IndicatorMetadataView', function() {
     "use strict";
 
     var server;
@@ -167,7 +167,7 @@ describe('MetadataView', function() {
     });
 
     it('should display data from server', function() {
-        var view = new App.MetadataView({
+        var view = new App.IndicatorMetadataView({
             model: new Backbone.Model({'indicator': 'asdf', 'year': '2002'})
         });
 
