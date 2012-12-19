@@ -30,5 +30,13 @@
     "query": "PREFIX prop: <http://data.lod2.eu/scoreboard/properties/>\r\nPREFIX qb: <http://purl.org/linked-data/cube#>\r\nPREFIX country: <http://data.lod2.eu/scoreboard/country/>\r\n\r\nSELECT DISTINCT ?indicator, ?year_label WHERE {\r\n\r\n?observation\r\n    a qb:Observation ;\r\n    prop:indicator ?indicator ;\r\n    prop:year ?year .\r\n\r\n?year\r\n    rdfs:label ?year_label .\r\n\r\n}\r\n\r\nLIMIT 1000\r\n",
     "timeout": null,
     "title": ""
+  },
+  {
+    "arg_spec": "indicator:iri country:iri",
+    "endpoint_url": "http://virtuoso.scoreboard.edw.ro/sparql",
+    "id": "get_one_indicator_country",
+    "query": "PREFIX prop: <http://data.lod2.eu/scoreboard/properties/>\r\nPREFIX qb: <http://purl.org/linked-data/cube#>\r\nPREFIX country: <http://data.lod2.eu/scoreboard/country/>\r\n\r\nSELECT (xsd:int(?year_label)) AS ?year, ?value WHERE {\r\n\r\n?observation\r\n    a qb:Observation ;\r\n    prop:indicator $indicator ;\r\n    prop:year ?year ;\r\n    prop:country $country ;\r\n    prop:value ?value .\r\n\r\n?year\r\n    rdfs:label ?year_label .\r\n\r\n}\r\n\r\nLIMIT 1000\r\n",
+    "timeout": null,
+    "title": ""
   }
 ]

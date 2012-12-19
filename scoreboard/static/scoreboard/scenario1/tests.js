@@ -72,21 +72,14 @@ describe('Scenario1FiltersView', function() {
 });
 
 
-var url_param = function(url, name){
-    var results = new RegExp('[\\?&]' + name + '=([^&#]*)').exec(url);
-    if (!results) { return null; }
-    return decodeURIComponent(results[1]);
-}
-
-
 describe('Scenario1ChartView', function() {
     "use strict";
 
-    var server, render_highcharts;
+    var server, scenario1_chart;
 
     beforeEach(function() {
         server = sinon.fakeServer.create();
-        render_highcharts = sinon.stub(App, 'render_highcharts');
+        scenario1_chart = sinon.stub(App, 'scenario1_chart');
 
         this.model = new Backbone.Model;
         this.chart = new App.Scenario1ChartView({model: this.model});
@@ -98,12 +91,13 @@ describe('Scenario1ChartView', function() {
 
     afterEach(function () {
         server.restore();
-        render_highcharts.restore();
+        scenario1_chart.restore();
     });
 
     it('should fetch data from server', function() {
         var url = server.requests[0].url;
         expect(url).to.have.string(App.URL + '/data?')
+        var url_param = App.testing.url_param;
         expect(url_param(url, 'method')).to.equal('get_one_indicator_year');
         expect(url_param(url, 'indicator')).to.equal('asdf');
         expect(url_param(url, 'year')).to.equal(
@@ -113,6 +107,7 @@ describe('Scenario1ChartView', function() {
     it('should fetch metadata from server', function() {
         var url2 = server.requests[1].url;
         expect(url2).to.have.string(App.URL + '/data?')
+        var url_param = App.testing.url_param;
         expect(url_param(url2, 'method')).to.equal('get_indicator_meta');
         expect(url_param(url2, 'indicator')).to.equal('asdf');
     });
@@ -133,8 +128,8 @@ describe('Scenario1ChartView', function() {
                                    JSON.stringify(ajax_metadata));
 
         var container = this.chart.$el.find('.highcharts-chart')[0];
-        expect(render_highcharts.calledOnce).to.equal(true);
-        var call_args = render_highcharts.getCall(0).args;
+        expect(scenario1_chart.calledOnce).to.equal(true);
+        var call_args = scenario1_chart.getCall(0).args;
         expect(call_args[0]).to.equal(container);
         expect(call_args[1]['data']).to.deep.equal(ajax_data);
         expect(call_args[1]['indicator_label']).to.equal(

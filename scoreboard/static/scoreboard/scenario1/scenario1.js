@@ -107,7 +107,7 @@ App.Scenario1ChartView = Backbone.View.extend({
                                Math.round(this.y*10)/10 + ' %_ind';
                     }
                 };
-                App.render_highcharts(container, options);
+                App.scenario1_chart(container, options);
             });
         }
     }

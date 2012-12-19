@@ -18,6 +18,7 @@ describe('IndicatorMetadataView', function() {
 
         expect(server.requests.length).to.equal(1);
         var url = server.requests[0].url;
+        var url_param = App.testing.url_param;
         expect(url_param(url, 'method')).to.equal('get_indicator_meta');
         expect(url_param(url, 'indicator')).to.equal('asdf');
         expect(url_param(url, 'year')).to.equal(
