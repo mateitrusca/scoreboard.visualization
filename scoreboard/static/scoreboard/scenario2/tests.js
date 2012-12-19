@@ -36,10 +36,11 @@ describe('Scenario2FiltersView', function() {
 describe('Scenario2ChartView', function() {
     "use strict";
 
-    var server;
+    var server, scenario2_chart;
 
     beforeEach(function() {
         server = sinon.fakeServer.create();
+        scenario2_chart = sinon.stub(App, 'scenario2_chart');
 
         this.model = new Backbone.Model({'indicator': 'ind1'});
         this.chart = new App.Scenario2ChartView({model: this.model});
@@ -47,6 +48,7 @@ describe('Scenario2ChartView', function() {
 
     afterEach(function () {
         server.restore();
+        scenario2_chart.restore();
     });
 
     it('should fetch data from server', function() {
@@ -57,6 +59,20 @@ describe('Scenario2ChartView', function() {
         expect(url_param(url, 'indicator')).to.equal('ind1');
         expect(url_param(url, 'country')).to.equal(
             'http://data.lod2.eu/scoreboard/country/Denmark');
+    });
+
+    it('should render chart with the data', function() {
+        var ajax_data = [{'year': "2010", 'value': 0.18},
+                         {'year': "2011", 'value': 0.14}];
+        server.requests[0].respond(
+            200, {'Content-Type': 'application/json'},
+            JSON.stringify(ajax_data));
+
+        var container = this.chart.$el.find('.highcharts-chart')[0];
+        expect(scenario2_chart.calledOnce).to.equal(true);
+        var call_args = scenario2_chart.getCall(0).args;
+        expect(call_args[0]).to.equal(container);
+        expect(call_args[1]['data']).to.deep.equal(ajax_data);
     });
 
 });

@@ -56,8 +56,24 @@ App.Scenario2ChartView = Backbone.View.extend({
 
         var args = this.model.toJSON();
         args['country'] = 'http://data.lod2.eu/scoreboard/country/Denmark';
+        if(! args['indicator']) {
+            return;
+        }
         var data_ajax = $.get(App.URL + '/data',
             _({'method': 'get_one_indicator_country'}).extend(args));
+        $.when(data_ajax).done(
+            function(data_resp) {
+            var options = {
+                'data': data_resp,
+                'indicator_label': ('<br>% of enterprises using Radio ' +
+                            'Frequency Identification (RFID) technologies'),
+                'credits': {
+                    'href': 'http://ec.europa.eu/digital-agenda/en/graphs/',
+                    'text': 'European Commission, Digital Agenda Scoreboard'
+                }
+            };
+            App.scenario2_chart(container, options);
+        });
     }
 
 });
@@ -68,6 +84,11 @@ App.scenario2_initialize = function() {
     box.html(App.render('scoreboard/scenario2/scenario2.html'));
 
     App.filters = new Backbone.Model();
+
+    new App.Scenario2ChartView({
+        model: App.filters,
+        el: $('#the-chart')
+    });
 
     $.getJSON(App.URL + '/get_filters_scenario2', function(data) {
         new App.Scenario2FiltersView({
