@@ -45,6 +45,17 @@ App.Scenario2FiltersView = Backbone.View.extend({
 App.scenario2_initialize = function() {
     var box = $('#scenario-box');
     box.html(App.render('scoreboard/scenario2/scenario2.html'));
+
+    App.filters = new Backbone.Model();
+
+    $.getJSON(App.URL + '/get_filters_scenario2', function(data) {
+        new App.Scenario2FiltersView({
+            model: App.filters,
+            el: $('#the-filters'),
+            filters_data: data
+        });
+
+    });
 };
 
 })();
