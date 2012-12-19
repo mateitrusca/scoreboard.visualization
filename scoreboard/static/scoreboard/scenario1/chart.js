@@ -71,7 +71,8 @@ App.scenario1_chart = function(container, options) {
             {
                 name: options['indicator_label'],
                 color: '#7FB2F0',
-                data: values
+                data: values,
+                animation: false
             }
         ]
     };

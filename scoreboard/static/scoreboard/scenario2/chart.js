@@ -98,7 +98,8 @@ App.scenario2_chart = function(container, options) {
         },
         series: [{
             name: 'Denmark',
-            data: chart_data
+            data: chart_data,
+            animation: false
         }]
     };
 
