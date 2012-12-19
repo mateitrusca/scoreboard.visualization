@@ -75,11 +75,11 @@ describe('Scenario1FiltersView', function() {
 describe('Scenario1ChartView', function() {
     "use strict";
 
-    var server, render_highcharts;
+    var server, scenario1_chart;
 
     beforeEach(function() {
         server = sinon.fakeServer.create();
-        render_highcharts = sinon.stub(App, 'render_highcharts');
+        scenario1_chart = sinon.stub(App, 'scenario1_chart');
 
         this.model = new Backbone.Model;
         this.chart = new App.Scenario1ChartView({model: this.model});
@@ -91,7 +91,7 @@ describe('Scenario1ChartView', function() {
 
     afterEach(function () {
         server.restore();
-        render_highcharts.restore();
+        scenario1_chart.restore();
     });
 
     it('should fetch data from server', function() {
@@ -128,8 +128,8 @@ describe('Scenario1ChartView', function() {
                                    JSON.stringify(ajax_metadata));
 
         var container = this.chart.$el.find('.highcharts-chart')[0];
-        expect(render_highcharts.calledOnce).to.equal(true);
-        var call_args = render_highcharts.getCall(0).args;
+        expect(scenario1_chart.calledOnce).to.equal(true);
+        var call_args = scenario1_chart.getCall(0).args;
         expect(call_args[0]).to.equal(container);
         expect(call_args[1]['data']).to.deep.equal(ajax_data);
         expect(call_args[1]['indicator_label']).to.equal(

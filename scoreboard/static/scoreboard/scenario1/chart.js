@@ -2,7 +2,7 @@
 "use strict";
 
 
-App.render_highcharts = function(container, options) {
+App.scenario1_chart = function(container, options) {
     var data = _(options['data']).sortBy('value').reverse();
     var country_names = _(data).pluck('country_name');
     var values = _(data).pluck('value');
