@@ -63,12 +63,12 @@ App.Scenario2ChartView = Backbone.View.extend({
             _({'method': 'get_one_indicator_country'}).extend(args));
         var metadata_ajax = $.get(App.URL + '/data',
             _({'method': 'get_indicator_meta'}).extend(args));
-        $.when(data_ajax).done(
-            function(data_resp) {
+        $.when(data_ajax, metadata_ajax).done(
+            function(data_resp, metadata_resp) {
+            var metadata = metadata_resp[0][0];
             var options = {
-                'data': data_resp,
-                'indicator_label': ('<br>% of enterprises using Radio ' +
-                            'Frequency Identification (RFID) technologies'),
+                'data': data_resp[0],
+                'indicator_label': metadata['label'],
                 'credits': {
                     'href': 'http://ec.europa.eu/digital-agenda/en/graphs/',
                     'text': 'European Commission, Digital Agenda Scoreboard'
