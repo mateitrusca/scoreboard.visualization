@@ -31,3 +31,32 @@ describe('Scenario2FiltersView', function() {
     });
 
 });
+
+
+describe('Scenario2ChartView', function() {
+    "use strict";
+
+    var server;
+
+    beforeEach(function() {
+        server = sinon.fakeServer.create();
+
+        this.model = new Backbone.Model({'indicator': 'ind1'});
+        this.chart = new App.Scenario2ChartView({model: this.model});
+    });
+
+    afterEach(function () {
+        server.restore();
+    });
+
+    it('should fetch data from server', function() {
+        var url = server.requests[0].url;
+        expect(url).to.have.string(App.URL + '/data?')
+        var url_param = App.testing.url_param;
+        expect(url_param(url, 'method')).to.equal('get_one_indicator_country');
+        expect(url_param(url, 'indicator')).to.equal('ind1');
+        expect(url_param(url, 'country')).to.equal(
+            'http://data.lod2.eu/scoreboard/country/Denmark');
+    });
+
+});

@@ -42,6 +42,27 @@ App.Scenario2FiltersView = Backbone.View.extend({
 });
 
 
+App.Scenario2ChartView = Backbone.View.extend({
+
+    initialize: function() {
+        this.model.on('change', this.render, this);
+        this.render();
+    },
+
+    render: function() {
+        this.$el.html(App.render('scoreboard/scenario2/chart.html',
+                                 this.model.toJSON()));
+        var container = this.$el.find('.highcharts-chart')[0];
+
+        var args = this.model.toJSON();
+        args['country'] = 'http://data.lod2.eu/scoreboard/country/Denmark';
+        var data_ajax = $.get(App.URL + '/data',
+            _({'method': 'get_one_indicator_country'}).extend(args));
+    }
+
+});
+
+
 App.scenario2_initialize = function() {
     var box = $('#scenario-box');
     box.html(App.render('scoreboard/scenario2/scenario2.html'));
