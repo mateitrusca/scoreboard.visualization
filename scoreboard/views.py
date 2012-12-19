@@ -60,8 +60,15 @@ class ScenarioView(object):
     def scenario1(self):
         return self.render_template(entry_point='App.scenario1_initialize')
 
+    def scenario2(self):
+        return self.render_template(entry_point='App.scenario2_initialize')
+
 
 class GetFiltersView(object):
+
+    def json_response(self, data):
+        self.request.RESPONSE.setHeader("Content-Type", "application/json")
+        return json.dumps(data, indent=2, sort_keys=True)
 
     def scenario1(self):
         years = defaultdict(list)
@@ -76,9 +83,10 @@ class GetFiltersView(object):
                 'years': years[row['indicator']],
             })
 
-        self.request.RESPONSE.setHeader("Content-Type", "application/json")
-        out = {'indicators': indicators}
-        return json.dumps(out, indent=2, sort_keys=True)
+        return self.json_response({'indicators': indicators})
+
+    def scenario2(self):
+        return self.json_response({})
 
 
 class TestsView(object):
