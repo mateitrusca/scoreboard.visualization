@@ -61,6 +61,8 @@ App.Scenario2ChartView = Backbone.View.extend({
         }
         var data_ajax = $.get(App.URL + '/data',
             _({'method': 'get_one_indicator_country'}).extend(args));
+        var metadata_ajax = $.get(App.URL + '/data',
+            _({'method': 'get_indicator_meta'}).extend(args));
         $.when(data_ajax).done(
             function(data_resp) {
             var options = {

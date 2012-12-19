@@ -61,6 +61,14 @@ describe('Scenario2ChartView', function() {
             'http://data.lod2.eu/scoreboard/country/Denmark');
     });
 
+    it('should fetch metadata from server', function() {
+        var url2 = server.requests[1].url;
+        expect(url2).to.have.string(App.URL + '/data?')
+        var url_param = App.testing.url_param;
+        expect(url_param(url2, 'method')).to.equal('get_indicator_meta');
+        expect(url_param(url2, 'indicator')).to.equal('ind1');
+    });
+
     it('should render chart with the data', function() {
         var ajax_data = [{'year': "2010", 'value': 0.18},
                          {'year': "2011", 'value': 0.14}];
