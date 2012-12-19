@@ -72,13 +72,6 @@ describe('Scenario1FiltersView', function() {
 });
 
 
-var url_param = function(url, name){
-    var results = new RegExp('[\\?&]' + name + '=([^&#]*)').exec(url);
-    if (!results) { return null; }
-    return decodeURIComponent(results[1]);
-}
-
-
 describe('Scenario1ChartView', function() {
     "use strict";
 
@@ -104,6 +97,7 @@ describe('Scenario1ChartView', function() {
     it('should fetch data from server', function() {
         var url = server.requests[0].url;
         expect(url).to.have.string(App.URL + '/data?')
+        var url_param = App.testing.url_param;
         expect(url_param(url, 'method')).to.equal('get_one_indicator_year');
         expect(url_param(url, 'indicator')).to.equal('asdf');
         expect(url_param(url, 'year')).to.equal(
@@ -113,6 +107,7 @@ describe('Scenario1ChartView', function() {
     it('should fetch metadata from server', function() {
         var url2 = server.requests[1].url;
         expect(url2).to.have.string(App.URL + '/data?')
+        var url_param = App.testing.url_param;
         expect(url_param(url2, 'method')).to.equal('get_indicator_meta');
         expect(url_param(url2, 'indicator')).to.equal('asdf');
     });

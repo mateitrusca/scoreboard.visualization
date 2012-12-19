@@ -15,4 +15,12 @@ App.testing.choose_radio = function(inputs, value) {
     inputs.filter('[value=' + value + ']').attr('checked', 'checked').change();
 };
 
+
+App.testing.url_param = function(url, name){
+    var results = new RegExp('[\\?&]' + name + '=([^&#]*)').exec(url);
+    if (!results) { return null; }
+    return decodeURIComponent(results[1]);
+};
+
+
 })();
