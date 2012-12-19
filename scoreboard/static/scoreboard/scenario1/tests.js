@@ -23,6 +23,8 @@ describe('Scenario1FiltersView', function() {
         it('should select the current indicator', function() {
             this.model.set({'indicator': 'ind2'});
             App.testing.choose_option(this.view.$el.find('select'), 'ind2');
+            var option_two = this.view.$el.find('option[value=ind2]');
+            expect(option_two.attr('selected')).to.equal('selected');
         });
 
         it('should set year=null if missing from new indicator', function() {
