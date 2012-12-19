@@ -16,8 +16,8 @@ describe('Scenario1FiltersView', function() {
     describe('indicators selector', function() {
 
         it('should update model', function() {
-            App.testing.choose_option(this.view.$el.find('select'), 'ind1');
-            expect(this.model.get('indicator')).to.equal('ind1');
+            App.testing.choose_option(this.view.$el.find('select'), 'ind2');
+            expect(this.model.get('indicator')).to.equal('ind2');
         });
 
         it('should select the current indicator', function() {
