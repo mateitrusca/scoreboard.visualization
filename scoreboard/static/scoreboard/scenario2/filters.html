@@ -10,7 +10,7 @@
 
 <div>
   Select the countries:
-  <select name="country">
+  <select name="country" multiple="multiple">
   {{# countries }}
     <option {{# if selected }} selected="selected" {{/ if }}
             value="{{ uri }}">{{ label }}</option>

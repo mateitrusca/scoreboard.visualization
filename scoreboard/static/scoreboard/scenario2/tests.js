@@ -6,7 +6,7 @@ describe('Scenario2FiltersView', function() {
     beforeEach(function() {
         this.filters_data = {
             'indicators': [{'uri': 'ind1'}, {'uri': 'ind2'}],
-            'countries': [{'uri': 'fr'}, {'uri': 'dk'}]
+            'countries': [{'uri': 'fr'}, {'uri': 'dk'}, {'uri': 'es'}]
         };
         this.model = new Backbone.Model;
         this.view = new App.Scenario2FiltersView({
@@ -39,16 +39,21 @@ describe('Scenario2FiltersView', function() {
     describe('countries selector', function() {
 
         it('should update model', function() {
-            var country_select = this.view.$el.find('select[name=country]');
-            choose(country_select, 'dk');
-            expect(this.model.get('country')).to.equal('dk');
+            choose(this.view.$el.find('select[name=country]'), 'dk');
+            expect(this.model.get('country')).to.deep.equal(['dk']);
         });
 
-        it('should select the current value', function() {
-            this.model.set({'country': 'dk'});
-            var option_dk = this.view.$el.find('select[name=country] ' +
-                                               'option[value=dk]');
-            expect(option_dk.attr('selected')).to.equal('selected');
+        it('should update model with multiple values', function() {
+            choose(this.view.$el.find('select[name=country]'), 'dk');
+            choose(this.view.$el.find('select[name=country]'), 'es');
+            this.view.$el.filter('select[name=country]').change();
+            expect(this.model.get('country')).to.deep.equal(['dk', 'es']);
+        });
+
+        it('should select the current values', function() {
+            this.model.set({'country': ['dk', 'es']});
+            var sel = this.view.$el.find('select[name=country]');
+            expect(sel.val()).to.deep.equal(['dk', 'es']);
         });
 
     });

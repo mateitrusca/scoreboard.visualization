@@ -31,7 +31,7 @@ App.Scenario2FiltersView = Backbone.View.extend({
         }
 
         _(data['countries']).forEach(function(country) {
-            if(country['uri'] == value['country'])
+            if(_(value['country']).contains(country['uri']))
                 country['selected'] = true;
         });
 
