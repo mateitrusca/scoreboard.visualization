@@ -101,11 +101,11 @@ describe('Scenario2ChartView', function() {
     });
 
     it('should render chart with the data and metadata received', function() {
-        var ajax_data = [{'year': "2010", 'value': 0.18},
-                         {'year': "2011", 'value': 0.14}];
+        var data_dk = [{'year': "2010", 'value': 0.18},
+                       {'year': "2011", 'value': 0.14}];
         server.requests[0].respond(
             200, {'Content-Type': 'application/json'},
-            JSON.stringify(ajax_data));
+            JSON.stringify(data_dk));
 
         var ajax_metadata = [{
             'label': "The Label!",
@@ -119,7 +119,9 @@ describe('Scenario2ChartView', function() {
         expect(scenario2_chart.calledOnce).to.equal(true);
         var call_args = scenario2_chart.getCall(0).args;
         expect(call_args[0]).to.equal(container);
-        expect(call_args[1]['data']).to.deep.equal(ajax_data);
+        expect(call_args[1]['series']).to.deep.equal([
+            {'label': "Denmark", 'data': data_dk}
+        ]);
         expect(call_args[1]['indicator_label']).to.equal(
             ajax_metadata[0]['label']);
     });

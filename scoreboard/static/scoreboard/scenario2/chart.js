@@ -3,9 +3,14 @@
 
 
 App.scenario2_chart = function(container, options) {
-    var data = _(options['data']).sortBy('year');
+    var data = _(options['series'][0]['data']).sortBy('year');
     var years = _(data).pluck('year');
     var chart_data = _.zip(years, _(data).pluck('value'));
+    var series = [{
+        name: 'Denmark',
+        data: chart_data,
+        animation: false
+    }];
 
     var chartOptions = {
         chart: {
@@ -96,11 +101,7 @@ App.scenario2_chart = function(container, options) {
                 }
             }
         },
-        series: [{
-            name: 'Denmark',
-            data: chart_data,
-            animation: false
-        }]
+        series: series
     };
 
     var chart = new Highcharts.Chart(chartOptions);

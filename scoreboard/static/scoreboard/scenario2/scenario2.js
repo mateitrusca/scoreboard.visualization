@@ -73,7 +73,7 @@ App.Scenario2ChartView = Backbone.View.extend({
             function(data_resp, metadata_resp) {
             var metadata = metadata_resp[0][0];
             var options = {
-                'data': data_resp[0],
+                'series': [{'label': "Denmark", 'data': data_resp[0]}],
                 'indicator_label': metadata['label'],
                 'credits': {
                     'href': 'http://ec.europa.eu/digital-agenda/en/graphs/',
