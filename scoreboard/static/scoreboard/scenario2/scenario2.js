@@ -30,12 +30,20 @@ App.Scenario2FiltersView = Backbone.View.extend({
             current_indicator['selected'] = true;
         }
 
+        _(data['countries']).forEach(function(country) {
+            if(_(value['country']).contains(country['uri']))
+                country['selected'] = true;
+        });
+
         this.$el.html(App.render('scoreboard/scenario2/filters.html', data));
+
+        this.$el.find('select[name=country]').select2();
     },
 
     update_filters: function() {
         this.model.set({
-            'indicator': this.$el.find('select').val()
+            'indicator': this.$el.find('select[name=indicator]').val(),
+            'country': this.$el.find('select[name=country]').val()
         });
     }
 
@@ -44,7 +52,10 @@ App.Scenario2FiltersView = Backbone.View.extend({
 
 App.Scenario2ChartView = Backbone.View.extend({
 
-    initialize: function() {
+    initialize: function(options) {
+        var countries = options['countries'];
+        this.country_label = _.object(_(countries).pluck('uri'),
+                                      _(countries).pluck('label'));
         this.model.on('change', this.render, this);
         this.render();
     },
@@ -55,19 +66,34 @@ App.Scenario2ChartView = Backbone.View.extend({
         var container = this.$el.find('.highcharts-chart')[0];
 
         var args = this.model.toJSON();
-        args['country'] = 'http://data.lod2.eu/scoreboard/country/Denmark';
-        if(! args['indicator']) {
+        if(! (args['indicator'] && args['country'])) {
             return;
         }
-        var data_ajax = $.get(App.URL + '/data',
-            _({'method': 'get_one_indicator_country'}).extend(args));
+
         var metadata_ajax = $.get(App.URL + '/data',
             _({'method': 'get_indicator_meta'}).extend(args));
-        $.when(data_ajax, metadata_ajax).done(
-            function(data_resp, metadata_resp) {
-            var metadata = metadata_resp[0][0];
+        var requests = [metadata_ajax];
+
+        var countries = args['country'];
+        _(countries).forEach(function(country_uri) {
+            var data_ajax = $.get(App.URL + '/data', {
+                'method': 'get_one_indicator_country',
+                'indicator': args['indicator'],
+                'country': country_uri
+            });
+            requests.push(data_ajax);
+        });
+        var country_label = this.country_label;
+
+        var ajax_calls = $.when.apply($, requests);
+        ajax_calls.done(function() {
+            var responses = _(arguments).toArray();
+            var metadata = responses.shift()[0][0];
+            var series = _(responses).map(function(resp, n) {
+                return {'label': country_label[countries[n]], 'data': resp[0]};
+            });
             var options = {
-                'data': data_resp[0],
+                'series': series,
                 'indicator_label': metadata['label'],
                 'credits': {
                     'href': 'http://ec.europa.eu/digital-agenda/en/graphs/',
@@ -86,11 +112,7 @@ App.scenario2_initialize = function() {
     box.html(App.render('scoreboard/scenario2/scenario2.html'));
 
     App.filters = new Backbone.Model();
-
-    new App.Scenario2ChartView({
-        model: App.filters,
-        el: $('#the-chart')
-    });
+    App.router = new App.ChartRouter(App.filters);
 
     $.getJSON(App.URL + '/get_filters_scenario2', function(data) {
         new App.Scenario2FiltersView({
@@ -99,7 +121,15 @@ App.scenario2_initialize = function() {
             filters_data: data
         });
 
+        new App.Scenario2ChartView({
+            model: App.filters,
+            el: $('#the-chart'),
+            countries: data['countries']
+        });
+
     });
+
+    Backbone.history.start();
 };
 
 })();

@@ -1,9 +1,19 @@
 <div>
   Select one Indicator:
-  <select>
+  <select name="indicator">
   {{# indicators }}
     <option {{# if selected }} selected="selected" {{/ if }}
             value="{{ uri }}">{{ label }}</option>
   {{/ indicators }}
+  </select>
+</div>
+
+<div>
+  Select the countries:
+  <select name="country" multiple="multiple">
+  {{# countries }}
+    <option {{# if selected }} selected="selected" {{/ if }}
+            value="{{ uri }}">{{ label }}</option>
+  {{/ countries }}
   </select>
 </div>

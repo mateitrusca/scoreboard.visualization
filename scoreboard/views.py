@@ -93,7 +93,17 @@ class GetFiltersView(object):
                 'label': row['label'],
             })
 
-        return self.json_response({'indicators': indicators})
+        countries = []
+        for row in run_query(self.context['get_countries']):
+            countries.append({
+                'uri': row['country'],
+                'label': row['label'],
+            })
+
+        return self.json_response({
+            'indicators': indicators,
+            'countries': countries,
+        })
 
 
 class TestsView(object):

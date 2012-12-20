@@ -115,33 +115,12 @@ App.Scenario1ChartView = Backbone.View.extend({
 });
 
 
-
-App.Scenario1Router = Backbone.Router.extend({
-
-    initialize: function(model) {
-        this.model = model;
-        this.route(/^chart\?(.*)$/, 'chart');
-        var router = this;
-        this.model.on('change', function(filters) {
-            var state = encodeURIComponent(JSON.stringify(filters.toJSON()));
-            router.navigate('chart?' + state);
-        });
-    },
-
-    chart: function(state) {
-        var value = JSON.parse(decodeURIComponent(state));
-        this.model.set(value);
-    }
-
-});
-
-
 App.scenario1_initialize = function() {
     var box = $('#scenario-box');
     box.html(App.render('scoreboard/scenario1/scenario1.html'));
 
     App.filters = new Backbone.Model();
-    App.router = new App.Scenario1Router(App.filters);
+    App.router = new App.ChartRouter(App.filters);
 
     new App.Scenario1ChartView({
         model: App.filters,
