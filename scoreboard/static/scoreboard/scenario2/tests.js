@@ -2,7 +2,10 @@ describe('Scenario2FiltersView', function() {
     "use strict";
 
     beforeEach(function() {
-        this.filters_data = {'indicators': [{'uri': 'ind1'}, {'uri': 'ind2'}]};
+        this.filters_data = {
+            'indicators': [{'uri': 'ind1'}, {'uri': 'ind2'}],
+            'countries': [{'uri': 'fr'}, {'uri': 'dk'}]
+        };
         this.model = new Backbone.Model;
         this.view = new App.Scenario2FiltersView({
             model: this.model,
@@ -26,6 +29,16 @@ describe('Scenario2FiltersView', function() {
 
         it('should make an initial selection', function() {
             expect(this.model.get('indicator')).to.equal('ind1');
+        });
+
+    });
+
+    describe('countries selector', function() {
+
+        it('should update model', function() {
+            var country_select = this.view.$el.find('select[name=country]');
+            App.testing.choose_option(country_select, 'dk');
+            expect(this.model.get('country')).to.equal('dk');
         });
 
     });

@@ -35,7 +35,8 @@ App.Scenario2FiltersView = Backbone.View.extend({
 
     update_filters: function() {
         this.model.set({
-            'indicator': this.$el.find('select').val()
+            'indicator': this.$el.find('select').val(),
+            'country': this.$el.find('select[name=country]').val()
         });
     }
 

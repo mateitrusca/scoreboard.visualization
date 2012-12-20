@@ -7,3 +7,13 @@
   {{/ indicators }}
   </select>
 </div>
+
+<div>
+  Select the countries:
+  <select name="country">
+  {{# countries }}
+    <option {{# if selected }} selected="selected" {{/ if }}
+            value="{{ uri }}">{{ label }}</option>
+  {{/ countries }}
+  </select>
+</div>
