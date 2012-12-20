@@ -86,6 +86,7 @@ App.scenario2_initialize = function() {
     box.html(App.render('scoreboard/scenario2/scenario2.html'));
 
     App.filters = new Backbone.Model();
+    App.router = new App.ChartRouter(App.filters);
 
     new App.Scenario2ChartView({
         model: App.filters,
@@ -100,6 +101,8 @@ App.scenario2_initialize = function() {
         });
 
     });
+
+    Backbone.history.start();
 };
 
 })();
