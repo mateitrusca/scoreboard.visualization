@@ -70,7 +70,10 @@ describe('Scenario2ChartView', function() {
         server = sinon.fakeServer.create();
         scenario2_chart = sinon.stub(App, 'scenario2_chart');
 
-        this.model = new Backbone.Model({'indicator': 'ind1'});
+        this.model = new Backbone.Model({
+            'indicator': 'ind1',
+            'country': ['http://data.lod2.eu/scoreboard/country/Denmark'],
+        });
         this.chart = new App.Scenario2ChartView({model: this.model});
     });
 

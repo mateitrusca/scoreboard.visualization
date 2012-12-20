@@ -61,10 +61,10 @@ App.Scenario2ChartView = Backbone.View.extend({
         var container = this.$el.find('.highcharts-chart')[0];
 
         var args = this.model.toJSON();
-        args['country'] = 'http://data.lod2.eu/scoreboard/country/Denmark';
-        if(! args['indicator']) {
+        if(! (args['indicator'] && args['country'])) {
             return;
         }
+        args['country'] = args['country'][0];
         var data_ajax = $.get(App.URL + '/data',
             _({'method': 'get_one_indicator_country'}).extend(args));
         var metadata_ajax = $.get(App.URL + '/data',
