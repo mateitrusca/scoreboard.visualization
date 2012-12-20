@@ -64,16 +64,29 @@ App.Scenario2ChartView = Backbone.View.extend({
         if(! (args['indicator'] && args['country'])) {
             return;
         }
-        args['country'] = args['country'][0];
+
         var metadata_ajax = $.get(App.URL + '/data',
             _({'method': 'get_indicator_meta'}).extend(args));
-        var data_ajax = $.get(App.URL + '/data',
-            _({'method': 'get_one_indicator_country'}).extend(args));
-        $.when(metadata_ajax, data_ajax).done(
-            function(metadata_resp, data_resp) {
-            var metadata = metadata_resp[0][0];
+        var requests = [metadata_ajax];
+
+        _(args['country']).forEach(function(country_uri) {
+            var data_ajax = $.get(App.URL + '/data', {
+                'method': 'get_one_indicator_country',
+                'indicator': args['indicator'],
+                'country': country_uri
+            });
+            requests.push(data_ajax);
+        });
+
+        var ajax_calls = $.when.apply($, requests);
+        ajax_calls.done(function() {
+            var responses = _(arguments).toArray();
+            var metadata = responses.shift()[0][0];
+            var series = _(responses).map(function(resp) {
+                return {'label': "Denmark", 'data': resp[0]};
+            });
             var options = {
-                'series': [{'label': "Denmark", 'data': data_resp[0]}],
+                'series': series,
                 'indicator_label': metadata['label'],
                 'credits': {
                     'href': 'http://ec.europa.eu/digital-agenda/en/graphs/',

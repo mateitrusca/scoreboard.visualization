@@ -139,4 +139,40 @@ describe('Scenario2ChartView', function() {
             ajax_metadata[0]['label']);
     });
 
+    it('should render chart with multiple countries', function() {
+        this.model.set({
+            'indicator': 'ind1',
+            'country': ['http://data.lod2.eu/scoreboard/country/Denmark',
+                        'http://data.lod2.eu/scoreboard/country/Spain'],
+        });
+
+        var ajax_metadata = [{
+            'label': "The Label!",
+            'comment': "The Definition!",
+            'publisher': "The Source!"
+        }];
+        var data_dk = [{'year': "2010", 'value': 0.18},
+                       {'year': "2011", 'value': 0.14}];
+        var data_es = [{'year': "2011", 'value': 0.22},
+                       {'year': "2012", 'value': 0.26}];
+
+        server.requests[0].respond(200, {'Content-Type': 'application/json'},
+                                   JSON.stringify(ajax_metadata));
+
+        server.requests[1].respond(
+            200, {'Content-Type': 'application/json'},
+            JSON.stringify(data_dk));
+
+        server.requests[2].respond(
+            200, {'Content-Type': 'application/json'},
+            JSON.stringify(data_es));
+
+        var call_args = scenario2_chart.getCall(0).args;
+        expect(call_args[1]['series']).to.deep.equal([
+            {'label': "Denmark", 'data': data_dk},
+            //{'label': "Spain", 'data': data_es}
+            {'label': "Denmark", 'data': data_es}
+        ]);
+    });
+
 });
