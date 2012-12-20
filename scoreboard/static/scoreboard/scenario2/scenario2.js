@@ -30,6 +30,11 @@ App.Scenario2FiltersView = Backbone.View.extend({
             current_indicator['selected'] = true;
         }
 
+        _(data['countries']).forEach(function(country) {
+            if(country['uri'] == value['country'])
+                country['selected'] = true;
+        });
+
         this.$el.html(App.render('scoreboard/scenario2/filters.html', data));
     },
 

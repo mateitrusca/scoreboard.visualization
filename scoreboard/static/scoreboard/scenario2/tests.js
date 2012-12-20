@@ -44,6 +44,13 @@ describe('Scenario2FiltersView', function() {
             expect(this.model.get('country')).to.equal('dk');
         });
 
+        it('should select the current value', function() {
+            this.model.set({'country': 'dk'});
+            var option_dk = this.view.$el.find('select[name=country] ' +
+                                               'option[value=dk]');
+            expect(option_dk.attr('selected')).to.equal('selected');
+        });
+
     });
 
 });
