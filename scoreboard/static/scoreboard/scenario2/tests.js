@@ -1,6 +1,8 @@
 describe('Scenario2FiltersView', function() {
     "use strict";
 
+    var choose = App.testing.choose_option;
+
     beforeEach(function() {
         this.filters_data = {
             'indicators': [{'uri': 'ind1'}, {'uri': 'ind2'}],
@@ -16,14 +18,15 @@ describe('Scenario2FiltersView', function() {
     describe('indicators selector', function() {
 
         it('should update model', function() {
-            App.testing.choose_option(this.view.$el.find('select'), 'ind2');
+            choose(this.view.$el.find('select[name=indicator]'), 'ind2');
             expect(this.model.get('indicator')).to.equal('ind2');
         });
 
         it('should select the current indicator', function() {
             this.model.set({'indicator': 'ind2'});
-            App.testing.choose_option(this.view.$el.find('select'), 'ind2');
-            var option_two = this.view.$el.find('option[value=ind2]');
+            choose(this.view.$el.find('select[name=indicator]'), 'ind2');
+            var option_two = this.view.$el.find('select[name=indicator] ' +
+                                                'option[value=ind2]');
             expect(option_two.attr('selected')).to.equal('selected');
         });
 
@@ -37,7 +40,7 @@ describe('Scenario2FiltersView', function() {
 
         it('should update model', function() {
             var country_select = this.view.$el.find('select[name=country]');
-            App.testing.choose_option(country_select, 'dk');
+            choose(country_select, 'dk');
             expect(this.model.get('country')).to.equal('dk');
         });
 
