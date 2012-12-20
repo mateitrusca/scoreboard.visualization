@@ -71,7 +71,15 @@ describe('Scenario2ChartView', function() {
         scenario2_chart = sinon.stub(App, 'scenario2_chart');
 
         this.model = new Backbone.Model();
-        this.chart = new App.Scenario2ChartView({model: this.model});
+        this.chart = new App.Scenario2ChartView({
+            model: this.model,
+            countries: [
+                {'uri': 'http://data.lod2.eu/scoreboard/country/Denmark',
+                 'label': "Denmark"},
+                {'uri': 'http://data.lod2.eu/scoreboard/country/Spain',
+                 'label': "Spain"}
+            ]
+        });
     });
 
     afterEach(function () {
@@ -170,8 +178,7 @@ describe('Scenario2ChartView', function() {
         var call_args = scenario2_chart.getCall(0).args;
         expect(call_args[1]['series']).to.deep.equal([
             {'label': "Denmark", 'data': data_dk},
-            //{'label': "Spain", 'data': data_es}
-            {'label': "Denmark", 'data': data_es}
+            {'label': "Spain", 'data': data_es}
         ]);
     });
 

@@ -50,7 +50,10 @@ App.Scenario2FiltersView = Backbone.View.extend({
 
 App.Scenario2ChartView = Backbone.View.extend({
 
-    initialize: function() {
+    initialize: function(options) {
+        var countries = options['countries'];
+        this.country_label = _.object(_(countries).pluck('uri'),
+                                      _(countries).pluck('label'));
         this.model.on('change', this.render, this);
         this.render();
     },
@@ -69,7 +72,8 @@ App.Scenario2ChartView = Backbone.View.extend({
             _({'method': 'get_indicator_meta'}).extend(args));
         var requests = [metadata_ajax];
 
-        _(args['country']).forEach(function(country_uri) {
+        var countries = args['country'];
+        _(countries).forEach(function(country_uri) {
             var data_ajax = $.get(App.URL + '/data', {
                 'method': 'get_one_indicator_country',
                 'indicator': args['indicator'],
@@ -77,13 +81,14 @@ App.Scenario2ChartView = Backbone.View.extend({
             });
             requests.push(data_ajax);
         });
+        var country_label = this.country_label;
 
         var ajax_calls = $.when.apply($, requests);
         ajax_calls.done(function() {
             var responses = _(arguments).toArray();
             var metadata = responses.shift()[0][0];
-            var series = _(responses).map(function(resp) {
-                return {'label': "Denmark", 'data': resp[0]};
+            var series = _(responses).map(function(resp, n) {
+                return {'label': country_label[countries[n]], 'data': resp[0]};
             });
             var options = {
                 'series': series,
@@ -107,16 +112,17 @@ App.scenario2_initialize = function() {
     App.filters = new Backbone.Model();
     App.router = new App.ChartRouter(App.filters);
 
-    new App.Scenario2ChartView({
-        model: App.filters,
-        el: $('#the-chart')
-    });
-
     $.getJSON(App.URL + '/get_filters_scenario2', function(data) {
         new App.Scenario2FiltersView({
             model: App.filters,
             el: $('#the-filters'),
             filters_data: data
+        });
+
+        new App.Scenario2ChartView({
+            model: App.filters,
+            el: $('#the-chart'),
+            countries: data['countries']
         });
 
     });
