@@ -65,12 +65,12 @@ App.Scenario2ChartView = Backbone.View.extend({
             return;
         }
         args['country'] = args['country'][0];
-        var data_ajax = $.get(App.URL + '/data',
-            _({'method': 'get_one_indicator_country'}).extend(args));
         var metadata_ajax = $.get(App.URL + '/data',
             _({'method': 'get_indicator_meta'}).extend(args));
-        $.when(data_ajax, metadata_ajax).done(
-            function(data_resp, metadata_resp) {
+        var data_ajax = $.get(App.URL + '/data',
+            _({'method': 'get_one_indicator_country'}).extend(args));
+        $.when(metadata_ajax, data_ajax).done(
+            function(metadata_resp, data_resp) {
             var metadata = metadata_resp[0][0];
             var options = {
                 'series': [{'label': "Denmark", 'data': data_resp[0]}],

@@ -83,7 +83,7 @@ describe('Scenario2ChartView', function() {
     });
 
     it('should fetch data from server', function() {
-        var url = server.requests[0].url;
+        var url = server.requests[1].url;
         expect(url).to.have.string(App.URL + '/data?')
         var url_param = App.testing.url_param;
         expect(url_param(url, 'method')).to.equal('get_one_indicator_country');
@@ -93,7 +93,7 @@ describe('Scenario2ChartView', function() {
     });
 
     it('should fetch metadata from server', function() {
-        var url2 = server.requests[1].url;
+        var url2 = server.requests[0].url;
         expect(url2).to.have.string(App.URL + '/data?')
         var url_param = App.testing.url_param;
         expect(url_param(url2, 'method')).to.equal('get_indicator_meta');
@@ -101,19 +101,20 @@ describe('Scenario2ChartView', function() {
     });
 
     it('should render chart with the data and metadata received', function() {
-        var data_dk = [{'year': "2010", 'value': 0.18},
-                       {'year': "2011", 'value': 0.14}];
-        server.requests[0].respond(
-            200, {'Content-Type': 'application/json'},
-            JSON.stringify(data_dk));
-
         var ajax_metadata = [{
             'label': "The Label!",
             'comment': "The Definition!",
             'publisher': "The Source!"
         }];
-        server.requests[1].respond(200, {'Content-Type': 'application/json'},
+        var data_dk = [{'year': "2010", 'value': 0.18},
+                       {'year': "2011", 'value': 0.14}];
+
+        server.requests[0].respond(200, {'Content-Type': 'application/json'},
                                    JSON.stringify(ajax_metadata));
+
+        server.requests[1].respond(
+            200, {'Content-Type': 'application/json'},
+            JSON.stringify(data_dk));
 
         var container = this.chart.$el.find('.highcharts-chart')[0];
         expect(scenario2_chart.calledOnce).to.equal(true);
