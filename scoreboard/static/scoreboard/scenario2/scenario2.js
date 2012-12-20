@@ -110,6 +110,7 @@ App.Scenario2ChartView = Backbone.View.extend({
 App.scenario2_initialize = function() {
     var box = $('#scenario-box');
     box.html(App.render('scoreboard/scenario2/scenario2.html'));
+    box.addClass('scenario2');
 
     App.filters = new Backbone.Model();
     App.router = new App.ChartRouter(App.filters);
