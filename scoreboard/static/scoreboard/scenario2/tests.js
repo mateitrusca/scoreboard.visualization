@@ -70,10 +70,7 @@ describe('Scenario2ChartView', function() {
         server = sinon.fakeServer.create();
         scenario2_chart = sinon.stub(App, 'scenario2_chart');
 
-        this.model = new Backbone.Model({
-            'indicator': 'ind1',
-            'country': ['http://data.lod2.eu/scoreboard/country/Denmark'],
-        });
+        this.model = new Backbone.Model();
         this.chart = new App.Scenario2ChartView({model: this.model});
     });
 
@@ -83,6 +80,11 @@ describe('Scenario2ChartView', function() {
     });
 
     it('should fetch data from server', function() {
+        this.model.set({
+            'indicator': 'ind1',
+            'country': ['http://data.lod2.eu/scoreboard/country/Denmark'],
+        });
+
         var url = server.requests[1].url;
         expect(url).to.have.string(App.URL + '/data?')
         var url_param = App.testing.url_param;
@@ -93,6 +95,11 @@ describe('Scenario2ChartView', function() {
     });
 
     it('should fetch metadata from server', function() {
+        this.model.set({
+            'indicator': 'ind1',
+            'country': ['http://data.lod2.eu/scoreboard/country/Denmark'],
+        });
+
         var url2 = server.requests[0].url;
         expect(url2).to.have.string(App.URL + '/data?')
         var url_param = App.testing.url_param;
@@ -101,6 +108,11 @@ describe('Scenario2ChartView', function() {
     });
 
     it('should render chart with the data and metadata received', function() {
+        this.model.set({
+            'indicator': 'ind1',
+            'country': ['http://data.lod2.eu/scoreboard/country/Denmark'],
+        });
+
         var ajax_metadata = [{
             'label': "The Label!",
             'comment': "The Definition!",
