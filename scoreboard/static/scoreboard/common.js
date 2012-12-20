@@ -23,4 +23,25 @@ App.IndicatorMetadataView = Backbone.View.extend({
 
 });
 
+
+App.ChartRouter = Backbone.Router.extend({
+
+    initialize: function(model) {
+        this.model = model;
+        this.route(/^chart\?(.*)$/, 'chart');
+        var router = this;
+        this.model.on('change', function(filters) {
+            var state = encodeURIComponent(JSON.stringify(filters.toJSON()));
+            router.navigate('chart?' + state);
+        });
+    },
+
+    chart: function(state) {
+        var value = JSON.parse(decodeURIComponent(state));
+        this.model.set(value);
+    }
+
+});
+
+
 })();
