@@ -36,6 +36,8 @@ App.Scenario2FiltersView = Backbone.View.extend({
         });
 
         this.$el.html(App.render('scoreboard/scenario2/filters.html', data));
+
+        this.$el.find('select[name=country]').select2();
     },
 
     update_filters: function() {
