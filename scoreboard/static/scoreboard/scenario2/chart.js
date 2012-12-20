@@ -3,14 +3,20 @@
 
 
 App.scenario2_chart = function(container, options) {
-    var data = _(options['series'][0]['data']).sortBy('year');
-    var years = _(data).pluck('year');
-    var chart_data = _.zip(years, _(data).pluck('value'));
-    var series = [{
-        name: 'Denmark',
-        data: chart_data,
-        animation: false
-    }];
+    var year_min = 2004;
+    var year_max = 2012;
+    var all_years = _.range(year_min, year_max);
+
+    var series = _(options['series']).map(function(info) {
+        var pairs = _(info['data']).sortBy('year');
+        var chart_data = _.zip(_(pairs).pluck('year'),
+                               _(pairs).pluck('value'));
+        return {
+            'name': info['label'],
+            'data': chart_data,
+            'animation': false
+        };
+    });
 
     var chartOptions = {
         chart: {
@@ -41,9 +47,7 @@ App.scenario2_chart = function(container, options) {
 
         },
         xAxis: {
-            categories: years,
-            min: 2004,
-            max: 2012,
+            categories: all_years,
             labels: {
                 style: {
                     color: '#000000'
