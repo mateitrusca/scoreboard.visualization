@@ -38,5 +38,13 @@
     "query": "PREFIX prop: <http://data.lod2.eu/scoreboard/properties/>\r\nPREFIX qb: <http://purl.org/linked-data/cube#>\r\nPREFIX country: <http://data.lod2.eu/scoreboard/country/>\r\n\r\nSELECT (xsd:int(?year_label)) AS ?year, ?value WHERE {\r\n\r\n?observation\r\n    a qb:Observation ;\r\n    prop:indicator $indicator ;\r\n    prop:year ?year ;\r\n    prop:country $country ;\r\n    prop:value ?value .\r\n\r\n?year\r\n    rdfs:label ?year_label .\r\n\r\n}\r\n\r\nLIMIT 1000\r\n",
     "timeout": null,
     "title": ""
+  },
+  {
+    "arg_spec": "",
+    "endpoint_url": "http://virtuoso.scoreboard.edw.ro/sparql",
+    "id": "get_countries",
+    "query": "PREFIX geo: <http://ns.aksw.org/spatialHierarchy/>\r\n\r\nSELECT ?country ?label WHERE {\r\n\r\n?country\r\n    a geo:Country ;\r\n    geo:isLocatedIn <http://data.lod2.eu/scoreboard/country/European+Union+-+27+countries> ;\r\n    rdfs:label ?label .\r\n\r\n}\r\n\r\nORDER BY ?label\r\n\r\nLIMIT 1000",
+    "timeout": null,
+    "title": ""
   }
 ]
