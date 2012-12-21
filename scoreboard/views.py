@@ -165,13 +165,14 @@ class FixturesView(object):
             fixtures = json.load(f)
         n = 0
         for data in fixtures:
-            old_ob = self.context.get(data['id'], None)
+            id = str(data['id'])
+            old_ob = self.context.get(id, None)
             if old_ob is not None:
                 assert old_ob.meta_type == ZSPARQLMETHOD
-                del self.context[data['id']]
-            manage_addZSPARQLMethod(self.context, data['id'],
+                del self.context[id]
+            manage_addZSPARQLMethod(self.context, id,
                                     data['title'], data['endpoint_url'])
-            ob = self.context[data['id']]
+            ob = self.context[id]
             ob.timeout = data['timeout']
             ob.arg_spec = data['arg_spec']
             ob.query = data['query']
