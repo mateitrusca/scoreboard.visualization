@@ -5,16 +5,19 @@
 App.IndicatorMetadataView = Backbone.View.extend({
 
     initialize: function() {
-        this.model.on('change', this.render, this);
+        this.model.on('change:indicator', this.render, this);
         this.render();
     },
 
     render: function() {
         this.$el.html("loading ...");
-        var args = App.make_scenario1_filter_args(this.model);
+        var indicator = this.model.get('indicator');
         var $el = this.$el;
-        if(args) {
-            _(args).extend({'method': 'get_indicator_meta'});
+        if(indicator) {
+            var args = {
+                'method': 'get_indicator_meta',
+                'indicator': indicator
+            };
             $.get(App.URL + '/data', args, function(data) {
                 $el.html(App.render('scoreboard/metadata.html', data[0]));
             });

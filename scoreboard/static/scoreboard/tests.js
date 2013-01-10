@@ -13,7 +13,7 @@ describe('IndicatorMetadataView', function() {
 
     it('should display data from server', function() {
         var view = new App.IndicatorMetadataView({
-            model: new Backbone.Model({'indicator': 'asdf', 'year': '2002'})
+            model: new Backbone.Model({'indicator': 'asdf'})
         });
 
         expect(server.requests.length).to.equal(1);
@@ -21,8 +21,6 @@ describe('IndicatorMetadataView', function() {
         var url_param = App.testing.url_param;
         expect(url_param(url, 'method')).to.equal('get_indicator_meta');
         expect(url_param(url, 'indicator')).to.equal('asdf');
-        expect(url_param(url, 'year')).to.equal(
-            'http://data.lod2.eu/scoreboard/year/2002');
 
         var ajax_data = [{
             'label': "The Label!",
