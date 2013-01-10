@@ -131,7 +131,8 @@ App.scenario2_initialize = function() {
     });
 
     App.metadata = new App.IndicatorMetadataView({
-        model: App.filters
+        model: App.filters,
+        field: 'indicator'
     });
     $('#the-metadata').append(App.metadata.el);
 
