@@ -1,20 +1,20 @@
 <div>
   Select one Indicator (X-Axis):
   <select name="indicator_x">
-  {{# indicators }}
+  {{# indicators_for_x }}
     <option {{# if selected }} selected="selected" {{/ if }}
             value="{{ uri }}">{{ label }}</option>
-  {{/ indicators }}
+  {{/ indicators_for_x }}
   </select>
 </div>
 
 <div>
   Select one Indicator (Y-Axis):
   <select name="indicator_y">
-  {{# indicators }}
+  {{# indicators_for_y }}
     <option {{# if selected }} selected="selected" {{/ if }}
             value="{{ uri }}">{{ label }}</option>
-  {{/ indicators }}
+  {{/ indicators_for_y }}
   </select>
 </div>
 

@@ -62,4 +62,15 @@ describe('Scenario3FiltersView', function() {
 
     });
 
+    it('should remember selection', function() {
+        var value = {
+            'indicator_x': 'ind2',
+            'indicator_y': 'ind3',
+            'year': '2011'
+        };
+        this.model.set(value);
+        this.view.update_filters();
+        expect(this.model.toJSON()).to.deep.equal(value);
+    });
+
 });

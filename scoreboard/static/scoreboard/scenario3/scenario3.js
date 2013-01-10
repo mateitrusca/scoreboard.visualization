@@ -17,12 +17,22 @@ App.Scenario3FiltersView = Backbone.View.extend({
 
     render: function() {
         var value = this.model.toJSON();
-        var data = JSON.parse(this.filters_data);
-        var indicator_by_uri = _.object(_(data['indicators']).pluck('uri'),
-                                        data['indicators']);
 
-        var indicator_x = indicator_by_uri[value['indicator_x']];
-        var indicator_y = indicator_by_uri[value['indicator_y']];
+        var index_by = function(list, prop) {
+            return _.object(_(list).pluck(prop), list);
+        };
+
+        var data = {
+            'indicators_for_x': JSON.parse(this.filters_data)['indicators'],
+            'indicators_for_y': JSON.parse(this.filters_data)['indicators']
+        }
+
+        var index_x = index_by(data['indicators_for_x'], 'uri');
+        var index_y = index_by(data['indicators_for_y'], 'uri');
+        var indicator_x = index_x[value['indicator_x']];
+        var indicator_y = index_y[value['indicator_y']];
+        if(indicator_x) { indicator_x['selected'] = true; }
+        if(indicator_y) { indicator_y['selected'] = true; }
 
         if(indicator_x && indicator_y) {
             var years = _(indicator_x['years']).filter(function(y) {
@@ -30,7 +40,8 @@ App.Scenario3FiltersView = Backbone.View.extend({
             });
             data['years'] = _(years).map(function(year) {
                 return {
-                    'value': year
+                    'value': year,
+                    'selected': (year == value['year'])
                 }
             });
         } else {
