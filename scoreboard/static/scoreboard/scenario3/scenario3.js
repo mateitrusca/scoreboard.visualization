@@ -15,9 +15,7 @@ App.Scenario3FiltersView = Backbone.View.extend({
         this.render();
     },
 
-    render: function() {
-        var value = this.model.toJSON();
-
+    get_options: function(value) {
         var index_by = function(list, prop) {
             return _.object(_(list).pluck(prop), list);
         };
@@ -47,16 +45,25 @@ App.Scenario3FiltersView = Backbone.View.extend({
         } else {
             data['years'] = [];
         }
+        return data;
+    },
 
-        this.$el.html(App.render('scoreboard/scenario3/filters.html', data));
+    render: function() {
+        var options = this.get_options(this.model.toJSON());
+        this.$el.html(App.render('scoreboard/scenario3/filters.html', options));
     },
 
     update_filters: function() {
-        this.model.set({
+        var year = this.$el.find('[name=year]:checked').val();
+        var new_value = {
             'indicator_x': this.$el.find('select[name=indicator_x]').val(),
-            'indicator_y': this.$el.find('select[name=indicator_y]').val(),
-            'year': this.$el.find('[name=year]:checked').val()
-        });
+            'indicator_y': this.$el.find('select[name=indicator_y]').val()
+        };
+        var options = this.get_options(new_value);
+        var available_years = _(_(options['years']).pluck('value'));
+        if(! available_years.contains(year)) { year = null; }
+        new_value['year'] = year;
+        this.model.set(new_value);
     }
 
 });

@@ -60,6 +60,13 @@ describe('Scenario3FiltersView', function() {
             expect(this.model.get('year')).to.equal('2011');
         });
 
+        it('should deselect year if not available', function() {
+            this.model.set({'indicator_x': 'ind2', 'indicator_y': 'ind3',
+                            'year': '2011'});
+            choose(this.view.$el.find('select[name=indicator_x]'), 'ind1');
+            expect(this.model.get('year')).to.equal(null);
+        });
+
     });
 
     it('should remember selection', function() {
