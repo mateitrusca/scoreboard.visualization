@@ -56,7 +56,7 @@ App.scenario2_chart = function(container, options) {
         },
         yAxis: {
             title: {
-                text: '%_ent',
+                text: options['indicator_label'],
                 style: {
                     color: '#000000',
                     fontWeight: 'bold'
