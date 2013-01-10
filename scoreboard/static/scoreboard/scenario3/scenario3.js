@@ -70,9 +70,25 @@ App.Scenario3FiltersView = Backbone.View.extend({
 
 
 App.scenario3_initialize = function() {
+
     var box = $('#scenario-box');
     box.html(App.render('scoreboard/scenario3/scenario3.html'));
     box.addClass('scenario3');
+
+    App.filters = new Backbone.Model();
+    App.router = new App.ChartRouter(App.filters);
+
+    $.getJSON(App.URL + '/get_filters_scenario1', function(data) {
+        new App.Scenario3FiltersView({
+            model: App.filters,
+            el: $('#the-filters'),
+            filters_data: data
+        });
+
+    });
+
+    Backbone.history.start();
+
 };
 
 
