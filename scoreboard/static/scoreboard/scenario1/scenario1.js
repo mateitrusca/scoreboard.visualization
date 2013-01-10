@@ -46,21 +46,13 @@ App.Scenario1FiltersView = Backbone.View.extend({
     },
 
     update_filters: function() {
-        var indicator = this.$el.find('select').val();
+        var new_value = {'indicator': this.$el.find('select').val()};
         var year = this.$el.find('input[name=year]:checked').val();
-
-        var data = JSON.parse(this.filters_data);
-        var indicator_by_uri = _.object(_(data['indicators']).pluck('uri'),
-                                        data['indicators']);
-        var current_indicator = indicator_by_uri[indicator];
-        if(! _(current_indicator['years']).contains(year)) {
-            year = null;
-        }
-
-        this.model.set({
-            'indicator': indicator,
-            'year': year
-        });
+        var options = this.get_options(new_value);
+        var available_years = _(_(options['years']).pluck('value'));
+        if(! available_years.contains(year)) { year = null; }
+        new_value['year'] = year;
+        this.model.set(new_value);
     }
 
 });
