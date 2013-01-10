@@ -25,17 +25,17 @@ App.Scenario1FiltersView = Backbone.View.extend({
     render: function() {
         var value = this.model.toJSON();
         var data = JSON.parse(this.filters_data);
-        var indicator_by_uri = _.object(_(data['indicators']).pluck('uri'),
-                                        data['indicators']);
-        var current_indicator = indicator_by_uri[value['indicator']];
-        if(current_indicator) {
-            data['years'] = _(current_indicator['years']).map(function(year) {
+        var index = App.index_by(data['indicators'], 'uri');
+        var indicator = index[value['indicator']];
+
+        if(indicator) {
+            data['years'] = _(indicator['years']).map(function(year) {
                 return {
                     'value': year,
                     'selected': (year == value['year'])
                 }
             });
-            current_indicator['selected'] = true;
+            indicator['selected'] = true;
         }
 
         this.$el.html(App.render('scoreboard/scenario1/filters.html', data));
