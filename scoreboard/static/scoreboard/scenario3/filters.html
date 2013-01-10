@@ -1,0 +1,9 @@
+<div>
+  Select one Indicator (X-Axis):
+  <select name="indicator_x">
+  {{# indicators }}
+    <option {{# if selected }} selected="selected" {{/ if }}
+            value="{{ uri }}">{{ label }}</option>
+  {{/ indicators }}
+  </select>
+</div>
