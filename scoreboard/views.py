@@ -63,6 +63,9 @@ class ScenarioView(object):
     def scenario2(self):
         return self.render_template(entry_point='App.scenario2_initialize')
 
+    def scenario3(self):
+        return self.render_template(entry_point='App.scenario3_initialize')
+
 
 class GetFiltersView(object):
 

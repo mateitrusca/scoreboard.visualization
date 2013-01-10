@@ -4,14 +4,15 @@
 
 App.IndicatorMetadataView = Backbone.View.extend({
 
-    initialize: function() {
-        this.model.on('change:indicator', this.render, this);
+    initialize: function(options) {
+        this.field = options['field'];
+        this.model.on('change:' + this.field, this.render, this);
         this.render();
     },
 
     render: function() {
         this.$el.html("loading ...");
-        var indicator = this.model.get('indicator');
+        var indicator = this.model.get(this.field);
         var $el = this.$el;
         if(indicator) {
             var args = {

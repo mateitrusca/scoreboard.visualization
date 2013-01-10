@@ -13,7 +13,10 @@ describe('IndicatorMetadataView', function() {
 
     it('should display data from server', function() {
         var view = new App.IndicatorMetadataView({
-            model: new Backbone.Model({'indicator': 'asdf'})
+            model: new Backbone.Model({
+                'indicator': 'asdf',
+                'field': 'indicator'
+            });
         });
 
         expect(server.requests.length).to.equal(1);
