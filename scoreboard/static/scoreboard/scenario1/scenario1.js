@@ -22,8 +22,7 @@ App.Scenario1FiltersView = Backbone.View.extend({
         this.render();
     },
 
-    render: function() {
-        var value = this.model.toJSON();
+    get_options: function(value) {
         var data = JSON.parse(this.filters_data);
         var index = App.index_by(data['indicators'], 'uri');
         var indicator = index[value['indicator']];
@@ -38,7 +37,12 @@ App.Scenario1FiltersView = Backbone.View.extend({
             indicator['selected'] = true;
         }
 
-        this.$el.html(App.render('scoreboard/scenario1/filters.html', data));
+        return data;
+    },
+
+    render: function() {
+        var options = this.get_options(this.model.toJSON());
+        this.$el.html(App.render('scoreboard/scenario1/filters.html', options));
     },
 
     update_filters: function() {
