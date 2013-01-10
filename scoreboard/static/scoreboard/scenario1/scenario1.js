@@ -136,10 +136,10 @@ App.scenario1_initialize = function() {
 
     });
 
-    new App.IndicatorMetadataView({
-        model: App.filters,
-        el: $('#the-metadata')
+    App.metadata = new App.IndicatorMetadataView({
+        model: App.filters
     });
+    $('#the-metadata').append(App.metadata.el);
 
     Backbone.history.start();
 };
