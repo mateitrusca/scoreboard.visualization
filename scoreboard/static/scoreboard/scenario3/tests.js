@@ -19,6 +19,11 @@ describe('Scenario3FiltersView', function() {
             expect(this.model.get('indicator_x')).to.equal('ind2');
         });
 
+        it('should select y axis', function() {
+            choose(this.view.$el.find('select[name=indicator_y]'), 'ind2');
+            expect(this.model.get('indicator_y')).to.equal('ind2');
+        });
+
     });
 
 });

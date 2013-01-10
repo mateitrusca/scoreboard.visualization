@@ -7,3 +7,13 @@
   {{/ indicators }}
   </select>
 </div>
+
+<div>
+  Select one Indicator (Y-Axis):
+  <select name="indicator_y">
+  {{# indicators }}
+    <option {{# if selected }} selected="selected" {{/ if }}
+            value="{{ uri }}">{{ label }}</option>
+  {{/ indicators }}
+  </select>
+</div>
