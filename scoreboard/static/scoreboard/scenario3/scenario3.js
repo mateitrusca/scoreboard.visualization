@@ -87,6 +87,18 @@ App.scenario3_initialize = function() {
 
     });
 
+    App.metadata_x = new App.IndicatorMetadataView({
+        model: App.filters,
+        field: 'indicator_x'
+    });
+    $('#the-metadata').append(App.metadata_x.el);
+
+    App.metadata_y = new App.IndicatorMetadataView({
+        model: App.filters,
+        field: 'indicator_y'
+    });
+    $('#the-metadata').append(App.metadata_y.el);
+
     Backbone.history.start();
 
 };
