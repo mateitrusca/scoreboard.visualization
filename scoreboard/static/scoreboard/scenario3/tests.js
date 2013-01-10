@@ -53,6 +53,13 @@ describe('Scenario3FiltersView', function() {
             expect(year_options(this.view)).to.deep.equal([]);
         });
 
+        it('should select year', function() {
+            this.model.set({'indicator_x': 'ind2', 'indicator_y': 'ind3'});
+            App.testing.choose_radio(this.view.$el.find('input[name=year]'),
+                                     '2011');
+            expect(this.model.get('year')).to.equal('2011');
+        });
+
     });
 
 });

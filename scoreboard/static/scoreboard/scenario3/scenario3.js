@@ -5,7 +5,8 @@
 App.Scenario3FiltersView = Backbone.View.extend({
 
     events: {
-        'change select': 'update_filters'
+        'change select': 'update_filters',
+        'change input[name=year]': 'update_filters'
     },
 
     initialize: function(options) {
@@ -42,7 +43,8 @@ App.Scenario3FiltersView = Backbone.View.extend({
     update_filters: function() {
         this.model.set({
             'indicator_x': this.$el.find('select[name=indicator_x]').val(),
-            'indicator_y': this.$el.find('select[name=indicator_y]').val()
+            'indicator_y': this.$el.find('select[name=indicator_y]').val(),
+            'year': this.$el.find('[name=year]:checked').val()
         });
     }
 
