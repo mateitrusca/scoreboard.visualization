@@ -17,3 +17,14 @@
   {{/ indicators }}
   </select>
 </div>
+
+<div>
+  Select the Year:
+  {{# years }}
+    <label>
+      <input type="radio" name="year" value="{{ value }}"
+             {{# if selected}} checked="checked" {{/ if }}>
+      {{ value }}
+    </label>
+  {{/ years }}
+</div>

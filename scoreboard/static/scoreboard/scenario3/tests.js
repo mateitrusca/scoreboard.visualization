@@ -38,6 +38,16 @@ describe('Scenario3FiltersView', function() {
             }).get();
         };
 
+        it('should display 2010 for ind1/ind2', function() {
+            this.model.set({'indicator_x': 'ind1', 'indicator_y': 'ind2'});
+            expect(year_options(this.view)).to.deep.equal(['2010']);
+        });
+
+        it('should display 2011 and 2012 for ind2/ind3', function() {
+            this.model.set({'indicator_x': 'ind2', 'indicator_y': 'ind3'});
+            expect(year_options(this.view)).to.deep.equal(['2011', '2012']);
+        });
+
         it('should display nothing for ind1/ind3', function() {
             this.model.set({'indicator_x': 'ind1', 'indicator_y': 'ind3'});
             expect(year_options(this.view)).to.deep.equal([]);
