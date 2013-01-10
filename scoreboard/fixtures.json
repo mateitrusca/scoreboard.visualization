@@ -43,7 +43,7 @@
     "arg_spec": "",
     "endpoint_url": "http://virtuoso.scoreboard.edw.ro/sparql",
     "id": "get_countries",
-    "query": "PREFIX geo: <http://ns.aksw.org/spatialHierarchy/>\r\n\r\nSELECT ?country ?label WHERE {\r\n\r\n?country\r\n    a geo:Country ;\r\n    geo:isLocatedIn <http://data.lod2.eu/scoreboard/country/European+Union+-+27+countries> ;\r\n    rdfs:label ?label .\r\n\r\n}\r\n\r\nORDER BY ?label\r\n\r\nLIMIT 1000",
+    "query": "PREFIX geo: <http://ns.aksw.org/spatialHierarchy/>\r\n\r\nSELECT ?country ?label WHERE {\r\n\r\n?country\r\n    a ?type ;\r\n    rdfs:label ?label .\r\n\r\nFILTER (?type = <http://ns.aksw.org/spatialHierarchy/Country> or\r\n        ?type = <http://ns.aksw.org/spatialHierarchy/SpatialArea>)\r\n\r\n}\r\n\r\nORDER BY ?label\r\n\r\nLIMIT 1000",
     "timeout": null,
     "title": ""
   }
