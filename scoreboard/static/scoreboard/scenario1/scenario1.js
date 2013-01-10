@@ -22,41 +22,37 @@ App.Scenario1FiltersView = Backbone.View.extend({
         this.render();
     },
 
-    render: function() {
-        var value = this.model.toJSON();
+    get_options: function(value) {
         var data = JSON.parse(this.filters_data);
-        var indicator_by_uri = _.object(_(data['indicators']).pluck('uri'),
-                                        data['indicators']);
-        var current_indicator = indicator_by_uri[value['indicator']];
-        if(current_indicator) {
-            data['years'] = _(current_indicator['years']).map(function(year) {
+        var index = App.index_by(data['indicators'], 'uri');
+        var indicator = index[value['indicator']];
+
+        if(indicator) {
+            data['years'] = _(indicator['years']).map(function(year) {
                 return {
                     'value': year,
                     'selected': (year == value['year'])
                 }
             });
-            current_indicator['selected'] = true;
+            indicator['selected'] = true;
         }
 
-        this.$el.html(App.render('scoreboard/scenario1/filters.html', data));
+        return data;
+    },
+
+    render: function() {
+        var options = this.get_options(this.model.toJSON());
+        this.$el.html(App.render('scoreboard/scenario1/filters.html', options));
     },
 
     update_filters: function() {
-        var indicator = this.$el.find('select').val();
+        var new_value = {'indicator': this.$el.find('select').val()};
         var year = this.$el.find('input[name=year]:checked').val();
-
-        var data = JSON.parse(this.filters_data);
-        var indicator_by_uri = _.object(_(data['indicators']).pluck('uri'),
-                                        data['indicators']);
-        var current_indicator = indicator_by_uri[indicator];
-        if(! _(current_indicator['years']).contains(year)) {
-            year = null;
-        }
-
-        this.model.set({
-            'indicator': indicator,
-            'year': year
-        });
+        var options = this.get_options(new_value);
+        var available_years = _(_(options['years']).pluck('value'));
+        if(! available_years.contains(year)) { year = null; }
+        new_value['year'] = year;
+        this.model.set(new_value);
     }
 
 });
