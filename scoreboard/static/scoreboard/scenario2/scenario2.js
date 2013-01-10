@@ -136,6 +136,12 @@ App.scenario2_initialize = function() {
     });
 
     Backbone.history.start();
+
+    if(! App.filters.get('country')) {
+        var EU27 = ("http://data.lod2.eu/scoreboard/country/" +
+                    "European+Union+-+27+countries");
+        App.filters.set('country', [EU27]);
+    }
 };
 
 })();
