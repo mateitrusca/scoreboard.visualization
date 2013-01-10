@@ -80,7 +80,7 @@ class GetFiltersView(object):
             indicators.append({
                 'uri': row['indicator'],
                 'label': row['label'],
-                'years': years[row['indicator']],
+                'years': sorted(years[row['indicator']], reverse=True),
             })
 
         return self.json_response({'indicators': indicators})
