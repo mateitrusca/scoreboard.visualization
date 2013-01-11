@@ -16,7 +16,7 @@ describe('IndicatorMetadataView', function() {
     it('should display data from server', function() {
         var view = new App.IndicatorMetadataView({
             model: new Backbone.Model({
-                'indicator': 'asdf',
+                'indicator': 'asdf'
             }),
             field: 'indicator'
         });

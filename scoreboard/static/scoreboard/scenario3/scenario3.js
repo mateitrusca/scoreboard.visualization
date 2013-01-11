@@ -24,7 +24,7 @@ App.Scenario3FiltersView = Backbone.View.extend({
         var data = {
             'indicators_for_x': JSON.parse(this.filters_data)['indicators'],
             'indicators_for_y': JSON.parse(this.filters_data)['indicators']
-        }
+        };
 
         var index_x = App.index_by(data['indicators_for_x'], 'uri');
         var index_y = App.index_by(data['indicators_for_y'], 'uri');
@@ -41,7 +41,7 @@ App.Scenario3FiltersView = Backbone.View.extend({
                 return {
                     'value': year,
                     'selected': (year == value['year'])
-                }
+                };
             });
         } else {
             data['years'] = [];

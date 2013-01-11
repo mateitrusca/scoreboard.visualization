@@ -37,7 +37,7 @@ App.Scenario1FiltersView = Backbone.View.extend({
                 return {
                     'value': year,
                     'selected': (year == value['year'])
-                }
+                };
             });
             indicator['selected'] = true;
         }
