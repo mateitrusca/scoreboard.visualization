@@ -4,6 +4,8 @@
 
 App.Scenario3FiltersView = Backbone.View.extend({
 
+    template: App.get_template('scoreboard/scenario3/filters.html'),
+
     events: {
         'change select': 'update_filters',
         'change input[name=year]': 'update_filters'
@@ -46,7 +48,7 @@ App.Scenario3FiltersView = Backbone.View.extend({
 
     render: function() {
         var options = this.get_options(this.model.toJSON());
-        this.$el.html(App.render('scoreboard/scenario3/filters.html', options));
+        this.$el.html(this.template(options));
     },
 
     update_filters: function() {
@@ -68,7 +70,7 @@ App.Scenario3FiltersView = Backbone.View.extend({
 App.scenario3_initialize = function() {
 
     var box = $('#scenario-box');
-    box.html(App.render('scoreboard/scenario3/scenario3.html'));
+    box.html(App.get_template('scoreboard/scenario3/scenario3.html')());
     box.addClass('scenario3');
 
     App.filters = new Backbone.Model();

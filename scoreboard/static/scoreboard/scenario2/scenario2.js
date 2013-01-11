@@ -4,6 +4,8 @@
 
 App.Scenario2FiltersView = Backbone.View.extend({
 
+    template: App.get_template('scoreboard/scenario2/filters.html'),
+
     events: {
         'change select': 'update_filters'
     },
@@ -35,7 +37,7 @@ App.Scenario2FiltersView = Backbone.View.extend({
                 country['selected'] = true;
         });
 
-        this.$el.html(App.render('scoreboard/scenario2/filters.html', data));
+        this.$el.html(this.template(data));
 
         this.$el.find('select[name=country]').select2();
     },
@@ -52,6 +54,8 @@ App.Scenario2FiltersView = Backbone.View.extend({
 
 App.Scenario2ChartView = Backbone.View.extend({
 
+    template: App.get_template('scoreboard/scenario2/chart.html'),
+
     initialize: function(options) {
         var countries = options['countries'];
         this.country_label = _.object(_(countries).pluck('uri'),
@@ -61,8 +65,7 @@ App.Scenario2ChartView = Backbone.View.extend({
     },
 
     render: function() {
-        this.$el.html(App.render('scoreboard/scenario2/chart.html',
-                                 this.model.toJSON()));
+        this.$el.html(this.template(this.model.toJSON()));
         var container = this.$el.find('.highcharts-chart')[0];
 
         var args = this.model.toJSON();
@@ -108,8 +111,9 @@ App.Scenario2ChartView = Backbone.View.extend({
 
 
 App.scenario2_initialize = function() {
+
     var box = $('#scenario-box');
-    box.html(App.render('scoreboard/scenario2/scenario2.html'));
+    box.html(App.get_template('scoreboard/scenario2/scenario2.html')());
     box.addClass('scenario2');
 
     App.filters = new Backbone.Model();

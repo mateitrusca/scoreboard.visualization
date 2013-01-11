@@ -4,6 +4,8 @@
 
 App.IndicatorMetadataView = Backbone.View.extend({
 
+    template: App.get_template('scoreboard/metadata.html'),
+
     initialize: function(options) {
         this.field = options['field'];
         this.model.on('change:' + this.field, this.render, this);
@@ -14,13 +16,14 @@ App.IndicatorMetadataView = Backbone.View.extend({
         this.$el.html("loading ...");
         var indicator = this.model.get(this.field);
         var $el = this.$el;
+        var template = this.template;
         if(indicator) {
             var args = {
                 'method': 'get_indicator_meta',
                 'indicator': indicator
             };
             $.get(App.URL + '/data', args, function(data) {
-                $el.html(App.render('scoreboard/metadata.html', data[0]));
+                $el.html(template(data[0]));
             });
         }
     }
