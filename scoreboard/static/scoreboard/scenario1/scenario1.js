@@ -4,6 +4,8 @@
 
 App.Scenario1FiltersView = Backbone.View.extend({
 
+    template: App.get_template('scoreboard/scenario1/filters.html'),
+
     events: {
         'change select': 'update_filters',
         'change input[name=year]': 'update_filters'
@@ -42,7 +44,7 @@ App.Scenario1FiltersView = Backbone.View.extend({
 
     render: function() {
         var options = this.get_options(this.model.toJSON());
-        this.$el.html(App.render('scoreboard/scenario1/filters.html', options));
+        this.$el.html(this.template(options));
     },
 
     update_filters: function() {
@@ -72,14 +74,15 @@ App.make_scenario1_filter_args = function(model) {
 
 App.Scenario1ChartView = Backbone.View.extend({
 
+    template: App.get_template('scoreboard/scenario1/chart.html'),
+
     initialize: function() {
         this.model.on('change', this.render, this);
         this.render();
     },
 
     render: function() {
-        this.$el.html(App.render('scoreboard/scenario1/chart.html',
-                                 this.model.toJSON()));
+        this.$el.html(this.template(this.model.toJSON()));
         var container = this.$el.find('.highcharts-chart')[0];
         var args = App.make_scenario1_filter_args(this.model);
         if(args) {
@@ -113,7 +116,7 @@ App.Scenario1ChartView = Backbone.View.extend({
 
 App.scenario1_initialize = function() {
     var box = $('#scenario-box');
-    box.html(App.render('scoreboard/scenario1/scenario1.html'));
+    box.html(App.get_template('scoreboard/scenario1/scenario1.html')());
 
     App.filters = new Backbone.Model();
     App.router = new App.ChartRouter(App.filters);
