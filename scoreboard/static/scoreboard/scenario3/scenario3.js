@@ -76,7 +76,7 @@ App.scenario3_initialize = function() {
     App.filters = new Backbone.Model();
     App.router = new App.ChartRouter(App.filters);
 
-    $.getJSON(App.URL + '/get_filters_scenario1', function(data) {
+    $.getJSON(App.URL + '/filters_data', function(data) {
         new App.Scenario3FiltersView({
             model: App.filters,
             el: $('#the-filters'),

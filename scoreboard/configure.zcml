@@ -24,25 +24,9 @@
     />
 
   <browser:page
-    name="get_filters_scenario1"
-    for=".views.IScoreboard"
-    class=".views.GetFiltersView"
-    attribute="scenario1"
-    permission="zope2.View"
-    />
-
-  <browser:page
     name="scenario2"
     for=".views.IScoreboard"
     class=".views.ScenarioView"
-    attribute="scenario2"
-    permission="zope2.View"
-    />
-
-  <browser:page
-    name="get_filters_scenario2"
-    for=".views.IScoreboard"
-    class=".views.GetFiltersView"
     attribute="scenario2"
     permission="zope2.View"
     />
@@ -52,6 +36,14 @@
     for=".views.IScoreboard"
     class=".views.ScenarioView"
     attribute="scenario3"
+    permission="zope2.View"
+    />
+
+  <browser:page
+    name="filters_data"
+    for=".views.IScoreboard"
+    class=".views.ScenarioView"
+    attribute="filters_data"
     permission="zope2.View"
     />
 

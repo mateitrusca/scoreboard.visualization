@@ -126,7 +126,7 @@ App.scenario1_initialize = function() {
         el: $('#the-chart')
     });
 
-    $.getJSON(App.URL + '/get_filters_scenario1', function(data) {
+    $.getJSON(App.URL + '/filters_data', function(data) {
         new App.Scenario1FiltersView({
             model: App.filters,
             el: $('#the-filters'),

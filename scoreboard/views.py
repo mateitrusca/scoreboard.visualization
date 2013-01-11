@@ -44,6 +44,10 @@ class IScoreboard(Interface):
 
 class ScenarioView(object):
 
+    def json_response(self, data):
+        self.request.RESPONSE.setHeader("Content-Type", "application/json")
+        return json.dumps(data, indent=2, sort_keys=True)
+
     def render_template(self, name='scenario.html', **kwargs):
         data = {'URL': self.context.absolute_url()}
         data.update(kwargs)
@@ -61,14 +65,7 @@ class ScenarioView(object):
     def scenario3(self):
         return self.render_template(entry_point='App.scenario3_initialize')
 
-
-class GetFiltersView(object):
-
-    def json_response(self, data):
-        self.request.RESPONSE.setHeader("Content-Type", "application/json")
-        return json.dumps(data, indent=2, sort_keys=True)
-
-    def scenario1(self):
+    def filters_data(self):
         years = defaultdict(list)
         for row in run_query(self.context['get_all_indicators_to_years']):
             years[row['indicator']].append(row['year_label'])
@@ -79,16 +76,6 @@ class GetFiltersView(object):
                 'uri': row['indicator'],
                 'label': row['label'],
                 'years': sorted(years[row['indicator']], reverse=True),
-            })
-
-        return self.json_response({'indicators': indicators})
-
-    def scenario2(self):
-        indicators = []
-        for row in run_query(self.context['get_all_indicator_labels']):
-            indicators.append({
-                'uri': row['indicator'],
-                'label': row['label'],
             })
 
         countries = []
