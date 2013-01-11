@@ -113,6 +113,10 @@ describe('Scenario3ChartView', function() {
         var url = data_request.url;
         expect(url).to.have.string(App.URL + '/data?');
         expect(url_param(url, 'method')).to.equal('get_two_indicators_year');
+        expect(url_param(url, 'indicator_x')).to.equal('ind2');
+        expect(url_param(url, 'indicator_y')).to.equal('ind3');
+        expect(url_param(url, 'year')).to.equal(
+            'http://data.lod2.eu/scoreboard/year/2011');
         data_request.respond(200, {'Content-Type': 'application/json'},
                                    JSON.stringify(series));
         expect(this.scenario3_chart.calledOnce).to.equal(true);
