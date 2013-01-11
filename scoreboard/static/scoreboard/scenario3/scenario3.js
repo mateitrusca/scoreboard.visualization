@@ -70,6 +70,42 @@ App.Scenario3FiltersView = Backbone.View.extend({
 });
 
 
+App.Scenario3ChartView = Backbone.View.extend({
+
+    className: "highcharts-chart",
+
+    initialize: function(options) {
+        this.render();
+        this.model.on('change', this.filters_changed, this);
+        this.filters_changed();
+    },
+
+    render: function() {
+        if(this.data) {
+            App.scenario3_chart(this.el, this.data);
+        }
+        else {
+            this.$el.html("Please select some filters.");
+        }
+    },
+
+    filters_changed: function() {
+        var view = this;
+        var args = this.model.toJSON();
+        if(! (args['indicator_x'] && args['indicator_y'] && args['year'])) {
+            return;
+        }
+        _(args).extend({'method': 'get_two_indicators_year'});
+        var series_request = $.get(App.URL + '/data', args);
+        series_request.done(function(series) {
+            view.data = {'series': series};
+            view.render();
+        });
+    }
+
+});
+
+
 App.scenario3_initialize = function() {
 
     var box = $('#scenario-box');
