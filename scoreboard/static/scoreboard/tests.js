@@ -1,3 +1,5 @@
+/*global App, Backbone, describe, beforeEach, afterEach, it, expect, sinon */
+
 describe('IndicatorMetadataView', function() {
     "use strict";
 

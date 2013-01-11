@@ -1,3 +1,6 @@
+/*global App, Backbone, $, describe, beforeEach, afterEach, it, expect, sinon */
+/*jshint sub:true */
+
 describe('Scenario2FiltersView', function() {
     "use strict";
 

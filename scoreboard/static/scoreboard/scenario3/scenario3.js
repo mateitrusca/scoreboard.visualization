@@ -1,3 +1,6 @@
+/*global App, Backbone, $, _ */
+/*jshint sub:true */
+
 (function() {
 "use strict";
 
