@@ -1,3 +1,5 @@
+/*global App, Backbone, $, describe, beforeEach, it, expect */
+
 describe('Scenario3FiltersView', function() {
     "use strict";
 

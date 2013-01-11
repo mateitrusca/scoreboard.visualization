@@ -1,3 +1,5 @@
+/*global App, $ */
+
 (function() {
 "use strict";
 

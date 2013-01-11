@@ -1,3 +1,6 @@
+/*global App, Backbone, $, describe, beforeEach, afterEach, it, expect, sinon */
+/*jshint sub:true */
+
 describe('Scenario1FiltersView', function() {
     "use strict";
 
@@ -6,7 +9,7 @@ describe('Scenario1FiltersView', function() {
             {'uri': 'ind1', 'years': ["2009", "2010"]},
             {'uri': 'ind2', 'years': ["2010", "2011"]}
         ]};
-        this.model = new Backbone.Model;
+        this.model = new Backbone.Model();
         this.view = new App.Scenario1FiltersView({
             model: this.model,
             filters_data: this.filters_data
@@ -81,7 +84,7 @@ describe('Scenario1ChartView', function() {
         server = sinon.fakeServer.create();
         scenario1_chart = sinon.stub(App, 'scenario1_chart');
 
-        this.model = new Backbone.Model;
+        this.model = new Backbone.Model();
         this.chart = new App.Scenario1ChartView({model: this.model});
         this.model.set({
             'indicator': 'asdf',
@@ -96,7 +99,7 @@ describe('Scenario1ChartView', function() {
 
     it('should fetch data from server', function() {
         var url = server.requests[0].url;
-        expect(url).to.have.string(App.URL + '/data?')
+        expect(url).to.have.string(App.URL + '/data?');
         var url_param = App.testing.url_param;
         expect(url_param(url, 'method')).to.equal('get_one_indicator_year');
         expect(url_param(url, 'indicator')).to.equal('asdf');
@@ -106,7 +109,7 @@ describe('Scenario1ChartView', function() {
 
     it('should fetch metadata from server', function() {
         var url2 = server.requests[1].url;
-        expect(url2).to.have.string(App.URL + '/data?')
+        expect(url2).to.have.string(App.URL + '/data?');
         var url_param = App.testing.url_param;
         expect(url_param(url2, 'method')).to.equal('get_indicator_meta');
         expect(url_param(url2, 'indicator')).to.equal('asdf');

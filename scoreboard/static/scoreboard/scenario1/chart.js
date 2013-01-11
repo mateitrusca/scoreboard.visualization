@@ -1,3 +1,6 @@
+/*global App, _, Highcharts */
+/*jshint sub:true */
+
 (function() {
 "use strict";
 

@@ -1,3 +1,6 @@
+/*global App, Backbone, $, describe, beforeEach, afterEach, it, expect, sinon */
+/*jshint sub:true */
+
 describe('Scenario2FiltersView', function() {
     "use strict";
 
@@ -8,7 +11,7 @@ describe('Scenario2FiltersView', function() {
             'indicators': [{'uri': 'ind1'}, {'uri': 'ind2'}],
             'countries': [{'uri': 'fr'}, {'uri': 'dk'}, {'uri': 'es'}]
         };
-        this.model = new Backbone.Model;
+        this.model = new Backbone.Model();
         this.view = new App.Scenario2FiltersView({
             model: this.model,
             filters_data: this.filters_data
@@ -90,11 +93,11 @@ describe('Scenario2ChartView', function() {
     it('should fetch data from server', function() {
         this.model.set({
             'indicator': 'ind1',
-            'country': ['http://data.lod2.eu/scoreboard/country/Denmark'],
+            'country': ['http://data.lod2.eu/scoreboard/country/Denmark']
         });
 
         var url = server.requests[1].url;
-        expect(url).to.have.string(App.URL + '/data?')
+        expect(url).to.have.string(App.URL + '/data?');
         var url_param = App.testing.url_param;
         expect(url_param(url, 'method')).to.equal('get_one_indicator_country');
         expect(url_param(url, 'indicator')).to.equal('ind1');
@@ -105,11 +108,11 @@ describe('Scenario2ChartView', function() {
     it('should fetch metadata from server', function() {
         this.model.set({
             'indicator': 'ind1',
-            'country': ['http://data.lod2.eu/scoreboard/country/Denmark'],
+            'country': ['http://data.lod2.eu/scoreboard/country/Denmark']
         });
 
         var url2 = server.requests[0].url;
-        expect(url2).to.have.string(App.URL + '/data?')
+        expect(url2).to.have.string(App.URL + '/data?');
         var url_param = App.testing.url_param;
         expect(url_param(url2, 'method')).to.equal('get_indicator_meta');
         expect(url_param(url2, 'indicator')).to.equal('ind1');
@@ -118,7 +121,7 @@ describe('Scenario2ChartView', function() {
     it('should render chart with the data and metadata received', function() {
         this.model.set({
             'indicator': 'ind1',
-            'country': ['http://data.lod2.eu/scoreboard/country/Denmark'],
+            'country': ['http://data.lod2.eu/scoreboard/country/Denmark']
         });
 
         var ajax_metadata = [{
@@ -151,7 +154,7 @@ describe('Scenario2ChartView', function() {
         this.model.set({
             'indicator': 'ind1',
             'country': ['http://data.lod2.eu/scoreboard/country/Denmark',
-                        'http://data.lod2.eu/scoreboard/country/Spain'],
+                        'http://data.lod2.eu/scoreboard/country/Spain']
         });
 
         var ajax_metadata = [{

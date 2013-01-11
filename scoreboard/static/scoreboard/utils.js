@@ -1,3 +1,5 @@
+/*global App, _ */
+
 (function() {
 "use strict";
 
