@@ -82,7 +82,18 @@ App.Scenario3ChartView = Backbone.View.extend({
 
     render: function() {
         if(this.data) {
-            App.scenario3_chart(this.el, this.data);
+            var options = {
+                'series': this.data['series'],
+                'indicator_x_label': ('EC effective cofinancing rate for ' +
+                                      'SMEs partner in FP7-ICT projects'),
+                'indicator_y_label': ('% of internet users selling goods or ' +
+                                    'services online (e.g. via auctions)'),
+                'credits': {
+                    'href': 'http://ec.europa.eu/digital-agenda/en/graphs/',
+                    'text': 'European Commission, Digital Agenda Scoreboard'
+                }
+            };
+            App.scenario3_chart(this.el, options);
         }
         else {
             this.$el.html("Please select some filters.");

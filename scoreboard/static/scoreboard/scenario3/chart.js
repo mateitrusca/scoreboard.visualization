@@ -57,8 +57,8 @@ App.scenario3_chart = function(container, options) {
 
         },
         credits: {
-            href: 'http://ec.europa.eu/digital-agenda/en/graphs',
-            text: 'European Commission, Digital Agenda Scoreboard',
+            href: options['credits']['href'],
+            text: options['credits']['text'],
             position: {
                 align: 'right',
                 x: -10,
@@ -67,7 +67,8 @@ App.scenario3_chart = function(container, options) {
             }
         },
         title: {
-            text: '<b>EC effective cofinancing rate for SMEs partner in FP7-ICT projects</b><br/> and <b>% of internet users selling goods or services online (e.g. via auctions)</b>',
+            text: (options['indicator_x_label'] + ' ' +
+                   options['indicator_y_label']),
             style: {
                 color: '#000000',
                 fontWeight: 'bold',
@@ -78,7 +79,7 @@ App.scenario3_chart = function(container, options) {
         xAxis: [{
             title: {
                 enabled: true,
-                text: 'EC effective cofinancing rate for SMEs partner in FP7-ICT projects',
+                text: options['indicator_x_label'],
                 style: {
                     color: '#000000',
                     fontWeight: 'bold'
@@ -105,7 +106,7 @@ App.scenario3_chart = function(container, options) {
         }],
         yAxis: {
             title: {
-                text: '% of internet users selling goods or services online (e.g. via auctions)',
+                text: options['indicator_y_label'],
                 style: {
                     color: '#000000',
                     fontWeight: 'bold'
