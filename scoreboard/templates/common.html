@@ -7,14 +7,19 @@
   <script src="{{ STATIC }}/lib/highcharts-2.3.3/js/highcharts.js"></script>
   <script src="{{ STATIC }}/lib/select2-3.2/select2.js"></script>
 
-  {% for name, text in get_templates('scoreboard') %}
-    <script type="text/x-template" id="{{ name }}">{{ text }}</script>
-  {% endfor %}
-
   <script>
     window.App = {
+
+      templates: {{ get_js_templates()|json|safe }},
+
       STATIC: {{ STATIC|json }},
-      URL: {{ URL|json }}
+
+      URL: {{ URL|json }},
+
+      get_template: function(name) {
+          return Handlebars.compile(App.templates[name]);
+      }
+
     };
   </script>
 
