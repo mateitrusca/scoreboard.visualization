@@ -5,7 +5,148 @@
 "use strict";
 
 
-App.scenario3_chart = function(container, data) {
+App.scenario3_chart = function(container, options) {
+    var countrycolor = function(code) {
+        if (_.isNull(App.COUNTRY_COLOR[code])) {
+            return '#1C3FFD';
+        } else {
+            return App.COUNTRY_COLOR[code];
+        }
+    }
+
+
+    var label_formatter = function() {
+        return this.point.name;
+    };
+
+    var series = _(options['series']).map(function(datapoint) {
+        var name = datapoint['country_name'];
+        var code = App.COUNTRY_CODE[name];
+        return {
+            'name': name + ' ' + code,
+            'color': countrycolor(code),
+            'data': [{
+                'name': code,
+                'x': datapoint['value_x'],
+                'y': datapoint['value_y']
+            }],
+            'marker': {
+                'radius': 5,
+                'symbol': 'circle',
+                'states': {
+                    hover: {'enabled': true, 'lineColor': 'rgb(100,100,100)'}
+                }
+            },
+            'dataLabels': {
+                'enabled': true,
+                'x': 16,
+                'y': 4,
+                'formatter': label_formatter
+            }
+        }
+    });
+
+    var chartOptions = {
+        chart: {
+            renderTo: container,
+            defaultSeriesType: 'scatter',
+            zoomType: 'xy',
+            marginRight: 25,
+            marginBottom: 150,
+            marginTop: 100
+
+        },
+        credits: {
+            href: 'http://ec.europa.eu/digital-agenda/en/graphs',
+            text: 'European Commission, Digital Agenda Scoreboard',
+            position: {
+                align: 'right',
+                x: -10,
+                verticalAlign: 'bottom',
+                y: -2
+            }
+        },
+        title: {
+            text: '<b>EC effective cofinancing rate for SMEs partner in FP7-ICT projects</b><br/> and <b>% of internet users selling goods or services online (e.g. via auctions)</b>',
+            style: {
+                color: '#000000',
+                fontWeight: 'bold',
+                fontSize:'1.2em'
+            }
+
+        },
+        xAxis: [{
+            title: {
+                enabled: true,
+                text: 'EC effective cofinancing rate for SMEs partner in FP7-ICT projects',
+                style: {
+                    color: '#000000',
+                    fontWeight: 'bold'
+                }
+            },
+            startOnTick: true,
+            endOnTick: true,
+            showLastLabel: true,
+            labels: {
+                style: {
+                    color: '#000000'
+                }
+             }
+
+        },{
+            opposite:true,
+            title: {
+                text: 'Year 2011',
+                style: {
+                    color: '#000000',
+                    fontWeight: 'bold'
+                }
+            }
+        }],
+        yAxis: {
+            title: {
+                text: '% of internet users selling goods or services online (e.g. via auctions)',
+                style: {
+                    color: '#000000',
+                    fontWeight: 'bold'
+                }
+            },
+            labels: {
+                style: {
+                    color: '#000000'
+                }
+            }
+        },
+        tooltip: {
+            formatter: function() {
+            return ('<b>'+ this.series.name +'</b><br/>x: '+
+                this.x +' %_of_total_cost,<br>y: '+ this.y +' %_ind_iu3');
+            }
+        },
+        legend: {
+            layout: 'horizontal',
+            align: 'center',
+            verticalAlign: 'bottom',
+            x: 0,
+            y: -20,
+            borderWidth: 0
+        },
+        plotOptions: {
+            scatter: {
+                states: {
+                    hover: {
+                        marker: {
+                            enabled: false
+                        }
+                    }
+                }
+            }
+        },
+        series: series
+    };
+
+    var chart = new Highcharts.Chart(chartOptions);
+
 };
 
 
