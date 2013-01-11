@@ -123,6 +123,12 @@ App.scenario3_initialize = function() {
             filters_data: data
         });
 
+        new App.Scenario3ChartView({
+            model: App.filters,
+            el: $('#the-chart'),
+            countries: data['countries']
+        });
+
     });
 
     App.metadata_x = new App.IndicatorMetadataView({
