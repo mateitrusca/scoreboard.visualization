@@ -83,3 +83,84 @@ describe('Scenario3FiltersView', function() {
     });
 
 });
+
+
+describe('Scenario3ChartView', function() {
+    "use strict";
+
+    var url_param = App.testing.url_param;
+
+    beforeEach(function() {
+        this.sandbox = sinon.sandbox.create();
+        this.scenario3_chart = this.sandbox.stub(App, 'scenario3_chart');
+        this.model = new Backbone.Model();
+        this.view = new App.Scenario3ChartView({model: this.model});
+    });
+
+    afterEach(function () {
+        this.sandbox.restore();
+    });
+
+    it('should fetch and render data from server', function() {
+        this.sandbox.useFakeServer();
+        this.model.set({'indicator_x': 'ind2', 'indicator_y': 'ind3',
+                        'year': '2011'});
+        var series = [
+            {'value_x': 3, 'value_y': 9, 'country_label': 'Denmark'},
+            {'value_x': 5, 'value_y': 6, 'country_label': 'Italy'}
+        ];
+        var data_request = this.sandbox.server.requests[0];
+        var url = data_request.url;
+        expect(url).to.have.string(App.URL + '/data?');
+        expect(url_param(url, 'method')).to.equal('get_two_indicators_year');
+        expect(url_param(url, 'indicator_x')).to.equal('ind2');
+        expect(url_param(url, 'indicator_y')).to.equal('ind3');
+        expect(url_param(url, 'year')).to.equal(
+            'http://data.lod2.eu/scoreboard/year/2011');
+        data_request.respond(200, {'Content-Type': 'application/json'},
+                                   JSON.stringify(series));
+
+        this.sandbox.server.requests[1].respond(200,
+            {'Content-Type': 'application/json'},
+            JSON.stringify([{'label': "IndyTwo"}]));
+        this.sandbox.server.requests[2].respond(200,
+            {'Content-Type': 'application/json'},
+            JSON.stringify([{'label': "IndyThree"}]));
+
+        expect(this.scenario3_chart.calledOnce).to.equal(true);
+        var call_args = this.scenario3_chart.getCall(0).args;
+        expect(call_args[0]).to.equal(this.view.el);
+        expect(call_args[1]['series']).to.deep.equal(series);
+    });
+
+    it('should fetch and display metadata from server', function() {
+        this.sandbox.useFakeServer();
+        this.model.set({'indicator_x': 'ind2', 'indicator_y': 'ind3',
+                        'year': '2011'});
+
+        var data_request = this.sandbox.server.requests[0];
+        data_request.respond(200, {'Content-Type': 'application/json'}, '[]');
+
+        var metadata_x_request = this.sandbox.server.requests[1];
+        var url = metadata_x_request.url;
+        expect(url).to.have.string(App.URL + '/data?');
+        expect(url_param(url, 'method')).to.equal('get_indicator_meta');
+        expect(url_param(url, 'indicator')).to.equal('ind2');
+        metadata_x_request.respond(200, {'Content-Type': 'application/json'},
+            JSON.stringify([{'label': "IndyTwo"}]));
+
+        var metadata_y_request = this.sandbox.server.requests[2];
+        var url = metadata_y_request.url;
+        expect(url).to.have.string(App.URL + '/data?');
+        expect(url_param(url, 'method')).to.equal('get_indicator_meta');
+        expect(url_param(url, 'indicator')).to.equal('ind3');
+        metadata_y_request.respond(200, {'Content-Type': 'application/json'},
+            JSON.stringify([{'label': "IndyThree"}]));
+
+        expect(this.scenario3_chart.calledOnce).to.equal(true);
+        var call_args = this.scenario3_chart.getCall(0).args;
+        expect(call_args[1]['indicator_x_label']).to.equal("IndyTwo");
+        expect(call_args[1]['indicator_y_label']).to.equal("IndyThree");
+    });
+
+});

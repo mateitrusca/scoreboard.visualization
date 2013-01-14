@@ -70,6 +70,68 @@ App.Scenario3FiltersView = Backbone.View.extend({
 });
 
 
+App.Scenario3ChartView = Backbone.View.extend({
+
+    className: "highcharts-chart",
+
+    initialize: function(options) {
+        this.render();
+        this.model.on('change', this.filters_changed, this);
+        this.filters_changed();
+    },
+
+    render: function() {
+        if(this.data) {
+            var options = {
+                'series': this.data['series'],
+                'indicator_x_label': this.data['indicator_x_label'],
+                'indicator_y_label': this.data['indicator_y_label'],
+                'credits': {
+                    'href': 'http://ec.europa.eu/digital-agenda/en/graphs/',
+                    'text': 'European Commission, Digital Agenda Scoreboard'
+                }
+            };
+            App.scenario3_chart(this.el, options);
+        }
+        else {
+            this.$el.html("Please select some filters.");
+        }
+    },
+
+    filters_changed: function() {
+        var view = this;
+        var args = this.model.toJSON();
+        if(! (args['indicator_x'] && args['indicator_y'] && args['year'])) {
+            return;
+        }
+        args['year'] = 'http://data.lod2.eu/scoreboard/year/' + args['year'];
+
+        var series_ajax = $.get(App.URL + '/data', _({
+            'method': 'get_two_indicators_year'
+        }).extend(args));
+        var metadata_x_ajax = $.get(App.URL + '/data', {
+            'method': 'get_indicator_meta',
+            'indicator': args['indicator_x']
+        });
+        var metadata_y_ajax = $.get(App.URL + '/data', {
+            'method': 'get_indicator_meta',
+            'indicator': args['indicator_y']
+        });
+
+        $.when(series_ajax, metadata_x_ajax, metadata_y_ajax).done(
+            function(series_resp, metadata_x_resp, metadata_y_resp) {
+            view.data = {
+                'series': series_resp[0],
+                'indicator_x_label': metadata_x_resp[0][0]['label'],
+                'indicator_y_label': metadata_y_resp[0][0]['label']
+            };
+            view.render();
+        });
+    }
+
+});
+
+
 App.scenario3_initialize = function() {
 
     var box = $('#scenario-box');
@@ -84,6 +146,12 @@ App.scenario3_initialize = function() {
             model: App.filters,
             el: $('#the-filters'),
             filters_data: data
+        });
+
+        new App.Scenario3ChartView({
+            model: App.filters,
+            el: $('#the-chart'),
+            countries: data['countries']
         });
 
     });
