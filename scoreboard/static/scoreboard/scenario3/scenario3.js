@@ -84,10 +84,8 @@ App.Scenario3ChartView = Backbone.View.extend({
         if(this.data) {
             var options = {
                 'series': this.data['series'],
-                'indicator_x_label': ('EC effective cofinancing rate for ' +
-                                      'SMEs partner in FP7-ICT projects'),
-                'indicator_y_label': ('% of internet users selling goods or ' +
-                                    'services online (e.g. via auctions)'),
+                'indicator_x_label': this.data['indicator_x_label'],
+                'indicator_y_label': this.data['indicator_y_label'],
                 'credits': {
                     'href': 'http://ec.europa.eu/digital-agenda/en/graphs/',
                     'text': 'European Commission, Digital Agenda Scoreboard'
@@ -107,10 +105,26 @@ App.Scenario3ChartView = Backbone.View.extend({
             return;
         }
         args['year'] = 'http://data.lod2.eu/scoreboard/year/' + args['year'];
-        _(args).extend({'method': 'get_two_indicators_year'});
-        var series_request = $.get(App.URL + '/data', args);
-        series_request.done(function(series) {
-            view.data = {'series': series};
+
+        var series_ajax = $.get(App.URL + '/data', _({
+            'method': 'get_two_indicators_year'
+        }).extend(args));
+        var metadata_x_ajax = $.get(App.URL + '/data', {
+            'method': 'get_indicator_meta',
+            'indicator': args['indicator_x']
+        });
+        var metadata_y_ajax = $.get(App.URL + '/data', {
+            'method': 'get_indicator_meta',
+            'indicator': args['indicator_y']
+        });
+
+        $.when(series_ajax, metadata_x_ajax, metadata_y_ajax).done(
+            function(series_resp, metadata_x_resp, metadata_y_resp) {
+            view.data = {
+                'series': series_resp[0],
+                'indicator_x_label': metadata_x_resp[0][0]['label'],
+                'indicator_y_label': metadata_y_resp[0][0]['label']
+            };
             view.render();
         });
     }
