@@ -95,7 +95,10 @@ describe('Scenario3ChartView', function() {
         this.sandbox = sinon.sandbox.create();
         this.scenario3_chart = this.sandbox.stub(App, 'scenario3_chart');
         this.model = new Backbone.Model();
-        this.view = new App.Scenario3ChartView({model: this.model});
+        this.view = new App.Scenario3ChartView({
+            model: this.model,
+            indicator_labels: {'ind2': "IndyTwo", 'ind3': "IndyThree"}
+        });
     });
 
     afterEach(function () {
@@ -120,41 +123,10 @@ describe('Scenario3ChartView', function() {
             'http://data.lod2.eu/scoreboard/year/2011');
         App.respond_json(data_request, series);
 
-        App.respond_json(this.sandbox.server.requests[1], [{'label': "IndyTwo"}]);
-        App.respond_json(this.sandbox.server.requests[2], [{'label': "IndyThree"}]);
-
         expect(this.scenario3_chart.calledOnce).to.equal(true);
         var call_args = this.scenario3_chart.getCall(0).args;
         expect(call_args[0]).to.equal(this.view.el);
         expect(call_args[1]['series']).to.deep.equal(series);
-    });
-
-    it('should fetch and display metadata from server', function() {
-        this.sandbox.useFakeServer();
-        this.model.set({'indicator_x': 'ind2', 'indicator_y': 'ind3',
-                        'year': '2011'});
-
-        var data_request = this.sandbox.server.requests[0];
-        App.respond_json(data_request, []);
-
-        var metadata_x_request = this.sandbox.server.requests[1];
-        var url = metadata_x_request.url;
-        expect(url).to.have.string(App.URL + '/data?');
-        expect(url_param(url, 'method')).to.equal('get_indicator_meta');
-        expect(url_param(url, 'indicator')).to.equal('ind2');
-        App.respond_json(metadata_x_request, [{'label': "IndyTwo"}]);
-
-        var metadata_y_request = this.sandbox.server.requests[2];
-        url = metadata_y_request.url;
-        expect(url).to.have.string(App.URL + '/data?');
-        expect(url_param(url, 'method')).to.equal('get_indicator_meta');
-        expect(url_param(url, 'indicator')).to.equal('ind3');
-        App.respond_json(metadata_y_request, [{'label': "IndyThree"}]);
-
-        expect(this.scenario3_chart.calledOnce).to.equal(true);
-        var call_args = this.scenario3_chart.getCall(0).args;
-        expect(call_args[1]['indicator_x_label']).to.equal("IndyTwo");
-        expect(call_args[1]['indicator_y_label']).to.equal("IndyThree");
     });
 
 });

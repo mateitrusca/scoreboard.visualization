@@ -34,6 +34,13 @@ App.IndicatorMetadataView = Backbone.View.extend({
 });
 
 
+App.get_indicator_labels = function(filters_data) {
+    var indicators = filters_data['indicators'];
+    return _.object(_(indicators).pluck('uri'),
+                    _(indicators).pluck('label'));
+};
+
+
 App.ChartRouter = Backbone.Router.extend({
 
     initialize: function(model) {
