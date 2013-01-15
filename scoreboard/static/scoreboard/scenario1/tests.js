@@ -78,11 +78,10 @@ describe('Scenario1FiltersView', function() {
 describe('Scenario1ChartView', function() {
     "use strict";
 
-    var server, scenario1_chart;
-
     beforeEach(function() {
-        server = sinon.fakeServer.create();
-        scenario1_chart = sinon.stub(App, 'scenario1_chart');
+        this.sandbox = sinon.sandbox.create();
+        this.sandbox.useFakeServer();
+        this.scenario1_chart = this.sandbox.stub(App, 'scenario1_chart');
 
         this.model = new Backbone.Model();
         this.chart = new App.Scenario1ChartView({model: this.model});
@@ -93,11 +92,11 @@ describe('Scenario1ChartView', function() {
     });
 
     afterEach(function () {
-        server.restore();
-        scenario1_chart.restore();
+        this.sandbox.restore();
     });
 
     it('should fetch data from server', function() {
+        var server = this.sandbox.server;
         var url = server.requests[0].url;
         expect(url).to.have.string(App.URL + '/data?');
         var url_param = App.testing.url_param;
@@ -108,6 +107,7 @@ describe('Scenario1ChartView', function() {
     });
 
     it('should fetch metadata from server', function() {
+        var server = this.sandbox.server;
         var url2 = server.requests[1].url;
         expect(url2).to.have.string(App.URL + '/data?');
         var url_param = App.testing.url_param;
@@ -116,6 +116,7 @@ describe('Scenario1ChartView', function() {
     });
 
     it('should render chart with the data and metadata received', function() {
+        var server = this.sandbox.server;
         var ajax_data = [{'country_name': "Austria", 'value': 0.18},
                          {'country_name': "Belgium", 'value': 0.14}];
         server.requests[0].respond(
@@ -130,8 +131,8 @@ describe('Scenario1ChartView', function() {
         server.requests[1].respond(200, {'Content-Type': 'application/json'},
                                    JSON.stringify(ajax_metadata));
 
-        expect(scenario1_chart.calledOnce).to.equal(true);
-        var call_args = scenario1_chart.getCall(0).args;
+        expect(this.scenario1_chart.calledOnce).to.equal(true);
+        var call_args = this.scenario1_chart.getCall(0).args;
         expect(call_args[0]).to.equal(this.chart.el);
         expect(call_args[1]['series']).to.deep.equal(ajax_data);
         expect(call_args[1]['indicator_label']).to.equal(
