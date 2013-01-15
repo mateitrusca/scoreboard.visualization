@@ -107,7 +107,7 @@ App.Scenario3ChartView = Backbone.View.extend({
         args['year'] = 'http://data.lod2.eu/scoreboard/year/' + args['year'];
 
         var series_ajax = $.get(App.URL + '/data', _({
-            'method': 'get_two_indicators_year'
+            'method': 'series_2indicator_year'
         }).extend(args));
 
         $.when(series_ajax).done(function(series) {

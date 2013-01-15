@@ -116,7 +116,7 @@ describe('Scenario3ChartView', function() {
         var data_request = this.sandbox.server.requests[0];
         var url = data_request.url;
         expect(url).to.have.string(App.URL + '/data?');
-        expect(url_param(url, 'method')).to.equal('get_two_indicators_year');
+        expect(url_param(url, 'method')).to.equal('series_2indicator_year');
         expect(url_param(url, 'indicator_x')).to.equal('ind2');
         expect(url_param(url, 'indicator_y')).to.equal('ind3');
         expect(url_param(url, 'year')).to.equal(
