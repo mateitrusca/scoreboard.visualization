@@ -142,13 +142,14 @@ App.scenario1_initialize = function() {
         });
         $('#the-chart').append(App.scenario1_chart_view.el);
 
-    });
+        App.metadata = new App.IndicatorMetadataView({
+            model: App.filters,
+            field: 'indicator',
+            indicators: App.get_indicators(data)
+        });
+        $('#the-metadata').append(App.metadata.el);
 
-    App.metadata = new App.IndicatorMetadataView({
-        model: App.filters,
-        field: 'indicator'
     });
-    $('#the-metadata').append(App.metadata.el);
 
     Backbone.history.start();
 };

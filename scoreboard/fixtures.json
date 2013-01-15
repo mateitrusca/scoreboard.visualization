@@ -1,13 +1,5 @@
 [
   {
-    "arg_spec": "indicator:iri",
-    "endpoint_url": "http://virtuoso.scoreboard.edw.ro/sparql",
-    "id": "get_indicator_meta",
-    "query": "PREFIX dcterms: <http://purl.org/dc/terms/>\r\n\r\nSELECT * WHERE {\r\n\r\n$indicator\r\n    rdfs:label ?label ;\r\n    rdfs:comment ?comment ;\r\n    dcterms:publisher ?publisher .\r\n}\r\n\r\nLIMIT 100\r\n",
-    "timeout": null,
-    "title": ""
-  },
-  {
     "arg_spec": "",
     "endpoint_url": "http://virtuoso.scoreboard.edw.ro/sparql",
     "id": "get_all_indicators_to_years",

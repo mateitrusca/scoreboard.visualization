@@ -138,13 +138,14 @@ App.scenario2_initialize = function() {
         $('#the-chart').append(App.scenario2_chart_view.el);
         App.scenario2_chart_view.filters_changed();
 
-    });
+        App.metadata = new App.IndicatorMetadataView({
+            model: App.filters,
+            field: 'indicator',
+            indicators: App.get_indicators(data)
+        });
+        $('#the-metadata').append(App.metadata.el);
 
-    App.metadata = new App.IndicatorMetadataView({
-        model: App.filters,
-        field: 'indicator'
     });
-    $('#the-metadata').append(App.metadata.el);
 
     Backbone.history.start();
 
