@@ -76,6 +76,9 @@ class ScenarioView(object):
                 'uri': row['indicator'],
                 'label': row['label'],
                 'years': sorted(years[row['indicator']], reverse=True),
+                'comment': row['comment'],
+                'publisher': row['publisher'],
+                'unit': row['unit'],
             })
 
         countries = []
