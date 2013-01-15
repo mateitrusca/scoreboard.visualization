@@ -79,7 +79,8 @@ App.Scenario1ChartView = Backbone.View.extend({
 
     className: 'highcharts-chart',
 
-    initialize: function() {
+    initialize: function(options) {
+        this.indicator_labels = options['indicator_labels'];
         this.model.on('change', this.filters_changed, this);
         this.filters_changed();
     },
@@ -99,16 +100,12 @@ App.Scenario1ChartView = Backbone.View.extend({
         }
         var series_ajax = $.get(App.URL + '/data',
             _({'method': 'get_one_indicator_year'}).extend(args));
-        var metadata_ajax = $.get(App.URL + '/data',
-            _({'method': 'get_indicator_meta'}).extend(args));
 
-        $.when(series_ajax, metadata_ajax).done(
-            function(series_resp, metadata_resp) {
-            var metadata = metadata_resp[0][0];
+        series_ajax.done(function(data) {
             view.data = {
-                'series': series_resp[0],
+                'series': data,
                 'year_text': "Year 2011",
-                'indicator_label': metadata['label'],
+                'indicator_label': view.indicator_labels[args['indicator']],
                 'credits': {
                     'href': 'http://ec.europa.eu/digital-agenda/en/graphs/',
                     'text': 'European Commission, Digital Agenda Scoreboard'
@@ -132,17 +129,18 @@ App.scenario1_initialize = function() {
     App.filters = new Backbone.Model();
     App.router = new App.ChartRouter(App.filters);
 
-    App.scenario1_chart_view = new App.Scenario1ChartView({
-        model: App.filters
-    });
-    $('#the-chart').append(App.scenario1_chart_view.el);
-
     $.getJSON(App.URL + '/filters_data', function(data) {
         new App.Scenario1FiltersView({
             model: App.filters,
             el: $('#the-filters'),
             filters_data: data
         });
+
+        App.scenario1_chart_view = new App.Scenario1ChartView({
+            model: App.filters,
+            indicator_labels: App.get_indicator_labels(data)
+        });
+        $('#the-chart').append(App.scenario1_chart_view.el);
 
     });
 
