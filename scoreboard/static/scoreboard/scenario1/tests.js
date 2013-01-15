@@ -134,7 +134,7 @@ describe('Scenario1ChartView', function() {
         expect(scenario1_chart.calledOnce).to.equal(true);
         var call_args = scenario1_chart.getCall(0).args;
         expect(call_args[0]).to.equal(container);
-        expect(call_args[1]['data']).to.deep.equal(ajax_data);
+        expect(call_args[1]['series']).to.deep.equal(ajax_data);
         expect(call_args[1]['indicator_label']).to.equal(
             ajax_metadata[0]['label']);
     });

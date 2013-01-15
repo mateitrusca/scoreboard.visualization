@@ -89,15 +89,15 @@ App.Scenario1ChartView = Backbone.View.extend({
         var container = this.$el.find('.highcharts-chart')[0];
         var args = App.make_scenario1_filter_args(this.model);
         if(args) {
-            var data_ajax = $.get(App.URL + '/data',
+            var series_ajax = $.get(App.URL + '/data',
                 _({'method': 'get_one_indicator_year'}).extend(args));
             var metadata_ajax = $.get(App.URL + '/data',
                 _({'method': 'get_indicator_meta'}).extend(args));
-            $.when(data_ajax, metadata_ajax).done(
-                function(data_resp, metadata_resp) {
+            $.when(series_ajax, metadata_ajax).done(
+                function(series_resp, metadata_resp) {
                 var metadata = metadata_resp[0][0];
                 var options = {
-                    'data': data_resp[0],
+                    'series': series_resp[0],
                     'year_text': "Year 2011",
                     'indicator_label': metadata['label'],
                     'credits': {
