@@ -61,6 +61,7 @@ App.Scenario2ChartView = Backbone.View.extend({
 
     initialize: function(options) {
         this.country_labels = options['country_labels'];
+        this.indicator_labels = options['indicator_labels'];
         this.model.on('change', this.filters_changed, this);
     },
 
@@ -77,25 +78,21 @@ App.Scenario2ChartView = Backbone.View.extend({
             return;
         }
 
-        var metadata_ajax = $.get(App.URL + '/data',
-            _({'method': 'get_indicator_meta'}).extend(args));
-        var requests = [metadata_ajax];
-
         var countries = args['country'];
-        _(countries).forEach(function(country_uri) {
+        var requests = _(countries).map(function(country_uri) {
             var data_ajax = $.get(App.URL + '/data', {
                 'method': 'get_one_indicator_country',
                 'indicator': args['indicator'],
                 'country': country_uri
             });
-            requests.push(data_ajax);
+            return data_ajax;
         });
         var country_labels = this.country_labels;
 
         var ajax_calls = $.when.apply($, requests);
         ajax_calls.done(function() {
-            var responses = _(arguments).toArray();
-            var metadata = responses.shift()[0][0];
+            var responses = (requests.length == 1) ? _([arguments])
+                                                   : _(arguments).toArray();
             var series = _(responses).map(function(resp, n) {
                 return {
                     'label': country_labels[countries[n]],
@@ -104,7 +101,7 @@ App.Scenario2ChartView = Backbone.View.extend({
             });
             view.data = {
                 'series': series,
-                'indicator_label': metadata['label'],
+                'indicator_label': view.indicator_labels[args['indicator']],
                 'credits': {
                     'href': 'http://ec.europa.eu/digital-agenda/en/graphs/',
                     'text': 'European Commission, Digital Agenda Scoreboard'
@@ -135,7 +132,8 @@ App.scenario2_initialize = function() {
 
         App.scenario2_chart_view = new App.Scenario2ChartView({
             model: App.filters,
-            country_labels: App.get_country_labels(data)
+            country_labels: App.get_country_labels(data),
+            indicator_labels: App.get_indicator_labels(data)
         });
         $('#the-chart').append(App.scenario2_chart_view.el);
         App.scenario2_chart_view.filters_changed();
