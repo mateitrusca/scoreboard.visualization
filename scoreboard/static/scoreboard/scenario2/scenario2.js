@@ -57,21 +57,18 @@ App.Scenario2FiltersView = Backbone.View.extend({
 
 App.Scenario2ChartView = Backbone.View.extend({
 
-    template: App.get_template('scoreboard/scenario2/chart.html'),
+    className: "highcharts-chart",
 
     initialize: function(options) {
         var countries = options['countries'];
         this.country_label = _.object(_(countries).pluck('uri'),
                                       _(countries).pluck('label'));
         this.model.on('change', this.filters_changed, this);
-        this.filters_changed();
     },
 
     render: function() {
-        this.$el.html(this.template(this.model.toJSON()));
         if(this.data) {
-            var container = this.$el.find('.highcharts-chart')[0];
-            App.scenario2_chart(container, this.data);
+            App.scenario2_chart(this.el, this.data);
         }
     },
 
@@ -135,11 +132,12 @@ App.scenario2_initialize = function() {
             filters_data: data
         });
 
-        new App.Scenario2ChartView({
+        App.scenario2_chart_view = new App.Scenario2ChartView({
             model: App.filters,
-            el: $('#the-chart'),
             countries: data['countries']
         });
+        $('#the-chart').append(App.scenario2_chart_view.el);
+        App.scenario2_chart_view.filters_changed();
 
     });
 
