@@ -67,7 +67,7 @@ class ScenarioView(object):
 
     def filters_data(self):
         years = defaultdict(list)
-        for row in run_query(self.context['get_all_indicators_to_years']):
+        for row in run_query(self.context['map_indicators_years']):
             years[row['indicator']].append(row['year_label'])
 
         indicators = []
