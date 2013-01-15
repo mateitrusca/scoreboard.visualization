@@ -1,4 +1,5 @@
-/*global App, Backbone, $, describe, beforeEach, it, expect */
+/*global App, Backbone, $, describe, beforeEach, afterEach, it, expect, sinon */
+/*jshint sub:true */
 
 describe('Scenario3FiltersView', function() {
     "use strict";
@@ -150,7 +151,7 @@ describe('Scenario3ChartView', function() {
             JSON.stringify([{'label': "IndyTwo"}]));
 
         var metadata_y_request = this.sandbox.server.requests[2];
-        var url = metadata_y_request.url;
+        url = metadata_y_request.url;
         expect(url).to.have.string(App.URL + '/data?');
         expect(url_param(url, 'method')).to.equal('get_indicator_meta');
         expect(url_param(url, 'indicator')).to.equal('ind3');
