@@ -10,28 +10,44 @@ App.IndicatorMetadataView = Backbone.View.extend({
     template: App.get_template('scoreboard/metadata.html'),
 
     initialize: function(options) {
+        this.indicators = options['indicators'];
         this.field = options['field'];
         this.model.on('change:' + this.field, this.render, this);
         this.render();
     },
 
     render: function() {
-        this.$el.html("loading ...");
         var indicator = this.model.get(this.field);
-        var $el = this.$el;
-        var template = this.template;
         if(indicator) {
-            var args = {
-                'method': 'get_indicator_meta',
-                'indicator': indicator
-            };
-            $.get(App.URL + '/data', args, function(data) {
-                $el.html(template(data[0]));
-            });
+            var data = this.indicators[indicator];
+            this.$el.html(this.template(data));
+        }
+        else {
+            this.$el.empty();
         }
     }
 
 });
+
+
+App.get_indicators = function(filters_data) {
+    var indicators = filters_data['indicators'];
+    return _.object(_(indicators).pluck('uri'), indicators);
+};
+
+
+App.get_indicator_labels = function(filters_data) {
+    var indicators = filters_data['indicators'];
+    return _.object(_(indicators).pluck('uri'),
+                    _(indicators).pluck('label'));
+};
+
+
+App.get_country_labels = function(filters_data) {
+    var countries = filters_data['countries'];
+    return _.object(_(countries).pluck('uri'),
+                    _(countries).pluck('label'));
+};
 
 
 App.ChartRouter = Backbone.Router.extend({

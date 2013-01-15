@@ -75,7 +75,7 @@ App.Scenario3ChartView = Backbone.View.extend({
     className: "highcharts-chart",
 
     initialize: function(options) {
-        this.render();
+        this.indicator_labels = options['indicator_labels'];
         this.model.on('change', this.filters_changed, this);
         this.filters_changed();
     },
@@ -107,23 +107,14 @@ App.Scenario3ChartView = Backbone.View.extend({
         args['year'] = 'http://data.lod2.eu/scoreboard/year/' + args['year'];
 
         var series_ajax = $.get(App.URL + '/data', _({
-            'method': 'get_two_indicators_year'
+            'method': 'series_2indicator_year'
         }).extend(args));
-        var metadata_x_ajax = $.get(App.URL + '/data', {
-            'method': 'get_indicator_meta',
-            'indicator': args['indicator_x']
-        });
-        var metadata_y_ajax = $.get(App.URL + '/data', {
-            'method': 'get_indicator_meta',
-            'indicator': args['indicator_y']
-        });
 
-        $.when(series_ajax, metadata_x_ajax, metadata_y_ajax).done(
-            function(series_resp, metadata_x_resp, metadata_y_resp) {
+        $.when(series_ajax).done(function(series) {
             view.data = {
-                'series': series_resp[0],
-                'indicator_x_label': metadata_x_resp[0][0]['label'],
-                'indicator_y_label': metadata_y_resp[0][0]['label']
+                'series': series,
+                'indicator_x_label': view.indicator_labels[args['indicator_x']],
+                'indicator_y_label': view.indicator_labels[args['indicator_y']]
             };
             view.render();
         });
@@ -151,22 +142,24 @@ App.scenario3_initialize = function() {
         new App.Scenario3ChartView({
             model: App.filters,
             el: $('#the-chart'),
-            countries: data['countries']
+            indicator_labels: App.get_indicator_labels(data)
         });
 
-    });
+        App.metadata_x = new App.IndicatorMetadataView({
+            model: App.filters,
+            field: 'indicator_x',
+            indicators: App.get_indicators(data)
+        });
+        $('#the-metadata').append(App.metadata_x.el);
 
-    App.metadata_x = new App.IndicatorMetadataView({
-        model: App.filters,
-        field: 'indicator_x'
-    });
-    $('#the-metadata').append(App.metadata_x.el);
+        App.metadata_y = new App.IndicatorMetadataView({
+            model: App.filters,
+            field: 'indicator_y',
+            indicators: App.get_indicators(data)
+        });
+        $('#the-metadata').append(App.metadata_y.el);
 
-    App.metadata_y = new App.IndicatorMetadataView({
-        model: App.filters,
-        field: 'indicator_y'
     });
-    $('#the-metadata').append(App.metadata_y.el);
 
     Backbone.history.start();
 
