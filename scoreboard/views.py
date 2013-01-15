@@ -82,7 +82,7 @@ class ScenarioView(object):
             })
 
         countries = []
-        for row in run_query(self.context['get_countries']):
+        for row in run_query(self.context['all_countries']):
             countries.append({
                 'uri': row['country'],
                 'label': row['label'],
