@@ -74,12 +74,10 @@ describe('Scenario2ChartView', function() {
         this.model = new Backbone.Model();
         this.chart = new App.Scenario2ChartView({
             model: this.model,
-            countries: [
-                {'uri': 'http://data.lod2.eu/scoreboard/country/Denmark',
-                 'label': "Denmark"},
-                {'uri': 'http://data.lod2.eu/scoreboard/country/Spain',
-                 'label': "Spain"}
-            ]
+            country_labels: {
+                'http://data.lod2.eu/scoreboard/country/Denmark': "Denmark",
+                'http://data.lod2.eu/scoreboard/country/Spain': "Spain"
+            }
         });
     });
 

@@ -60,9 +60,7 @@ App.Scenario2ChartView = Backbone.View.extend({
     className: "highcharts-chart",
 
     initialize: function(options) {
-        var countries = options['countries'];
-        this.country_label = _.object(_(countries).pluck('uri'),
-                                      _(countries).pluck('label'));
+        this.country_labels = options['country_labels'];
         this.model.on('change', this.filters_changed, this);
     },
 
@@ -92,14 +90,17 @@ App.Scenario2ChartView = Backbone.View.extend({
             });
             requests.push(data_ajax);
         });
-        var country_label = this.country_label;
+        var country_labels = this.country_labels;
 
         var ajax_calls = $.when.apply($, requests);
         ajax_calls.done(function() {
             var responses = _(arguments).toArray();
             var metadata = responses.shift()[0][0];
             var series = _(responses).map(function(resp, n) {
-                return {'label': country_label[countries[n]], 'data': resp[0]};
+                return {
+                    'label': country_labels[countries[n]],
+                    'data': resp[0]
+                };
             });
             view.data = {
                 'series': series,
@@ -134,7 +135,7 @@ App.scenario2_initialize = function() {
 
         App.scenario2_chart_view = new App.Scenario2ChartView({
             model: App.filters,
-            countries: data['countries']
+            country_labels: App.get_country_labels(data)
         });
         $('#the-chart').append(App.scenario2_chart_view.el);
         App.scenario2_chart_view.filters_changed();

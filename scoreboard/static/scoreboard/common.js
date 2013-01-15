@@ -41,6 +41,13 @@ App.get_indicator_labels = function(filters_data) {
 };
 
 
+App.get_country_labels = function(filters_data) {
+    var countries = filters_data['countries'];
+    return _.object(_(countries).pluck('uri'),
+                    _(countries).pluck('label'));
+};
+
+
 App.ChartRouter = Backbone.Router.extend({
 
     initialize: function(model) {
