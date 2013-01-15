@@ -67,11 +67,9 @@ describe('Scenario2FiltersView', function() {
 describe('Scenario2ChartView', function() {
     "use strict";
 
-    var server, scenario2_chart;
-
     beforeEach(function() {
-        server = sinon.fakeServer.create();
-        scenario2_chart = sinon.stub(App, 'scenario2_chart');
+        this.sandbox = sinon.sandbox.create();
+        this.scenario2_chart = this.sandbox.stub(App, 'scenario2_chart');
 
         this.model = new Backbone.Model();
         this.chart = new App.Scenario2ChartView({
@@ -86,11 +84,12 @@ describe('Scenario2ChartView', function() {
     });
 
     afterEach(function () {
-        server.restore();
-        scenario2_chart.restore();
+        this.sandbox.restore();
     });
 
     it('should fetch data from server', function() {
+        this.sandbox.useFakeServer();
+        var server = this.sandbox.server;
         this.model.set({
             'indicator': 'ind1',
             'country': ['http://data.lod2.eu/scoreboard/country/Denmark']
@@ -106,6 +105,8 @@ describe('Scenario2ChartView', function() {
     });
 
     it('should fetch metadata from server', function() {
+        this.sandbox.useFakeServer();
+        var server = this.sandbox.server;
         this.model.set({
             'indicator': 'ind1',
             'country': ['http://data.lod2.eu/scoreboard/country/Denmark']
@@ -119,6 +120,8 @@ describe('Scenario2ChartView', function() {
     });
 
     it('should render chart with the data and metadata received', function() {
+        this.sandbox.useFakeServer();
+        var server = this.sandbox.server;
         this.model.set({
             'indicator': 'ind1',
             'country': ['http://data.lod2.eu/scoreboard/country/Denmark']
@@ -139,9 +142,10 @@ describe('Scenario2ChartView', function() {
             200, {'Content-Type': 'application/json'},
             JSON.stringify(data_dk));
 
-        expect(scenario2_chart.calledOnce).to.equal(true);
-        var call_args = scenario2_chart.getCall(0).args;
-        expect(call_args[0]).to.equal(this.chart.el);
+        var container = this.chart.el;
+        expect(this.scenario2_chart.calledOnce).to.equal(true);
+        var call_args = this.scenario2_chart.getCall(0).args;
+        expect(call_args[0]).to.equal(container);
         expect(call_args[1]['series']).to.deep.equal([
             {'label': "Denmark", 'data': data_dk}
         ]);
@@ -150,6 +154,8 @@ describe('Scenario2ChartView', function() {
     });
 
     it('should render chart with multiple countries', function() {
+        this.sandbox.useFakeServer();
+        var server = this.sandbox.server;
         this.model.set({
             'indicator': 'ind1',
             'country': ['http://data.lod2.eu/scoreboard/country/Denmark',
@@ -177,7 +183,7 @@ describe('Scenario2ChartView', function() {
             200, {'Content-Type': 'application/json'},
             JSON.stringify(data_es));
 
-        var call_args = scenario2_chart.getCall(0).args;
+        var call_args = this.scenario2_chart.getCall(0).args;
         expect(call_args[1]['series']).to.deep.equal([
             {'label': "Denmark", 'data': data_dk},
             {'label': "Spain", 'data': data_es}
