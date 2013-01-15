@@ -103,7 +103,7 @@ describe('Scenario1ChartView', function() {
         var url = server.requests[0].url;
         expect(url).to.have.string(App.URL + '/data?');
         var url_param = App.testing.url_param;
-        expect(url_param(url, 'method')).to.equal('get_one_indicator_year');
+        expect(url_param(url, 'method')).to.equal('series_indicator_year');
         expect(url_param(url, 'indicator')).to.equal('asdf');
         expect(url_param(url, 'year')).to.equal(
             'http://data.lod2.eu/scoreboard/year/2002');

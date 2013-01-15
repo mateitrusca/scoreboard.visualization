@@ -99,7 +99,7 @@ App.Scenario1ChartView = Backbone.View.extend({
             return;
         }
         var series_ajax = $.get(App.URL + '/data',
-            _({'method': 'get_one_indicator_year'}).extend(args));
+            _({'method': 'series_indicator_year'}).extend(args));
 
         series_ajax.done(function(data) {
             view.data = {
