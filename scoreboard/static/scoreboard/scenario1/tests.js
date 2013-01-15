@@ -119,17 +119,14 @@ describe('Scenario1ChartView', function() {
         var server = this.sandbox.server;
         var ajax_data = [{'country_name': "Austria", 'value': 0.18},
                          {'country_name': "Belgium", 'value': 0.14}];
-        server.requests[0].respond(
-            200, {'Content-Type': 'application/json'},
-            JSON.stringify(ajax_data));
+        App.respond_json(server.requests[0], ajax_data);
 
         var ajax_metadata = [{
             'label': "The Label!",
             'comment': "The Definition!",
             'publisher': "The Source!"
         }];
-        server.requests[1].respond(200, {'Content-Type': 'application/json'},
-                                   JSON.stringify(ajax_metadata));
+        App.respond_json(server.requests[1], ajax_metadata);
 
         expect(this.scenario1_chart.calledOnce).to.equal(true);
         var call_args = this.scenario1_chart.getCall(0).args;

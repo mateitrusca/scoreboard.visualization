@@ -135,12 +135,9 @@ describe('Scenario2ChartView', function() {
         var data_dk = [{'year': "2010", 'value': 0.18},
                        {'year': "2011", 'value': 0.14}];
 
-        server.requests[0].respond(200, {'Content-Type': 'application/json'},
-                                   JSON.stringify(ajax_metadata));
+        App.respond_json(server.requests[0], ajax_metadata);
 
-        server.requests[1].respond(
-            200, {'Content-Type': 'application/json'},
-            JSON.stringify(data_dk));
+        App.respond_json(server.requests[1], data_dk);
 
         var container = this.chart.el;
         expect(this.scenario2_chart.calledOnce).to.equal(true);
@@ -172,16 +169,9 @@ describe('Scenario2ChartView', function() {
         var data_es = [{'year': "2011", 'value': 0.22},
                        {'year': "2012", 'value': 0.26}];
 
-        server.requests[0].respond(200, {'Content-Type': 'application/json'},
-                                   JSON.stringify(ajax_metadata));
-
-        server.requests[1].respond(
-            200, {'Content-Type': 'application/json'},
-            JSON.stringify(data_dk));
-
-        server.requests[2].respond(
-            200, {'Content-Type': 'application/json'},
-            JSON.stringify(data_es));
+        App.respond_json(server.requests[0], ajax_metadata);
+        App.respond_json(server.requests[1], data_dk);
+        App.respond_json(server.requests[2], data_es);
 
         var call_args = this.scenario2_chart.getCall(0).args;
         expect(call_args[1]['series']).to.deep.equal([

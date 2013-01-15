@@ -25,4 +25,10 @@ App.testing.url_param = function(url, name){
 };
 
 
+App.respond_json = function(request, data) {
+    var headers = {'Content-Type': 'application/json'};
+    request.respond(200, headers, JSON.stringify(data));
+}
+
+
 })();

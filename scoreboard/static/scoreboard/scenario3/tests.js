@@ -118,15 +118,10 @@ describe('Scenario3ChartView', function() {
         expect(url_param(url, 'indicator_y')).to.equal('ind3');
         expect(url_param(url, 'year')).to.equal(
             'http://data.lod2.eu/scoreboard/year/2011');
-        data_request.respond(200, {'Content-Type': 'application/json'},
-                                   JSON.stringify(series));
+        App.respond_json(data_request, series);
 
-        this.sandbox.server.requests[1].respond(200,
-            {'Content-Type': 'application/json'},
-            JSON.stringify([{'label': "IndyTwo"}]));
-        this.sandbox.server.requests[2].respond(200,
-            {'Content-Type': 'application/json'},
-            JSON.stringify([{'label': "IndyThree"}]));
+        App.respond_json(this.sandbox.server.requests[1], [{'label': "IndyTwo"}]);
+        App.respond_json(this.sandbox.server.requests[2], [{'label': "IndyThree"}]);
 
         expect(this.scenario3_chart.calledOnce).to.equal(true);
         var call_args = this.scenario3_chart.getCall(0).args;
@@ -140,23 +135,21 @@ describe('Scenario3ChartView', function() {
                         'year': '2011'});
 
         var data_request = this.sandbox.server.requests[0];
-        data_request.respond(200, {'Content-Type': 'application/json'}, '[]');
+        App.respond_json(data_request, []);
 
         var metadata_x_request = this.sandbox.server.requests[1];
         var url = metadata_x_request.url;
         expect(url).to.have.string(App.URL + '/data?');
         expect(url_param(url, 'method')).to.equal('get_indicator_meta');
         expect(url_param(url, 'indicator')).to.equal('ind2');
-        metadata_x_request.respond(200, {'Content-Type': 'application/json'},
-            JSON.stringify([{'label': "IndyTwo"}]));
+        App.respond_json(metadata_x_request, [{'label': "IndyTwo"}]);
 
         var metadata_y_request = this.sandbox.server.requests[2];
         url = metadata_y_request.url;
         expect(url).to.have.string(App.URL + '/data?');
         expect(url_param(url, 'method')).to.equal('get_indicator_meta');
         expect(url_param(url, 'indicator')).to.equal('ind3');
-        metadata_y_request.respond(200, {'Content-Type': 'application/json'},
-            JSON.stringify([{'label': "IndyThree"}]));
+        App.respond_json(metadata_y_request, [{'label': "IndyThree"}]);
 
         expect(this.scenario3_chart.calledOnce).to.equal(true);
         var call_args = this.scenario3_chart.getCall(0).args;
