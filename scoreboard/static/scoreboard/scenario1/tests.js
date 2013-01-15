@@ -130,10 +130,9 @@ describe('Scenario1ChartView', function() {
         server.requests[1].respond(200, {'Content-Type': 'application/json'},
                                    JSON.stringify(ajax_metadata));
 
-        var container = this.chart.$el.find('.highcharts-chart')[0];
         expect(scenario1_chart.calledOnce).to.equal(true);
         var call_args = scenario1_chart.getCall(0).args;
-        expect(call_args[0]).to.equal(container);
+        expect(call_args[0]).to.equal(this.chart.el);
         expect(call_args[1]['series']).to.deep.equal(ajax_data);
         expect(call_args[1]['indicator_label']).to.equal(
             ajax_metadata[0]['label']);
