@@ -80,38 +80,47 @@ App.Scenario1ChartView = Backbone.View.extend({
     template: App.get_template('scoreboard/scenario1/chart.html'),
 
     initialize: function() {
-        this.model.on('change', this.render, this);
-        this.render();
+        this.model.on('change', this.filters_changed, this);
+        this.filters_changed();
     },
 
     render: function() {
         this.$el.html(this.template(this.model.toJSON()));
-        var container = this.$el.find('.highcharts-chart')[0];
-        var args = App.make_scenario1_filter_args(this.model);
-        if(args) {
-            var series_ajax = $.get(App.URL + '/data',
-                _({'method': 'get_one_indicator_year'}).extend(args));
-            var metadata_ajax = $.get(App.URL + '/data',
-                _({'method': 'get_indicator_meta'}).extend(args));
-            $.when(series_ajax, metadata_ajax).done(
-                function(series_resp, metadata_resp) {
-                var metadata = metadata_resp[0][0];
-                var options = {
-                    'series': series_resp[0],
-                    'year_text': "Year 2011",
-                    'indicator_label': metadata['label'],
-                    'credits': {
-                        'href': 'http://ec.europa.eu/digital-agenda/en/graphs/',
-                        'text': 'European Commission, Digital Agenda Scoreboard'
-                    },
-                    'tooltip_formatter': function() {
-                        return '<b>'+ this.x +'</b><br>: ' +
-                               Math.round(this.y*10)/10 + ' %_ind';
-                    }
-                };
-                App.scenario1_chart(container, options);
-            });
+        if(this.data) {
+            var container = this.$el.find('.highcharts-chart')[0];
+            App.scenario1_chart(container, this.data);
         }
+    },
+
+    filters_changed: function() {
+        var args = App.make_scenario1_filter_args(this.model);
+        var view = this;
+        if(! args) {
+            return;
+        }
+        var series_ajax = $.get(App.URL + '/data',
+            _({'method': 'get_one_indicator_year'}).extend(args));
+        var metadata_ajax = $.get(App.URL + '/data',
+            _({'method': 'get_indicator_meta'}).extend(args));
+
+        $.when(series_ajax, metadata_ajax).done(
+            function(series_resp, metadata_resp) {
+            var metadata = metadata_resp[0][0];
+            view.data = {
+                'series': series_resp[0],
+                'year_text': "Year 2011",
+                'indicator_label': metadata['label'],
+                'credits': {
+                    'href': 'http://ec.europa.eu/digital-agenda/en/graphs/',
+                    'text': 'European Commission, Digital Agenda Scoreboard'
+                },
+                'tooltip_formatter': function() {
+                    return '<b>'+ this.x +'</b><br>: ' +
+                           Math.round(this.y*10)/10 + ' %_ind';
+                }
+            };
+            view.render();
+        });
     }
 
 });
