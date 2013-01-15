@@ -71,7 +71,7 @@ class ScenarioView(object):
             years[row['indicator']].append(row['year_label'])
 
         indicators = []
-        for row in run_query(self.context['get_all_indicator_labels']):
+        for row in run_query(self.context['all_indicators']):
             indicators.append({
                 'uri': row['indicator'],
                 'label': row['label'],

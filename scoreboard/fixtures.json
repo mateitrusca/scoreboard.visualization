@@ -10,14 +10,6 @@
   {
     "arg_spec": "",
     "endpoint_url": "http://virtuoso.scoreboard.edw.ro/sparql",
-    "id": "get_all_indicator_labels",
-    "query": "PREFIX cls: <http://data.lod2.eu/scoreboard/classes/>\r\n\r\nSELECT ?indicator ?label WHERE {\r\n\r\n?indicator\r\n    a cls:Indicator ;\r\n    rdfs:label ?label .\r\n\r\n}\r\n\r\nLIMIT 1000\r\n",
-    "timeout": null,
-    "title": ""
-  },
-  {
-    "arg_spec": "",
-    "endpoint_url": "http://virtuoso.scoreboard.edw.ro/sparql",
     "id": "get_all_indicators_to_years",
     "query": "PREFIX prop: <http://data.lod2.eu/scoreboard/properties/>\r\nPREFIX qb: <http://purl.org/linked-data/cube#>\r\nPREFIX country: <http://data.lod2.eu/scoreboard/country/>\r\n\r\nSELECT DISTINCT ?indicator, ?year_label WHERE {\r\n\r\n?observation\r\n    a qb:Observation ;\r\n    prop:indicator ?indicator ;\r\n    prop:year ?year .\r\n\r\n?year\r\n    rdfs:label ?year_label .\r\n\r\n}\r\n\r\nLIMIT 1000\r\n",
     "timeout": null,
@@ -52,6 +44,14 @@
     "endpoint_url": "http://virtuoso.scoreboard.edw.ro/sparql",
     "id": "series_2indicator_year",
     "query": "PREFIX prop: <http://data.lod2.eu/scoreboard/properties/>\r\nPREFIX qb: <http://purl.org/linked-data/cube#>\r\nPREFIX country: <http://data.lod2.eu/scoreboard/country/>\r\n\r\nSELECT ?country_name, ?value_x, ?value_y WHERE {\r\n\r\n?observation_x\r\n    a qb:Observation ;\r\n    prop:indicator $indicator_x ;\r\n    prop:year $year ;\r\n    prop:country ?country ;\r\n    prop:value ?value_x .\r\n\r\n?observation_y\r\n    a qb:Observation ;\r\n    prop:indicator $indicator_y ;\r\n    prop:year $year ;\r\n    prop:country ?country ;\r\n    prop:value ?value_y .\r\n\r\n?country\r\n    rdfs:label ?country_name .\r\n\r\n}\r\n\r\nLIMIT 1000\r\n",
+    "timeout": null,
+    "title": ""
+  },
+  {
+    "arg_spec": "",
+    "endpoint_url": "http://virtuoso.scoreboard.edw.ro/sparql",
+    "id": "all_indicators",
+    "query": "PREFIX cls: <http://data.lod2.eu/scoreboard/classes/>\r\n\r\nSELECT ?indicator ?label WHERE {\r\n\r\n?indicator\r\n    a cls:Indicator ;\r\n    rdfs:label ?label .\r\n\r\n}\r\n\r\nLIMIT 1000\r\n",
     "timeout": null,
     "title": ""
   }
