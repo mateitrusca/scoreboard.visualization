@@ -63,14 +63,20 @@ App.Scenario2ChartView = Backbone.View.extend({
         var countries = options['countries'];
         this.country_label = _.object(_(countries).pluck('uri'),
                                       _(countries).pluck('label'));
-        this.model.on('change', this.render, this);
-        this.render();
+        this.model.on('change', this.filters_changed, this);
+        this.filters_changed();
     },
 
     render: function() {
         this.$el.html(this.template(this.model.toJSON()));
-        var container = this.$el.find('.highcharts-chart')[0];
+        if(this.data) {
+            var container = this.$el.find('.highcharts-chart')[0];
+            App.scenario2_chart(container, this.data);
+        }
+    },
 
+    filters_changed: function() {
+        var view = this;
         var args = this.model.toJSON();
         if(! (args['indicator'] && args['country'])) {
             return;
@@ -98,7 +104,7 @@ App.Scenario2ChartView = Backbone.View.extend({
             var series = _(responses).map(function(resp, n) {
                 return {'label': country_label[countries[n]], 'data': resp[0]};
             });
-            var options = {
+            view.data = {
                 'series': series,
                 'indicator_label': metadata['label'],
                 'credits': {
@@ -106,7 +112,7 @@ App.Scenario2ChartView = Backbone.View.extend({
                     'text': 'European Commission, Digital Agenda Scoreboard'
                 }
             };
-            App.scenario2_chart(container, options);
+            view.render();
         });
     }
 

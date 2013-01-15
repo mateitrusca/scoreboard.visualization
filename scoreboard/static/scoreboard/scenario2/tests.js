@@ -139,10 +139,9 @@ describe('Scenario2ChartView', function() {
             200, {'Content-Type': 'application/json'},
             JSON.stringify(data_dk));
 
-        var container = this.chart.$el.find('.highcharts-chart')[0];
         expect(scenario2_chart.calledOnce).to.equal(true);
         var call_args = scenario2_chart.getCall(0).args;
-        expect(call_args[0]).to.equal(container);
+        expect(call_args[0]).to.equal(this.chart.el);
         expect(call_args[1]['series']).to.deep.equal([
             {'label': "Denmark", 'data': data_dk}
         ]);
