@@ -65,6 +65,9 @@ class ScenarioView(object):
     def scenario3(self):
         return self.render_template(entry_point='App.scenario3_initialize')
 
+    def scenario5(self):
+        return self.render_template(entry_point='App.scenario5_initialize')
+
     def filters_data(self):
         years = defaultdict(list)
         for row in run_query(self.context['map_indicators_years']):
