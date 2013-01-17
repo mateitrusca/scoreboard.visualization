@@ -79,7 +79,7 @@ var country_data = [
     {code: 'DE',   color: '#FFC600', label: "Germany"},
     {code: 'DK',   color: '#45BF55', label: "Denmark"},
     {code: 'EE',   color: '#0EEAFF', label: "Estonia"},
-    {code: 'EL',   color: '#6A07B0', label: "Greece"},
+    {code: 'GR',   color: '#6A07B0', label: "Greece"},
     {code: 'ES',   color: '#044C29', label: "Spain"},
     {code: 'FI',   color: '#7FB2F0', label: "Finland"},
     {code: 'FR',   color: '#15A9FA', label: "France"},
@@ -101,7 +101,7 @@ var country_data = [
     {code: 'SI',   color: '#648E23', label: "Slovenia"},
     {code: 'SK',   color: '#7DC30F', label: "Slovak Republic"},
     {code: 'TR',   color: '#9900AB', label: "Turkey"},
-    {code: 'UK',   color: '#D000C4', label: "United Kingdom"},
+    {code: 'GB',   color: '#D000C4', label: "United Kingdom"},
     {code: 'EU27', color: '#94090D', label: "European Union - 27 countries"}
 ];
 
