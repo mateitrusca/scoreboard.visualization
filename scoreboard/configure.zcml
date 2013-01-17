@@ -40,6 +40,14 @@
     />
 
   <browser:page
+    name="scenario5"
+    for=".views.IScoreboard"
+    class=".views.ScenarioView"
+    attribute="scenario5"
+    permission="zope2.View"
+    />
+
+  <browser:page
     name="filters_data"
     for=".views.IScoreboard"
     class=".views.ScenarioView"

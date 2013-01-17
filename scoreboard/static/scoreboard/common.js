@@ -114,4 +114,8 @@ App.COUNTRY_CODE = _.object(_(country_data).pluck('label'),
                             _(country_data).pluck('code'));
 
 
+App.COUNTRY_NAME = _.object(_(country_data).pluck('code'),
+                            _(country_data).pluck('label'));
+
+
 })();
