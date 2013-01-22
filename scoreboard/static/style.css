@@ -1,3 +1,7 @@
 .scenario2 .select2-container {
     min-width: 400px;
 }
+
+html {
+    overflow-y: scroll;
+}
