@@ -30,8 +30,9 @@ App.scenario5_map = function(container, options) {
             },
             tooltips: function(feature) {
                 var code = feature['code'];
+                var value = value_by_country[code];
                 return [App.COUNTRY_NAME[code],
-                        value_by_country[code] || 'n/a'];
+                        (value ? App.round(value, 3) : 'n/a')];
             }
         });
         map.getLayer('countries').style({
