@@ -63,18 +63,6 @@ App.Scenario1FiltersView = Backbone.View.extend({
 });
 
 
-App.make_scenario1_filter_args = function(model) {
-    var args = model.toJSON();
-    if(!(args['indicator'] && args['year'])) {
-        return null;
-    }
-    return {
-        'indicator': args['indicator'],
-        'year': 'http://data.lod2.eu/scoreboard/year/' + args['year']
-    };
-};
-
-
 App.Scenario1ChartView = Backbone.View.extend({
 
     className: 'highcharts-chart',
@@ -93,13 +81,16 @@ App.Scenario1ChartView = Backbone.View.extend({
     },
 
     filters_changed: function() {
-        var args = App.make_scenario1_filter_args(this.model);
         var view = this;
-        if(! args) {
+        var args = this.model.toJSON();
+        if(!(args['indicator'] && args['year'])) {
             return;
         }
-        var series_ajax = $.get(App.URL + '/data',
-            _({'method': 'series_indicator_year'}).extend(args));
+        var series_ajax = $.get(App.URL + '/data', {
+            'method': 'series_indicator_year',
+            'indicator': args['indicator'],
+            'year': 'http://data.lod2.eu/scoreboard/year/' + args['year']
+        });
 
         series_ajax.done(function(data) {
             view.data = {
