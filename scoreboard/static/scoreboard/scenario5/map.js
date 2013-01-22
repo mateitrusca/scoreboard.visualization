@@ -6,14 +6,16 @@
 
 
 App.scenario5_map = function(container, options) {
-    var data = options['data'];
+    var series = options['series'];
     var value_by_country = _.object(
-        _(data).map(function(v) { return App.COUNTRY_CODE[v['cname']]; }),
-        _(data).pluck('value'));
+        _(series).map(function(v) {
+            return App.COUNTRY_CODE[v['country_name']];
+        }),
+        _(series).pluck('value'));
 
     var colorscale = new chroma.ColorScale({
         colors: chroma.brewer['YlOrBr'],
-        limits: [0, _(_(data).pluck('value')).max()]
+        limits: [0, _(_(series).pluck('value')).max()]
     });
 
     var n = 0;
@@ -28,8 +30,9 @@ App.scenario5_map = function(container, options) {
             },
             tooltips: function(feature) {
                 var code = feature['code'];
+                var value = value_by_country[code];
                 return [App.COUNTRY_NAME[code],
-                        value_by_country[code] || 'n/a'];
+                        (value ? App.round(value, 3) : 'n/a')];
             }
         });
         map.getLayer('countries').style({
