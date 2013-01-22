@@ -5,3 +5,7 @@
 html {
     overflow-y: scroll;
 }
+
+.scenario5 #the-map {
+    height: 500px;
+}
