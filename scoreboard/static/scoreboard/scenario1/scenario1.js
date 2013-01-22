@@ -74,7 +74,6 @@ App.Scenario1ChartView = Backbone.View.extend({
     },
 
     render: function() {
-        this.$el.html();
         if(this.data) {
             App.scenario1_chart(this.el, this.data);
         }
