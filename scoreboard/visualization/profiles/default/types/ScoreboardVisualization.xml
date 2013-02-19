@@ -2,7 +2,7 @@
 <object name="ScoreboardVisualization"
    meta_type="Factory-based Type Information with dynamic views"
    i18n:domain="scoreboard.visualization" xmlns:i18n="http://xml.zope.org/namespaces/i18n">
-  <property name="title" i18n:translate="">ScoreboardVisualization</property>
+  <property name="title" i18n:translate="">Scoreboard Visualization</property>
   <property name="description"
     i18n:translate="">Description of the Example Type</property>
   <property name="content_meta_type">ScoreboardVisualization</property>
@@ -13,9 +13,9 @@
   <property name="global_allow">True</property>
   <property name="filter_content_types">False</property>
   <property name="allow_discussion">False</property>
-  <property name="default_view">chart</property>
+  <property name="default_view">daviz-view.html</property>
   <property name="view_methods">
-    <element value="chart" />
+    <element value="daviz-view.html" />
   </property>
   <alias from="(Default)" to="(dynamic view)" />
   <alias from="edit" to="atct_edit" />

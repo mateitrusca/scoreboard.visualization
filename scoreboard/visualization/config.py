@@ -1,9 +1,11 @@
 """Common configuration constants
 """
-
 PROJECTNAME = 'scoreboard.visualization'
 
 ADD_PERMISSIONS = {
-    # -*- extra stuff goes here -*-
-    'ScoreboardVisualization': 'scoreboard.visualization: Add ScoreboardVisualization',
+    'ScoreboardVisualization':
+        'scoreboard.visualization: Add ScoreboardVisualization',
 }
+
+from zope.i18nmessageid.message import MessageFactory
+_ = MessageFactory('scoreboard')

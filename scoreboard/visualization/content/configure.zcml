@@ -1,10 +1,11 @@
 <configure
     xmlns="http://namespaces.zope.org/zope"
     xmlns:five="http://namespaces.zope.org/five"
-    i18n_domain="scoreboard.visualization">
+    xmlns:browser="http://namespaces.zope.org/browser"
+    i18n_domain="scoreboard">
 
   <!-- configure your content components here -->
-  
+
   <!-- -*- extra stuff goes here -*- -->
   <class class=".scoreboardvisualization.ScoreboardVisualization">
     <require
@@ -12,5 +13,17 @@
         interface="..interfaces.IScoreboardVisualization"
         />
   </class>
+
+  <class class=".scoreboardvisualization.ScoreboardVisualization">
+    <implements interface="eea.app.visualization.interfaces.IVisualizationEnabled" />
+  </class>
+
+  <browser:page
+    name="daviz_support"
+    for=".scoreboardvisualization.ScoreboardVisualization"
+    class=".support.VisualizationSupport"
+    permission="zope.Public"
+    allowed_interface="eea.app.visualization.subtypes.interfaces.IVisualizationSubtyper"
+    />
 
 </configure>

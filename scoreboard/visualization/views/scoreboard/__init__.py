@@ -1,0 +1,2 @@
+""" Scoreboard daviz view
+"""

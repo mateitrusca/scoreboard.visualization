@@ -1,6 +1,4 @@
-# -*- coding: utf-8 -*-
-"""
-This module contains the tool of scoreboard.visualization
+""" This module contains the tool of scoreboard.visualization
 """
 from setuptools import setup, find_packages
 
@@ -19,6 +17,9 @@ setup(name='scoreboard.visualization',
       url='http://github.com/eaudeweb',
       license='GPL',
       install_requires=[
+        'setuptools',
+        'edw.highcharts',
+        'eea.app.visualization',
         'Jinja2',
         'path.py',
         'simplejson',
