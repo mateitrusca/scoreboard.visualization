@@ -63,13 +63,6 @@
     />
 
   <browser:page
-    name="tests"
-    for=".views.IScoreboard"
-    class=".views.TestsView"
-    permission="zope2.View"
-    />
-
-  <browser:page
     name="fixtures-dump"
     for=".views.IScoreboard"
     class=".views.FixturesView"

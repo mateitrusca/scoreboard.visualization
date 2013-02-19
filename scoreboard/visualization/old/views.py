@@ -97,12 +97,6 @@ class ScenarioView(object):
         })
 
 
-class TestsView(object):
-
-    def __call__(self):
-        return render_template('tests.html', URL=self.context.absolute_url())
-
-
 class DataView(object):
 
     def __call__(self):
