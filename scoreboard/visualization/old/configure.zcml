@@ -2,51 +2,6 @@
   xmlns="http://namespaces.zope.org/zope"
   xmlns:browser="http://namespaces.zope.org/browser">
 
-  <browser:defaultView
-    for=".views.IScoreboard"
-    name="index"
-    />
-
-  <browser:page
-    name="index"
-    for=".views.IScoreboard"
-    class=".views.ScenarioView"
-    attribute="index"
-    permission="zope2.View"
-    />
-
-  <browser:page
-    name="scenario1"
-    for=".views.IScoreboard"
-    class=".views.ScenarioView"
-    attribute="scenario1"
-    permission="zope2.View"
-    />
-
-  <browser:page
-    name="scenario2"
-    for=".views.IScoreboard"
-    class=".views.ScenarioView"
-    attribute="scenario2"
-    permission="zope2.View"
-    />
-
-  <browser:page
-    name="scenario3"
-    for=".views.IScoreboard"
-    class=".views.ScenarioView"
-    attribute="scenario3"
-    permission="zope2.View"
-    />
-
-  <browser:page
-    name="scenario5"
-    for=".views.IScoreboard"
-    class=".views.ScenarioView"
-    attribute="scenario5"
-    permission="zope2.View"
-    />
-
   <browser:page
     name="filters_data"
     for=".views.IScoreboard"

@@ -48,26 +48,6 @@ class ScenarioView(object):
         self.request.RESPONSE.setHeader("Content-Type", "application/json")
         return json.dumps(data, indent=2, sort_keys=True)
 
-    def render_template(self, name='scenario.html', **kwargs):
-        data = {'URL': self.context.absolute_url()}
-        data.update(kwargs)
-        return render_template(name, **data)
-
-    def index(self):
-        return self.render_template('index.html')
-
-    def scenario1(self):
-        return self.render_template(entry_point='App.scenario1_initialize')
-
-    def scenario2(self):
-        return self.render_template(entry_point='App.scenario2_initialize')
-
-    def scenario3(self):
-        return self.render_template(entry_point='App.scenario3_initialize')
-
-    def scenario5(self):
-        return self.render_template(entry_point='App.scenario5_initialize')
-
     def filters_data(self):
         years = defaultdict(list)
         for row in run_query(self.context['map_indicators_years']):
