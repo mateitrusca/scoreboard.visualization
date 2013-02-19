@@ -1,0 +1,30 @@
+<div>
+  Select one Indicator (X-Axis):
+  <select name="indicator_x">
+  {{# indicators_for_x }}
+    <option {{# if selected }} selected="selected" {{/ if }}
+            value="{{ uri }}">{{ label }}</option>
+  {{/ indicators_for_x }}
+  </select>
+</div>
+
+<div>
+  Select one Indicator (Y-Axis):
+  <select name="indicator_y">
+  {{# indicators_for_y }}
+    <option {{# if selected }} selected="selected" {{/ if }}
+            value="{{ uri }}">{{ label }}</option>
+  {{/ indicators_for_y }}
+  </select>
+</div>
+
+<div>
+  Select the Year:
+  {{# years }}
+    <label>
+      <input type="radio" name="year" value="{{ value }}"
+             {{# if selected}} checked="checked" {{/ if }}>
+      {{ value }}
+    </label>
+  {{/ years }}
+</div>

@@ -1,0 +1,93 @@
+<configure
+  xmlns="http://namespaces.zope.org/zope"
+  xmlns:browser="http://namespaces.zope.org/browser">
+
+  <browser:defaultView
+    for=".views.IScoreboard"
+    name="index"
+    />
+
+  <browser:page
+    name="index"
+    for=".views.IScoreboard"
+    class=".views.ScenarioView"
+    attribute="index"
+    permission="zope2.View"
+    />
+
+  <browser:page
+    name="scenario1"
+    for=".views.IScoreboard"
+    class=".views.ScenarioView"
+    attribute="scenario1"
+    permission="zope2.View"
+    />
+
+  <browser:page
+    name="scenario2"
+    for=".views.IScoreboard"
+    class=".views.ScenarioView"
+    attribute="scenario2"
+    permission="zope2.View"
+    />
+
+  <browser:page
+    name="scenario3"
+    for=".views.IScoreboard"
+    class=".views.ScenarioView"
+    attribute="scenario3"
+    permission="zope2.View"
+    />
+
+  <browser:page
+    name="scenario5"
+    for=".views.IScoreboard"
+    class=".views.ScenarioView"
+    attribute="scenario5"
+    permission="zope2.View"
+    />
+
+  <browser:page
+    name="filters_data"
+    for=".views.IScoreboard"
+    class=".views.ScenarioView"
+    attribute="filters_data"
+    permission="zope2.View"
+    />
+
+  <browser:page
+    name="data"
+    for=".views.IScoreboard"
+    class=".views.DataView"
+    permission="zope2.View"
+    />
+
+  <browser:page
+    name="tests"
+    for=".views.IScoreboard"
+    class=".views.TestsView"
+    permission="zope2.View"
+    />
+
+  <browser:page
+    name="fixtures-dump"
+    for=".views.IScoreboard"
+    class=".views.FixturesView"
+    attribute="dump"
+    permission="zope2.ViewManagementScreens"
+    />
+
+  <browser:page
+    name="fixtures-load"
+    for=".views.IScoreboard"
+    class=".views.FixturesView"
+    attribute="load"
+    permission="zope2.ViewManagementScreens"
+    />
+
+  <browser:resourceDirectory
+    name="scoreboard"
+    directory="./static"
+    />
+
+</configure>
