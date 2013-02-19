@@ -5,7 +5,7 @@
 
   <div metal:fill-slot="content-core">
 
-     hello scoreboard from a template
+     <h3 tal:content="view/message"/>
 
   </div>
 
