@@ -1,0 +1,3 @@
+.daviz-view-edit .field input[type="text"][name$=".title"] {
+  height: auto;
+}

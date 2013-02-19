@@ -1,12 +1,11 @@
-# -*- coding: utf-8 -*-
-"""
-This module contains the tool of scoreboard.visualization
+""" This module contains the tool of scoreboard.visualization
 """
 import os
 from setuptools import setup, find_packages
 
 
 def read(*rnames):
+    """ Read """
     return open(os.path.join(os.path.dirname(__file__), *rnames)).read()
 
 NAME = 'scoreboard.visualization'
@@ -56,9 +55,12 @@ setup(name=NAME,
       namespace_packages=['scoreboard', ],
       include_package_data=True,
       zip_safe=False,
-      install_requires=['setuptools',
-                        # -*- Extra requirements: -*-
-                        ],
+      install_requires=[
+          'setuptools',
+          'edw.highcharts',
+          'eea.app.visualization',
+          # -*- Extra requirements: -*-
+          ],
       tests_require=tests_require,
       extras_require=dict(tests=tests_require),
       test_suite='scoreboard.visualization.tests.test_docs.test_suite',

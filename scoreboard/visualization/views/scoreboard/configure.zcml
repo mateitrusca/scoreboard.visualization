@@ -1,0 +1,32 @@
+<configure
+  xmlns="http://namespaces.zope.org/zope"
+  xmlns:daviz="http://namespaces.zope.org/daviz"
+  xmlns:browser="http://namespaces.zope.org/browser">
+
+  <daviz:view name="scoreboard.highchart" />
+
+  <browser:page
+    for="eea.app.visualization.interfaces.IVisualizationEnabled"
+    name="scoreboard.highchart"
+    template="view.pt"
+    class=".view.View"
+    permission="zope2.View"
+    />
+
+  <browser:page
+    for="eea.app.visualization.interfaces.IVisualizationEnabled"
+    name="scoreboard.highchart.edit"
+    class=".edit.Edit"
+    permission="eea.app.visualization.configure"
+    />
+
+  <browser:resource name="scoreboard.highchart.icon.png" file="icon.png" />
+  <browser:resource name="scoreboard.highchart.preview.png" file="preview.png" />
+
+  <subscriber
+    for="scoreboard.visualization.interfaces.IScoreboardVisualization
+         eea.app.visualization.interfaces.IVisualizationEnabledEvent"
+    handler=".events.create_default_views"
+    />
+
+</configure>

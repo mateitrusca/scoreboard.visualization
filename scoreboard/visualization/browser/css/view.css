@@ -1,0 +1,5 @@
+/* Exhibit custom CSS */
+
+.tab-scoreboard-highchart span {
+  background: url("../../++resource++scoreboard.highchart.icon.png") no-repeat;
+}

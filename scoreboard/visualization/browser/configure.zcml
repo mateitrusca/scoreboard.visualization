@@ -3,14 +3,26 @@
     xmlns:browser="http://namespaces.zope.org/browser"
     i18n_domain="scoreboard.visualization">
 
-  <include package="plone.app.contentmenu" />
+  <include package=".resources" />
 
-  <browser:page
-    name="chart"
-    for="..interfaces.IScoreboardVisualization"
-    permission="zope2.View"
-    template="view.pt"
-    class=".views.ChartView"
+  <browser:resource
+    name="scoreboard.visualization.view.css"
+    file="./css/view.css"
+   />
+
+  <browser:resource
+    name="scoreboard.visualization.edit.css"
+    file="./css/edit.css"
     />
+
+  <browser:resource
+    name="scoreboard.visualization.view.js"
+    file="./js/view.js"
+   />
+
+  <browser:resource
+    name="scoreboard.visualization.edit.js"
+    file="./js/edit.js"
+   />
 
 </configure>
