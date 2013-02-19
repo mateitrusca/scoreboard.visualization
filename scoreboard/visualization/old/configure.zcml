@@ -17,22 +17,6 @@
     permission="zope2.View"
     />
 
-  <browser:page
-    name="fixtures-dump"
-    for=".views.IScoreboard"
-    class=".views.FixturesView"
-    attribute="dump"
-    permission="zope2.ViewManagementScreens"
-    />
-
-  <browser:page
-    name="fixtures-load"
-    for=".views.IScoreboard"
-    class=".views.FixturesView"
-    attribute="load"
-    permission="zope2.ViewManagementScreens"
-    />
-
   <browser:resourceDirectory
     name="scoreboard"
     directory="./static"
