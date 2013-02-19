@@ -32,7 +32,16 @@ def render_template(name, **kwargs):
     return jinja_env.get_template(name).render(**kwargs)
 
 
-def run_query(method_ob, **kwargs):
+queries = {q['id']: q for q in json.loads(
+    (path(__file__).parent / 'fixtures.json').bytes())}
+
+
+def run_query(method_name, **kwargs):
+    from Products.ZSPARQLMethod.Method import ZSPARQLMethod
+    q = queries[method_name]
+    method_ob = ZSPARQLMethod(q['id'], q['title'], q['endpoint_url'])
+    method_ob.arg_spec = q['arg_spec']
+    method_ob.query = q['query']
     result = method_ob(**kwargs)
     return [dict(zip(result.var_names, unpack_row(row)))
            for row in result.rdfterm_rows]
@@ -50,11 +59,11 @@ class ScenarioView(object):
 
     def filters_data(self):
         years = defaultdict(list)
-        for row in run_query(self.context['map_indicators_years']):
+        for row in run_query('map_indicators_years'):
             years[row['indicator']].append(row['year_label'])
 
         indicators = []
-        for row in run_query(self.context['all_indicators']):
+        for row in run_query('all_indicators'):
             indicators.append({
                 'uri': row['indicator'],
                 'label': row['label'],
@@ -65,7 +74,7 @@ class ScenarioView(object):
             })
 
         countries = []
-        for row in run_query(self.context['all_countries']):
+        for row in run_query('all_countries'):
             countries.append({
                 'uri': row['country'],
                 'label': row['label'],
@@ -82,7 +91,7 @@ class DataView(object):
     def __call__(self):
         args = dict(self.request.form)
         method_name = args.pop('method')
-        out = run_query(self.context[method_name], **args)
+        out = run_query(method_name, **args)
 
         self.request.RESPONSE.setHeader("Content-Type", "application/json")
         return json.dumps(out, indent=2, sort_keys=True)
