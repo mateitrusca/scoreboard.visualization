@@ -1,7 +1,7 @@
-/*global App, $script, $ */
+/*global App, $script */
 /*jshint sub:true */
 
-(function() {
+(function($) {
 "use strict";
 
 
@@ -86,4 +86,4 @@ App.scenario5_initialize = function() {
 };
 
 
-})();
+})(App.jQuery);

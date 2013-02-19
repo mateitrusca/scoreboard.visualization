@@ -1,7 +1,7 @@
-/*global App, Backbone, $ */
+/*global App, Backbone */
 /*jshint sub:true */
 
-(function() {
+(function($) {
 "use strict";
 
 
@@ -118,4 +118,4 @@ App.COUNTRY_NAME = _.object(_(country_data).pluck('code'),
                             _(country_data).pluck('label'));
 
 
-})();
+})(App.jQuery);

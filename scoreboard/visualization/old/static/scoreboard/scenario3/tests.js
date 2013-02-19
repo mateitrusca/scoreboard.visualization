@@ -1,9 +1,10 @@
-/*global App, Backbone, $, describe, beforeEach, afterEach, it, expect, sinon */
+/*global App, Backbone, describe, beforeEach, afterEach, it, expect, sinon */
 /*jshint sub:true */
 
 describe('Scenario3FiltersView', function() {
     "use strict";
 
+    var $ = App.jQuery;
     var choose = App.testing.choose_option;
 
     beforeEach(function() {

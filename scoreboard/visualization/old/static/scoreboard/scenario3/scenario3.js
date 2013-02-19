@@ -1,7 +1,7 @@
-/*global App, Backbone, $, _ */
+/*global App, Backbone, _ */
 /*jshint sub:true */
 
-(function() {
+(function($) {
 "use strict";
 
 
@@ -166,4 +166,4 @@ App.scenario3_initialize = function() {
 };
 
 
-})();
+})(App.jQuery);
