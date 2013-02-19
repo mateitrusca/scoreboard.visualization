@@ -1,20 +1,8 @@
-{% extends "layout.html" %}
+{% from 'common.html' import include_js_app with context %}
+{{ include_js_app() }}
 
+<div id="scenario-box"></div>
 
-{% block content %}
-
-  <div id="scenario-box"></div>
-
-{% endblock %}
-
-
-{% block script %}
-
-  {% from 'common.html' import include_js_app with context %}
-  {{ include_js_app() }}
-
-  <script>
-    $(document).ready({{ entry_point }});
-  </script>
-
-{% endblock %}
+<script>
+  $(document).ready({{ entry_point }});
+</script>

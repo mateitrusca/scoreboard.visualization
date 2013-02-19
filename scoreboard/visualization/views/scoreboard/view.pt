@@ -1,5 +1,5 @@
 <div class="daviz-tab-view daviz-tab-view-noscript" tal:attributes="id view/tabname" i18n:domain="scoreboard">
   <div class="daviz-views">
-    <div tal:replace="structure python:view.message" />
+    <div tal:replace="structure python:view.get_chart()" />
   </div>
 </div>

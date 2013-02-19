@@ -1,8 +1,10 @@
 """ Tiles view module
 """
+import json
 from zope.interface import implements
 from eea.app.visualization.views.view import ViewForm
 from scoreboard.visualization.views.scoreboard.interfaces import IScoreboardView
+from scoreboard.visualization.old.views import render_template
 
 class View(ViewForm):
     """ Tile view
@@ -16,9 +18,11 @@ class View(ViewForm):
         """
         return self.data.get('title', '') or self._label
 
-
-    @property
-    def message(self):
-        """ Message
-        """
-        return "Hello from scoreboard!"
+    def get_chart(self):
+        old_context = self.context.restrictedTraverse('/scoreboard')
+        data = {
+            'URL': old_context.absolute_url(),
+            'entry_point': 'App.scenario1_initialize',
+        }
+        data.update(json.loads(self.data['configuration'])['chart-options'])
+        return render_template('scenario.html', **data)
