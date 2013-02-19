@@ -20,6 +20,25 @@
     permission="eea.app.visualization.configure"
     />
 
+  <browser:page
+    name="filters_data"
+    for="...interfaces.IScoreboardVisualization"
+    class=".data.FiltersView"
+    permission="zope2.View"
+    />
+
+  <browser:page
+    name="data"
+    for="...interfaces.IScoreboardVisualization"
+    class=".data.DataView"
+    permission="zope2.View"
+    />
+
+  <browser:resourceDirectory
+    name="scoreboard"
+    directory="./../../old/static"
+    />
+
   <browser:resource name="scoreboard.highchart.icon.png" file="icon.png" />
   <browser:resource name="scoreboard.highchart.preview.png" file="preview.png" />
 

@@ -2,24 +2,4 @@
   xmlns="http://namespaces.zope.org/zope"
   xmlns:browser="http://namespaces.zope.org/browser">
 
-  <browser:page
-    name="filters_data"
-    for=".views.IScoreboard"
-    class=".views.ScenarioView"
-    attribute="filters_data"
-    permission="zope2.View"
-    />
-
-  <browser:page
-    name="data"
-    for=".views.IScoreboard"
-    class=".views.DataView"
-    permission="zope2.View"
-    />
-
-  <browser:resourceDirectory
-    name="scoreboard"
-    directory="./static"
-    />
-
 </configure>

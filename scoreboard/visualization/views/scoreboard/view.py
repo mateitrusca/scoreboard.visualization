@@ -19,9 +19,8 @@ class View(ViewForm):
         return self.data.get('title', '') or self._label
 
     def get_chart(self):
-        old_context = self.context.restrictedTraverse('/scoreboard')
         data = {
-            'URL': old_context.absolute_url(),
+            'URL': self.context.absolute_url(),
             'entry_point': 'App.scenario1_initialize',
         }
         data.update(json.loads(self.data['configuration'])['chart-options'])
