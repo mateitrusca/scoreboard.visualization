@@ -23,14 +23,24 @@ SELECT DISTINCT ?{{ facet }} WHERE {
 
 }
 
+{% if constraints %}
+{% set k,v = constraints.items()[0] %}
+FILTER (str(?{{ k }}) = '{{ v }}')
+{% endif %}
+
 LIMIT 1000
 """)
 
 
 def prepare_query(facet, **constraints):
-    return query_template.render(facet=facet)
+    return query_template.render(facet=facet, constraints=constraints)
 
 
 def test_select_facet():
     assert "SELECT DISTINCT ?indicator WHERE" in prepare_query('indicator')
     assert "SELECT DISTINCT ?year_label WHERE" in prepare_query('year_label')
+
+
+def test_one_constraint():
+    assert ("FILTER (str(?year_label) = '2005')"
+            in prepare_query('indicator', year_label='2005'))
