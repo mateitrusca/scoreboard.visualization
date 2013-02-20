@@ -1,4 +1,4 @@
-/*global App, $, _, Highcharts */
+/*global App, _, Highcharts */
 /*jshint sub:true */
 
 (function() {

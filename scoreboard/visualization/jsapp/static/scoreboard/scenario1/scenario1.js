@@ -1,7 +1,7 @@
-/*global App, Backbone, $, _ */
+/*global App, Backbone, _ */
 /*jshint sub:true */
 
-(function() {
+(function($) {
 "use strict";
 
 
@@ -144,4 +144,4 @@ App.scenario1_initialize = function() {
     Backbone.history.start();
 };
 
-})();
+})(App.jQuery);
