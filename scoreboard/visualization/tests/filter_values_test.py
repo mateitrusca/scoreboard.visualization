@@ -4,7 +4,6 @@ from jinja2 import Template
 query_template = Template("""\
 PREFIX prop: <http://data.lod2.eu/scoreboard/properties/>
 PREFIX qb: <http://purl.org/linked-data/cube#>
-PREFIX country: <http://data.lod2.eu/scoreboard/country/>
 
 SELECT DISTINCT ?{{ facet }} WHERE {
 
