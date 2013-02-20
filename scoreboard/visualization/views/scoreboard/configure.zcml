@@ -34,11 +34,6 @@
     permission="zope2.View"
     />
 
-  <browser:resourceDirectory
-    name="scoreboard"
-    directory="./../../old/static"
-    />
-
   <browser:resource name="scoreboard.highchart.icon.png" file="icon.png" />
   <browser:resource name="scoreboard.highchart.preview.png" file="preview.png" />
 
