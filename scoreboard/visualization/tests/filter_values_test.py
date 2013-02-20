@@ -24,8 +24,12 @@ SELECT DISTINCT ?{{ facet }} WHERE {
 }
 
 {% if constraints %}
-{% set k,v = constraints.items()[0] %}
-FILTER (str(?{{ k }}) = '{{ v }}')
+FILTER (
+  {%- for name, value in constraints.iteritems() -%}
+    str(?{{ name }}) = '{{ value }}'
+    {%- if not loop.last %} && {% endif -%}
+  {%- endfor -%}
+)
 {% endif %}
 
 LIMIT 1000
@@ -44,3 +48,8 @@ def test_select_facet():
 def test_one_constraint():
     assert ("FILTER (str(?year_label) = '2005')"
             in prepare_query('indicator', year_label='2005'))
+
+
+def test_two_constraints():
+    assert ("FILTER (str(?year_label) = '2005' && str(?unit) = '%_pop')"
+            in prepare_query('indicator', year_label='2005', unit='%_pop'))
