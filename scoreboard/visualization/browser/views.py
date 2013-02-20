@@ -1,5 +1,12 @@
-class TestsView(object):
+from Products.Five.browser import BrowserView
+from scoreboard.visualization.jsapp import jsapp_html
 
-    def __call__(self):
-        from scoreboard.visualization.old.views import render_template
-        return render_template('tests.html', URL=self.context.absolute_url())
+
+class TestsView(BrowserView):
+
+    @property
+    def static_prefix(self):
+        return '/++resource++scoreboard'
+
+    def jsapp_html(self):
+        return jsapp_html(URL=self.context.absolute_url())

@@ -30,6 +30,7 @@
     for="..interfaces.IScoreboardVisualization"
     class=".views.TestsView"
     permission="zope2.View"
+    template="tests.pt"
     />
 
 </configure>
