@@ -20,8 +20,7 @@
     expect = chai.expect;
   </script>
 
-  {% from 'common.html' import include_js_app with context %}
-  {{ include_js_app() }}
+  {% include 'jsapp.html' %}
 
   <script src="{{ STATIC }}/testing.js"></script>
   <script src="{{ STATIC }}/scoreboard/tests.js"></script>
