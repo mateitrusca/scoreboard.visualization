@@ -25,4 +25,12 @@
     file="./js/edit.js"
    />
 
+  <browser:page
+    name="tests"
+    for="..interfaces.IScoreboardVisualization"
+    class=".views.TestsView"
+    permission="zope2.View"
+    template="tests.pt"
+    />
+
 </configure>

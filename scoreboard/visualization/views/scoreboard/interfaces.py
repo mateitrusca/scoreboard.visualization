@@ -18,3 +18,9 @@ class IScoreboardEdit(Interface):
         default=u"Scoreboard",
         required=True,
     )
+    configuration = schema.Text(
+        title=_(u"Configuration"),
+        description=_(u"JSON that configures this visualization"),
+        default=u"{}",
+        required=True,
+    )
