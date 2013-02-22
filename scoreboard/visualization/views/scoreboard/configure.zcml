@@ -3,21 +3,21 @@
   xmlns:daviz="http://namespaces.zope.org/daviz"
   xmlns:browser="http://namespaces.zope.org/browser">
 
-  <daviz:view name="scoreboard.highchart" />
-
-  <browser:page
+  <daviz:view
     for="eea.app.visualization.interfaces.IVisualizationEnabled"
     name="scoreboard.highchart"
     template="view.pt"
     class=".view.View"
     permission="zope2.View"
+    title="Scoreboad View"
     />
 
-  <browser:page
+  <daviz:edit
     for="eea.app.visualization.interfaces.IVisualizationEnabled"
-    name="scoreboard.highchart.edit"
+    name="scoreboard.highchart"
     class=".edit.Edit"
     permission="eea.app.visualization.configure"
+    title="Scoreboad View"
     />
 
   <browser:resource name="scoreboard.highchart.icon.png" file="icon.png" />
