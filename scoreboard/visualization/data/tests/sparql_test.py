@@ -8,6 +8,7 @@ def sparql_test(func):
 
 
 INDICATORS = 'http://data.lod2.eu/scoreboard/indicators/'
+DAD_SCHEMA = 'http://semantic.digital-agenda-data.eu/def/'
 
 
 @sparql_test
@@ -88,13 +89,16 @@ def test_data_get_series_for_two_indicators_one_year():
             'value_x': 43096.0} in res
 
 
-@sparql_test
-def test_dimensions_query():
+def _create_cube():
     from scoreboard.visualization.data.cube import Cube
     from scoreboard.visualization.views.scoreboard import data
     dataset = 'http://semantic.digital-agenda-data.eu/dataset/scoreboard'
-    cube = Cube(data.SPARQL_ENDPOINT, dataset)
+    return Cube(data.SPARQL_ENDPOINT, dataset)
+
+
+@sparql_test
+def test_dimensions_query():
+    cube = _create_cube()
     dimensions = cube.get_dimensions()
-    DAD_SCHEMA = 'http://semantic.digital-agenda-data.eu/def/'
     assert (DAD_SCHEMA + 'property/indicator') in dimensions
     assert (DAD_SCHEMA + 'property/ref-area') in dimensions
