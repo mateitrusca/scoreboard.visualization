@@ -31,12 +31,18 @@ SELECT DISTINCT ?value, ?notation, ?label WHERE {
 ?observation
   a qb:Observation ;
   qb:dataSet ?dataset ;
+  ?filter1 ?filter1_value ;
   ?dimension ?value .
 ?value
   skos:notation ?notation ;
   skos:prefLabel ?label .
   FILTER (
     ?dataset = {{ dataset.n3() }} &&
+    {% if filters %}
+    {% set (filter, filter_value) = filters[0] %}
+    ?filter1 = {{ filter.n3() }} &&
+    ?filter1_value = {{ filter_value.n3() }} &&
+    {% endif %}
     ?dimension = {{ dimension.n3() }}
   )
 }
@@ -58,9 +64,13 @@ class Cube(object):
         query = dimensions_query.render(dataset=self.dataset)
         return [r[0] for r in self._execute(query)]
 
-    def get_dimension_values(self, dimension):
-        query = dimension_values_query.render(dataset=self.dataset,
-                                              dimension=sparql.IRI(dimension))
+    def get_dimension_values(self, dimension, filters=[]):
+        data = {
+            'dataset': self.dataset,
+            'dimension': sparql.IRI(dimension),
+            'filters': [(sparql.IRI(f), sparql.IRI(v)) for f, v in filters],
+        }
+        query = dimension_values_query.render(**data)
         return [{
             'value': r[0],
             'notation': r[1],

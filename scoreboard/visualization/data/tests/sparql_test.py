@@ -114,3 +114,18 @@ def test_get_all_year_values():
     assert 'ES' in codes
     assert 'IS' in codes
     assert 'EU27' in codes
+
+
+@sparql_test
+def test_get_available_country_values_for_year():
+    YEARS = 'http://reference.data.gov.uk/id/year/'
+    cube = _create_cube()
+    items = cube.get_dimension_values(DAD_SCHEMA + 'property/ref-area', [
+        (DAD_SCHEMA + 'property/time-period', YEARS + '2002'),
+    ])
+    codes = [y['notation'] for y in items]
+    assert len(codes) == 17
+    assert 'DE' in codes
+    assert 'ES' in codes
+    assert 'IS' not in codes
+    assert 'EU27' not in codes
