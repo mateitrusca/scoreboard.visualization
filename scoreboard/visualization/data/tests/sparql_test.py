@@ -1,4 +1,6 @@
 import pytest
+from mock import Mock
+import simplejson as json
 
 
 def sparql_test(func):
@@ -17,3 +19,18 @@ def test_map_indicators_years():
                 'bb_fcov_RURAL_POP__pop',
                 'bb_lines_TOTAL_FBB_nbr_lines']:
         assert (INDICATORS + ind, '2008') in res
+
+
+@sparql_test
+def test_data_get_series_for_one_indicator_one_year():
+    from scoreboard.visualization.views.scoreboard import data
+    view = data.DataView()
+    view.request = Mock(form={
+        'method': 'series_indicator_year',
+        'indicator': ('http://data.lod2.eu/scoreboard/'
+                      'indicators/tel_rev_TOTAL_TELECOM_million_euro'),
+        'year': 'http://data.lod2.eu/scoreboard/year/2009',
+    })
+    res = json.loads(view())
+    assert {"country_name": "Estonia", "value": 716.0} in res
+    assert {"country_name": "Finland", "value": 4730.0} in res
