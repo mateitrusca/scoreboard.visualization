@@ -8,7 +8,7 @@ from Products.ZSPARQLMethod.Method import ZSPARQLMethod
 queries = {q['id']: q for q in json.loads(
     (path(__file__).parent / 'queries.json').bytes())}
 
-SPARQL_ENDPOINT = 'http://virtuoso.scoreboard.edw.ro/sparql'
+SPARQL_ENDPOINT = 'http://virtuoso.scoreboardtest.edw.ro/sparql'
 
 
 def run_query(method_name, **kwargs):
