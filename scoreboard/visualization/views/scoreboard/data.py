@@ -13,7 +13,7 @@ SPARQL_ENDPOINT = 'http://virtuoso.scoreboardtest.edw.ro/sparql'
 
 def run_query(method_name, **kwargs):
     q = queries[method_name]
-    method_ob = ZSPARQLMethod(q['id'], q['title'], SPARQL_ENDPOINT)
+    method_ob = ZSPARQLMethod(q['id'], "", SPARQL_ENDPOINT)
     method_ob.arg_spec = q['arg_spec']
     method_ob.query = q['query']
     result = method_ob(**kwargs)
