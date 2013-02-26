@@ -21,16 +21,20 @@ def test_map_indicators_years():
         assert (INDICATORS + ind, '2008') in res
 
 
-@sparql_test
-def test_data_get_series_for_one_indicator_one_year():
+def _data_query(form):
     from scoreboard.visualization.views.scoreboard import data
     view = data.DataView()
-    view.request = Mock(form={
+    view.request = Mock(form=form)
+    return json.loads(view())
+
+
+@sparql_test
+def test_data_get_series_for_one_indicator_one_year():
+    res = _data_query({
         'method': 'series_indicator_year',
         'indicator': ('http://data.lod2.eu/scoreboard/'
                       'indicators/tel_rev_TOTAL_TELECOM_million_euro'),
         'year': 'http://data.lod2.eu/scoreboard/year/2009',
     })
-    res = json.loads(view())
     assert {"country_name": "Estonia", "value": 716.0} in res
     assert {"country_name": "Finland", "value": 4730.0} in res
