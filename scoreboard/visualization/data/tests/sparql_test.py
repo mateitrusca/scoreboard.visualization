@@ -102,3 +102,15 @@ def test_dimensions_query():
     dimensions = cube.get_dimensions()
     assert (DAD_SCHEMA + 'property/indicator') in dimensions
     assert (DAD_SCHEMA + 'property/ref-area') in dimensions
+
+
+@sparql_test
+def test_get_all_year_values():
+    cube = _create_cube()
+    items = cube.get_dimension_values(DAD_SCHEMA + 'property/ref-area')
+    codes = [y['notation'] for y in items]
+    assert len(codes) == 34
+    assert 'DE' in codes
+    assert 'ES' in codes
+    assert 'IS' in codes
+    assert 'EU27' in codes
