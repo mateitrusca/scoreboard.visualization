@@ -38,3 +38,16 @@ def test_data_get_series_for_one_indicator_one_year():
     })
     assert {"country_name": "Estonia", "value": 716.0} in res
     assert {"country_name": "Finland", "value": 4730.0} in res
+
+
+@sparql_test
+def test_data_get_series_for_one_indicator_one_country():
+    res = _data_query({
+        'method': 'series_indicator_country',
+        'indicator': ('http://data.lod2.eu/scoreboard/'
+                      'indicators/h_iacc_HH_TOTAL__hh'),
+        'country': ('http://data.lod2.eu/scoreboard/'
+                    'country/European+Union+-+27+countries'),
+    })
+    assert {'value': 0.4918411076068878, 'year': 2006} in res
+    assert {'value': 0.6038933396339417, 'year': 2008} in res
