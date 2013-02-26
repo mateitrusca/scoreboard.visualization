@@ -86,3 +86,15 @@ def test_data_get_series_for_two_indicators_one_year():
     assert {'country_name': 'Italy',
             'value_y': 0.9761999845504761,
             'value_x': 43096.0} in res
+
+
+@sparql_test
+def test_dimensions_query():
+    from scoreboard.visualization.data.cube import Cube
+    from scoreboard.visualization.views.scoreboard import data
+    dataset = 'http://semantic.digital-agenda-data.eu/dataset/scoreboard'
+    cube = Cube(data.SPARQL_ENDPOINT, dataset)
+    dimensions = cube.get_dimensions()
+    DAD_SCHEMA = 'http://semantic.digital-agenda-data.eu/def/'
+    assert (DAD_SCHEMA + 'property/indicator') in dimensions
+    assert (DAD_SCHEMA + 'property/ref-area') in dimensions
