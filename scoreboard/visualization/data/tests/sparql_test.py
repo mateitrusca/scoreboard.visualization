@@ -21,11 +21,28 @@ def test_map_indicators_years():
         assert (INDICATORS + ind, '2008') in res
 
 
-def _data_query(form):
+def _data_query(form, view_cls_name='DataView'):
     from scoreboard.visualization.views.scoreboard import data
-    view = data.DataView()
+    view = getattr(data, view_cls_name)()
     view.request = Mock(form=form)
     return json.loads(view())
+
+
+@sparql_test
+def test_filters_view():
+    from scoreboard.visualization.views.scoreboard import data
+    res = _data_query({}, 'FiltersView')
+    assert {'uri': 'http://data.lod2.eu/scoreboard/country/Finland',
+            'label': 'Finland'} in res['countries']
+    assert {'uri': 'http://data.lod2.eu/scoreboard/country/Italy',
+            'label': 'Italy'} in res['countries']
+
+    indicators = [(i['uri'], i['unit'], sorted(i['years']))
+                  for i in res['indicators']]
+    assert (INDICATORS + 'tel_inv_TOTAL_TELECOM_million_euro',
+            'million_euro', ['2009', '2010']) in indicators
+    assert (INDICATORS + 'bb_speed30_TOTAL_FBB__lines',
+            '%_lines', ['2010', '2011']) in indicators
 
 
 @sparql_test
