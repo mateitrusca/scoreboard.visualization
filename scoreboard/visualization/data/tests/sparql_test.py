@@ -51,3 +51,21 @@ def test_data_get_series_for_one_indicator_one_country():
     })
     assert {'value': 0.4918411076068878, 'year': 2006} in res
     assert {'value': 0.6038933396339417, 'year': 2008} in res
+
+
+@sparql_test
+def test_data_get_series_for_two_indicators_one_year():
+    res = _data_query({
+        'method': 'series_2indicator_year',
+        'indicator_x': ('http://data.lod2.eu/scoreboard/'
+                        'indicators/tel_rev_TOTAL_TELECOM_million_euro'),
+        'indicator_y': ('http://data.lod2.eu/scoreboard/'
+                        'indicators/bb_dsl_TOTAL_FBB__lines'),
+        'year': 'http://data.lod2.eu/scoreboard/year/2009',
+    })
+    assert {'country_name': 'Czech Republic',
+            'value_y': 0.4065999984741211,
+            'value_x': 5491.0} in res
+    assert {'country_name': 'Italy',
+            'value_y': 0.9761999845504761,
+            'value_x': 43096.0} in res
