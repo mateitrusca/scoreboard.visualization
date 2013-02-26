@@ -31,18 +31,21 @@ SELECT DISTINCT ?value, ?notation, ?label WHERE {
 ?observation
   a qb:Observation ;
   qb:dataSet ?dataset ;
-  ?filter1 ?filter1_value ;
+  {%- for f in filters %}
+  {%- set n = loop.revindex %}
+  ?filter{{n}} ?filter{{n}}_value ;
+  {%- endfor %}
   ?dimension ?value .
 ?value
   skos:notation ?notation ;
   skos:prefLabel ?label .
   FILTER (
     ?dataset = {{ dataset.n3() }} &&
-    {% if filters %}
-    {% set (filter, filter_value) = filters[0] %}
-    ?filter1 = {{ filter.n3() }} &&
-    ?filter1_value = {{ filter_value.n3() }} &&
-    {% endif %}
+    {%- for filter, filter_value in filters %}
+    {%- set n = loop.revindex %}
+    ?filter{{n}} = {{ filter.n3() }} &&
+    ?filter{{n}}_value = {{ filter_value.n3() }} &&
+    {%- endfor %}
     ?dimension = {{ dimension.n3() }}
   )
 }
