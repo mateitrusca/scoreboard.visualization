@@ -1,0 +1,6 @@
+<select style="max-width: 500px">
+{{# options }}
+  <option {{# if selected }} selected="selected" {{/ if }}
+          value="{{ value }}">{{ label }}</option>
+{{/ options }}
+</select>

@@ -119,6 +119,11 @@ App.scenario1_initialize = function() {
     App.filters = new Backbone.Model();
     App.router = new App.ChartRouter(App.filters);
 
+    App.indicator_filter = new App.IndicatorFilter({
+        model: App.filters,
+        el: $('#new-filters')
+    })
+
     $.getJSON(App.URL + '/filters_data', function(data) {
         new App.Scenario1FiltersView({
             model: App.filters,
