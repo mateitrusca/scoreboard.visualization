@@ -5,14 +5,14 @@ import sparql
 dimensions_query = Template("""\
 PREFIX qb: <http://purl.org/linked-data/cube#>
 SELECT ?dimension WHERE {
-?dataset
-  a qb:DataSet ;
-  qb:structure ?structure .
-?structure
-  qb:component ?componentSpec .
-?componentSpec
-  qb:dimension ?dimension ;
-  qb:order ?componentSpecOrder .
+  ?dataset
+    a qb:DataSet ;
+    qb:structure ?structure .
+  ?structure
+    qb:component ?componentSpec .
+  ?componentSpec
+    qb:dimension ?dimension ;
+    qb:order ?componentSpecOrder .
   FILTER (
     ?dataset = {{ dataset.n3() }}
   )
@@ -26,19 +26,19 @@ dimension_values_query = Template("""\
 PREFIX qb: <http://purl.org/linked-data/cube#>
 Prefix skos: <http://www.w3.org/2004/02/skos/core#>
 SELECT DISTINCT ?value, ?notation, ?label WHERE {
-?dataset
-  a qb:DataSet .
-?observation
-  a qb:Observation ;
-  qb:dataSet ?dataset ;
-  {%- for f in filters %}
-  {%- set n = loop.revindex %}
-  ?filter{{n}} ?filter{{n}}_value ;
-  {%- endfor %}
-  ?dimension ?value .
-?value
-  skos:notation ?notation ;
-  skos:prefLabel ?label .
+  ?dataset
+    a qb:DataSet .
+  ?observation
+    a qb:Observation ;
+    qb:dataSet ?dataset ;
+    {%- for f in filters %}
+    {%- set n = loop.revindex %}
+    ?filter{{n}} ?filter{{n}}_value ;
+    {%- endfor %}
+    ?dimension ?value .
+  ?value
+    skos:notation ?notation ;
+    skos:prefLabel ?label .
   FILTER (
     ?dataset = {{ dataset.n3() }} &&
     {%- for filter, filter_value in filters %}
