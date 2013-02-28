@@ -28,10 +28,10 @@
     />
 
   <browser:page
-    name="filter_values"
+    name="filter_options"
     for="...interfaces.IScoreboardVisualization"
     class=".data.FiltersView"
-    attribute="filter_values"
+    attribute="filter_options"
     permission="zope2.View"
     />
 

@@ -107,9 +107,9 @@ def test_dimensions_query():
 
 
 @sparql_test
-def test_get_all_year_values():
+def test_get_all_year_options():
     cube = _create_cube()
-    items = cube.get_dimension_values(DAD_SCHEMA + 'property/ref-area')
+    items = cube.get_dimension_options(DAD_SCHEMA + 'property/ref-area')
     codes = [y['notation'] for y in items]
     assert len(codes) == 34
     assert 'DE' in codes
@@ -119,9 +119,9 @@ def test_get_all_year_values():
 
 
 @sparql_test
-def test_get_available_country_values_for_year():
+def test_get_available_country_options_for_year():
     cube = _create_cube()
-    items = cube.get_dimension_values(DAD_SCHEMA + 'property/ref-area', [
+    items = cube.get_dimension_options(DAD_SCHEMA + 'property/ref-area', [
         (DAD_SCHEMA + 'property/time-period', YEARS + '2002'),
     ])
     codes = [y['notation'] for y in items]
@@ -133,9 +133,9 @@ def test_get_available_country_values_for_year():
 
 
 @sparql_test
-def test_get_available_country_values_for_year_and_indicator():
+def test_get_available_country_options_for_year_and_indicator():
     cube = _create_cube()
-    items = cube.get_dimension_values(DAD_SCHEMA + 'property/ref-area', [
+    items = cube.get_dimension_options(DAD_SCHEMA + 'property/ref-area', [
         (DAD_SCHEMA + 'property/time-period', YEARS + '2002'),
         (DAD_SCHEMA + 'property/indicator', NEW_INDICATORS + 'h_iacc'),
     ])

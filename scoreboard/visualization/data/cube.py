@@ -22,7 +22,7 @@ LIMIT 100
 """)
 
 
-dimension_values_query = Template("""\
+dimension_options_query = Template("""\
 PREFIX qb: <http://purl.org/linked-data/cube#>
 Prefix skos: <http://www.w3.org/2004/02/skos/core#>
 SELECT DISTINCT ?value, ?notation, ?label WHERE {
@@ -67,13 +67,13 @@ class Cube(object):
         query = dimensions_query.render(dataset=self.dataset)
         return [r[0] for r in self._execute(query)]
 
-    def get_dimension_values(self, dimension, filters=[]):
+    def get_dimension_options(self, dimension, filters=[]):
         data = {
             'dataset': self.dataset,
             'dimension': sparql.IRI(dimension),
             'filters': [(sparql.IRI(f), sparql.IRI(v)) for f, v in filters],
         }
-        query = dimension_values_query.render(**data)
+        query = dimension_options_query.render(**data)
         return [{
             'value': r[0],
             'notation': r[1],

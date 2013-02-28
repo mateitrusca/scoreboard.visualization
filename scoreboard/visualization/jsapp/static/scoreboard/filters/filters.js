@@ -15,10 +15,10 @@ App.IndicatorFilter = Backbone.View.extend({
 
     initialize: function(options) {
         var args = {'dimension': this.dimension};
-        var ajax = $.get(App.URL + '/filter_values', args);
+        var ajax = $.get(App.URL + '/filter_options', args);
         var view = this;
         ajax.done(function(data) {
-            view.options = data['values'];
+            view.options = data['options'];
             view.render();
         });
     },
@@ -47,9 +47,9 @@ App.YearFilter = Backbone.View.extend({
         // TODO render greyed-out interface
         var args = {'dimension': this.dimension};
         var view = this;
-        var ajax = $.get(App.URL + '/filter_values', args);
+        var ajax = $.get(App.URL + '/filter_options', args);
         ajax.done(function(data) {
-            view.options = data['values'];
+            view.options = data['options'];
             view.render();
             //console.log('year update done');
         });

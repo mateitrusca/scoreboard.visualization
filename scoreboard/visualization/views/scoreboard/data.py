@@ -55,12 +55,12 @@ class FiltersView(object):
         self.request.RESPONSE.setHeader("Content-Type", "application/json")
         return json.dumps(out, indent=2, sort_keys=True)
 
-    def filter_values(self):
+    def filter_options(self):
         cube = Cube(SPARQL_ENDPOINT, DATASET)
         dimension = self.request.form['dimension']
-        values = cube.get_dimension_values(dimension)
+        options = cube.get_dimension_options(dimension)
         self.request.RESPONSE.setHeader("Content-Type", "application/json")
-        return json.dumps({'values': values}, indent=2, sort_keys=True)
+        return json.dumps({'options': options}, indent=2, sort_keys=True)
 
 
 class DataView(object):
