@@ -25,7 +25,7 @@ LIMIT 100
 dimension_options_query = Template("""\
 PREFIX qb: <http://purl.org/linked-data/cube#>
 Prefix skos: <http://www.w3.org/2004/02/skos/core#>
-SELECT DISTINCT ?value, ?notation, ?label WHERE {
+SELECT DISTINCT ?option AS ?uri, ?notation, ?label WHERE {
   ?dataset
     a qb:DataSet .
   ?observation
@@ -33,18 +33,18 @@ SELECT DISTINCT ?value, ?notation, ?label WHERE {
     qb:dataSet ?dataset ;
     {%- for f in filters %}
     {%- set n = loop.revindex %}
-    ?filter{{n}} ?filter{{n}}_value ;
+    ?filter{{n}} ?filter{{n}}_option ;
     {%- endfor %}
-    ?dimension ?value .
-  ?value
+    ?dimension ?option .
+  ?option
     skos:notation ?notation ;
     skos:prefLabel ?label .
   FILTER (
     ?dataset = {{ dataset.n3() }} &&
-    {%- for filter, filter_value in filters %}
+    {%- for filter, filter_option in filters %}
     {%- set n = loop.revindex %}
     ?filter{{n}} = {{ filter.n3() }} &&
-    ?filter{{n}}_value = {{ filter_value.n3() }} &&
+    ?filter{{n}}_option = {{ filter_option.n3() }} &&
     {%- endfor %}
     ?dimension = {{ dimension.n3() }}
   )
@@ -75,7 +75,7 @@ class Cube(object):
         }
         query = dimension_options_query.render(**data)
         return [{
-            'value': r[0],
+            'uri': r[0],
             'notation': r[1],
             'label': r[2],
         } for r in self._execute(query)]
