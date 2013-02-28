@@ -37,12 +37,21 @@ App.YearFilter = Backbone.View.extend({
     dimension: dad_prop + 'time-period',
 
     initialize: function(options) {
+        this.update();
+        this.model.on('change:indicator', this.update, this);
+    },
+
+    update: function() {
+        //console.log('updating year');
+        // TODO abort any existing requests
+        // TODO render greyed-out interface
         var args = {'dimension': this.dimension};
-        var ajax = $.get(App.URL + '/filter_values', args);
         var view = this;
+        var ajax = $.get(App.URL + '/filter_values', args);
         ajax.done(function(data) {
             view.options = data['values'];
             view.render();
+            //console.log('year update done');
         });
     },
 
