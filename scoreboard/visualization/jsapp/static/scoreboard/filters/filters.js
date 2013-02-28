@@ -4,14 +4,11 @@
 (function($) {
 "use strict";
 
-var dad_prop = 'http://semantic.digital-agenda-data.eu/def/property/';
-
-
 App.IndicatorFilter = Backbone.View.extend({
 
     template: App.get_template('scoreboard/filters/dropdown.html'),
 
-    dimension: dad_prop + 'indicator',
+    dimension: 'indicator',
 
     initialize: function(options) {
         var args = {'dimension': this.dimension};
@@ -34,7 +31,7 @@ App.YearFilter = Backbone.View.extend({
 
     template: App.get_template('scoreboard/filters/dropdown.html'),
 
-    dimension: dad_prop + 'time-period',
+    dimension: 'time-period',
 
     initialize: function(options) {
         this.update();

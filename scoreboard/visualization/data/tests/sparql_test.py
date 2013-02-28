@@ -8,9 +8,6 @@ def sparql_test(func):
 
 
 INDICATORS = 'http://data.lod2.eu/scoreboard/indicators/'
-DAD_SCHEMA = 'http://semantic.digital-agenda-data.eu/def/'
-YEARS = 'http://reference.data.gov.uk/id/year/'
-NEW_INDICATORS = 'http://semantic.digital-agenda-data.eu/codelist/indicator/'
 
 
 @sparql_test
@@ -33,7 +30,6 @@ def _data_query(form, view_cls_name='DataView'):
 
 @sparql_test
 def test_filters_view():
-    from scoreboard.visualization.views.scoreboard import data
     res = _data_query({}, 'FiltersView')
     assert {'uri': 'http://data.lod2.eu/scoreboard/country/Finland',
             'label': 'Finland'} in res['countries']
@@ -102,14 +98,14 @@ def _create_cube():
 def test_dimensions_query():
     cube = _create_cube()
     dimensions = cube.get_dimensions()
-    assert (DAD_SCHEMA + 'property/indicator') in dimensions
-    assert (DAD_SCHEMA + 'property/ref-area') in dimensions
+    assert ('indicator') in dimensions
+    assert ('ref-area') in dimensions
 
 
 @sparql_test
 def test_get_all_year_options():
     cube = _create_cube()
-    items = cube.get_dimension_options(DAD_SCHEMA + 'property/ref-area')
+    items = cube.get_dimension_options('ref-area')
     codes = [y['notation'] for y in items]
     assert len(codes) == 34
     assert 'DE' in codes
@@ -121,8 +117,8 @@ def test_get_all_year_options():
 @sparql_test
 def test_get_available_country_options_for_year():
     cube = _create_cube()
-    items = cube.get_dimension_options(DAD_SCHEMA + 'property/ref-area', [
-        (DAD_SCHEMA + 'property/time-period', YEARS + '2002'),
+    items = cube.get_dimension_options('ref-area', [
+        ('time-period', '2002'),
     ])
     codes = [y['notation'] for y in items]
     assert len(codes) == 17
@@ -135,9 +131,9 @@ def test_get_available_country_options_for_year():
 @sparql_test
 def test_get_available_country_options_for_year_and_indicator():
     cube = _create_cube()
-    items = cube.get_dimension_options(DAD_SCHEMA + 'property/ref-area', [
-        (DAD_SCHEMA + 'property/time-period', YEARS + '2002'),
-        (DAD_SCHEMA + 'property/indicator', NEW_INDICATORS + 'h_iacc'),
+    items = cube.get_dimension_options('ref-area', [
+        ('time-period', '2002'),
+        ('indicator', 'h_iacc'),
     ])
     codes = [y['notation'] for y in items]
     assert len(codes) == 15

@@ -4,7 +4,7 @@ import sparql
 
 dimensions_query = Template("""\
 PREFIX qb: <http://purl.org/linked-data/cube#>
-SELECT ?dimension WHERE {
+SELECT DISTINCT ?dimension_code WHERE {
   ?dataset
     a qb:DataSet ;
     qb:structure ?structure .
@@ -13,6 +13,8 @@ SELECT ?dimension WHERE {
   ?componentSpec
     qb:dimension ?dimension ;
     qb:order ?componentSpecOrder .
+  ?dimension
+    skos:notation ?dimension_code .
   FILTER (
     ?dataset = {{ dataset.n3() }}
   )
@@ -24,29 +26,38 @@ LIMIT 100
 
 dimension_options_query = Template("""\
 PREFIX qb: <http://purl.org/linked-data/cube#>
-Prefix skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 SELECT DISTINCT ?option AS ?uri, ?notation, ?label WHERE {
   ?dataset
     a qb:DataSet .
   ?observation
     a qb:Observation ;
     qb:dataSet ?dataset ;
-    {%- for f in filters %}
-    {%- set n = loop.revindex %}
-    ?filter{{n}} ?filter{{n}}_option ;
+    {%- for n in filters %}
+    {%- set n = loop.index %}
+    ?filter{{n}}_dimension ?filter{{n}}_option ;
     {%- endfor %}
     ?dimension ?option .
+  ?dimension
+    skos:notation ?dimension_code .
+  {%- for f in filters %}
+  {%- set n = loop.index %}
+  ?filter{{n}}_dimension
+    skos:notation ?filter{{n}}_dimension_code .
+  ?filter{{n}}_option
+    skos:notation ?filter{{n}}_option_code .
+  {%- endfor %}
   ?option
     skos:notation ?notation ;
     skos:prefLabel ?label .
   FILTER (
     ?dataset = {{ dataset.n3() }} &&
-    {%- for filter, filter_option in filters %}
-    {%- set n = loop.revindex %}
-    ?filter{{n}} = {{ filter.n3() }} &&
-    ?filter{{n}}_option = {{ filter_option.n3() }} &&
+    {%- for filter_dimension_code, filter_option_code in filters %}
+    {%- set n = loop.index %}
+    ?filter{{n}}_dimension_code = {{ filter_dimension_code.n3() }} &&
+    ?filter{{n}}_option_code = {{ filter_option_code.n3() }} &&
     {%- endfor %}
-    ?dimension = {{ dimension.n3() }}
+    ?dimension_code = {{ dimension_code.n3() }}
   )
 }
 LIMIT 1000
@@ -70,8 +81,9 @@ class Cube(object):
     def get_dimension_options(self, dimension, filters=[]):
         data = {
             'dataset': self.dataset,
-            'dimension': sparql.IRI(dimension),
-            'filters': [(sparql.IRI(f), sparql.IRI(v)) for f, v in filters],
+            'dimension_code': sparql.Literal(dimension),
+            'filters': [(sparql.Literal(f), sparql.Literal(v))
+                        for f, v in filters],
         }
         query = dimension_options_query.render(**data)
         return [{
