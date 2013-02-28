@@ -36,53 +36,42 @@ App.Scenario5MapView = Backbone.View.extend({
             view.render();
         });
     }
-
 });
 
 
 App.scenario5_initialize = function() {
-    var deps = [
-        App.STATIC + '/lib/qtip-2.0.1/jquery.qtip.min.js',
-        App.STATIC + '/lib/raphael-2.1.0/raphael-min.js',
-        App.STATIC + '/lib/chroma/chroma.min.js',
-        App.STATIC + '/lib/kartograph-20130111/kartograph.min.js'
-    ];
-
     var qtip_css = App.STATIC + '/lib/qtip-2.0.1/jquery.qtip.css';
     $('<link rel="stylesheet">').attr('href', qtip_css).appendTo($('head'));
+    var box = $('#scenario-box');
+    box.html(App.get_template('scoreboard/scenario5/scenario5.html')());
+    box.addClass('scenario5');
 
-    $script(deps, function() {
-        var box = $('#scenario-box');
-        box.html(App.get_template('scoreboard/scenario5/scenario5.html')());
-        box.addClass('scenario5');
+    App.filters = new Backbone.Model();
+    App.router = new App.ChartRouter(App.filters);
 
-        App.filters = new Backbone.Model();
-        App.router = new App.ChartRouter(App.filters);
-
-        $.getJSON(App.URL + '/filters_data', function(data) {
-            new App.Scenario1FiltersView({
-                model: App.filters,
-                el: $('#the-filters'),
-                filters_data: data
-            });
-
-            App.scenario5_map_view = new App.Scenario5MapView({
-                el: $('#the-map')[0],
-                model: App.filters,
-                indicator_labels: App.get_indicator_labels(data)
-            });
-
-            App.metadata = new App.IndicatorMetadataView({
-                model: App.filters,
-                field: 'indicator',
-                indicators: App.get_indicators(data)
-            });
-            $('#the-metadata').append(App.metadata.el);
-
+    $.getJSON(App.URL + '/filters_data', function(data) {
+        new App.Scenario1FiltersView({
+            model: App.filters,
+            el: $('#the-filters'),
+            filters_data: data
         });
 
-        Backbone.history.start();
+        App.scenario5_map_view = new App.Scenario5MapView({
+            el: $('#the-map')[0],
+            model: App.filters,
+            indicator_labels: App.get_indicator_labels(data)
+        });
+
+        App.metadata = new App.IndicatorMetadataView({
+            model: App.filters,
+            field: 'indicator',
+            indicators: App.get_indicators(data)
+        });
+        $('#the-metadata').append(App.metadata.el);
+
     });
+
+    Backbone.history.start();
 };
 
 
