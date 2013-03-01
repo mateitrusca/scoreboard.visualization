@@ -81,11 +81,13 @@ App.Scenario1ChartView = Backbone.View.extend({
     filters_changed: function() {
         var view = this;
         var args = this.model.toJSON();
-        if(!(args['indicator'] && args['time-period'])) {
-            return;
+        if(!(args['indicator'] &&
+             args['time-period'] &&
+             args['breakdown'] &&
+             args['unit-measure'])) {
+            console.log('not all');
+            return;  // not all filters have values
         }
-        args['breakdown'] = 'IND_TOTAL';
-        args['unit-measure'] = 'pc_ind';
         args['columns'] = 'ref-area,value';
         var series_ajax = $.get(App.URL + '/datapoints', args);
 
@@ -117,18 +119,18 @@ App.scenario1_initialize = function() {
     App.filters = new Backbone.Model();
     App.router = new App.ChartRouter(App.filters);
 
-    App.indicator_filter = new App.SelectFilter({
-        model: App.filters,
-        dimension: 'indicator'
-    });
-    App.indicator_filter.$el.appendTo($('#new-filters'));
+    function add_filter(dimension, constraints) {
+        new App.SelectFilter({
+            model: App.filters,
+            dimension: dimension,
+            constraints: constraints
+        }).$el.appendTo($('#new-filters'));
+    }
 
-    App.year_filter = new App.SelectFilter({
-        model: App.filters,
-        constraints: ['indicator'],
-        dimension: 'time-period'
-    });
-    App.year_filter.$el.appendTo($('#new-filters'));
+    add_filter('indicator', []);
+    add_filter('time-period', ['indicator']);
+    add_filter('breakdown', ['time-period', 'indicator']);
+    add_filter('unit-measure', ['breakdown', 'time-period', 'indicator']);
 
     App.scenario1_chart_view = new App.Scenario1ChartView({
         model: App.filters,
