@@ -1,4 +1,3 @@
-import pytest
 from mock import Mock, patch, call
 import simplejson as json
 
@@ -23,7 +22,7 @@ def test_all_indicator_values():
 
 def test_single_filter_passed_on_to_query():
     with patch('scoreboard.visualization.views.scoreboard.data.Cube') as Cube:
-        res = _filter_options_query({
+        _filter_options_query({
             'dimension': 'ref-area',
             'time-period': '2002',
         })
@@ -33,7 +32,7 @@ def test_single_filter_passed_on_to_query():
 
 def test_filters_passed_on_to_query():
     with patch('scoreboard.visualization.views.scoreboard.data.Cube') as Cube:
-        res = _filter_options_query({
+        _filter_options_query({
             'dimension': 'ref-area',
             'time-period': '2002',
             'indicator': 'h_iacc',
