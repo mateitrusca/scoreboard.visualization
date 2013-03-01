@@ -10,6 +10,17 @@ App.scenario1_chart = function(container, options) {
     var country_names = _(series).pluck('ref-area');
     var values = _(series).pluck('value');
 
+    var values = _(series).map(
+        function(value, key, list){
+            if (value['ref-area'] === "EU27"){
+                return {'y': value.value,
+                        'color': '#35478C'}
+            }
+            else{
+                return value.value;
+            }
+    });
+
     var chartOptions = {
         chart: {
             renderTo: container,
