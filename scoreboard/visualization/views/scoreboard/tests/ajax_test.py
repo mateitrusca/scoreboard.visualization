@@ -13,7 +13,7 @@ def _data_query(form):
     from scoreboard.visualization.views.scoreboard import data
     filters_view = data.FiltersView()
     filters_view.request = Mock(form=form)
-    return json.loads(filters_view.data())
+    return json.loads(filters_view.datapoints())
 
 
 def test_all_indicator_values():
@@ -80,4 +80,4 @@ def test_data_query_returns_rows():
                              filters=[('breakdown', 'IND_TOTAL'),
                                       ('indicator', 'i_bfeu'),
                                       ('unit-measure', 'pc_ind')])
-    assert res == {'rows': rows}
+    assert res == {'datapoints': rows}
