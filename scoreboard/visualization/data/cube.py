@@ -4,15 +4,17 @@ import sparql
 
 dimensions_query = Template("""\
 PREFIX qb: <http://purl.org/linked-data/cube#>
-SELECT ?dimension WHERE {
-?dataset
-  a qb:DataSet ;
-  qb:structure ?structure .
-?structure
-  qb:component ?componentSpec .
-?componentSpec
-  qb:dimension ?dimension ;
-  qb:order ?componentSpecOrder .
+SELECT DISTINCT ?dimension_code WHERE {
+  ?dataset
+    a qb:DataSet ;
+    qb:structure ?structure .
+  ?structure
+    qb:component ?componentSpec .
+  ?componentSpec
+    qb:dimension ?dimension ;
+    qb:order ?componentSpecOrder .
+  ?dimension
+    skos:notation ?dimension_code .
   FILTER (
     ?dataset = {{ dataset.n3() }}
   )
@@ -22,31 +24,83 @@ LIMIT 100
 """)
 
 
-dimension_values_query = Template("""\
+dimension_options_query = Template("""\
 PREFIX qb: <http://purl.org/linked-data/cube#>
-Prefix skos: <http://www.w3.org/2004/02/skos/core#>
-SELECT DISTINCT ?value, ?notation, ?label WHERE {
-?dataset
-  a qb:DataSet .
-?observation
-  a qb:Observation ;
-  qb:dataSet ?dataset ;
-  {%- for f in filters %}
-  {%- set n = loop.revindex %}
-  ?filter{{n}} ?filter{{n}}_value ;
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+SELECT DISTINCT ?option AS ?uri, ?notation, ?label WHERE {
+  ?dataset
+    a qb:DataSet .
+  ?observation
+    a qb:Observation ;
+    qb:dataSet ?dataset ;
+    {%- for f in filters %} {%- set n = loop.index %}
+    ?filter{{n}}_dimension ?filter{{n}}_option ;
+    {%- endfor %}
+    ?dimension ?option .
+  ?dimension
+    skos:notation ?dimension_code .
+  {%- for f in filters %} {%- set n = loop.index %}
+  ?filter{{n}}_dimension
+    skos:notation ?filter{{n}}_dimension_code .
+  ?filter{{n}}_option
+    skos:notation ?filter{{n}}_option_code .
   {%- endfor %}
-  ?dimension ?value .
-?value
-  skos:notation ?notation ;
-  skos:prefLabel ?label .
+  ?option
+    skos:notation ?notation ;
+    skos:prefLabel ?label .
   FILTER (
     ?dataset = {{ dataset.n3() }} &&
-    {%- for filter, filter_value in filters %}
-    {%- set n = loop.revindex %}
-    ?filter{{n}} = {{ filter.n3() }} &&
-    ?filter{{n}}_value = {{ filter_value.n3() }} &&
+    {%- for dimension_code, option_code in filters %} {%- set n = loop.index %}
+    ?filter{{n}}_dimension_code = {{ dimension_code.n3() }} &&
+    ?filter{{n}}_option_code = {{ option_code.n3() }} &&
     {%- endfor %}
-    ?dimension = {{ dimension.n3() }}
+    ?dimension_code = {{ dimension_code.n3() }}
+  )
+}
+LIMIT 1000
+""")
+
+
+data_query = Template("""\
+PREFIX qb: <http://purl.org/linked-data/cube#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX sdmx-measure: <http://purl.org/linked-data/sdmx/2009/measure#>
+PREFIX dad-prop: <http://semantic.digital-agenda-data.eu/def/property/>
+SELECT DISTINCT {% for f in columns %} {%- set n = loop.index -%}
+                ?col{{n}}, {% endfor -%} ?value WHERE {
+  ?dataset
+    a qb:DataSet .
+  ?observation
+    a qb:Observation ;
+    qb:dataSet ?dataset ;
+    {%- for f in filters %} {%- set n = loop.index %}
+    ?filter{{n}}_dimension ?filter{{n}}_option ;
+    {%- endfor %}
+    {%- for c in columns %} {%- set n = loop.index %}
+    ?col{{n}}_dimension ?col{{n}}_option ;
+    {%- endfor %}
+    sdmx-measure:obsValue ?value .
+  {%- for f in filters %} {%- set n = loop.index %}
+  ?filter{{n}}_dimension
+    skos:notation ?filter{{n}}_dimension_code .
+  ?filter{{n}}_option
+    skos:notation ?filter{{n}}_option_code .
+  {%- endfor %}
+  {%- for c in columns %} {%- set n = loop.index %}
+  ?col{{n}}_dimension
+    skos:notation ?col{{n}}_dimension_code .
+  ?col{{n}}_option
+    skos:notation ?col{{n}} .
+  {%- endfor %}
+  FILTER (
+    {%- for dimension_code, option_code in filters %} {%- set n = loop.index %}
+    ?filter{{n}}_dimension_code = {{ dimension_code.n3() }} &&
+    ?filter{{n}}_option_code = {{ option_code.n3() }} &&
+    {%- endfor %}
+    {%- for c in columns %} {%- set n = loop.index %}
+    ?col{{n}}_dimension_code = {{ c.n3() }} &&
+    {%- endfor %}
+    ?dataset = {{ dataset.n3() }}
   )
 }
 LIMIT 1000
@@ -67,15 +121,27 @@ class Cube(object):
         query = dimensions_query.render(dataset=self.dataset)
         return [r[0] for r in self._execute(query)]
 
-    def get_dimension_values(self, dimension, filters=[]):
+    def get_dimension_options(self, dimension, filters=[]):
         data = {
             'dataset': self.dataset,
-            'dimension': sparql.IRI(dimension),
-            'filters': [(sparql.IRI(f), sparql.IRI(v)) for f, v in filters],
+            'dimension_code': sparql.Literal(dimension),
+            'filters': [(sparql.Literal(f), sparql.Literal(v))
+                        for f, v in filters],
         }
-        query = dimension_values_query.render(**data)
+        query = dimension_options_query.render(**data)
         return [{
-            'value': r[0],
+            'uri': r[0],
             'notation': r[1],
             'label': r[2],
         } for r in self._execute(query)]
+
+    def get_data(self, columns, filters):
+        assert columns[-1] == 'value', "Last column must be 'value'"
+        query = data_query.render(**{
+            'dataset': self.dataset,
+            'columns': [sparql.Literal(c) for c in columns[:-1]],
+            'filters': [(sparql.Literal(f), sparql.Literal(v))
+                        for f, v in filters],
+        })
+        for row in self._execute(query):
+            yield dict(zip(columns, row))

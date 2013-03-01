@@ -68,7 +68,6 @@ App.Scenario1ChartView = Backbone.View.extend({
     className: 'highcharts-chart',
 
     initialize: function(options) {
-        this.indicator_labels = options['indicator_labels'];
         this.model.on('change', this.filters_changed, this);
         this.filters_changed();
     },
@@ -82,20 +81,19 @@ App.Scenario1ChartView = Backbone.View.extend({
     filters_changed: function() {
         var view = this;
         var args = this.model.toJSON();
-        if(!(args['indicator'] && args['year'])) {
+        if(!(args['indicator'] && args['time-period'])) {
             return;
         }
-        var series_ajax = $.get(App.URL + '/data', {
-            'method': 'series_indicator_year',
-            'indicator': args['indicator'],
-            'year': 'http://data.lod2.eu/scoreboard/year/' + args['year']
-        });
+        args['breakdown'] = 'IND_TOTAL';
+        args['unit-measure'] = 'pc_ind';
+        args['columns'] = 'ref-area,value';
+        var series_ajax = $.get(App.URL + '/datapoints', args);
 
         series_ajax.done(function(data) {
             view.data = {
-                'series': data,
+                'series': data['datapoints'],
                 'year_text': "Year 2011",
-                'indicator_label': view.indicator_labels[args['indicator']],
+                'indicator_label': "teh indicator",
                 'credits': {
                     'href': 'http://ec.europa.eu/digital-agenda/en/graphs/',
                     'text': 'European Commission, Digital Agenda Scoreboard'
@@ -119,27 +117,24 @@ App.scenario1_initialize = function() {
     App.filters = new Backbone.Model();
     App.router = new App.ChartRouter(App.filters);
 
-    $.getJSON(App.URL + '/filters_data', function(data) {
-        new App.Scenario1FiltersView({
-            model: App.filters,
-            el: $('#the-filters'),
-            filters_data: data
-        });
-
-        App.scenario1_chart_view = new App.Scenario1ChartView({
-            model: App.filters,
-            indicator_labels: App.get_indicator_labels(data)
-        });
-        $('#the-chart').append(App.scenario1_chart_view.el);
-
-        App.metadata = new App.IndicatorMetadataView({
-            model: App.filters,
-            field: 'indicator',
-            indicators: App.get_indicators(data)
-        });
-        $('#the-metadata').append(App.metadata.el);
-
+    App.indicator_filter = new App.SelectFilter({
+        model: App.filters,
+        dimension: 'indicator'
     });
+    App.indicator_filter.$el.appendTo($('#new-filters'));
+
+    App.year_filter = new App.SelectFilter({
+        model: App.filters,
+        constraints: ['indicator'],
+        dimension: 'time-period'
+    });
+    App.year_filter.$el.appendTo($('#new-filters'));
+
+    App.scenario1_chart_view = new App.Scenario1ChartView({
+        model: App.filters,
+        indicator_labels: {}
+    });
+    $('#the-chart').append(App.scenario1_chart_view.el);
 
     Backbone.history.start();
 };

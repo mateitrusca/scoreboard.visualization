@@ -28,6 +28,22 @@
     />
 
   <browser:page
+    name="filter_options"
+    for="...interfaces.IScoreboardVisualization"
+    class=".data.FiltersView"
+    attribute="filter_options"
+    permission="zope2.View"
+    />
+
+  <browser:page
+    name="datapoints"
+    for="...interfaces.IScoreboardVisualization"
+    class=".data.FiltersView"
+    attribute="datapoints"
+    permission="zope2.View"
+    />
+
+  <browser:page
     name="data"
     for="...interfaces.IScoreboardVisualization"
     class=".data.DataView"

@@ -8,9 +8,6 @@ def sparql_test(func):
 
 
 INDICATORS = 'http://data.lod2.eu/scoreboard/indicators/'
-DAD_SCHEMA = 'http://semantic.digital-agenda-data.eu/def/'
-YEARS = 'http://reference.data.gov.uk/id/year/'
-NEW_INDICATORS = 'http://semantic.digital-agenda-data.eu/codelist/indicator/'
 
 
 @sparql_test
@@ -33,7 +30,6 @@ def _data_query(form, view_cls_name='DataView'):
 
 @sparql_test
 def test_filters_view():
-    from scoreboard.visualization.views.scoreboard import data
     res = _data_query({}, 'FiltersView')
     assert {'uri': 'http://data.lod2.eu/scoreboard/country/Finland',
             'label': 'Finland'} in res['countries']
@@ -102,14 +98,14 @@ def _create_cube():
 def test_dimensions_query():
     cube = _create_cube()
     dimensions = cube.get_dimensions()
-    assert (DAD_SCHEMA + 'property/indicator') in dimensions
-    assert (DAD_SCHEMA + 'property/ref-area') in dimensions
+    assert ('indicator') in dimensions
+    assert ('ref-area') in dimensions
 
 
 @sparql_test
-def test_get_all_year_values():
+def test_get_all_year_options():
     cube = _create_cube()
-    items = cube.get_dimension_values(DAD_SCHEMA + 'property/ref-area')
+    items = cube.get_dimension_options('ref-area')
     codes = [y['notation'] for y in items]
     assert len(codes) == 34
     assert 'DE' in codes
@@ -119,10 +115,10 @@ def test_get_all_year_values():
 
 
 @sparql_test
-def test_get_available_country_values_for_year():
+def test_get_available_country_options_for_year():
     cube = _create_cube()
-    items = cube.get_dimension_values(DAD_SCHEMA + 'property/ref-area', [
-        (DAD_SCHEMA + 'property/time-period', YEARS + '2002'),
+    items = cube.get_dimension_options('ref-area', [
+        ('time-period', '2002'),
     ])
     codes = [y['notation'] for y in items]
     assert len(codes) == 17
@@ -133,11 +129,11 @@ def test_get_available_country_values_for_year():
 
 
 @sparql_test
-def test_get_available_country_values_for_year_and_indicator():
+def test_get_available_country_options_for_year_and_indicator():
     cube = _create_cube()
-    items = cube.get_dimension_values(DAD_SCHEMA + 'property/ref-area', [
-        (DAD_SCHEMA + 'property/time-period', YEARS + '2002'),
-        (DAD_SCHEMA + 'property/indicator', NEW_INDICATORS + 'h_iacc'),
+    items = cube.get_dimension_options('ref-area', [
+        ('time-period', '2002'),
+        ('indicator', 'h_iacc'),
     ])
     codes = [y['notation'] for y in items]
     assert len(codes) == 15
@@ -145,3 +141,48 @@ def test_get_available_country_values_for_year_and_indicator():
     assert 'ES' not in codes
     assert 'IS' not in codes
     assert 'EU27' not in codes
+
+
+@sparql_test
+def test_get_data_by_ref_area_with_dimension_filters():
+    columns = ('ref-area', 'value')
+    filters = [
+        ('indicator', 'i_bfeu'),
+        ('time-period', '2011'),
+        ('breakdown', 'IND_TOTAL'),
+        ('unit-measure', 'pc_ind'),
+    ]
+    cube = _create_cube()
+    points = list(cube.get_data(columns, filters))
+    assert len(points) == 31
+    assert {'ref-area': 'IE', 'value': 0.2222} in points
+
+
+@sparql_test
+def test_get_data_by_time_period_with_dimension_filters():
+    columns = ('time-period', 'value')
+    filters = [
+        ('indicator', 'i_bfeu'),
+        ('breakdown', 'IND_TOTAL'),
+        ('unit-measure', 'pc_ind'),
+        ('ref-area', 'IE'),
+    ]
+    cube = _create_cube()
+    points = list(cube.get_data(columns, filters))
+    assert {'time-period': '2011', 'value': 0.2222} in points
+    assert len(points) == 5
+
+
+@sparql_test
+def test_get_data_by_time_period_and_ref_area_with_dimension_filters():
+    columns = ('time-period', 'ref-area', 'value')
+    filters = [
+        ('indicator', 'i_bfeu'),
+        ('breakdown', 'IND_TOTAL'),
+        ('unit-measure', 'pc_ind'),
+    ]
+    cube = _create_cube()
+    points = list(cube.get_data(columns, filters))
+    assert {'time-period': '2011', 'ref-area': 'IE', 'value': 0.2222} in points
+    assert {'time-period': '2010', 'ref-area': 'PT', 'value': 0.0609} in points
+    assert len(points) == 161

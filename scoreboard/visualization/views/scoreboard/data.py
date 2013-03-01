@@ -3,12 +3,14 @@ import simplejson as json
 from path import path
 from sparql import unpack_row
 from Products.ZSPARQLMethod.Method import ZSPARQLMethod
+from ...data.cube import Cube
 
 
 queries = {q['id']: q for q in json.loads(
     (path(__file__).parent / 'queries.json').bytes())}
 
 SPARQL_ENDPOINT = 'http://virtuoso.scoreboardtest.edw.ro/sparql'
+DATASET = 'http://semantic.digital-agenda-data.eu/dataset/scoreboard'
 
 
 def run_query(method_name, **kwargs):
@@ -52,6 +54,24 @@ class FiltersView(object):
         }
         self.request.RESPONSE.setHeader("Content-Type", "application/json")
         return json.dumps(out, indent=2, sort_keys=True)
+
+    def filter_options(self):
+        cube = Cube(SPARQL_ENDPOINT, DATASET)
+        form = dict(self.request.form)
+        dimension = form.pop('dimension')
+        filters = sorted(form.items())
+        options = cube.get_dimension_options(dimension, filters)
+        self.request.RESPONSE.setHeader("Content-Type", "application/json")
+        return json.dumps({'options': options}, indent=2, sort_keys=True)
+
+    def datapoints(self):
+        cube = Cube(SPARQL_ENDPOINT, DATASET)
+        form = dict(self.request.form)
+        columns = form.pop('columns').split(',')
+        filters = sorted(form.items())
+        rows = list(cube.get_data(columns=columns, filters=filters))
+        self.request.RESPONSE.setHeader("Content-Type", "application/json")
+        return json.dumps({'datapoints': rows}, indent=2, sort_keys=True)
 
 
 class DataView(object):

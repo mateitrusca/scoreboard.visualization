@@ -24,6 +24,7 @@
 
   <script tal:attributes="src string:${STATIC}/testing.js"></script>
   <script tal:attributes="src string:${STATIC}/scoreboard/tests.js"></script>
+  <script tal:attributes="src string:${STATIC}/scoreboard/filters/tests.js"></script>
   <script tal:attributes="src string:${STATIC}/scoreboard/scenario1/tests.js"></script>
   <script tal:attributes="src string:${STATIC}/scoreboard/scenario2/tests.js"></script>
   <script tal:attributes="src string:${STATIC}/scoreboard/scenario3/tests.js"></script>

@@ -87,12 +87,11 @@ describe('Scenario1ChartView', function() {
 
         this.model = new Backbone.Model();
         this.chart = new App.Scenario1ChartView({
-            model: this.model,
-            indicator_labels: {'asdf': "The Label!"}
+            model: this.model
         });
         this.model.set({
             'indicator': 'asdf',
-            'year': '2002'
+            'time-period': '2002'
         });
     });
 
@@ -103,25 +102,24 @@ describe('Scenario1ChartView', function() {
     it('should fetch data from server', function() {
         var server = this.sandbox.server;
         var url = server.requests[0].url;
-        expect(url).to.have.string(App.URL + '/data?');
+        expect(url).to.have.string(App.URL + '/datapoints?');
         var url_param = App.testing.url_param;
-        expect(url_param(url, 'method')).to.equal('series_indicator_year');
+        expect(url_param(url, 'columns')).to.equal('ref-area,value');
         expect(url_param(url, 'indicator')).to.equal('asdf');
-        expect(url_param(url, 'year')).to.equal(
-            'http://data.lod2.eu/scoreboard/year/2002');
+        expect(url_param(url, 'time-period')).to.equal('2002');
     });
 
     it('should render chart with the data received', function() {
         var server = this.sandbox.server;
-        var ajax_data = [{'country_name': "Austria", 'value': 0.18},
-                         {'country_name': "Belgium", 'value': 0.14}];
-        App.respond_json(server.requests[0], ajax_data);
+        var ajax_data = [{'ref-area': "Austria", 'value': 0.18},
+                         {'ref-area': "Belgium", 'value': 0.14}];
+        App.respond_json(server.requests[0], {'datapoints': ajax_data});
 
         expect(this.scenario1_chart.calledOnce).to.equal(true);
         var call_args = this.scenario1_chart.getCall(0).args;
         expect(call_args[0]).to.equal(this.chart.el);
         expect(call_args[1]['series']).to.deep.equal(ajax_data);
-        expect(call_args[1]['indicator_label']).to.equal("The Label!");
+        //expect(call_args[1]['indicator_label']).to.equal("The Label!");
     });
 
 });
