@@ -87,8 +87,7 @@ describe('Scenario1ChartView', function() {
 
         this.model = new Backbone.Model();
         this.chart = new App.Scenario1ChartView({
-            model: this.model,
-            indicator_labels: {'asdf': "The Label!"}
+            model: this.model
         });
         this.model.set({
             'indicator': 'asdf',
@@ -120,7 +119,7 @@ describe('Scenario1ChartView', function() {
         var call_args = this.scenario1_chart.getCall(0).args;
         expect(call_args[0]).to.equal(this.chart.el);
         expect(call_args[1]['series']).to.deep.equal(ajax_data);
-        expect(call_args[1]['indicator_label']).to.equal("The Label!");
+        //expect(call_args[1]['indicator_label']).to.equal("The Label!");
     });
 
 });

@@ -68,7 +68,6 @@ App.Scenario1ChartView = Backbone.View.extend({
     className: 'highcharts-chart',
 
     initialize: function(options) {
-        this.indicator_labels = options['indicator_labels'];
         this.model.on('change', this.filters_changed, this);
         this.filters_changed();
     },
@@ -94,7 +93,7 @@ App.Scenario1ChartView = Backbone.View.extend({
             view.data = {
                 'series': data['datapoints'],
                 'year_text': "Year 2011",
-                'indicator_label': view.indicator_labels[args['indicator']],
+                'indicator_label': "teh indicator",
                 'credits': {
                     'href': 'http://ec.europa.eu/digital-agenda/en/graphs/',
                     'text': 'European Commission, Digital Agenda Scoreboard'
