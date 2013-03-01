@@ -57,11 +57,9 @@ class FiltersView(object):
 
     def filter_options(self):
         cube = Cube(SPARQL_ENDPOINT, DATASET)
-        dimension = self.request.form['dimension']
-        filters_arg = self.request.form.get('filter', [])
-        if isinstance(filters_arg, basestring):
-            filters_arg = [filters_arg]
-        filters = [tuple(f.split(':', 1)) for f in filters_arg]
+        form = dict(self.request.form)
+        dimension = form.pop('dimension')
+        filters = sorted(form.items())
         options = cube.get_dimension_options(dimension, filters)
         self.request.RESPONSE.setHeader("Content-Type", "application/json")
         return json.dumps({'options': options}, indent=2, sort_keys=True)
