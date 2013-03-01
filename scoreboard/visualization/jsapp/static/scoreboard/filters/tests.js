@@ -12,22 +12,9 @@ describe('modular filters', function() {
             this.sandbox = sinon.sandbox.create();
         });
 
-        it('should load options via ajax', function() {
-            this.sandbox.useFakeServer();
-            var server = this.sandbox.server;
-            var view = new App.SelectFilter({dimension: 'indicator'});
-            var options = [{'label': "Option One", 'notation': 'one'},
-                           {'label': "Option Two", 'notation': 'two'}];
-            App.respond_json(server.requests[0], {'options': options});
-            expect(view.dimension_options).to.deep.equal(options);
-            expect(url_param(server.requests[0].url, 'dimension')).
-                to.equal('indicator');
-        });
-
         var NoAjaxSelectFilter = App.SelectFilter.extend({
             update: function() {
-                this.dimension_options = this.options['options'];
-                this.render();
+                this.received_new_options(this.options['options']);
             }
         });
 
@@ -58,6 +45,18 @@ describe('modular filters', function() {
                 to.equal('time-period');
             expect(url_param(server.requests[0].url, 'indicator')).
                 to.equal('i_iugm');
+        });
+
+        it('should update model with initial value', function() {
+            var model = new Backbone.Model();
+            var options = [{'label': "Option One", 'notation': 'one'},
+                           {'label': "Option Two", 'notation': 'two'}];
+            var view = new NoAjaxSelectFilter({
+                model: model,
+                options: options,
+                dimension: 'time-period'
+            });
+            expect(model.get('time-period')).to.equal('one');
         });
 
         it('should update model when selection changes', function() {

@@ -91,7 +91,9 @@ describe('Scenario1ChartView', function() {
         });
         this.model.set({
             'indicator': 'asdf',
-            'time-period': '2002'
+            'time-period': '2002',
+            'breakdown': 'ind_total',
+            'unit-measure': 'pc_ind'
         });
     });
 

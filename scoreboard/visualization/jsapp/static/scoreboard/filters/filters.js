@@ -22,6 +22,12 @@ App.SelectFilter = Backbone.View.extend({
         this.update();
     },
 
+    received_new_options: function(new_options) {
+        this.dimension_options = new_options;
+        this.render();
+        this.model.set(this.dimension, new_options[0]['notation']);
+    },
+
     update: function() {
         // TODO abort any existing requests
         // TODO render greyed-out interface
@@ -34,8 +40,7 @@ App.SelectFilter = Backbone.View.extend({
         }, this);
         var ajax = $.get(App.URL + '/filter_options', args);
         ajax.done(_.bind(function(data) {
-            this.dimension_options = data['options'];
-            this.render();
+            this.received_new_options(data['options']);
         }, this));
     },
 
