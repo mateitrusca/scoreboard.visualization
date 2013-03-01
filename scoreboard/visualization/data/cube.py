@@ -139,7 +139,8 @@ class Cube(object):
             'filters': [(sparql.Literal(f), sparql.Literal(v))
                         for f, v in filters],
         })
-        return [{
-            'ref-area': r[0],
-            'value': r[1],
-        } for r in self._execute(query)]
+        for row in self._execute(query):
+            yield {
+                'ref-area': row[0],
+                'value': row[1],
+            }

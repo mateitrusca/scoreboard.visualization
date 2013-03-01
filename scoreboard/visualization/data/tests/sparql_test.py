@@ -144,7 +144,7 @@ def test_get_available_country_options_for_year_and_indicator():
 
 
 @sparql_test
-def test_get_data_with_dimension_filters():
+def test_get_data_by_ref_area_with_dimension_filters():
     columns = ('ref-area', 'value')
     filters = [
         ('indicator', 'i_bfeu'),
@@ -153,6 +153,6 @@ def test_get_data_with_dimension_filters():
         ('unit-measure', 'pc_ind'),
     ]
     cube = _create_cube()
-    points = cube.get_data(columns, filters)
+    points = list(cube.get_data(columns, filters))
     assert len(points) == 31
     assert {'ref-area': 'IE', 'value': 0.2222} in points
