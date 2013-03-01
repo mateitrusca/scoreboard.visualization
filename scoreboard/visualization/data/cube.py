@@ -33,15 +33,13 @@ SELECT DISTINCT ?option AS ?uri, ?notation, ?label WHERE {
   ?observation
     a qb:Observation ;
     qb:dataSet ?dataset ;
-    {%- for n in filters %}
-    {%- set n = loop.index %}
+    {%- for f in filters %} {%- set n = loop.index %}
     ?filter{{n}}_dimension ?filter{{n}}_option ;
     {%- endfor %}
     ?dimension ?option .
   ?dimension
     skos:notation ?dimension_code .
-  {%- for f in filters %}
-  {%- set n = loop.index %}
+  {%- for f in filters %} {%- set n = loop.index %}
   ?filter{{n}}_dimension
     skos:notation ?filter{{n}}_dimension_code .
   ?filter{{n}}_option
@@ -52,10 +50,9 @@ SELECT DISTINCT ?option AS ?uri, ?notation, ?label WHERE {
     skos:prefLabel ?label .
   FILTER (
     ?dataset = {{ dataset.n3() }} &&
-    {%- for filter_dimension_code, filter_option_code in filters %}
-    {%- set n = loop.index %}
-    ?filter{{n}}_dimension_code = {{ filter_dimension_code.n3() }} &&
-    ?filter{{n}}_option_code = {{ filter_option_code.n3() }} &&
+    {%- for dimension_code, option_code in filters %} {%- set n = loop.index %}
+    ?filter{{n}}_dimension_code = {{ dimension_code.n3() }} &&
+    ?filter{{n}}_option_code = {{ option_code.n3() }} &&
     {%- endfor %}
     ?dimension_code = {{ dimension_code.n3() }}
   )
@@ -75,14 +72,12 @@ SELECT DISTINCT ?col1, ?value WHERE {
   ?observation
     a qb:Observation ;
     qb:dataSet ?dataset ;
-    {%- for n in filters %}
-    {%- set n = loop.index %}
+    {%- for f in filters %} {%- set n = loop.index %}
     ?filter{{n}}_dimension ?filter{{n}}_option ;
     {%- endfor %}
     ?col1_dimension ?col1_option ;
     sdmx-measure:obsValue ?value .
-  {%- for f in filters %}
-  {%- set n = loop.index %}
+  {%- for f in filters %} {%- set n = loop.index %}
   ?filter{{n}}_dimension
     skos:notation ?filter{{n}}_dimension_code .
   ?filter{{n}}_option
@@ -93,10 +88,9 @@ SELECT DISTINCT ?col1, ?value WHERE {
   ?col1_option
     skos:notation ?col1 .
   FILTER (
-    {%- for filter_dimension_code, filter_option_code in filters %}
-    {%- set n = loop.index %}
-    ?filter{{n}}_dimension_code = {{ filter_dimension_code.n3() }} &&
-    ?filter{{n}}_option_code = {{ filter_option_code.n3() }} &&
+    {%- for dimension_code, option_code in filters %} {%- set n = loop.index %}
+    ?filter{{n}}_dimension_code = {{ dimension_code.n3() }} &&
+    ?filter{{n}}_option_code = {{ option_code.n3() }} &&
     {%- endfor %}
     ?col1_dimension_code = {{ columns[0].n3() }} &&
     ?dataset = {{ dataset.n3() }}
