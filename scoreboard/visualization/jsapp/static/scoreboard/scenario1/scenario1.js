@@ -129,27 +129,11 @@ App.scenario1_initialize = function() {
     });
     App.year_filter.$el.appendTo($('#new-filters'));
 
-    $.getJSON(App.URL + '/filters_data', function(data) {
-        new App.Scenario1FiltersView({
-            model: App.filters,
-            el: $('#the-filters'),
-            filters_data: data
-        });
-
-        App.scenario1_chart_view = new App.Scenario1ChartView({
-            model: App.filters,
-            indicator_labels: {}
-        });
-        $('#the-chart').append(App.scenario1_chart_view.el);
-
-        App.metadata = new App.IndicatorMetadataView({
-            model: App.filters,
-            field: 'indicator',
-            indicators: {}
-        });
-        $('#the-metadata').append(App.metadata.el);
-
+    App.scenario1_chart_view = new App.Scenario1ChartView({
+        model: App.filters,
+        indicator_labels: {}
     });
+    $('#the-chart').append(App.scenario1_chart_view.el);
 
     Backbone.history.start();
 };
