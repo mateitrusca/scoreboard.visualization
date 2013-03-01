@@ -79,7 +79,7 @@ SELECT DISTINCT ?col1, ?value WHERE {
     {%- set n = loop.index %}
     ?filter{{n}}_dimension ?filter{{n}}_option ;
     {%- endfor %}
-    dad-prop:ref-area ?ref_area ;
+    ?col1_dimension ?col1_option ;
     sdmx-measure:obsValue ?value .
   {%- for f in filters %}
   {%- set n = loop.index %}
@@ -88,7 +88,9 @@ SELECT DISTINCT ?col1, ?value WHERE {
   ?filter{{n}}_option
     skos:notation ?filter{{n}}_option_code .
   {%- endfor %}
-  ?ref_area
+  ?col1_dimension
+    skos:notation ?col1_dimension_code .
+  ?col1_option
     skos:notation ?col1 .
   FILTER (
     {%- for filter_dimension_code, filter_option_code in filters %}
@@ -96,6 +98,7 @@ SELECT DISTINCT ?col1, ?value WHERE {
     ?filter{{n}}_dimension_code = {{ filter_dimension_code.n3() }} &&
     ?filter{{n}}_option_code = {{ filter_option_code.n3() }} &&
     {%- endfor %}
+    ?col1_dimension_code = {{ columns[0].n3() }} &&
     ?dataset = {{ dataset.n3() }}
   )
 }
@@ -135,12 +138,9 @@ class Cube(object):
         assert columns[-1] == 'value', "Last column must be 'value'"
         query = data_query.render(**{
             'dataset': self.dataset,
-            'columns': columns[:-1],
+            'columns': [sparql.Literal(c) for c in columns[:-1]],
             'filters': [(sparql.Literal(f), sparql.Literal(v))
                         for f, v in filters],
         })
         for row in self._execute(query):
-            yield {
-                'ref-area': row[0],
-                'value': row[1],
-            }
+            yield dict(zip(columns, row))

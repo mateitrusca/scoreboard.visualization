@@ -156,3 +156,18 @@ def test_get_data_by_ref_area_with_dimension_filters():
     points = list(cube.get_data(columns, filters))
     assert len(points) == 31
     assert {'ref-area': 'IE', 'value': 0.2222} in points
+
+
+@sparql_test
+def test_get_data_by_time_period_with_dimension_filters():
+    columns = ('time-period', 'value')
+    filters = [
+        ('indicator', 'i_bfeu'),
+        ('breakdown', 'IND_TOTAL'),
+        ('unit-measure', 'pc_ind'),
+        ('ref-area', 'IE'),
+    ]
+    cube = _create_cube()
+    points = list(cube.get_data(columns, filters))
+    assert {'time-period': '2011', 'value': 0.2222} in points
+    assert len(points) == 5
