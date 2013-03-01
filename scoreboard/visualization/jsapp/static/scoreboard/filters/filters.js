@@ -35,6 +35,10 @@ App.YearFilter = Backbone.View.extend({
 
     dimension: 'time-period',
 
+    events: {
+        'change select': 'on_selection_change'
+    },
+
     initialize: function(options) {
         this.update();
         this.model.on('change:indicator', this.update, this);
@@ -62,6 +66,12 @@ App.YearFilter = Backbone.View.extend({
         this.$el.html(this.template({
             'dimension_options': this.dimension_options,
         }));
+    },
+
+    on_selection_change: function() {
+        var value = this.$el.find('select').val();
+        var key = this.dimension;
+        this.model.set(key, value);
     }
 
 });
