@@ -1,4 +1,4 @@
-/*global App, Backbone */
+/*global App, Backbone, _ */
 /*jshint sub:true */
 
 (function($) {
@@ -15,18 +15,23 @@ App.SelectFilter = Backbone.View.extend({
 
     initialize: function(options) {
         this.dimension = options['dimension'];
+        this.constraints = options['constraints'] || [];
+        _(this.constraints).forEach(function(other_dimension) {
+            this.model.on('change:' + other_dimension, this.update, this);
+        }, this);
         this.update();
-    },
-
-    inject_constraints: function(args) {
-        /* noop */
     },
 
     update: function() {
         // TODO abort any existing requests
         // TODO render greyed-out interface
         var args = {'dimension': this.dimension};
-        this.inject_constraints(args);
+        _(this.constraints).forEach(function(other_dimension) {
+            var other_option = this.model.get(other_dimension);
+            if(other_option) {
+                args[other_dimension] = other_option;
+            }
+        }, this);
         var ajax = $.get(App.URL + '/filter_options', args);
         ajax.done(_.bind(function(data) {
             this.dimension_options = data['options'];
@@ -36,7 +41,7 @@ App.SelectFilter = Backbone.View.extend({
 
     render: function() {
         this.$el.html(this.template({
-            'dimension_options': this.dimension_options,
+            'dimension_options': this.dimension_options
         }));
     },
 
@@ -44,25 +49,6 @@ App.SelectFilter = Backbone.View.extend({
         var value = this.$el.find('select').val();
         var key = this.dimension;
         this.model.set(key, value);
-    }
-
-});
-
-
-App.YearFilter = App.SelectFilter.extend({
-
-    initialize: function(options) {
-        options['dimension'] = 'time-period';
-        App.SelectFilter.prototype.initialize.apply(this, arguments);
-        // TODO handle constraints in SelectFilter
-        this.model.on('change:indicator', this.update, this);
-    },
-
-    inject_constraints: function(args) {
-        var indicator = this.model.get('indicator');
-        if(indicator) {
-            args['indicator'] = indicator;
-        }
     }
 
 });

@@ -24,26 +24,20 @@ describe('modular filters', function() {
                 to.equal('indicator');
         });
 
-    });
-
-
-    describe('YearFilter', function() {
-
-        var NoAjaxYearFilter = App.YearFilter.extend({
+        var NoAjaxSelectFilter = App.SelectFilter.extend({
             update: function() {
                 this.dimension_options = this.options['options'];
                 this.render();
             }
         });
 
-        beforeEach(function() {
-            this.sandbox = sinon.sandbox.create();
-        });
-
         it('should load options via ajax', function() {
             this.sandbox.useFakeServer();
             var server = this.sandbox.server;
-            var view = new App.YearFilter({model: new Backbone.Model()});
+            var view = new App.SelectFilter({
+                model: new Backbone.Model(),
+                dimension: 'time-period'
+            });
             var options = [{'label': "Option One", 'notation': 'one'},
                            {'label': "Option Two", 'notation': 'two'}];
             App.respond_json(server.requests[0], {'options': options});
@@ -55,8 +49,10 @@ describe('modular filters', function() {
         it('should filter years based on indicator', function() {
             this.sandbox.useFakeServer();
             var server = this.sandbox.server;
-            var view = new App.YearFilter({
-                model: new Backbone.Model({'indicator': 'i_iugm'})
+            var view = new App.SelectFilter({
+                model: new Backbone.Model({'indicator': 'i_iugm'}),
+                constraints: ['indicator'],
+                dimension: 'time-period'
             });
             expect(url_param(server.requests[0].url, 'dimension')).
                 to.equal('time-period');
@@ -68,7 +64,11 @@ describe('modular filters', function() {
             var model = new Backbone.Model();
             var options = [{'label': "Option One", 'notation': 'one'},
                            {'label': "Option Two", 'notation': 'two'}];
-            var view = new NoAjaxYearFilter({model: model, options: options});
+            var view = new NoAjaxSelectFilter({
+                model: model,
+                options: options,
+                dimension: 'time-period'
+            });
             App.testing.choose_option(view.$el.find('select'), 'two');
             expect(model.get('time-period')).to.equal('two');
         });

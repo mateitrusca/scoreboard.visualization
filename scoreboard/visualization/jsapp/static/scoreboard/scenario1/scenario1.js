@@ -123,9 +123,10 @@ App.scenario1_initialize = function() {
     });
     App.indicator_filter.$el.appendTo($('#new-filters'));
 
-    App.year_filter = new App.YearFilter({
+    App.year_filter = new App.SelectFilter({
         model: App.filters,
-        dimension: 'year'
+        constraints: ['indicator'],
+        dimension: 'time-period'
     });
     App.year_filter.$el.appendTo($('#new-filters'));
 
