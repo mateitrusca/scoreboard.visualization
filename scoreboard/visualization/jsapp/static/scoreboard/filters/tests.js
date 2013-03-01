@@ -19,7 +19,7 @@ describe('modular filters', function() {
             var options = [{'label': "Option One", 'notation': 'one'},
                            {'label': "Option Two", 'notation': 'two'}];
             App.respond_json(server.requests[0], {'options': options});
-            expect(view.options).to.deep.equal(options);
+            expect(view.dimension_options).to.deep.equal(options);
             expect(url_param(server.requests[0].url, 'dimension')).
                 to.equal('indicator');
         });
@@ -40,7 +40,7 @@ describe('modular filters', function() {
             var options = [{'label': "Option One", 'notation': 'one'},
                            {'label': "Option Two", 'notation': 'two'}];
             App.respond_json(server.requests[0], {'options': options});
-            expect(view.options).to.deep.equal(options);
+            expect(view.dimension_options).to.deep.equal(options);
             expect(url_param(server.requests[0].url, 'dimension')).
                 to.equal('time-period');
         });

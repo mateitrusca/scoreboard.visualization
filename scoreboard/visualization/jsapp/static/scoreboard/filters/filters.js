@@ -15,13 +15,15 @@ App.IndicatorFilter = Backbone.View.extend({
         var ajax = $.get(App.URL + '/filter_options', args);
         var view = this;
         ajax.done(function(data) {
-            view.options = data['options'];
+            view.dimension_options = data['options'];
             view.render();
         });
     },
 
     render: function() {
-        this.$el.html(this.template({'options': this.options}));
+        this.$el.html(this.template({
+            'dimension_options': this.dimension_options,
+        }));
     }
 
 });
@@ -50,14 +52,16 @@ App.YearFilter = Backbone.View.extend({
         var view = this;
         var ajax = $.get(App.URL + '/filter_options', args);
         ajax.done(function(data) {
-            view.options = data['options'];
+            view.dimension_options = data['options'];
             view.render();
             //console.log('year update done');
         });
     },
 
     render: function() {
-        this.$el.html(this.template({'options': this.options}));
+        this.$el.html(this.template({
+            'dimension_options': this.dimension_options,
+        }));
     }
 
 });
