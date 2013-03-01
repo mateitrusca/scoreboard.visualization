@@ -47,6 +47,18 @@ describe('modular filters', function() {
                 to.equal('i_iugm');
         });
 
+        it('should update model with initial value', function() {
+            var model = new Backbone.Model();
+            var options = [{'label': "Option One", 'notation': 'one'},
+                           {'label': "Option Two", 'notation': 'two'}];
+            var view = new NoAjaxSelectFilter({
+                model: model,
+                options: options,
+                dimension: 'time-period'
+            });
+            expect(model.get('time-period')).to.equal('one');
+        });
+
         it('should update model when selection changes', function() {
             var model = new Backbone.Model();
             var options = [{'label': "Option One", 'notation': 'one'},
