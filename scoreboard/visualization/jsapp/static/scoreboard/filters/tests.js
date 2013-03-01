@@ -14,8 +14,7 @@ describe('modular filters', function() {
 
         var NoAjaxSelectFilter = App.SelectFilter.extend({
             update: function() {
-                this.dimension_options = this.options['options'];
-                this.render();
+                this.received_new_options(this.options['options']);
             }
         });
 
