@@ -12,12 +12,13 @@ App.scenario1_chart = function(container, options) {
 
     var values = _(series).map(
         function(value, key, list){
+            var result = value.value * 100;
             if (value['ref-area'] === "EU27"){
-                return {'y': value.value,
+                return {'y': result,
                         'color': '#35478C'}
             }
             else{
-                return value.value;
+                return result;
             }
     });
 
