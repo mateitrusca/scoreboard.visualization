@@ -7,7 +7,7 @@
 
 App.scenario1_chart = function(container, options) {
     var series = _(options['series']).sortBy('value').reverse();
-    var country_names = _(series).pluck('country_name');
+    var country_names = _(series).pluck('ref-area');
     var values = _(series).pluck('value');
 
     var chartOptions = {

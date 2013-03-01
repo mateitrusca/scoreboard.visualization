@@ -82,18 +82,17 @@ App.Scenario1ChartView = Backbone.View.extend({
     filters_changed: function() {
         var view = this;
         var args = this.model.toJSON();
-        if(!(args['indicator'] && args['year'])) {
+        if(!(args['indicator'] && args['time-period'])) {
             return;
         }
-        var series_ajax = $.get(App.URL + '/data', {
-            'method': 'series_indicator_year',
-            'indicator': args['indicator'],
-            'year': 'http://data.lod2.eu/scoreboard/year/' + args['year']
-        });
+        args['breakdown'] = 'IND_TOTAL';
+        args['unit-measure'] = 'pc_ind';
+        args['columns'] = 'ref-area,value';
+        var series_ajax = $.get(App.URL + '/datapoints', args);
 
         series_ajax.done(function(data) {
             view.data = {
-                'series': data,
+                'series': data['datapoints'],
                 'year_text': "Year 2011",
                 'indicator_label': view.indicator_labels[args['indicator']],
                 'credits': {
