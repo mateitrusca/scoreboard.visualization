@@ -6,7 +6,7 @@ describe('modular filters', function() {
 
     var url_param = App.testing.url_param;
 
-    describe('IndicatorFilter', function() {
+    describe('SelectFilter', function() {
 
         beforeEach(function() {
             this.sandbox = sinon.sandbox.create();
@@ -15,7 +15,7 @@ describe('modular filters', function() {
         it('should load options via ajax', function() {
             this.sandbox.useFakeServer();
             var server = this.sandbox.server;
-            var view = new App.IndicatorFilter();
+            var view = new App.SelectFilter({dimension: 'indicator'});
             var options = [{'label': "Option One", 'notation': 'one'},
                            {'label': "Option Two", 'notation': 'two'}];
             App.respond_json(server.requests[0], {'options': options});

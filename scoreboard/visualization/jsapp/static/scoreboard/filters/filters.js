@@ -14,6 +14,7 @@ App.SelectFilter = Backbone.View.extend({
     },
 
     initialize: function(options) {
+        this.dimension = options['dimension'];
         this.update();
     },
 
@@ -49,19 +50,12 @@ App.SelectFilter = Backbone.View.extend({
 });
 
 
-App.IndicatorFilter = App.SelectFilter.extend({
-
-    dimension: 'indicator'
-
-});
-
-
 App.YearFilter = App.SelectFilter.extend({
 
-    dimension: 'time-period',
-
     initialize: function(options) {
+        options['dimension'] = 'time-period';
         App.SelectFilter.prototype.initialize.apply(this, arguments);
+        // TODO handle constraints in SelectFilter
         this.model.on('change:indicator', this.update, this);
     },
 
