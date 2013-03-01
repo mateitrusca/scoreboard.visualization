@@ -134,14 +134,14 @@ App.scenario1_initialize = function() {
 
         App.scenario1_chart_view = new App.Scenario1ChartView({
             model: App.filters,
-            indicator_labels: App.get_indicator_labels(data)
+            indicator_labels: {}
         });
         $('#the-chart').append(App.scenario1_chart_view.el);
 
         App.metadata = new App.IndicatorMetadataView({
             model: App.filters,
             field: 'indicator',
-            indicators: App.get_indicators(data)
+            indicators: {}
         });
         $('#the-metadata').append(App.metadata.el);
 
