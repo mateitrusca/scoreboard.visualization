@@ -45,6 +45,18 @@ describe('modular filters', function() {
                 to.equal('time-period');
         });
 
+        it('should filter years based on indicator', function() {
+            this.sandbox.useFakeServer();
+            var server = this.sandbox.server;
+            var view = new App.YearFilter({
+                model: new Backbone.Model({'indicator': 'i_iugm'})
+            });
+            expect(url_param(server.requests[0].url, 'dimension')).
+                to.equal('time-period');
+            expect(url_param(server.requests[0].url, 'indicator')).
+                to.equal('i_iugm');
+        });
+
     });
 
 });

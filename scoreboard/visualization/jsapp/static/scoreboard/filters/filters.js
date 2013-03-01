@@ -43,6 +43,10 @@ App.YearFilter = Backbone.View.extend({
         // TODO abort any existing requests
         // TODO render greyed-out interface
         var args = {'dimension': this.dimension};
+        var indicator = this.model.get('indicator');
+        if(indicator) {
+            args['indicator'] = indicator;
+        }
         var view = this;
         var ajax = $.get(App.URL + '/filter_options', args);
         ajax.done(function(data) {
