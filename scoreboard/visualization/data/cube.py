@@ -66,7 +66,8 @@ PREFIX qb: <http://purl.org/linked-data/cube#>
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 PREFIX sdmx-measure: <http://purl.org/linked-data/sdmx/2009/measure#>
 PREFIX dad-prop: <http://semantic.digital-agenda-data.eu/def/property/>
-SELECT DISTINCT ?col1, ?value WHERE {
+SELECT DISTINCT {% for f in columns %} {%- set n = loop.index -%}
+                ?col{{n}}, {% endfor -%} ?value WHERE {
   ?dataset
     a qb:DataSet .
   ?observation
@@ -75,7 +76,9 @@ SELECT DISTINCT ?col1, ?value WHERE {
     {%- for f in filters %} {%- set n = loop.index %}
     ?filter{{n}}_dimension ?filter{{n}}_option ;
     {%- endfor %}
-    ?col1_dimension ?col1_option ;
+    {%- for c in columns %} {%- set n = loop.index %}
+    ?col{{n}}_dimension ?col{{n}}_option ;
+    {%- endfor %}
     sdmx-measure:obsValue ?value .
   {%- for f in filters %} {%- set n = loop.index %}
   ?filter{{n}}_dimension
@@ -83,16 +86,20 @@ SELECT DISTINCT ?col1, ?value WHERE {
   ?filter{{n}}_option
     skos:notation ?filter{{n}}_option_code .
   {%- endfor %}
-  ?col1_dimension
-    skos:notation ?col1_dimension_code .
-  ?col1_option
-    skos:notation ?col1 .
+  {%- for c in columns %} {%- set n = loop.index %}
+  ?col{{n}}_dimension
+    skos:notation ?col{{n}}_dimension_code .
+  ?col{{n}}_option
+    skos:notation ?col{{n}} .
+  {%- endfor %}
   FILTER (
     {%- for dimension_code, option_code in filters %} {%- set n = loop.index %}
     ?filter{{n}}_dimension_code = {{ dimension_code.n3() }} &&
     ?filter{{n}}_option_code = {{ option_code.n3() }} &&
     {%- endfor %}
-    ?col1_dimension_code = {{ columns[0].n3() }} &&
+    {%- for c in columns %} {%- set n = loop.index %}
+    ?col{{n}}_dimension_code = {{ c.n3() }} &&
+    {%- endfor %}
     ?dataset = {{ dataset.n3() }}
   )
 }
