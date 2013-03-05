@@ -9,7 +9,8 @@ class QueryError(Exception):
 
 dimensions_query = Template("""\
 PREFIX qb: <http://purl.org/linked-data/cube#>
-SELECT DISTINCT ?dimension_code WHERE {
+PREFIX dad-prop: <http://semantic.digital-agenda-data.eu/def/property/>
+SELECT DISTINCT ?notation, ?group_notation WHERE {
   ?dataset
     a qb:DataSet ;
     qb:structure ?structure .
@@ -19,7 +20,13 @@ SELECT DISTINCT ?dimension_code WHERE {
     qb:dimension ?dimension ;
     qb:order ?componentSpecOrder .
   ?dimension
-    skos:notation ?dimension_code .
+    skos:notation ?notation .
+  OPTIONAL {
+    ?dimension
+      dad-prop:grouped-using ?group .
+    ?group
+      skos:notation ?group_notation .
+  }
   FILTER (
     ?dataset = {{ dataset.n3() }}
   )
@@ -134,7 +141,7 @@ class Cube(object):
 
     def get_dimensions(self):
         query = dimensions_query.render(dataset=self.dataset)
-        return [r[0] for r in self._execute(query)]
+        return list(self._execute(query, as_dict=True))
 
     def get_dimension_options(self, dimension, filters=[]):
         data = {
