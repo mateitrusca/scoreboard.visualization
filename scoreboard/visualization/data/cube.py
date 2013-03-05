@@ -151,11 +151,7 @@ class Cube(object):
                         for f, v in filters],
         }
         query = dimension_options_query.render(**data)
-        return [{
-            'uri': r[0],
-            'notation': r[1],
-            'label': r[2],
-        } for r in self._execute(query)]
+        return list(self._execute(query, as_dict=True))
 
     def get_data(self, columns, filters):
         assert columns[-1] == 'value', "Last column must be 'value'"
