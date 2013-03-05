@@ -118,7 +118,7 @@ class Cube(object):
         self.endpoint = endpoint
         self.dataset = sparql.IRI(dataset)
 
-    def _execute(self, query):
+    def _execute(self, query, as_dict=False):
         try:
             res = sparql.query(self.endpoint, query)
         except urllib2.HTTPError, e:
@@ -126,7 +126,11 @@ class Cube(object):
                 raise QueryError(e.fp.read())
             else:
                 raise
-        return (sparql.unpack_row(r) for r in res)
+        rv = (sparql.unpack_row(r) for r in res)
+        if as_dict:
+            return (dict(zip(res.variables, r)) for r in rv)
+        else:
+            return rv
 
     def get_dimensions(self):
         query = dimensions_query.render(dataset=self.dataset)
