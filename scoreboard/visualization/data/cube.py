@@ -1,5 +1,10 @@
+import urllib2
 from jinja2 import Template
 import sparql
+
+
+class QueryError(Exception):
+    pass
 
 
 dimensions_query = Template("""\
@@ -114,7 +119,13 @@ class Cube(object):
         self.dataset = sparql.IRI(dataset)
 
     def _execute(self, query):
-        res = sparql.query(self.endpoint, query)
+        try:
+            res = sparql.query(self.endpoint, query)
+        except urllib2.HTTPError, e:
+            if 400 <= e.code < 600:
+                raise QueryError(e.fp.read())
+            else:
+                raise
         return (sparql.unpack_row(r) for r in res)
 
     def get_dimensions(self):
