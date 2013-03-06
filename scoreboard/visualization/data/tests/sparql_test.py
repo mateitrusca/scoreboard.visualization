@@ -100,6 +100,18 @@ def test_get_available_year_options_for_indicator_group():
 
 
 @sparql_test
+def test_get_indicators_in_group():
+    cube = _create_cube()
+    items = cube.get_dimension_options('indicator', [
+        ('indicator-group', 'ict-skills'),
+    ])
+    indicators = [i['notation'] for i in items]
+    assert len(indicators) == 6
+    assert 'i_skedu' in indicators
+    assert 'e_broad' not in indicators
+
+
+@sparql_test
 def test_get_data_by_ref_area_with_dimension_filters():
     columns = ('ref-area', 'value')
     filters = [
