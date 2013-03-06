@@ -1,6 +1,12 @@
 import urllib2
+import os
+import logging
 from jinja2 import Template
 import sparql
+
+SPARQL_DEBUG = bool(os.environ.get('SPARQL_DEBUG') == 'on')
+
+logger = logging.getLogger(__name__)
 
 
 class QueryError(Exception):
@@ -171,6 +177,8 @@ class Cube(object):
         self.dataset = sparql.IRI(dataset)
 
     def _execute(self, query, as_dict=False):
+        if SPARQL_DEBUG:
+            logger.info('Running query: \n%s', query)
         try:
             res = sparql.query(self.endpoint, query)
         except urllib2.HTTPError, e:
