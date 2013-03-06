@@ -30,7 +30,6 @@ App.SelectFilter = Backbone.View.extend({
 
     update: function() {
         // TODO abort any existing requests
-        // TODO render greyed-out interface
         var incomplete = false;
         var args = {'dimension': this.dimension};
         _(this.constraints).forEach(function(other_dimension) {
@@ -41,8 +40,10 @@ App.SelectFilter = Backbone.View.extend({
             args[other_dimension] = other_option;
         }, this);
         if(incomplete) {
+            this.$el.html("--");
             return;
         }
+        this.$el.html("-- loading --");
         var ajax = $.get(App.URL + '/filter_options', args);
         ajax.done(_.bind(function(data) {
             this.received_new_options(data['options']);
