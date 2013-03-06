@@ -25,7 +25,9 @@ App.SelectFilter = Backbone.View.extend({
     received_new_options: function(new_options) {
         this.dimension_options = new_options;
         this.render();
-        this.model.set(this.dimension, new_options[0]['notation']);
+        if(new_options.length > 0) {
+            this.model.set(this.dimension, new_options[0]['notation']);
+        }
     },
 
     update: function() {
