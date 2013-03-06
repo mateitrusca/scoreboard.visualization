@@ -119,18 +119,18 @@ App.scenario1_initialize = function() {
     App.filters = new Backbone.Model();
     App.router = new App.ChartRouter(App.filters);
 
-    function add_filter(dimension, constraints) {
-        new App.SelectFilter({
+    function add_filter(Filter, dimension, constraints) {
+        new Filter({
             model: App.filters,
             dimension: dimension,
             constraints: constraints
         }).$el.appendTo($('#new-filters'));
     }
 
-    add_filter('indicator', []);
-    add_filter('time-period', ['indicator']);
-    add_filter('breakdown', ['time-period', 'indicator']);
-    add_filter('unit-measure', ['breakdown', 'time-period', 'indicator']);
+    add_filter(App.SelectFilter, 'indicator', []);
+    add_filter(App.SelectFilter, 'time-period', ['indicator']);
+    add_filter(App.RadioFilter, 'breakdown', ['time-period', 'indicator']);
+    add_filter(App.RadioFilter, 'unit-measure', ['breakdown', 'time-period', 'indicator']);
 
     App.scenario1_chart_view = new App.Scenario1ChartView({
         model: App.filters,
