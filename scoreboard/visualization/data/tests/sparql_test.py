@@ -65,6 +65,16 @@ def test_get_available_country_options_for_year_and_indicator():
 
 
 @sparql_test
+def test_get_available_indicator_group_options():
+    cube = _create_cube()
+    items = cube.get_dimension_options('indicator-group')
+    codes = [y['notation'] for y in items]
+    assert len(codes) == 8
+    assert 'internet-usage' in codes
+    assert 'ebusiness' in codes
+
+
+@sparql_test
 def test_get_data_by_ref_area_with_dimension_filters():
     columns = ('ref-area', 'value')
     filters = [

@@ -39,7 +39,8 @@ LIMIT 100
 dimension_options_query = Template("""\
 PREFIX qb: <http://purl.org/linked-data/cube#>
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
-SELECT DISTINCT ?option AS ?uri, ?notation, ?label WHERE {
+PREFIX dad-prop: <http://semantic.digital-agenda-data.eu/def/property/>
+SELECT DISTINCT ?uri, ?notation, ?label WHERE {
   ?dataset
     a qb:DataSet .
   ?observation
@@ -49,27 +50,52 @@ SELECT DISTINCT ?option AS ?uri, ?notation, ?label WHERE {
     ?filter{{n}}_dimension ?filter{{n}}_option ;
     {%- endfor %}
     ?dimension ?option .
-  ?dimension
-    skos:notation ?dimension_code .
   {%- for f in filters %} {%- set n = loop.index %}
   ?filter{{n}}_dimension
     skos:notation ?filter{{n}}_dimension_code .
   ?filter{{n}}_option
     skos:notation ?filter{{n}}_option_code .
   {%- endfor %}
+  FILTER (
+    {%- for f_dimension_code, f_option_code in filters %}
+    {%- set n = loop.index %}
+    ?filter{{n}}_dimension_code = {{ f_dimension_code.n3() }} &&
+    ?filter{{n}}_option_code = {{ f_option_code.n3() }} &&
+    {%- endfor %}
+    ?dataset = {{ dataset.n3() }}
+  )
+
+  {%- if dimension_code.value in ['indicator-group', 'breakdown-group'] %}
+  ?dimension
+    dad-prop:grouped-using ?dimension_group .
+  ?dimension_group
+    skos:notation ?dimension_code .
+  ?option
+    dad-prop:membership [
+      dad-prop:member-of ?option_group ] .
+  ?option_group
+    a skos:Concept ;
+    skos:notation ?notation ;
+    skos:prefLabel ?label .
+  FILTER (
+    ?dimension_code = {{ dimension_code.n3() }} &&
+    ?option_group = ?uri
+  )
+
+  {%- else %}
+  ?dimension
+    skos:notation ?dimension_code .
   ?option
     skos:notation ?notation ;
     skos:prefLabel ?label .
   FILTER (
-    ?dataset = {{ dataset.n3() }} &&
-    {%- for dimension_code, option_code in filters %} {%- set n = loop.index %}
-    ?filter{{n}}_dimension_code = {{ dimension_code.n3() }} &&
-    ?filter{{n}}_option_code = {{ option_code.n3() }} &&
-    {%- endfor %}
-    ?dimension_code = {{ dimension_code.n3() }}
+    ?dimension_code = {{ dimension_code.n3() }} &&
+    ?option = ?uri
   )
+
+  {%- endif %}
 }
-LIMIT 1000
+LIMIT 100
 """)
 
 
