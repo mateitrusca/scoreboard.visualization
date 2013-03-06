@@ -1,7 +1,7 @@
 import urllib2
 import os
 import logging
-from jinja2 import Template
+import jinja2
 import sparql
 
 SPARQL_DEBUG = bool(os.environ.get('SPARQL_DEBUG') == 'on')
@@ -13,7 +13,10 @@ class QueryError(Exception):
     pass
 
 
-dimensions_query = Template("""\
+sparql_templates = {}
+
+
+sparql_templates['dimensions'] = """\
 PREFIX qb: <http://purl.org/linked-data/cube#>
 PREFIX dad-prop: <http://semantic.digital-agenda-data.eu/def/property/>
 SELECT DISTINCT ?notation, ?group_notation WHERE {
@@ -39,10 +42,10 @@ SELECT DISTINCT ?notation, ?group_notation WHERE {
 }
 ORDER BY ?componentSpecOrder
 LIMIT 100
-""")
+"""
 
 
-dimension_options_query = Template("""\
+sparql_templates['dimension_options'] = """\
 {%- set group_dimensions = ['indicator-group', 'breakdown-group'] -%}
 PREFIX qb: <http://purl.org/linked-data/cube#>
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
@@ -121,10 +124,10 @@ SELECT DISTINCT ?uri, ?notation, ?label WHERE {
   {%- endif %}
 }
 LIMIT 100
-""")
+"""
 
 
-data_query = Template("""\
+sparql_templates['data'] = """\
 PREFIX qb: <http://purl.org/linked-data/cube#>
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 PREFIX sdmx-measure: <http://purl.org/linked-data/sdmx/2009/measure#>
@@ -167,7 +170,10 @@ SELECT DISTINCT {% for f in columns %} {%- set n = loop.index -%}
   )
 }
 LIMIT 1000
-""")
+"""
+
+
+sparql_env = jinja2.Environment(loader=jinja2.DictLoader(sparql_templates))
 
 
 class Cube(object):
@@ -193,22 +199,23 @@ class Cube(object):
             return rv
 
     def get_dimensions(self):
-        query = dimensions_query.render(dataset=self.dataset)
+        query = sparql_env.get_template('dimensions').render(**{
+            'dataset': self.dataset,
+        })
         return list(self._execute(query, as_dict=True))
 
     def get_dimension_options(self, dimension, filters=[]):
-        data = {
+        query = sparql_env.get_template('dimension_options').render(**{
             'dataset': self.dataset,
             'dimension_code': sparql.Literal(dimension),
             'filters': [(sparql.Literal(f), sparql.Literal(v))
                         for f, v in filters],
-        }
-        query = dimension_options_query.render(**data)
+        })
         return list(self._execute(query, as_dict=True))
 
     def get_data(self, columns, filters):
         assert columns[-1] == 'value', "Last column must be 'value'"
-        query = data_query.render(**{
+        query = sparql_env.get_template('data').render(**{
             'dataset': self.dataset,
             'columns': [sparql.Literal(c) for c in columns[:-1]],
             'filters': [(sparql.Literal(f), sparql.Literal(v))
