@@ -16,6 +16,42 @@ class QueryError(Exception):
 sparql_templates = {}
 
 
+sparql_templates['bits'] = """\
+{%- set group_dimensions = ['indicator-group', 'breakdown-group'] -%}
+{% macro one_filter(prefix, dimension_code, option_code) %}
+  ?observation
+    ?{{ prefix }}_dimension ?{{ prefix }}_option .
+
+  {%- if dimension_code.value in group_dimensions %}
+  ?{{ prefix }}_dimension
+    dad-prop:grouped-using ?{{ prefix }}_dimension_group .
+  ?{{ prefix }}_dimension_group
+    skos:notation ?{{ prefix }}_dimension_group_code .
+  ?{{ prefix }}_option
+    dad-prop:membership [
+      dad-prop:member-of ?{{ prefix }}_option_group ] .
+  ?{{ prefix }}_option_group
+    skos:notation ?{{ prefix }}_option_group_code .
+  FILTER (
+    ?{{ prefix }}_dimension_group_code = {{ dimension_code.n3() }} &&
+    ?{{ prefix }}_option_group_code = {{ option_code.n3() }}
+  )
+
+  {%- else %}
+  ?{{ prefix }}_dimension
+    skos:notation ?{{ prefix }}_dimension_code .
+  ?{{ prefix }}_option
+    skos:notation ?{{ prefix }}_option_code .
+  FILTER (
+    ?{{ prefix }}_dimension_code = {{ dimension_code.n3() }} &&
+    ?{{ prefix }}_option_code = {{ option_code.n3() }}
+  )
+
+  {%- endif %}
+{% endmacro %}
+"""
+
+
 sparql_templates['dimensions'] = """\
 PREFIX qb: <http://purl.org/linked-data/cube#>
 PREFIX dad-prop: <http://semantic.digital-agenda-data.eu/def/property/>
@@ -47,6 +83,7 @@ LIMIT 100
 
 sparql_templates['dimension_options'] = """\
 {%- set group_dimensions = ['indicator-group', 'breakdown-group'] -%}
+{%- from 'bits' import one_filter -%}
 PREFIX qb: <http://purl.org/linked-data/cube#>
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 PREFIX dad-prop: <http://semantic.digital-agenda-data.eu/def/property/>
@@ -62,36 +99,7 @@ SELECT DISTINCT ?uri, ?notation, ?label WHERE {
   )
 
 {%- for f_dimension_code, f_option_code in filters %}
-  {%- set n = loop.index %}
-  ?observation
-    ?filter{{n}}_dimension ?filter{{n}}_option .
-
-  {%- if f_dimension_code.value in group_dimensions %}
-  ?filter{{n}}_dimension
-    dad-prop:grouped-using ?filter{{n}}_dimension_group .
-  ?filter{{n}}_dimension_group
-    skos:notation ?filter{{n}}_dimension_group_code .
-  ?filter{{n}}_option
-    dad-prop:membership [
-      dad-prop:member-of ?filter{{n}}_option_group ] .
-  ?filter{{n}}_option_group
-    skos:notation ?filter{{n}}_option_group_code .
-  FILTER (
-    ?filter{{n}}_dimension_group_code = {{ f_dimension_code.n3() }} &&
-    ?filter{{n}}_option_group_code = {{ f_option_code.n3() }}
-  )
-
-  {%- else %}
-  ?filter{{n}}_dimension
-    skos:notation ?filter{{n}}_dimension_code .
-  ?filter{{n}}_option
-    skos:notation ?filter{{n}}_option_code .
-  FILTER (
-    ?filter{{n}}_dimension_code = {{ f_dimension_code.n3() }} &&
-    ?filter{{n}}_option_code = {{ f_option_code.n3() }}
-  )
-
-  {%- endif %}
+  {{ one_filter('filter_%d' % loop.index, f_dimension_code, f_option_code) }}
 {%- endfor %}
 
   {%- if dimension_code.value in group_dimensions %}
