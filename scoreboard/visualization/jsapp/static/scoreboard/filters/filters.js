@@ -61,11 +61,21 @@ App.SelectFilter = Backbone.View.extend({
 App.RadioFilter = App.SelectFilter.extend({
     template: App.get_template('scoreboard/filters/radio_buttons.html'),
 
+    events: {
+        'change input:radio': 'on_selection_change'
+    },
+
     render: function() {
         this.$el.html(this.template({
             'dimension_options': this.dimension_options,
             'dimension_id': this.dimension
         }));
+    },
+
+    on_selection_change: function() {
+        var value = this.$el.find("input:radio[checked='checked']").attr('id');
+        var key = this.dimension;
+        this.model.set(key, value);
     }
 });
 
