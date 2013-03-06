@@ -88,6 +88,18 @@ def test_get_available_indicator_group_options_for_year_and_country():
 
 
 @sparql_test
+def test_get_available_year_options_for_indicator_group():
+    cube = _create_cube()
+    items = cube.get_dimension_options('time-period', [
+        ('indicator-group', 'mobile'),
+    ])
+    years = [y['notation'] for y in items]
+    assert len(years) == 6
+    assert '2010' in years
+    assert '2002' not in years
+
+
+@sparql_test
 def test_get_data_by_ref_area_with_dimension_filters():
     columns = ('ref-area', 'value')
     filters = [

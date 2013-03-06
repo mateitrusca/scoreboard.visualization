@@ -52,20 +52,38 @@ SELECT DISTINCT ?uri, ?notation, ?label WHERE {
     ?dataset = {{ dataset.n3() }}
   )
 
-  {%- for f_dimension_code, f_option_code in filters %}
+{%- for f_dimension_code, f_option_code in filters %}
   {%- set n = loop.index %}
   ?observation
     ?filter{{n}}_dimension ?filter{{n}}_option .
+
+  {%- if f_dimension_code.value in group_dimensions %}
+  ?filter{{n}}_dimension
+    dad-prop:grouped-using ?filter{{n}}_dimension_group .
+  ?filter{{n}}_dimension_group
+    skos:notation ?filter{{n}}_dimension_group_code .
+  ?filter{{n}}_option
+    dad-prop:membership [
+      dad-prop:member-of ?filter{{n}}_option_group ] .
+  ?filter{{n}}_option_group
+    skos:notation ?filter{{n}}_option_group_code .
+  FILTER (
+    ?filter{{n}}_dimension_group_code = {{ f_dimension_code.n3() }} &&
+    ?filter{{n}}_option_group_code = {{ f_option_code.n3() }}
+  )
+
+  {%- else %}
   ?filter{{n}}_dimension
     skos:notation ?filter{{n}}_dimension_code .
   ?filter{{n}}_option
     skos:notation ?filter{{n}}_option_code .
-
   FILTER (
     ?filter{{n}}_dimension_code = {{ f_dimension_code.n3() }} &&
     ?filter{{n}}_option_code = {{ f_option_code.n3() }}
   )
-  {%- endfor %}
+
+  {%- endif %}
+{%- endfor %}
 
   {%- if dimension_code.value in group_dimensions %}
   ?dimension
