@@ -90,8 +90,10 @@ describe('Scenario1ChartView', function() {
             model: this.model
         });
         this.model.set({
+            'indicator-group': 'qq',
             'indicator': 'asdf',
             'time-period': '2002',
+            'breakdown-group': 'total',
             'breakdown': 'ind_total',
             'unit-measure': 'pc_ind'
         });
