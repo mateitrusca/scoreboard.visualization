@@ -94,7 +94,6 @@ SELECT DISTINCT ?uri, ?notation, ?label WHERE {
     dad-prop:membership [
       dad-prop:member-of ?option_group ] .
   ?option_group
-    a skos:Concept ;
     skos:notation ?notation ;
     skos:prefLabel ?label .
   FILTER (
