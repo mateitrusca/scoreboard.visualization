@@ -1,11 +1,10 @@
 <div id="{{ dimension_id }}" style="max-width: 500px">
 {{# dimension_options }}
     <input type="radio"
-           id="{{ notation }}"
-           name="radio"
-           value="{{ notation }}"
+           id="{{ this.notation }}"
+           name="{{ ../dimension_id }}"
            {{# if checked }} checked="checked" {{/ if }}
     />
-    <label for="radio1">{{ label }}</label>
+    <label for="{{ this.notation }}">{{ label }}</label>
 {{/ dimension_options }}
 </div>
