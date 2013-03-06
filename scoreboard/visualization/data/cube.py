@@ -136,6 +136,7 @@ LIMIT 100
 
 
 sparql_templates['data'] = """\
+{%- from 'bits' import one_filter -%}
 PREFIX qb: <http://purl.org/linked-data/cube#>
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 PREFIX sdmx-measure: <http://purl.org/linked-data/sdmx/2009/measure#>
@@ -147,19 +148,15 @@ SELECT DISTINCT {% for f in columns %} {%- set n = loop.index -%}
   ?observation
     a qb:Observation ;
     qb:dataSet ?dataset ;
-    {%- for f in filters %} {%- set n = loop.index %}
-    ?filter{{n}}_dimension ?filter{{n}}_option ;
-    {%- endfor %}
     {%- for c in columns %} {%- set n = loop.index %}
     ?col{{n}}_dimension ?col{{n}}_option ;
     {%- endfor %}
     sdmx-measure:obsValue ?value .
-  {%- for f in filters %} {%- set n = loop.index %}
-  ?filter{{n}}_dimension
-    skos:notation ?filter{{n}}_dimension_code .
-  ?filter{{n}}_option
-    skos:notation ?filter{{n}}_option_code .
-  {%- endfor %}
+
+{%- for f_dimension_code, f_option_code in filters %}
+  {{ one_filter('filter_%d' % loop.index, f_dimension_code, f_option_code) }}
+{%- endfor %}
+
   {%- for c in columns %} {%- set n = loop.index %}
   ?col{{n}}_dimension
     skos:notation ?col{{n}}_dimension_code .
@@ -167,10 +164,6 @@ SELECT DISTINCT {% for f in columns %} {%- set n = loop.index -%}
     skos:notation ?col{{n}} .
   {%- endfor %}
   FILTER (
-    {%- for dimension_code, option_code in filters %} {%- set n = loop.index %}
-    ?filter{{n}}_dimension_code = {{ dimension_code.n3() }} &&
-    ?filter{{n}}_option_code = {{ option_code.n3() }} &&
-    {%- endfor %}
     {%- for c in columns %} {%- set n = loop.index %}
     ?col{{n}}_dimension_code = {{ c.n3() }} &&
     {%- endfor %}
