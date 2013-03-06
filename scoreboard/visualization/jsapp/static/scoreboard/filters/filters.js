@@ -58,5 +58,15 @@ App.SelectFilter = Backbone.View.extend({
 
 });
 
+App.RadioFilter = App.SelectFilter.extend({
+    template: App.get_template('scoreboard/filters/radio_buttons.html'),
+
+    render: function() {
+        this.$el.html(this.template({
+            'dimension_options': this.dimension_options,
+            'dimension_id': this.dimension
+        }));
+    }
+});
 
 })(App.jQuery);
