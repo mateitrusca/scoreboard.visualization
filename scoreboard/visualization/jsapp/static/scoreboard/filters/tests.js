@@ -58,6 +58,21 @@ describe('modular filters', function() {
             expect(server.requests).to.deep.equal([]);
         });
 
+        it('should abort in-flight ajax requests', function() {
+            this.sandbox.useFakeServer();
+            var server = this.sandbox.server;
+            var view = new App.SelectFilter({
+                model: new Backbone.Model(),
+                dimension: 'time-period'
+            });
+            view.update();
+            App.respond_json(server.requests[1], {
+                'options': [{'label': "Option One", 'notation': 'two'}]});
+            App.respond_json(server.requests[0], {
+                'options': [{'label': "Option One", 'notation': 'one'}]});
+            expect(view.dimension_options[0]['notation']).to.equal('two');
+        });
+
         it('should update model with initial value', function() {
             var model = new Backbone.Model();
             var options = [{'label': "Option One", 'notation': 'one'},

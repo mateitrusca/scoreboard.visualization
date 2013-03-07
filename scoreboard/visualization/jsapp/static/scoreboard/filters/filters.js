@@ -31,7 +31,10 @@ App.SelectFilter = Backbone.View.extend({
     },
 
     update: function() {
-        // TODO abort any existing requests
+        if(this.ajax) {
+            this.ajax.abort();
+            this.ajax = null;
+        }
         var incomplete = false;
         var args = {'dimension': this.dimension};
         _(this.constraints).forEach(function(other_dimension) {
@@ -46,8 +49,9 @@ App.SelectFilter = Backbone.View.extend({
             return;
         }
         this.$el.html("-- loading --");
-        var ajax = $.get(App.URL + '/filter_options', args);
-        ajax.done(_.bind(function(data) {
+        this.ajax = $.get(App.URL + '/filter_options', args);
+        this.ajax.done(_.bind(function(data) {
+            this.ajax = null;
             this.received_new_options(data['options']);
         }, this));
     },
