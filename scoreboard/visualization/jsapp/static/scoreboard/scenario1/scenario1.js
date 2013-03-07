@@ -81,11 +81,12 @@ App.Scenario1ChartView = Backbone.View.extend({
     filters_changed: function() {
         var view = this;
         var args = this.model.toJSON();
-        if(!(args['indicator'] &&
+        if(!(args['indicator-group'] &&
+             args['indicator'] &&
              args['time-period'] &&
+             args['breakdown-group'] &&
              args['breakdown'] &&
              args['unit-measure'])) {
-            console.log('not all');
             return;  // not all filters have values
         }
         args['columns'] = 'ref-area,value';
@@ -127,10 +128,18 @@ App.scenario1_initialize = function() {
         }).$el.appendTo($('#new-filters'));
     }
 
-    add_filter(App.SelectFilter, 'indicator', []);
-    add_filter(App.SelectFilter, 'time-period', ['indicator']);
-    add_filter(App.RadioFilter, 'breakdown', ['time-period', 'indicator']);
-    add_filter(App.RadioFilter, 'unit-measure', ['breakdown', 'time-period', 'indicator']);
+    add_filter(App.SelectFilter, 'indicator-group', []);
+    add_filter(App.SelectFilter, 'indicator', ['indicator-group']);
+    add_filter(App.SelectFilter, 'time-period',
+               ['indicator-group', 'indicator']);
+    add_filter(App.SelectFilter, 'breakdown-group',
+               ['time-period', 'indicator-group', 'indicator']);
+    add_filter(App.RadioFilter, 'breakdown',
+               ['breakdown-group', 'time-period',
+                'indicator-group', 'indicator']);
+    add_filter(App.RadioFilter, 'unit-measure',
+               ['breakdown-group', 'breakdown', 'time-period',
+                'indicator-group', 'indicator']);
 
     App.scenario1_chart_view = new App.Scenario1ChartView({
         model: App.filters,

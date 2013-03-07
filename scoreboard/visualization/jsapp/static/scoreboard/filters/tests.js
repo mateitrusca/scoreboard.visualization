@@ -47,6 +47,17 @@ describe('modular filters', function() {
                 to.equal('i_iugm');
         });
 
+        it('should wait until all constraints are selected', function() {
+            this.sandbox.useFakeServer();
+            var server = this.sandbox.server;
+            var view = new App.SelectFilter({
+                model: new Backbone.Model({'indicator': 'i_iugm'}),
+                constraints: ['indicator', 'ref-area'],
+                dimension: 'time-period'
+            });
+            expect(server.requests).to.deep.equal([]);
+        });
+
         it('should update model with initial value', function() {
             var model = new Backbone.Model();
             var options = [{'label': "Option One", 'notation': 'one'},
