@@ -13,8 +13,12 @@ describe('modular filters', function() {
         });
 
         var NoAjaxSelectFilter = App.SelectFilter.extend({
-            update: function() {
-                this.received_new_options(this.options['options']);
+            fetch_options: function(args) {
+                var mock_ajax = App.jQuery.Deferred();
+                mock_ajax.abort = function() {
+                    mock_ajax.reject();
+                };
+                return mock_ajax;
             }
         });
 
@@ -50,12 +54,58 @@ describe('modular filters', function() {
         it('should wait until all constraints are selected', function() {
             this.sandbox.useFakeServer();
             var server = this.sandbox.server;
-            var view = new App.SelectFilter({
-                model: new Backbone.Model({'indicator': 'i_iugm'}),
+            var model = new Backbone.Model();
+            var c1 = new NoAjaxSelectFilter({model: model,
+                                             dimension: 'indicator'});
+            var c2 = new NoAjaxSelectFilter({model: model,
+                                             dimension: 'ref-area'});
+            var view = new NoAjaxSelectFilter({
+                model: model,
                 constraints: ['indicator', 'ref-area'],
                 dimension: 'time-period'
             });
-            expect(server.requests).to.deep.equal([]);
+            expect(view.ajax).to.equal(null);
+
+            c1.ajax.resolve({options: [{notation: 'ind1'}]});
+            expect(view.ajax).to.equal(null);
+
+            c2.ajax.resolve({options: [{notation: 'country1'}]});
+            expect(view.ajax).to.not.equal(null);
+        });
+
+        it('should wait until constraints finish loading', function() {
+            this.sandbox.useFakeServer();
+            var server = this.sandbox.server;
+            var model = new Backbone.Model({'ref-area': 'country1'});
+            var loadstate = new Backbone.Model();
+            var c1 = new NoAjaxSelectFilter({model: model,
+                                             loadstate: loadstate,
+                                             dimension: 'ref-area'});
+            var view = new NoAjaxSelectFilter({
+                model: model,
+                loadstate: loadstate,
+                constraints: ['ref-area'],
+                dimension: 'time-period'
+            });
+            expect(view.ajax).to.equal(null);
+
+            c1.ajax.resolve({options: [{notation: 'country1'}]});
+            expect(view.ajax).to.not.equal(null);
+        });
+
+        it('should abort in-flight ajax requests', function() {
+            this.sandbox.useFakeServer();
+            var server = this.sandbox.server;
+            var view = new App.SelectFilter({
+                model: new Backbone.Model(),
+                dimension: 'time-period'
+            });
+            view.update();
+            App.respond_json(server.requests[1], {
+                'options': [{'label': "Option One", 'notation': 'two'}]});
+            App.respond_json(server.requests[0], {
+                'options': [{'label': "Option One", 'notation': 'one'}]});
+            expect(view.dimension_options[0]['notation']).to.equal('two');
         });
 
         it('should update model with initial value', function() {
@@ -64,9 +114,9 @@ describe('modular filters', function() {
                            {'label': "Option Two", 'notation': 'two'}];
             var view = new NoAjaxSelectFilter({
                 model: model,
-                options: options,
                 dimension: 'time-period'
             });
+            view.ajax.resolve({options: options});
             expect(model.get('time-period')).to.equal('one');
         });
 
@@ -76,9 +126,9 @@ describe('modular filters', function() {
                            {'label': "Option Two", 'notation': 'two'}];
             var view = new NoAjaxSelectFilter({
                 model: model,
-                options: options,
                 dimension: 'time-period'
             });
+            view.ajax.resolve({options: options});
             App.testing.choose_option(view.$el.find('select'), 'two');
             expect(model.get('time-period')).to.equal('two');
         });
