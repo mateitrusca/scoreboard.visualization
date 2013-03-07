@@ -78,6 +78,7 @@ App.RadioFilter = App.SelectFilter.extend({
             'dimension_options': this.dimension_options,
             'dimension_id': this.dimension
         }));
+        window.jQuery('#'+this.dimension, this.$sl).buttonset();
     },
 
     on_selection_change: function() {
