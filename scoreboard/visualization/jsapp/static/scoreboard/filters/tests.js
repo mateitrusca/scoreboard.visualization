@@ -13,8 +13,12 @@ describe('modular filters', function() {
         });
 
         var NoAjaxSelectFilter = App.SelectFilter.extend({
-            update: function() {
-                this.received_new_options(this.options['options']);
+            fetch_options: function(args) {
+                var mock_ajax = App.jQuery.Deferred();
+                mock_ajax.abort = function() {
+                    mock_ajax.reject();
+                };
+                return mock_ajax;
             }
         });
 
@@ -79,9 +83,9 @@ describe('modular filters', function() {
                            {'label': "Option Two", 'notation': 'two'}];
             var view = new NoAjaxSelectFilter({
                 model: model,
-                options: options,
                 dimension: 'time-period'
             });
+            view.ajax.resolve({options: options});
             expect(model.get('time-period')).to.equal('one');
         });
 
@@ -91,9 +95,9 @@ describe('modular filters', function() {
                            {'label': "Option Two", 'notation': 'two'}];
             var view = new NoAjaxSelectFilter({
                 model: model,
-                options: options,
                 dimension: 'time-period'
             });
+            view.ajax.resolve({options: options});
             App.testing.choose_option(view.$el.find('select'), 'two');
             expect(model.get('time-period')).to.equal('two');
         });

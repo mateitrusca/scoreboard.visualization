@@ -49,11 +49,15 @@ App.SelectFilter = Backbone.View.extend({
             return;
         }
         this.$el.html("-- loading --");
-        this.ajax = $.get(App.URL + '/filter_options', args);
+        this.ajax = this.fetch_options(args);
         this.ajax.done(_.bind(function(data) {
             this.ajax = null;
             this.received_new_options(data['options']);
         }, this));
+    },
+
+    fetch_options: function(args) {
+        return $.get(App.URL + '/filter_options', args);
     },
 
     render: function() {
