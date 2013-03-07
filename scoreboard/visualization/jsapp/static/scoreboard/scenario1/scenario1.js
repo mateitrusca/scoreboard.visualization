@@ -69,6 +69,8 @@ App.Scenario1ChartView = Backbone.View.extend({
 
     initialize: function(options) {
         this.model.on('change', this.filters_changed, this);
+        this.loadstate = options['loadstate'] || new Backbone.Model();
+        this.loadstate.on('change', this.filters_changed, this);
         this.filters_changed();
     },
 
@@ -79,18 +81,22 @@ App.Scenario1ChartView = Backbone.View.extend({
     },
 
     filters_changed: function() {
+        var incomplete = false;
         var args = this.model.toJSON();
-        if(!(args['indicator-group'] &&
-             args['indicator'] &&
-             args['time-period'] &&
-             args['breakdown-group'] &&
-             args['breakdown'] &&
-             args['unit-measure'])) {
-            return;  // not all filters have values
+        _(['indicator-group', 'indicator', 'time-period', 'breakdown-group',
+           'breakdown', 'unit-measure']).forEach(function(field) {
+            if(! args[field]) { incomplete = true; }
+            if(this.loadstate.get(field)) { incomplete = true; }
+        }, this);
+        if(incomplete) {
+            // not all filters have values
+            this.$el.html('--');
+            return;
         }
         args['columns'] = 'ref-area,value';
-        var series_ajax = $.get(App.URL + '/datapoints', args);
+        this.$el.html('-- loading --');
 
+        var series_ajax = $.get(App.URL + '/datapoints', args);
         series_ajax.done(_.bind(function(data) {
             this.data = {
                 'series': data['datapoints'],
@@ -144,6 +150,7 @@ App.scenario1_initialize = function() {
 
     App.scenario1_chart_view = new App.Scenario1ChartView({
         model: App.filters,
+        loadstate: App.filter_loadstate,
         indicator_labels: {}
     });
     $('#the-chart').append(App.scenario1_chart_view.el);
