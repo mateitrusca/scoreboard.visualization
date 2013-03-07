@@ -1,9 +1,9 @@
-from .base import sparql_test, _create_cube
+from .base import sparql_test, create_cube
 
 
 @sparql_test
 def test_dimensions_query():
-    cube = _create_cube()
+    cube = create_cube()
     res = cube.get_dimensions()
     dimensions = {d['notation']: d for d in res}
     assert 'indicator' in dimensions
@@ -14,7 +14,7 @@ def test_dimensions_query():
 
 @sparql_test
 def test_get_all_year_options():
-    cube = _create_cube()
+    cube = create_cube()
     items = cube.get_dimension_options('ref-area')
     codes = [y['notation'] for y in items]
     assert len(codes) == 34
@@ -26,7 +26,7 @@ def test_get_all_year_options():
 
 @sparql_test
 def test_get_available_country_options_for_year():
-    cube = _create_cube()
+    cube = create_cube()
     items = cube.get_dimension_options('ref-area', [
         ('time-period', '2002'),
     ])
@@ -40,7 +40,7 @@ def test_get_available_country_options_for_year():
 
 @sparql_test
 def test_get_available_country_options_for_year_and_indicator():
-    cube = _create_cube()
+    cube = create_cube()
     items = cube.get_dimension_options('ref-area', [
         ('time-period', '2002'),
         ('indicator', 'h_iacc'),
@@ -55,7 +55,7 @@ def test_get_available_country_options_for_year_and_indicator():
 
 @sparql_test
 def test_get_available_indicator_group_options():
-    cube = _create_cube()
+    cube = create_cube()
     items = cube.get_dimension_options('indicator-group')
     codes = [y['notation'] for y in items]
     assert len(codes) == 8
@@ -65,7 +65,7 @@ def test_get_available_indicator_group_options():
 
 @sparql_test
 def test_get_available_indicator_group_options_for_year_and_country():
-    cube = _create_cube()
+    cube = create_cube()
     items = cube.get_dimension_options('indicator-group', [
         ('time-period', '2002'),
         ('ref-area', 'DK'),
@@ -78,7 +78,7 @@ def test_get_available_indicator_group_options_for_year_and_country():
 
 @sparql_test
 def test_get_available_year_options_for_indicator_group():
-    cube = _create_cube()
+    cube = create_cube()
     items = cube.get_dimension_options('time-period', [
         ('indicator-group', 'mobile'),
     ])
@@ -90,7 +90,7 @@ def test_get_available_year_options_for_indicator_group():
 
 @sparql_test
 def test_get_indicators_in_group():
-    cube = _create_cube()
+    cube = create_cube()
     items = cube.get_dimension_options('indicator', [
         ('indicator-group', 'ict-skills'),
     ])
