@@ -1,0 +1,57 @@
+{%- set group_dimensions = ['indicator-group', 'breakdown-group'] -%}
+{%- set short_label_required = ['breakdown-group', 'breakdown', 'unit-measure'] -%}
+{%- from 'bits.sparql' import one_filter -%}
+PREFIX qb: <http://purl.org/linked-data/cube#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX dad-prop: <http://semantic.digital-agenda-data.eu/def/property/>
+SELECT DISTINCT ?uri, ?notation, ?label, ?short_label WHERE {
+  ?dataset
+    a qb:DataSet .
+  ?observation
+    a qb:Observation ;
+    qb:dataSet ?dataset ;
+    ?dimension ?option .
+  FILTER (
+    ?dataset = {{ dataset.n3() }}
+  )
+
+{%- for f_dimension_code, f_option_code in filters %}
+  {{ one_filter('filter_%d' % loop.index, f_dimension_code, f_option_code) }}
+{%- endfor %}
+
+  {%- if dimension_code.value in group_dimensions %}
+  ?dimension
+    dad-prop:grouped-using ?dimension_group .
+  ?dimension_group
+    skos:notation ?dimension_code .
+  ?option
+    dad-prop:membership [
+      dad-prop:member-of ?option_group ] .
+  ?option_group
+    skos:notation ?notation ;
+    {% if dimension_code.value in short_label_required %}
+        skos:altLabel ?short_label ;
+    {% endif %}
+    skos:prefLabel ?label .
+  FILTER (
+    ?dimension_code = {{ dimension_code.n3() }} &&
+    ?option_group = ?uri
+  )
+
+  {%- else %}
+  ?dimension
+    skos:notation ?dimension_code .
+  ?option
+    skos:notation ?notation ;
+    {% if dimension_code.value in short_label_required %}
+        skos:altLabel ?short_label ;
+    {% endif %}
+    skos:prefLabel ?label .
+  FILTER (
+    ?dimension_code = {{ dimension_code.n3() }} &&
+    ?option = ?uri
+  )
+
+  {%- endif %}
+}
+LIMIT 100

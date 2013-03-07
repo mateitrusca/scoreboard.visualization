@@ -1,0 +1,32 @@
+{%- set group_dimensions = ['indicator-group', 'breakdown-group'] -%}
+{% macro one_filter(prefix, dimension_code, option_code) %}
+  ?observation
+    ?{{ prefix }}_dimension ?{{ prefix }}_option .
+
+  {%- if dimension_code.value in group_dimensions %}
+  ?{{ prefix }}_dimension
+    dad-prop:grouped-using ?{{ prefix }}_dimension_group .
+  ?{{ prefix }}_dimension_group
+    skos:notation ?{{ prefix }}_dimension_group_code .
+  ?{{ prefix }}_option
+    dad-prop:membership [
+      dad-prop:member-of ?{{ prefix }}_option_group ] .
+  ?{{ prefix }}_option_group
+    skos:notation ?{{ prefix }}_option_group_code .
+  FILTER (
+    ?{{ prefix }}_dimension_group_code = {{ dimension_code.n3() }} &&
+    ?{{ prefix }}_option_group_code = {{ option_code.n3() }}
+  )
+
+  {%- else %}
+  ?{{ prefix }}_dimension
+    skos:notation ?{{ prefix }}_dimension_code .
+  ?{{ prefix }}_option
+    skos:notation ?{{ prefix }}_option_code .
+  FILTER (
+    ?{{ prefix }}_dimension_code = {{ dimension_code.n3() }} &&
+    ?{{ prefix }}_option_code = {{ option_code.n3() }}
+  )
+
+  {%- endif %}
+{% endmacro %}
