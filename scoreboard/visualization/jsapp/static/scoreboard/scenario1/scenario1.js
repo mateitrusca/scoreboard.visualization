@@ -79,7 +79,6 @@ App.Scenario1ChartView = Backbone.View.extend({
     },
 
     filters_changed: function() {
-        var view = this;
         var args = this.model.toJSON();
         if(!(args['indicator-group'] &&
              args['indicator'] &&
@@ -92,8 +91,8 @@ App.Scenario1ChartView = Backbone.View.extend({
         args['columns'] = 'ref-area,value';
         var series_ajax = $.get(App.URL + '/datapoints', args);
 
-        series_ajax.done(function(data) {
-            view.data = {
+        series_ajax.done(_.bind(function(data) {
+            this.data = {
                 'series': data['datapoints'],
                 'year_text': "Year 2011",
                 'indicator_label': "teh indicator",
@@ -106,8 +105,8 @@ App.Scenario1ChartView = Backbone.View.extend({
                            Math.round(this.y*10)/10 + ' %_ind';
                 }
             };
-            view.render();
-        });
+            this.render();
+        }, this));
     }
 
 });
