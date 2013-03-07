@@ -118,11 +118,13 @@ App.scenario1_initialize = function() {
     box.html(App.get_template('scoreboard/scenario1/scenario1.html')());
 
     App.filters = new Backbone.Model();
+    App.filter_loadstate = new Backbone.Model();
     App.router = new App.ChartRouter(App.filters);
 
     function add_filter(Filter, dimension, constraints) {
         new Filter({
             model: App.filters,
+            loadstate: App.filter_loadstate,
             dimension: dimension,
             constraints: constraints
         }).$el.appendTo($('#new-filters'));

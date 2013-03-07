@@ -73,6 +73,26 @@ describe('modular filters', function() {
             expect(view.ajax).to.not.equal(null);
         });
 
+        it('should wait until constraints finish loading', function() {
+            this.sandbox.useFakeServer();
+            var server = this.sandbox.server;
+            var model = new Backbone.Model({'ref-area': 'country1'});
+            var loadstate = new Backbone.Model();
+            var c1 = new NoAjaxSelectFilter({model: model,
+                                             loadstate: loadstate,
+                                             dimension: 'ref-area'});
+            var view = new NoAjaxSelectFilter({
+                model: model,
+                loadstate: loadstate,
+                constraints: ['ref-area'],
+                dimension: 'time-period'
+            });
+            expect(view.ajax).to.equal(null);
+
+            c1.ajax.resolve({options: [{notation: 'country1'}]});
+            expect(view.ajax).to.not.equal(null);
+        });
+
         it('should abort in-flight ajax requests', function() {
             this.sandbox.useFakeServer();
             var server = this.sandbox.server;
