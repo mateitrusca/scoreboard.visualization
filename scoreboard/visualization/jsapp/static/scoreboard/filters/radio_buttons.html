@@ -5,6 +5,12 @@
            name="{{ ../dimension_id }}"
            {{# if selected }} checked="checked" {{/ if }}
     />
-    <label for="{{ this.notation }}">{{ label }}</label>
+    <label for="{{ this.notation }}">
+    {{# if short_label }}
+        {{ short_label }}
+    {{ else }}
+        {{ label }}
+    {{/ if }}
+    </label>
 {{/ dimension_options }}
 </div>
