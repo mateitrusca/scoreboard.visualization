@@ -112,6 +112,26 @@ def test_get_indicators_in_group():
 
 
 @sparql_test
+def test_get_altlabel_for_group_dimension():
+    cube = _create_cube()
+    items = cube.get_dimension_options('breakdown-group')
+    label = [it['short_label'] for it in items
+                if it['notation'] == 'byage'
+            ][0]
+    assert u'Age' == label
+
+
+@sparql_test
+def test_get_altlabel_for_not_group_dimension():
+    cube = _create_cube()
+    items = cube.get_dimension_options('unit-measure')
+    label = [it['short_label'] for it in items
+                if it['notation'] == 'pc_ind'
+            ][0]
+    assert u'% ind' == label
+
+
+@sparql_test
 def test_get_data_by_ref_area_with_dimension_filters():
     columns = ('ref-area', 'value')
     filters = [
