@@ -81,6 +81,7 @@ App.SelectFilter = Backbone.View.extend({
 
 });
 
+
 App.RadioFilter = App.SelectFilter.extend({
     template: App.get_template('scoreboard/filters/radio_buttons.html'),
 
@@ -102,5 +103,32 @@ App.RadioFilter = App.SelectFilter.extend({
         this.model.set(key, value);
     }
 });
+
+
+App.FiltersBox = Backbone.View.extend({
+
+    filter_types: {
+        'select': App.SelectFilter,
+        'radio': App.RadioFilter
+    },
+
+    initialize: function(options) {
+        this.filters = [];
+        this.loadstate = options['loadstate'] || new Backbone.Model();
+        _(options['schema']['filters']).forEach(function(item) {
+            var cls = this.filter_types[item['type']];
+            var filter = new cls({
+                model: this.model,
+                loadstate: this.loadstate,
+                dimension: item['dimension'],
+                constraints: item['constraints']
+            });
+            this.filters.push(filter);
+            this.$el.append(filter.el);
+        }, this);
+    }
+
+});
+
 
 })(App.jQuery);

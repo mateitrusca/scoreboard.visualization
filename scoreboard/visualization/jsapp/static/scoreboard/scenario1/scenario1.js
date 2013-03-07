@@ -118,6 +118,40 @@ App.Scenario1ChartView = Backbone.View.extend({
 });
 
 
+App.scenario1_filters_schema = {
+    filters: [
+        {type: 'select',
+         dimension: 'indicator-group',
+         constraints: []},
+        {type: 'select',
+         dimension: 'indicator',
+         constraints: ['indicator-group']},
+        {type: 'select',
+         dimension: 'time-period',
+         constraints: ['indicator-group',
+                       'indicator']},
+        {type: 'select',
+         dimension: 'breakdown-group',
+         constraints: ['time-period',
+                       'indicator-group',
+                       'indicator']},
+        {type: 'radio',
+         dimension: 'breakdown',
+         constraints: ['breakdown-group',
+                       'time-period',
+                       'indicator-group',
+                       'indicator']},
+        {type: 'radio',
+         dimension: 'unit-measure',
+         constraints: ['breakdown-group',
+                       'breakdown',
+                       'time-period',
+                       'indicator-group',
+                       'indicator']}
+    ]
+};
+
+
 App.scenario1_initialize = function() {
     var box = $('#scenario-box');
     box.html(App.get_template('scoreboard/scenario1/scenario1.html')());
@@ -126,27 +160,12 @@ App.scenario1_initialize = function() {
     App.filter_loadstate = new Backbone.Model();
     App.router = new App.ChartRouter(App.filters);
 
-    function add_filter(Filter, dimension, constraints) {
-        new Filter({
-            model: App.filters,
-            loadstate: App.filter_loadstate,
-            dimension: dimension,
-            constraints: constraints
-        }).$el.appendTo($('#new-filters'));
-    }
-
-    add_filter(App.SelectFilter, 'indicator-group', []);
-    add_filter(App.SelectFilter, 'indicator', ['indicator-group']);
-    add_filter(App.SelectFilter, 'time-period',
-               ['indicator-group', 'indicator']);
-    add_filter(App.SelectFilter, 'breakdown-group',
-               ['time-period', 'indicator-group', 'indicator']);
-    add_filter(App.RadioFilter, 'breakdown',
-               ['breakdown-group', 'time-period',
-                'indicator-group', 'indicator']);
-    add_filter(App.RadioFilter, 'unit-measure',
-               ['breakdown-group', 'breakdown', 'time-period',
-                'indicator-group', 'indicator']);
+    App.filters_box = new App.FiltersBox({
+        el: $('#new-filters')[0],
+        model: App.filters,
+        loadstate: App.filter_loadstate,
+        schema: App.scenario1_filters_schema
+    });
 
     App.scenario1_chart_view = new App.Scenario1ChartView({
         model: App.filters,
