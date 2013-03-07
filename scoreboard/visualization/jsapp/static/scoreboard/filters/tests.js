@@ -54,12 +54,23 @@ describe('modular filters', function() {
         it('should wait until all constraints are selected', function() {
             this.sandbox.useFakeServer();
             var server = this.sandbox.server;
-            var view = new App.SelectFilter({
-                model: new Backbone.Model({'indicator': 'i_iugm'}),
+            var model = new Backbone.Model();
+            var c1 = new NoAjaxSelectFilter({model: model,
+                                             dimension: 'indicator'});
+            var c2 = new NoAjaxSelectFilter({model: model,
+                                             dimension: 'ref-area'});
+            var view = new NoAjaxSelectFilter({
+                model: model,
                 constraints: ['indicator', 'ref-area'],
                 dimension: 'time-period'
             });
-            expect(server.requests).to.deep.equal([]);
+            expect(view.ajax).to.equal(null);
+
+            c1.ajax.resolve({options: [{notation: 'ind1'}]});
+            expect(view.ajax).to.equal(null);
+
+            c2.ajax.resolve({options: [{notation: 'country1'}]});
+            expect(view.ajax).to.not.equal(null);
         });
 
         it('should abort in-flight ajax requests', function() {

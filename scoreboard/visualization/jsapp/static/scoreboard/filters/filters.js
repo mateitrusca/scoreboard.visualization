@@ -16,6 +16,8 @@ App.SelectFilter = Backbone.View.extend({
     initialize: function(options) {
         this.dimension = options['dimension'];
         this.constraints = options['constraints'] || [];
+        this.dimension_options = [];
+        this.ajax = null;
         _(this.constraints).forEach(function(other_dimension) {
             this.model.on('change:' + other_dimension, this.update, this);
         }, this);
