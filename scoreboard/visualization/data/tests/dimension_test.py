@@ -1,15 +1,4 @@
-import pytest
-
-
-def sparql_test(func):
-    return pytest.mark.skipif("os.environ.get('SBTEST_SPARQL') != 'on'")(func)
-
-
-def _create_cube():
-    from scoreboard.visualization.data.cube import Cube
-    from scoreboard.visualization.views.scoreboard import data
-    dataset = 'http://semantic.digital-agenda-data.eu/dataset/scoreboard'
-    return Cube(data.SPARQL_ENDPOINT, dataset)
+from .base import sparql_test, _create_cube
 
 
 @sparql_test
@@ -109,65 +98,3 @@ def test_get_indicators_in_group():
     assert len(indicators) == 6
     assert 'i_skedu' in indicators
     assert 'e_broad' not in indicators
-
-
-@sparql_test
-def test_get_data_by_ref_area_with_dimension_filters():
-    columns = ('ref-area', 'value')
-    filters = [
-        ('indicator', 'i_bfeu'),
-        ('time-period', '2011'),
-        ('breakdown', 'IND_TOTAL'),
-        ('unit-measure', 'pc_ind'),
-    ]
-    cube = _create_cube()
-    points = list(cube.get_data(columns, filters))
-    assert len(points) == 31
-    assert {'ref-area': 'IE', 'value': 0.2222} in points
-
-
-@sparql_test
-def test_get_data_by_time_period_with_dimension_filters():
-    columns = ('time-period', 'value')
-    filters = [
-        ('indicator', 'i_bfeu'),
-        ('breakdown', 'IND_TOTAL'),
-        ('unit-measure', 'pc_ind'),
-        ('ref-area', 'IE'),
-    ]
-    cube = _create_cube()
-    points = list(cube.get_data(columns, filters))
-    assert {'time-period': '2011', 'value': 0.2222} in points
-    assert len(points) == 5
-
-
-@sparql_test
-def test_get_data_by_time_period_and_ref_area_with_dimension_filters():
-    columns = ('time-period', 'ref-area', 'value')
-    filters = [
-        ('indicator', 'i_bfeu'),
-        ('breakdown', 'IND_TOTAL'),
-        ('unit-measure', 'pc_ind'),
-    ]
-    cube = _create_cube()
-    points = list(cube.get_data(columns, filters))
-    assert {'time-period': '2011', 'ref-area': 'IE', 'value': 0.2222} in points
-    assert {'time-period': '2010', 'ref-area': 'PT', 'value': 0.0609} in points
-    assert len(points) == 161
-
-
-@sparql_test
-def test_get_data_by_time_period_and_ref_area_with_dimension_group_filters():
-    columns = ('time-period', 'ref-area', 'value')
-    filters = [
-        ('indicator-group', 'ecommerce'),
-        ('indicator', 'i_bfeu'),
-        ('breakdown-group', 'total'),
-        ('breakdown', 'IND_TOTAL'),
-        ('unit-measure', 'pc_ind'),
-    ]
-    cube = _create_cube()
-    points = list(cube.get_data(columns, filters))
-    assert {'time-period': '2011', 'ref-area': 'IE', 'value': 0.2222} in points
-    assert {'time-period': '2010', 'ref-area': 'PT', 'value': 0.0609} in points
-    assert len(points) == 161
