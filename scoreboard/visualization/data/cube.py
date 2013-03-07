@@ -83,11 +83,12 @@ LIMIT 100
 
 sparql_templates['dimension_options'] = """\
 {%- set group_dimensions = ['indicator-group', 'breakdown-group'] -%}
+{%- set short_label_required = ['breakdown-group', 'breakdown', 'unit-measure'] -%}
 {%- from 'bits' import one_filter -%}
 PREFIX qb: <http://purl.org/linked-data/cube#>
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 PREFIX dad-prop: <http://semantic.digital-agenda-data.eu/def/property/>
-SELECT DISTINCT ?uri, ?notation, ?label WHERE {
+SELECT DISTINCT ?uri, ?notation, ?label, ?short_label WHERE {
   ?dataset
     a qb:DataSet .
   ?observation
@@ -112,6 +113,9 @@ SELECT DISTINCT ?uri, ?notation, ?label WHERE {
       dad-prop:member-of ?option_group ] .
   ?option_group
     skos:notation ?notation ;
+    {% if dimension_code.value in short_label_required %}
+        skos:altLabel ?short_label ;
+    {% endif %}
     skos:prefLabel ?label .
   FILTER (
     ?dimension_code = {{ dimension_code.n3() }} &&
@@ -123,6 +127,9 @@ SELECT DISTINCT ?uri, ?notation, ?label WHERE {
     skos:notation ?dimension_code .
   ?option
     skos:notation ?notation ;
+    {% if dimension_code.value in short_label_required %}
+        skos:altLabel ?short_label ;
+    {% endif %}
     skos:prefLabel ?label .
   FILTER (
     ?dimension_code = {{ dimension_code.n3() }} &&
