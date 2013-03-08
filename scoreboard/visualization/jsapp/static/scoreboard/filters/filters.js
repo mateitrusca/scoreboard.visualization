@@ -94,11 +94,11 @@ App.RadioFilter = App.SelectFilter.extend({
             'dimension_options': this.dimension_options,
             'dimension_id': this.dimension
         }));
-        window.jQuery('#'+this.dimension, this.$sl).buttonset();
+        App.plone_jQuery(this.$el.find("#"+this.dimension)).buttonset();
     },
 
     on_selection_change: function() {
-        var value = this.$el.find("input:radio[checked='checked']").attr('id');
+        var value = this.$el.find("input:radio[checked='checked']").val();
         var key = this.dimension;
         this.model.set(key, value);
     }
