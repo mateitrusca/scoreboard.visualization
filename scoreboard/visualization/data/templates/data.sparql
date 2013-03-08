@@ -16,8 +16,8 @@ SELECT DISTINCT {% for f in columns %} {%- set n = loop.index -%}
     sdmx-measure:obsValue ?value .
 
 {%- for f_dimension_code, f_option_code in filters %}
-  {{ one_filter('observation', 'filter_%d' % loop.index,
-                f_dimension_code, f_option_code) }}
+{{ one_filter('observation', 'filter_%d' % loop.index,
+              f_dimension_code, f_option_code) }}
 {%- endfor %}
 
   {%- for c in columns %} {%- set n = loop.index %}

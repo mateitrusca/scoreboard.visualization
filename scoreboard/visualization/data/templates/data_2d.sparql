@@ -18,10 +18,10 @@ SELECT DISTINCT ?x_value, ?y_value WHERE {
     sdmx-measure:obsValue ?y_value .
 
 {%- for f_dimension_code, f_option_code in filters %}
-  {{ one_filter('x_observation', 'x_filter_%d' % loop.index,
-                f_dimension_code, f_option_code) }}
-  {{ one_filter('y_observation', 'y_filter_%d' % loop.index,
-                f_dimension_code, f_option_code) }}
+{{ one_filter('x_observation', 'x_filter_%d' % loop.index,
+              f_dimension_code, f_option_code) }}
+{{ one_filter('y_observation', 'y_filter_%d' % loop.index,
+              f_dimension_code, f_option_code) }}
 {%- endfor %}
 
   FILTER (
