@@ -118,3 +118,18 @@ def test_get_altlabel_for_not_group_dimension():
                 if it['notation'] == 'pc_ind'
             ][0]
     assert u'% ind' == label
+
+
+@sparql_test
+def test_get_years_for_xy_indicators():
+    cube = create_cube()
+    items = cube.get_dimension_options_xy('time-period',
+        [('ref-area', 'ES')],
+        [('indicator', 'i_iuse')],
+        [('indicator', 'i_iu3g')],
+    )
+    years = [i['notation'] for i in items]
+    assert len(years) == 5
+    assert '2010' in years
+    assert '2006' not in years
+    assert '2004' not in years

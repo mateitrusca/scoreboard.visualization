@@ -44,3 +44,36 @@
   ?{{ prefix }}_option
     skos:notation ?{{ prefix }} .
 {%- endmacro %}
+
+
+{% macro one_dimension(dimension_code) %}
+  {%- if dimension_code.value in group_dimensions %}
+  ?dimension
+    dad-prop:grouped-using ?dimension_group .
+  ?dimension_group
+    skos:notation {{ dimension_code.n3() }} .
+  ?option
+    dad-prop:membership [
+      dad-prop:member-of ?uri ] .
+  ?uri
+    skos:notation ?notation ;
+    skos:prefLabel ?label .
+  OPTIONAL {
+    ?uri
+      skos:altLabel ?short_label
+  }
+
+  {%- else %}
+  FILTER(?option = ?uri)
+  ?dimension
+    skos:notation {{ dimension_code.n3() }} .
+  ?uri
+    skos:notation ?notation ;
+    skos:prefLabel ?label .
+  OPTIONAL {
+    ?uri
+      skos:altLabel ?short_label
+  }
+
+  {%- endif %}
+{%- endmacro %}

@@ -55,6 +55,18 @@ class Cube(object):
         })
         return list(self._execute(query, as_dict=True))
 
+    def get_dimension_options_xy(self, dimension,
+                                 filters, x_filters, y_filters):
+        tmpl = sparql_env.get_template('dimension_options_xy.sparql')
+        query = tmpl.render(**{
+            'dataset': self.dataset,
+            'dimension_code': sparql.Literal(dimension),
+            'filters': literal_pairs(filters),
+            'x_filters': literal_pairs(x_filters),
+            'y_filters': literal_pairs(y_filters),
+        })
+        return list(self._execute(query, as_dict=True))
+
     def get_data(self, columns, filters):
         assert columns[-1] == 'value', "Last column must be 'value'"
         query = sparql_env.get_template('data.sparql').render(**{
