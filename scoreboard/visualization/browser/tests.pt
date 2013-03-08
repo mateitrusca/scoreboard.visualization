@@ -19,7 +19,14 @@
     mocha.setup('bdd');
     expect = chai.expect;
   </script>
-
+  <script
+      type="text/javascript"
+      src="http://localhost:8080/scoreboard/portal_javascripts/Sunburst%20Theme/++resource++plone.app.jquery.js">
+  </script>
+  <script
+      type="text/javascript"
+      src="http://localhost:8080/scoreboard/portal_javascripts/Sunburst%20Theme/collective.js.jqueryui.custom.min.js">
+  </script>
   <tal:block content="structure python:view.jsapp_html()"/>
 
   <script tal:attributes="src string:${STATIC}/testing.js"></script>
