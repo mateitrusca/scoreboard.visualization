@@ -21,11 +21,11 @@
   </script>
   <script
       type="text/javascript"
-      src="/scoreboard/portal_javascripts/Sunburst%20Theme/++resource++plone.app.jquery.js">
+      src="portal_javascripts/Sunburst%20Theme/++resource++plone.app.jquery.js">
   </script>
   <script
       type="text/javascript"
-      src="/scoreboard/portal_javascripts/Sunburst%20Theme/collective.js.jqueryui.custom.min.js">
+      src="portal_javascripts/Sunburst%20Theme/collective.js.jqueryui.custom.min.js">
   </script>
   <tal:block content="structure python:view.jsapp_html()"/>
 
