@@ -1,5 +1,5 @@
 {%- set group_dimensions = ['indicator-group', 'breakdown-group'] -%}
-{%- from 'bits.sparql' import one_filter -%}
+{%- from 'bits.sparql' import one_filter, one_dimension -%}
 PREFIX qb: <http://purl.org/linked-data/cube#>
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 PREFIX dad-prop: <http://semantic.digital-agenda-data.eu/def/property/>
@@ -25,35 +25,7 @@ SELECT DISTINCT ?uri, ?notation, ?label, ?short_label WHERE {
               f_dimension_code, f_option_code) }}
 {%- endfor %}
 
-  {%- if dimension_code.value in group_dimensions %}
-  ?dimension
-    dad-prop:grouped-using ?dimension_group .
-  ?dimension_group
-    skos:notation {{ dimension_code.n3() }} .
-  ?option
-    dad-prop:membership [
-      dad-prop:member-of ?uri ] .
-  ?uri
-    skos:notation ?notation ;
-    skos:prefLabel ?label .
-  OPTIONAL {
-    ?uri
-      skos:altLabel ?short_label
-  }
+{{ one_dimension(dimension_code) }}
 
-  {%- else %}
-  FILTER(?option = ?uri)
-  ?dimension
-    skos:notation {{ dimension_code.n3() }} .
-  ?uri
-    skos:notation ?notation ;
-    skos:prefLabel ?label .
-  FILTER(?option = ?uri)
-  OPTIONAL {
-    ?uri
-      skos:altLabel ?short_label
-  }
-
-  {%- endif %}
 }
 LIMIT 100
