@@ -3,16 +3,10 @@ import simplejson as json
 import pytest
 
 
-def _dimension_values_query(form):
+def ajax(name, form):
     from scoreboard.visualization.views.scoreboard import data
     view = data.CubeView(Mock(), Mock(form=form))
-    return json.loads(view.dimension_values())
-
-
-def _data_query(form):
-    from scoreboard.visualization.views.scoreboard import data
-    view = data.CubeView(Mock(), Mock(form=form))
-    return json.loads(view.datapoints())
+    return json.loads(getattr(view, name)())
 
 
 @pytest.fixture()
@@ -27,13 +21,13 @@ def test_all_indicator_values(mock_cube):
         {'label': 'indicator one', 'notation': 'one'},
         {'label': 'indicator two', 'notation': 'two'},
     ]
-    res = _dimension_values_query({'dimension': 'indicator'})
+    res = ajax('dimension_values', {'dimension': 'indicator'})
     assert {'label': 'indicator one', 'notation': 'one'} in res['options']
     assert {'label': 'indicator two', 'notation': 'two'} in res['options']
 
 
 def test_single_filter_passed_on_to_query(mock_cube):
-    _dimension_values_query({
+    ajax('dimension_values', {
         'dimension': 'ref-area',
         'time-period': '2002',
     })
@@ -42,7 +36,7 @@ def test_single_filter_passed_on_to_query(mock_cube):
 
 
 def test_filters_passed_on_to_query(mock_cube):
-    _dimension_values_query({
+    ajax('dimension_values', {
         'dimension': 'ref-area',
         'time-period': '2002',
         'indicator': 'h_iacc',
@@ -53,7 +47,7 @@ def test_filters_passed_on_to_query(mock_cube):
 
 
 def test_data_query_sends_filters_and_columns(mock_cube):
-    _data_query({
+    ajax('datapoints', {
         'columns': 'time-period,ref-area,value',
         'indicator': 'i_bfeu',
         'breakdown': 'IND_TOTAL',
@@ -70,7 +64,7 @@ def test_data_query_returns_rows(mock_cube):
     rows = [{'time-period': '2011', 'ref-area': 'IE', 'value': 0.2222},
             {'time-period': '2010', 'ref-area': 'PT', 'value': 0.0609}]
     mock_cube.get_data.return_value = iter(rows)
-    res = _data_query({
+    res = ajax('datapoints', {
         'columns': 'time-period,ref-area,value',
         'indicator': 'i_bfeu',
         'breakdown': 'IND_TOTAL',
