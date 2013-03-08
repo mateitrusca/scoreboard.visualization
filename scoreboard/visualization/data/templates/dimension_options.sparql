@@ -4,15 +4,11 @@ PREFIX qb: <http://purl.org/linked-data/cube#>
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 PREFIX dad-prop: <http://semantic.digital-agenda-data.eu/def/property/>
 SELECT DISTINCT ?uri, ?notation, ?label, ?short_label WHERE {
-  ?dataset
-    a qb:DataSet .
+
   ?observation
     a qb:Observation ;
-    qb:dataSet ?dataset ;
+    qb:dataSet {{ dataset.n3() }} ;
     ?dimension ?option .
-  FILTER (
-    ?dataset = {{ dataset.n3() }}
-  )
 
 {%- for f_dimension_code, f_option_code in filters %}
   {{ one_filter('observation', 'filter_%d' % loop.index,
@@ -23,36 +19,29 @@ SELECT DISTINCT ?uri, ?notation, ?label, ?short_label WHERE {
   ?dimension
     dad-prop:grouped-using ?dimension_group .
   ?dimension_group
-    skos:notation ?dimension_code .
+    skos:notation {{ dimension_code.n3() }} .
   ?option
     dad-prop:membership [
-      dad-prop:member-of ?option_group ] .
-  ?option_group
+      dad-prop:member-of ?uri ] .
+  ?uri
     skos:notation ?notation ;
     skos:prefLabel ?label .
   OPTIONAL {
-    ?option_group
+    ?uri
       skos:altLabel ?short_label
   }
-  FILTER (
-    ?dimension_code = {{ dimension_code.n3() }} &&
-    ?option_group = ?uri
-  )
 
   {%- else %}
+  FILTER(?option = ?uri)
   ?dimension
-    skos:notation ?dimension_code .
-  ?option
+    skos:notation {{ dimension_code.n3() }} .
+  ?uri
     skos:notation ?notation ;
     skos:prefLabel ?label .
   OPTIONAL {
-    ?option
+    ?uri
       skos:altLabel ?short_label
   }
-  FILTER (
-    ?dimension_code = {{ dimension_code.n3() }} &&
-    ?option = ?uri
-  )
 
   {%- endif %}
 }
