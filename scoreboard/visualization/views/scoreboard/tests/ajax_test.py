@@ -16,7 +16,7 @@ def mock_cube(request):
     return p.start().return_value
 
 
-def test_all_indicator_values(mock_cube):
+def test_dimension_all_indicator_values(mock_cube):
     mock_cube.get_dimension_options.return_value = [
         {'label': 'indicator one', 'notation': 'one'},
         {'label': 'indicator two', 'notation': 'two'},
@@ -26,7 +26,7 @@ def test_all_indicator_values(mock_cube):
     assert {'label': 'indicator two', 'notation': 'two'} in res['options']
 
 
-def test_single_filter_passed_on_to_query(mock_cube):
+def test_dimension_single_filter_passed_on_to_query(mock_cube):
     ajax('dimension_values', {
         'dimension': 'ref-area',
         'time-period': '2002',
@@ -35,7 +35,7 @@ def test_single_filter_passed_on_to_query(mock_cube):
     assert cube_call == call('ref-area', [('time-period', '2002')])
 
 
-def test_filters_passed_on_to_query(mock_cube):
+def test_dimension_filters_passed_on_to_query(mock_cube):
     ajax('dimension_values', {
         'dimension': 'ref-area',
         'time-period': '2002',
