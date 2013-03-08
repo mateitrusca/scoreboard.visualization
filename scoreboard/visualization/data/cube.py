@@ -65,9 +65,9 @@ class Cube(object):
         for row in self._execute(query):
             yield dict(zip(columns, row))
 
-    def get_data_2d(self, columns, xy_columns, filters, x_filters, y_filters):
+    def get_data_xy(self, columns, xy_columns, filters, x_filters, y_filters):
         assert xy_columns == ('value',)
-        query = sparql_env.get_template('data_2d.sparql').render(**{
+        query = sparql_env.get_template('data_xy.sparql').render(**{
             'dataset': self.dataset,
             'filters': literal_pairs(filters),
             'x_filters': literal_pairs(x_filters),

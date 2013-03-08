@@ -74,13 +74,13 @@ def test_get_same_observation_in_two_dimensions():
         ('ref-area', 'IE'),
     ]
     cube = create_cube()
-    points = list(cube.get_data_2d((), xy_columns, filters, (), ()))
+    points = list(cube.get_data_xy((), xy_columns, filters, (), ()))
     assert len(points) == 1
     assert points[0] == {'value': {'x': 0.2222, 'y': 0.2222}}
 
 
 @sparql_test
-def test_get_2d_observations_for_2_countries_all_years():
+def test_get_xy_observations_for_2_countries_all_years():
     columns = ('time-period',)
     xy_columns = ('value',)
     filters = [
@@ -91,7 +91,7 @@ def test_get_2d_observations_for_2_countries_all_years():
     x_filters = [('ref-area', 'IE')]
     y_filters = [('ref-area', 'DK')]
     cube = create_cube()
-    pts = list(cube.get_data_2d(columns, xy_columns,
+    pts = list(cube.get_data_xy(columns, xy_columns,
                                 filters, x_filters, y_filters))
     assert len(pts) == 5
     assert {'time-period': '2011', 'value': {'x': 0.2222, 'y': 0.2795}} in pts
