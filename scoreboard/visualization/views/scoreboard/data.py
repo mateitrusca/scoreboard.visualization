@@ -74,6 +74,21 @@ class CubeView(BrowserView):
         options = self.cube.get_dimension_options(dimension, filters)
         return self.jsonify({'options': options})
 
+    def dimension_values_xy(self):
+        form = dict(self.request.form)
+        dimension = form.pop('dimension')
+        (filters, x_filters, y_filters) = ([], [], [])
+        for k, v in sorted(form.items()):
+            if k.startswith('x:'):
+                x_filters.append((k[2:], v))
+            elif k.startswith('y:'):
+                y_filters.append((k[2:], v))
+            else:
+                filters.append((k, v))
+        options = self.cube.get_dimension_options_xy(dimension, filters,
+                                                     x_filters, y_filters)
+        return self.jsonify({'options': options})
+
     def datapoints(self):
         form = dict(self.request.form)
         columns = form.pop('columns').split(',')

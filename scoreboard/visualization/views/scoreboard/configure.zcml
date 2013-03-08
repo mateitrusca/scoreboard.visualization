@@ -36,6 +36,14 @@
     />
 
   <browser:page
+    name="dimension_values_xy"
+    for="...interfaces.IScoreboardVisualization"
+    class=".data.CubeView"
+    attribute="dimension_values_xy"
+    permission="zope2.View"
+    />
+
+  <browser:page
     name="datapoints"
     for="...interfaces.IScoreboardVisualization"
     class=".data.CubeView"

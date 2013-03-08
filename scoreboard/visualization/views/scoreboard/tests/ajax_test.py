@@ -46,6 +46,23 @@ def test_dimension_filters_passed_on_to_query(mock_cube):
                                           ('time-period', '2002')])
 
 
+def test_dimension_xy_filters_passed_on_to_query(mock_cube):
+    mock_cube.get_dimension_options_xy.return_value = ['something']
+    res = ajax('dimension_values_xy', {
+        'dimension': 'ref-area',
+        'time-period': '2002',
+        'breakdown': 'blahblah',
+        'x:indicator': 'i_iuse',
+        'y:indicator': 'i_iu3g',
+    })
+    assert mock_cube.get_dimension_options_xy.mock_calls[0] == call(
+        'ref-area',
+        [('breakdown', 'blahblah'), ('time-period', '2002')],
+        [('indicator', 'i_iuse')],
+        [('indicator', 'i_iu3g')])
+    assert res == {'options': ['something']}
+
+
 def test_data_query_sends_filters_and_columns(mock_cube):
     ajax('datapoints', {
         'columns': 'time-period,ref-area,value',
