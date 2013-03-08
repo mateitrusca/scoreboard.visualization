@@ -32,3 +32,15 @@
   ?{{ prefix }}_option
     skos:notation ?{{ prefix }} .
 {%- endmacro %}
+
+
+{% macro one_xy_column(x_observation, y_observation, prefix, dimension_code) %}
+  ?{{ x_observation }}
+    ?{{ prefix }}_dimension ?{{ prefix }}_option .
+  ?{{ y_observation }}
+    ?{{ prefix }}_dimension ?{{ prefix }}_option .
+  ?{{ prefix }}_dimension
+    skos:notation {{ dimension_code.n3() }} .
+  ?{{ prefix }}_option
+    skos:notation ?{{ prefix }} .
+{%- endmacro %}

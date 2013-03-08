@@ -65,11 +65,16 @@ class Cube(object):
         for row in self._execute(query):
             yield dict(zip(columns, row))
 
-    def get_data_2d(self, columns, filters):
-        assert columns == ('value',)
+    def get_data_2d(self, columns, xy_columns, filters, x_filters, y_filters):
+        assert xy_columns == ('value',)
         query = sparql_env.get_template('data_2d.sparql').render(**{
             'dataset': self.dataset,
             'filters': literal_pairs(filters),
+            'x_filters': literal_pairs(x_filters),
+            'y_filters': literal_pairs(y_filters),
+            'columns': [sparql.Literal(c) for c in columns],
         })
         for row in self._execute(query):
-            yield {'value': {'x': row[0], 'y': row[1]}}
+            out = dict(zip(columns, row))
+            out['value'] = {'x': row[-2], 'y': row[-1]}
+            yield out

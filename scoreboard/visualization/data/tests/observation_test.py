@@ -65,7 +65,7 @@ def test_get_data_by_time_period_and_ref_area_with_dimension_group_filters():
 
 @sparql_test
 def test_get_same_observation_in_two_dimensions():
-    columns = ('value',)
+    xy_columns = ('value',)
     filters = [
         ('time-period', '2011'),
         ('indicator', 'i_bfeu'),
@@ -74,6 +74,25 @@ def test_get_same_observation_in_two_dimensions():
         ('ref-area', 'IE'),
     ]
     cube = create_cube()
-    points = list(cube.get_data_2d(columns, filters))
+    points = list(cube.get_data_2d((), xy_columns, filters, (), ()))
     assert len(points) == 1
     assert points[0] == {'value': {'x': 0.2222, 'y': 0.2222}}
+
+
+@sparql_test
+def test_get_2d_observations_for_2_countries_all_years():
+    columns = ('time-period',)
+    xy_columns = ('value',)
+    filters = [
+        ('indicator', 'i_bfeu'),
+        ('breakdown', 'IND_TOTAL'),
+        ('unit-measure', 'pc_ind'),
+    ]
+    x_filters = [('ref-area', 'IE')]
+    y_filters = [('ref-area', 'DK')]
+    cube = create_cube()
+    pts = list(cube.get_data_2d(columns, xy_columns,
+                                filters, x_filters, y_filters))
+    assert len(pts) == 5
+    assert {'time-period': '2011', 'value': {'x': 0.2222, 'y': 0.2795}} in pts
+    assert {'time-period': '2012', 'value': {'x': 0.2811, 'y': 0.2892}} in pts
