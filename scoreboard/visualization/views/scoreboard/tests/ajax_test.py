@@ -2,10 +2,10 @@ from mock import Mock, patch, call
 import simplejson as json
 
 
-def _filter_options_query(form):
+def _dimension_values_query(form):
     from scoreboard.visualization.views.scoreboard import data
     view = data.CubeView(Mock(), Mock(form=form))
-    return json.loads(view.filter_options())
+    return json.loads(view.dimension_values())
 
 
 def _data_query(form):
@@ -20,14 +20,14 @@ def test_all_indicator_values():
             {'label': 'indicator one', 'notation': 'one'},
             {'label': 'indicator two', 'notation': 'two'},
         ]
-        res = _filter_options_query({'dimension': 'indicator'})
+        res = _dimension_values_query({'dimension': 'indicator'})
     assert {'label': 'indicator one', 'notation': 'one'} in res['options']
     assert {'label': 'indicator two', 'notation': 'two'} in res['options']
 
 
 def test_single_filter_passed_on_to_query():
     with patch('scoreboard.visualization.views.scoreboard.data.Cube') as Cube:
-        _filter_options_query({
+        _dimension_values_query({
             'dimension': 'ref-area',
             'time-period': '2002',
         })
@@ -37,7 +37,7 @@ def test_single_filter_passed_on_to_query():
 
 def test_filters_passed_on_to_query():
     with patch('scoreboard.visualization.views.scoreboard.data.Cube') as Cube:
-        _filter_options_query({
+        _dimension_values_query({
             'dimension': 'ref-area',
             'time-period': '2002',
             'indicator': 'h_iacc',

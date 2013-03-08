@@ -28,10 +28,10 @@
     />
 
   <browser:page
-    name="filter_options"
+    name="dimension_values"
     for="...interfaces.IScoreboardVisualization"
     class=".data.CubeView"
-    attribute="filter_options"
+    attribute="dimension_values"
     permission="zope2.View"
     />
 

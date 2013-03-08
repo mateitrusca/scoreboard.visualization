@@ -67,7 +67,7 @@ class CubeView(BrowserView):
         self.request.RESPONSE.setHeader("Content-Type", "application/json")
         return json.dumps(data, indent=2, sort_keys=True)
 
-    def filter_options(self):
+    def dimension_values(self):
         form = dict(self.request.form)
         dimension = form.pop('dimension')
         filters = sorted(form.items())
