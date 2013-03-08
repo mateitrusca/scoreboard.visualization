@@ -1,6 +1,7 @@
 from collections import defaultdict
 import simplejson as json
 from path import path
+from Products.Five.browser import BrowserView
 from sparql import unpack_row
 from Products.ZSPARQLMethod.Method import ZSPARQLMethod
 from ...data.cube import Cube
@@ -55,23 +56,30 @@ class FiltersView(object):
         self.request.RESPONSE.setHeader("Content-Type", "application/json")
         return json.dumps(out, indent=2, sort_keys=True)
 
+
+class CubeView(BrowserView):
+
+    def __init__(self, ctx, request):
+        super(CubeView, self).__init__(ctx, request)
+        self.cube = Cube(SPARQL_ENDPOINT, DATASET)
+
+    def jsonify(self, data):
+        self.request.RESPONSE.setHeader("Content-Type", "application/json")
+        return json.dumps(data, indent=2, sort_keys=True)
+
     def filter_options(self):
-        cube = Cube(SPARQL_ENDPOINT, DATASET)
         form = dict(self.request.form)
         dimension = form.pop('dimension')
         filters = sorted(form.items())
-        options = cube.get_dimension_options(dimension, filters)
-        self.request.RESPONSE.setHeader("Content-Type", "application/json")
-        return json.dumps({'options': options}, indent=2, sort_keys=True)
+        options = self.cube.get_dimension_options(dimension, filters)
+        return self.jsonify({'options': options})
 
     def datapoints(self):
-        cube = Cube(SPARQL_ENDPOINT, DATASET)
         form = dict(self.request.form)
         columns = form.pop('columns').split(',')
         filters = sorted(form.items())
-        rows = list(cube.get_data(columns=columns, filters=filters))
-        self.request.RESPONSE.setHeader("Content-Type", "application/json")
-        return json.dumps({'datapoints': rows}, indent=2, sort_keys=True)
+        rows = list(self.cube.get_data(columns=columns, filters=filters))
+        return self.jsonify({'datapoints': rows})
 
 
 class DataView(object):

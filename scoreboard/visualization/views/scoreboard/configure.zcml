@@ -30,7 +30,7 @@
   <browser:page
     name="filter_options"
     for="...interfaces.IScoreboardVisualization"
-    class=".data.FiltersView"
+    class=".data.CubeView"
     attribute="filter_options"
     permission="zope2.View"
     />
@@ -38,7 +38,7 @@
   <browser:page
     name="datapoints"
     for="...interfaces.IScoreboardVisualization"
-    class=".data.FiltersView"
+    class=".data.CubeView"
     attribute="datapoints"
     permission="zope2.View"
     />

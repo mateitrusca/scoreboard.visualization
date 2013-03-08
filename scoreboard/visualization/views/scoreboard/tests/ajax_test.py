@@ -4,16 +4,14 @@ import simplejson as json
 
 def _filter_options_query(form):
     from scoreboard.visualization.views.scoreboard import data
-    filters_view = data.FiltersView()
-    filters_view.request = Mock(form=form)
-    return json.loads(filters_view.filter_options())
+    view = data.CubeView(Mock(), Mock(form=form))
+    return json.loads(view.filter_options())
 
 
 def _data_query(form):
     from scoreboard.visualization.views.scoreboard import data
-    filters_view = data.FiltersView()
-    filters_view.request = Mock(form=form)
-    return json.loads(filters_view.datapoints())
+    view = data.CubeView(Mock(), Mock(form=form))
+    return json.loads(view.datapoints())
 
 
 def test_all_indicator_values():
