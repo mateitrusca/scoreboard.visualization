@@ -30,3 +30,16 @@
 
   {%- endif %}
 {%- endmacro %}
+
+
+{% macro one_column(observation, prefix, dimension_code) %}
+  ?{{ observation }}
+    ?{{ prefix }}_dimension ?{{ prefix }}_option .
+  ?{{ prefix }}_dimension
+    skos:notation ?{{ prefix }}_dimension_code .
+  ?{{ prefix }}_option
+    skos:notation ?{{ prefix }} .
+  FILTER (
+    ?{{ prefix }}_dimension_code = {{ dimension_code.n3() }}
+  )
+{%- endmacro %}
