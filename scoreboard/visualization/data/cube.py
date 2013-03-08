@@ -15,6 +15,10 @@ class QueryError(Exception):
     pass
 
 
+def literal_pairs(pairs):
+    return [(sparql.Literal(a), sparql.Literal(b)) for a, b in pairs]
+
+
 class Cube(object):
 
     def __init__(self, endpoint, dataset):
@@ -47,8 +51,7 @@ class Cube(object):
         query = sparql_env.get_template('dimension_options.sparql').render(**{
             'dataset': self.dataset,
             'dimension_code': sparql.Literal(dimension),
-            'filters': [(sparql.Literal(f), sparql.Literal(v))
-                        for f, v in filters],
+            'filters': literal_pairs(filters),
         })
         return list(self._execute(query, as_dict=True))
 
@@ -57,8 +60,7 @@ class Cube(object):
         query = sparql_env.get_template('data.sparql').render(**{
             'dataset': self.dataset,
             'columns': [sparql.Literal(c) for c in columns[:-1]],
-            'filters': [(sparql.Literal(f), sparql.Literal(v))
-                        for f, v in filters],
+            'filters': literal_pairs(filters),
         })
         for row in self._execute(query):
             yield dict(zip(columns, row))
@@ -67,8 +69,7 @@ class Cube(object):
         assert columns == ('value',)
         query = sparql_env.get_template('data_2d.sparql').render(**{
             'dataset': self.dataset,
-            'filters': [(sparql.Literal(f), sparql.Literal(v))
-                        for f, v in filters],
+            'filters': literal_pairs(filters),
         })
         for row in self._execute(query):
             yield {'value': {'x': row[0], 'y': row[1]}}
