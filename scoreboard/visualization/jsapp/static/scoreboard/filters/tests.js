@@ -135,4 +135,34 @@ describe('modular filters', function() {
 
     });
 
+    describe('RadioFilter', function() {
+        beforeEach(function() {
+            this.sandbox = sinon.sandbox.create();
+        });
+
+        var NoAjaxSelectFilter = App.RadioFilter.extend({
+            fetch_options: function(args) {
+                var mock_ajax = App.jQuery.Deferred();
+                mock_ajax.abort = function() {
+                    mock_ajax.reject();
+                };
+                return mock_ajax;
+            }
+        });
+
+        it('should update model when selection changes', function() {
+            var model = new Backbone.Model();
+            var options = [{'label': "Option One", 'notation': 'one'},
+                           {'label': "Option Two", 'notation': 'two'}];
+            var view = new NoAjaxSelectFilter({
+                model: model,
+                dimension: 'breakdown'
+            });
+            view.ajax.resolve({options: options});
+            App.testing.choose_radio(view.$el.find('input:radio'), 'two');
+            expect(model.get('breakdown')).to.equal('two');
+        });
+    });
+
+
 });
