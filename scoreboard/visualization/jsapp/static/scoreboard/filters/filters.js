@@ -60,6 +60,17 @@ App.SelectFilter = Backbone.View.extend({
             this.ajax = null;
             this.loadstate.set(this.dimension, false);
             this.received_new_options(data['options']);
+            if(_.contains(['indicator', 'unit-measure'], this.dimension)){
+                App[this.dimension + '_labels'] = _.map(data['options'],
+                    function(item){
+                        return {
+                            'id': item.notation,
+                            'label': item.label,
+                            'short_label': item.short_label
+                        }
+                    }
+                );
+            }
         }, this));
     },
 

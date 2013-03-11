@@ -95,21 +95,51 @@ App.Scenario1ChartView = Backbone.View.extend({
         }
         args['columns'] = 'ref-area,value';
         this.$el.html('-- loading --');
-
         var series_ajax = $.get(App.URL + '/datapoints', args);
         series_ajax.done(_.bind(function(data) {
+            function get_label(dimension, type, labels){
+                var label_types = ['label', 'short_label'];
+                if(! _.contains(label_types, type)){
+                    return;
+                }
+                var result = _.find(labels,
+                    function(item){
+                        return item.id == args[dimension];
+                    }
+                );
+                if(!result){
+                    return;
+                }
+                if(result[type]){
+                    return result[type]
+                }
+                else{
+                    label_types.pop(type);
+                    return result[label_types[0]];
+                }
+            }
+            var x_label = get_label(
+                    'indicator',
+                    'label',
+                    App['indicator_labels']
+            );
+            var y_label = get_label(
+                    'unit-measure',
+                    'short_label',
+                    App['unit-measure_labels']
+            );
             this.data = {
                 'series': data['datapoints'],
                 'year_text': "Year 2011",
-                'indicator_label': this.model.get('indicator'),
-                'unit_measure': this.model.get('unit-measure'),
+                'indicator_label': x_label,
+                'unit_measure': y_label,
                 'credits': {
                     'href': 'http://ec.europa.eu/digital-agenda/en/graphs/',
                     'text': 'European Commission, Digital Agenda Scoreboard'
                 },
                 'tooltip_formatter': function() {
                     return '<b>'+ this.x +'</b><br>: ' +
-                           Math.round(this.y*10)/10 + ' %_ind';
+                           Math.round(this.y*10)/10 + ' ' + y_label;
                 }
             };
             this.render();

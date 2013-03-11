@@ -43,7 +43,8 @@ App.scenario1_chart = function(container, options) {
             style: {
                 color: '#000000',
                 fontWeight: 'bold',
-                fontSize:'1.2em'
+                fontSize:'1.2em',
+                width: '700'
             }
         },
         subtitle: {
