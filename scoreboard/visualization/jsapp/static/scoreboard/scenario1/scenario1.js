@@ -101,7 +101,7 @@ App.Scenario1ChartView = Backbone.View.extend({
             this.data = {
                 'series': data['datapoints'],
                 'year_text': "Year 2011",
-                'indicator_label': "teh indicator",
+                'indicator_label': this.model.get('indicator'),
                 'credits': {
                     'href': 'http://ec.europa.eu/digital-agenda/en/graphs/',
                     'text': 'European Commission, Digital Agenda Scoreboard'

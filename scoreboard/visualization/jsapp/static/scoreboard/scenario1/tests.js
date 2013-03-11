@@ -126,4 +126,11 @@ describe('Scenario1ChartView', function() {
         //expect(call_args[1]['indicator_label']).to.equal("The Label!");
     });
 
+    it('should render with the selected indicator', function() {
+        var server = this.sandbox.server;
+        this.model.set('indicator', 'new indicator');
+        App.respond_json(server.requests[0], {'datapoints': []});
+        expect(this.chart.data.indicator_label).to.equal('new indicator');
+    });
+
 });

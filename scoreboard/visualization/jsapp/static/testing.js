@@ -14,7 +14,7 @@ App.testing.choose_option = function(select, value) {
 
 App.testing.choose_radio = function(inputs, value) {
     inputs.attr('checked', null);
-    inputs.filter('[value=' + value + ']').attr('checked', 'checked').change();
+    inputs.filter('[value="' + value + '"]').attr('checked', 'checked').change();
 };
 
 
