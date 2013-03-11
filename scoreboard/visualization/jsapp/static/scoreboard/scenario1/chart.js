@@ -64,7 +64,7 @@ App.scenario1_chart = function(container, options) {
         yAxis: {
             min: 0,
             title: {
-                text: options['indicator_label'],
+                text: options['unit_measure'],
                 style: {
                     color: '#000000',
                     fontWeight: 'bold'

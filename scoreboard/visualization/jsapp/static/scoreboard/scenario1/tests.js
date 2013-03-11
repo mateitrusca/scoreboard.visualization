@@ -133,4 +133,11 @@ describe('Scenario1ChartView', function() {
         expect(this.chart.data.indicator_label).to.equal('new indicator');
     });
 
+    it('should render with the selected unit-measure', function() {
+        var server = this.sandbox.server;
+        this.model.set('unit-measure', 'new unit-measure');
+        App.respond_json(server.requests[0], {'datapoints': []});
+        expect(this.chart.data.unit_measure).to.equal('new unit-measure');
+    });
+
 });
