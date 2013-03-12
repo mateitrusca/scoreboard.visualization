@@ -11,9 +11,11 @@ def test_get_data_by_ref_area_with_dimension_filters():
         ('unit-measure', 'pc_ind'),
     ]
     cube = create_cube()
-    points = list(cube.get_data(columns, filters))
+    points = list(cube.get_data(columns,  filters))
     assert len(points) == 31
-    assert {'ref-area': 'IE', 'value': 0.2222} in points
+    assert {'ref-area': 'IE',
+            'ref-area-label': 'Ireland',
+            'value': 0.2222} in points
 
 
 @sparql_test
@@ -27,7 +29,9 @@ def test_get_data_by_time_period_with_dimension_filters():
     ]
     cube = create_cube()
     points = list(cube.get_data(columns, filters))
-    assert {'time-period': '2011', 'value': 0.2222} in points
+    assert {'time-period': '2011',
+            'time-period-label': 'British Year:2011',
+            'value': 0.2222} in points
     assert len(points) == 5
 
 
@@ -41,8 +45,16 @@ def test_get_data_by_time_period_and_ref_area_with_dimension_filters():
     ]
     cube = create_cube()
     points = list(cube.get_data(columns, filters))
-    assert {'time-period': '2011', 'ref-area': 'IE', 'value': 0.2222} in points
-    assert {'time-period': '2010', 'ref-area': 'PT', 'value': 0.0609} in points
+    assert {'time-period': '2011',
+            'time-period-label': 'British Year:2011',
+            'ref-area': 'IE',
+            'ref-area-label': 'Ireland',
+            'value': 0.2222} in points
+    assert {'time-period': '2010',
+            'time-period-label': 'British Year:2010',
+            'ref-area': 'PT',
+            'ref-area-label': 'Portugal',
+            'value': 0.0609} in points
     assert len(points) == 161
 
 
@@ -58,8 +70,16 @@ def test_get_data_by_time_period_and_ref_area_with_dimension_group_filters():
     ]
     cube = create_cube()
     points = list(cube.get_data(columns, filters))
-    assert {'time-period': '2011', 'ref-area': 'IE', 'value': 0.2222} in points
-    assert {'time-period': '2010', 'ref-area': 'PT', 'value': 0.0609} in points
+    assert {'time-period': '2011',
+            'time-period-label': 'British Year:2011',
+            'ref-area': 'IE',
+            'ref-area-label': 'Ireland',
+            'value': 0.2222} in points
+    assert {'time-period': '2010',
+            'time-period-label': 'British Year:2010',
+            'ref-area': 'PT',
+            'ref-area-label': 'Portugal',
+            'value': 0.0609} in points
     assert len(points) == 161
 
 

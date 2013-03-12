@@ -67,13 +67,19 @@ class Cube(object):
         })
         return list(self._execute(query, as_dict=True))
 
-    def get_data(self, columns, filters):
-        assert columns[-1] == 'value', "Last column must be 'value'"
+    def get_data(self, fields, filters):
+        assert fields[-1] == 'value', "Last column must be 'value'"
         query = sparql_env.get_template('data.sparql').render(**{
             'dataset': self.dataset,
-            'columns': [sparql.Literal(c) for c in columns[:-1]],
+            'columns': [sparql.Literal(c) for c in fields[:-1]],
             'filters': literal_pairs(filters),
         })
+
+        columns = []
+        for f in fields:
+            columns.append(f);
+            columns.append('%s-label' %f)
+
         for row in self._execute(query):
             yield dict(zip(columns, row))
 

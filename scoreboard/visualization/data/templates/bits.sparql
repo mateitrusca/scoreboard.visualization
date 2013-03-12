@@ -31,6 +31,10 @@
     skos:notation {{ dimension_code.n3() }} .
   ?{{ prefix }}_option
     skos:notation ?{{ prefix }} .
+  OPTIONAL{
+    ?{{ prefix }}_option
+      skos:prefLabel ?{{ prefix }}_label .
+  }
 {%- endmacro %}
 
 
