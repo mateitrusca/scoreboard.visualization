@@ -31,7 +31,7 @@ App.SelectFilter = Backbone.View.extend({
         this.dimension_options = new_options;
         this.render();
         if(new_options.length > 0) {
-            this.model.set(this.dimension, new_options[0]['notation']);
+            this.model.set(this.name, new_options[0]['notation']);
         }
     },
 
@@ -87,7 +87,7 @@ App.SelectFilter = Backbone.View.extend({
 
     on_selection_change: function() {
         var value = this.$el.find('select').val();
-        var key = this.dimension;
+        var key = this.name;
         this.model.set(key, value);
     }
 

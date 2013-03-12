@@ -27,6 +27,7 @@ describe('modular filters', function() {
             var server = this.sandbox.server;
             var view = new App.SelectFilter({
                 model: new Backbone.Model(),
+                name: 'this-time-period',
                 dimension: 'time-period'
             });
             var options = [{'label': "Option One", 'notation': 'one'},
@@ -43,6 +44,7 @@ describe('modular filters', function() {
             var view = new App.SelectFilter({
                 model: new Backbone.Model({'indicator': 'i_iugm'}),
                 constraints: ['indicator'],
+                name: 'this-time-period',
                 dimension: 'time-period'
             });
             expect(url_param(server.requests[0].url, 'dimension')).
@@ -56,12 +58,15 @@ describe('modular filters', function() {
             var server = this.sandbox.server;
             var model = new Backbone.Model();
             var c1 = new NoAjaxSelectFilter({model: model,
+                                             name: 'indicator',
                                              dimension: 'indicator'});
             var c2 = new NoAjaxSelectFilter({model: model,
+                                             name: 'ref-area',
                                              dimension: 'ref-area'});
             var view = new NoAjaxSelectFilter({
                 model: model,
                 constraints: ['indicator', 'ref-area'],
+                name: 'this-time-period',
                 dimension: 'time-period'
             });
             expect(view.ajax).to.equal(null);
@@ -85,6 +90,7 @@ describe('modular filters', function() {
                 model: model,
                 loadstate: loadstate,
                 constraints: ['ref-area'],
+                name: 'this-time-period',
                 dimension: 'time-period'
             });
             expect(view.ajax).to.equal(null);
@@ -98,6 +104,7 @@ describe('modular filters', function() {
             var server = this.sandbox.server;
             var view = new App.SelectFilter({
                 model: new Backbone.Model(),
+                name: 'this-time-period',
                 dimension: 'time-period'
             });
             view.update();
@@ -114,10 +121,11 @@ describe('modular filters', function() {
                            {'label': "Option Two", 'notation': 'two'}];
             var view = new NoAjaxSelectFilter({
                 model: model,
+                name: 'this-time-period',
                 dimension: 'time-period'
             });
             view.ajax.resolve({options: options});
-            expect(model.get('time-period')).to.equal('one');
+            expect(model.get('this-time-period')).to.equal('one');
         });
 
         it('should update model when selection changes', function() {
@@ -126,11 +134,12 @@ describe('modular filters', function() {
                            {'label': "Option Two", 'notation': 'two'}];
             var view = new NoAjaxSelectFilter({
                 model: model,
+                name: 'this-time-period',
                 dimension: 'time-period'
             });
             view.ajax.resolve({options: options});
             App.testing.choose_option(view.$el.find('select'), 'two');
-            expect(model.get('time-period')).to.equal('two');
+            expect(model.get('this-time-period')).to.equal('two');
         });
 
     });
