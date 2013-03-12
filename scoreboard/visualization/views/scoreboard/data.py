@@ -79,9 +79,9 @@ class CubeView(BrowserView):
         dimension = form.pop('dimension')
         (filters, x_filters, y_filters) = ([], [], [])
         for k, v in sorted(form.items()):
-            if k.startswith('x:'):
+            if k.startswith('x-'):
                 x_filters.append((k[2:], v))
-            elif k.startswith('y:'):
+            elif k.startswith('y-'):
                 y_filters.append((k[2:], v))
             else:
                 filters.append((k, v))
@@ -102,9 +102,9 @@ class CubeView(BrowserView):
         xy_columns = form.pop('xy_columns').split(',')
         (filters, x_filters, y_filters) = ([], [], [])
         for k, v in sorted(form.items()):
-            if k.startswith('x:'):
+            if k.startswith('x-'):
                 x_filters.append((k[2:], v))
-            elif k.startswith('y:'):
+            elif k.startswith('y-'):
                 y_filters.append((k[2:], v))
             else:
                 filters.append((k, v))
