@@ -75,8 +75,9 @@ App.Scenario3ChartView = Backbone.View.extend({
     className: "highcharts-chart",
 
     initialize: function(options) {
-        this.indicator_labels = options['indicator_labels'];
         this.model.on('change', this.filters_changed, this);
+        this.loadstate = options['loadstate'] || new Backbone.Model();
+        this.loadstate.on('change', this.filters_changed, this);
         this.filters_changed();
     },
 
@@ -99,25 +100,28 @@ App.Scenario3ChartView = Backbone.View.extend({
     },
 
     filters_changed: function() {
-        var view = this;
+        var incomplete = false;
         var args = this.model.toJSON();
-        if(! (args['indicator_x'] && args['indicator_y'] && args['year'])) {
+        var required = _(App.scenario3_filters_schema['filters']).pluck('name');
+        _(required).forEach(function(field) {
+            if(! args[field]) { incomplete = true; }
+            if(this.loadstate.get(field)) { incomplete = true; }
+        }, this);
+        if(incomplete) {
+            // not all filters have values
+            this.$el.html('--');
             return;
         }
-        args['year'] = 'http://data.lod2.eu/scoreboard/year/' + args['year'];
-
-        var series_ajax = $.get(App.URL + '/data', _({
-            'method': 'series_2indicator_year'
-        }).extend(args));
-
-        $.when(series_ajax).done(function(series) {
-            view.data = {
-                'series': series,
-                'indicator_x_label': view.indicator_labels[args['indicator_x']],
-                'indicator_y_label': view.indicator_labels[args['indicator_y']]
+        args['columns'] = 'ref-area';
+        args['xy_columns'] = 'value';
+        this.$el.html('-- loading --');
+        var series_ajax = $.get(App.URL + '/datapoints_xy', args);
+        series_ajax.done(_.bind(function(data) {
+            this.data = {
+                'series': data['datapoints']
             };
-            view.render();
-        });
+            this.render();
+        }, this));
     }
 
 });
@@ -189,6 +193,7 @@ App.scenario3_filters_schema = {
 
         {type: 'select',
          xy: true,
+         name: 'time-period',
          dimension: 'time-period',
          constraints: {
              'x-indicator':    'x-indicator',
@@ -217,6 +222,12 @@ App.scenario3_initialize = function() {
         loadstate: App.filter_loadstate,
         schema: App.scenario3_filters_schema
     });
+
+    App.scenario3_chart_view = new App.Scenario3ChartView({
+        model: App.filters,
+        loadstate: App.filter_loadstate,
+    });
+    $('#the-chart').append(App.scenario3_chart_view.el);
 
     Backbone.history.start();
 
