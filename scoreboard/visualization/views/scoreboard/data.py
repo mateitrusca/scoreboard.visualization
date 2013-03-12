@@ -91,9 +91,9 @@ class CubeView(BrowserView):
 
     def datapoints(self):
         form = dict(self.request.form)
-        columns = form.pop('columns').split(',')
+        fields = form.pop('fields').split(',')
         filters = sorted(form.items())
-        rows = list(self.cube.get_data(columns=columns, filters=filters))
+        rows = list(self.cube.get_data(fields=fields, filters=filters))
         return self.jsonify({'datapoints': rows})
 
     def datapoints_xy(self):

@@ -93,7 +93,7 @@ App.Scenario1ChartView = Backbone.View.extend({
             this.$el.html('--');
             return;
         }
-        args['columns'] = 'ref-area,value';
+        args['fields'] = 'ref-area,value';
         this.$el.html('-- loading --');
         var series_ajax = $.get(App.URL + '/datapoints', args);
         series_ajax.done(_.bind(function(data) {
@@ -140,7 +140,14 @@ App.Scenario1ChartView = Backbone.View.extend({
                 'tooltip_formatter': function() {
                     return '<b>'+ this.x +'</b><br>: ' +
                            Math.round(this.y*10)/10 + ' ' + y_label;
-                }
+                },
+                'xlabels_formatter': function() {
+                    var max_length = 15;
+                    if (this.value.length > max_length){
+                        return this.value.substr(0, max_length) + ' ...';
+                    }
+                    return this.value
+                },
             };
             this.render();
         }, this));

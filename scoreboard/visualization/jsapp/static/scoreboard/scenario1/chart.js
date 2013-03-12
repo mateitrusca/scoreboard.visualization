@@ -7,7 +7,7 @@
 
 App.scenario1_chart = function(container, options) {
     var series = _(options['series']).sortBy('value').reverse();
-    var country_names = _(series).pluck('ref-area');
+    var country_names = _(series).pluck('ref-area-label');
     var values = _(series).pluck('value');
 
     var values = _(series).map(
@@ -57,8 +57,9 @@ App.scenario1_chart = function(container, options) {
             labels: {
                 rotation: -45,
                 align: 'right',
+                formatter: options['xlabels_formatter'],
                 style: {
-                    color: '#000000'
+                    color: '#000000',
                 }
              }
         },

@@ -108,7 +108,7 @@ describe('Scenario1ChartView', function() {
         var url = server.requests[0].url;
         expect(url).to.have.string(App.URL + '/datapoints?');
         var url_param = App.testing.url_param;
-        expect(url_param(url, 'columns')).to.equal('ref-area,value');
+        expect(url_param(url, 'fields')).to.equal('ref-area,value');
         expect(url_param(url, 'indicator')).to.equal('asdf');
         expect(url_param(url, 'time-period')).to.equal('2002');
     });
