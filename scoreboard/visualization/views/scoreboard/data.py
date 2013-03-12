@@ -96,6 +96,25 @@ class CubeView(BrowserView):
         rows = list(self.cube.get_data(columns=columns, filters=filters))
         return self.jsonify({'datapoints': rows})
 
+    def datapoints_xy(self):
+        form = dict(self.request.form)
+        columns = form.pop('columns').split(',')
+        xy_columns = form.pop('xy_columns').split(',')
+        (filters, x_filters, y_filters) = ([], [], [])
+        for k, v in sorted(form.items()):
+            if k.startswith('x:'):
+                x_filters.append((k[2:], v))
+            elif k.startswith('y:'):
+                y_filters.append((k[2:], v))
+            else:
+                filters.append((k, v))
+        rows = list(self.cube.get_data_xy(columns=columns,
+                                          xy_columns=xy_columns,
+                                          filters=filters,
+                                          x_filters=x_filters,
+                                          y_filters=y_filters))
+        return self.jsonify({'datapoints': rows})
+
 
 class DataView(object):
 

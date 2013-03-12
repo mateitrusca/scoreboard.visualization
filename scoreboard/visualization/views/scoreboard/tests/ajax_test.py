@@ -93,3 +93,23 @@ def test_data_query_returns_rows(mock_cube):
                                       ('indicator', 'i_bfeu'),
                                       ('unit-measure', 'pc_ind')])
     assert res == {'datapoints': rows}
+
+
+def test_data_xy_query_sends_filters_and_columns(mock_cube):
+    mock_cube.get_data_xy.return_value = ['something']
+    res = ajax('datapoints_xy', {
+        'x:indicator': 'i_iuse',
+        'y:indicator': 'i_iu3g',
+        'unit-measure': 'pc_ind',
+        'breakdown': 'IND_TOTAL',
+        'columns': 'time-period,ref-area',
+        'xy_columns': 'value',
+    })
+    cube_call = mock_cube.get_data_xy.mock_calls[0]
+    assert cube_call == call(columns=['time-period', 'ref-area'],
+                             xy_columns=['value'],
+                             filters=[('breakdown', 'IND_TOTAL'),
+                                      ('unit-measure', 'pc_ind')],
+                             x_filters=[('indicator', 'i_iuse')],
+                             y_filters=[('indicator', 'i_iu3g')])
+    assert res == {'datapoints': ['something']}
