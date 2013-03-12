@@ -123,6 +123,85 @@ App.Scenario3ChartView = Backbone.View.extend({
 });
 
 
+App.scenario3_filters_schema = {
+    filters: [
+        {type: 'select',
+         name: 'x-indicator-group',
+         dimension: 'indicator-group',
+         constraints: {}},
+        {type: 'select',
+         name: 'x-indicator',
+         dimension: 'indicator',
+         constraints: {
+             'indicator-group': 'x-indicator-group'
+         }},
+        {type: 'select',
+         name: 'x-breakdown-group',
+         dimension: 'breakdown-group',
+         constraints: {
+             'indicator':       'x-indicator'
+         }},
+        {type: 'radio',
+         name: 'x-breakdown',
+         dimension: 'breakdown',
+         constraints: {
+             'indicator':       'x-indicator',
+             'breakdown-group': 'x-breakdown-group'
+         }},
+        {type: 'radio',
+         name: 'x-unit-measure',
+         dimension: 'unit-measure',
+         constraints: {
+             'indicator':       'x-indicator',
+             'breakdown':       'x-breakdown'
+         }},
+
+        {type: 'select',
+         name: 'y-indicator-group',
+         dimension: 'indicator-group',
+         constraints: {}},
+        {type: 'select',
+         name: 'y-indicator',
+         dimension: 'indicator',
+         constraints: {
+             'indicator-group': 'y-indicator-group'
+         }},
+        {type: 'select',
+         name: 'y-breakdown-group',
+         dimension: 'breakdown-group',
+         constraints: {
+             'indicator':       'y-indicator'
+         }},
+        {type: 'radio',
+         name: 'y-breakdown',
+         dimension: 'breakdown',
+         constraints: {
+             'indicator':       'y-indicator',
+             'breakdown-group': 'y-breakdown-group'
+         }},
+        {type: 'radio',
+         name: 'y-unit-measure',
+         dimension: 'unit-measure',
+         constraints: {
+             'indicator':       'y-indicator',
+             'breakdown':       'y-breakdown'
+         }},
+
+        {type: 'select',
+         xy: true,
+         dimension: 'time-period',
+         constraints: {
+             'x-indicator':    'x-indicator',
+             'x-breakdown':    'x-breakdown',
+             'x-unit-measure': 'x-unit-measure',
+             'y-indicator':    'y-indicator',
+             'y-breakdown':    'y-breakdown',
+             'y-unit-measure': 'y-unit-measure'
+         }}
+    ]
+};
+
+
 App.scenario3_initialize = function() {
 
     var box = $('#scenario-box');
@@ -132,33 +211,11 @@ App.scenario3_initialize = function() {
     App.filters = new Backbone.Model();
     App.router = new App.ChartRouter(App.filters);
 
-    $.getJSON(App.URL + '/filters_data', function(data) {
-        new App.Scenario3FiltersView({
-            model: App.filters,
-            el: $('#the-filters'),
-            filters_data: data
-        });
-
-        new App.Scenario3ChartView({
-            model: App.filters,
-            el: $('#the-chart'),
-            indicator_labels: App.get_indicator_labels(data)
-        });
-
-        App.metadata_x = new App.IndicatorMetadataView({
-            model: App.filters,
-            field: 'indicator_x',
-            indicators: App.get_indicators(data)
-        });
-        $('#the-metadata').append(App.metadata_x.el);
-
-        App.metadata_y = new App.IndicatorMetadataView({
-            model: App.filters,
-            field: 'indicator_y',
-            indicators: App.get_indicators(data)
-        });
-        $('#the-metadata').append(App.metadata_y.el);
-
+    App.filters_box = new App.FiltersBox({
+        el: $('#the-filters')[0],
+        model: App.filters,
+        loadstate: App.filter_loadstate,
+        schema: App.scenario3_filters_schema
     });
 
     Backbone.history.start();
