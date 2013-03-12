@@ -111,7 +111,7 @@ App.Scenario1ChartView = Backbone.View.extend({
                     return;
                 }
                 if(result[type]){
-                    return result[type]
+                    return result[type];
                 }
                 else{
                     label_types.pop(type);
