@@ -14,6 +14,7 @@ App.SelectFilter = Backbone.View.extend({
     },
 
     initialize: function(options) {
+        this.name = options['name'];
         this.dimension = options['dimension'];
         this.constraints = options['constraints'] || [];
         this.dimension_options = [];
@@ -103,14 +104,14 @@ App.RadioFilter = App.SelectFilter.extend({
     render: function() {
         this.$el.html(this.template({
             'dimension_options': this.dimension_options,
-            'name': this.dimension
+            'name': this.name
         }));
         App.plone_jQuery(this.$el.find('.radio-filter-container')).buttonset();
     },
 
     on_selection_change: function() {
         var value = this.$el.find("input:radio[checked='checked']").val();
-        var key = this.dimension;
+        var key = this.name;
         this.model.set(key, value);
     }
 });

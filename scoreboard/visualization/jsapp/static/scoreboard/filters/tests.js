@@ -156,11 +156,12 @@ describe('modular filters', function() {
                            {'label': "Option Two", 'notation': 'two'}];
             var view = new NoAjaxSelectFilter({
                 model: model,
+                name: 'this-breakdown',
                 dimension: 'breakdown'
             });
             view.ajax.resolve({options: options});
             App.testing.choose_radio(view.$el.find('input:radio'), 'two');
-            expect(model.get('breakdown')).to.equal('two');
+            expect(model.get('this-breakdown')).to.equal('two');
         });
     });
 
