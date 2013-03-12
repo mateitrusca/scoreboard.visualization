@@ -78,7 +78,7 @@ class Cube(object):
             yield dict(zip(columns, row))
 
     def get_data_xy(self, columns, xy_columns, filters, x_filters, y_filters):
-        assert xy_columns == ('value',)
+        assert xy_columns == ['value']
         query = sparql_env.get_template('data_xy.sparql').render(**{
             'dataset': self.dataset,
             'filters': literal_pairs(filters),

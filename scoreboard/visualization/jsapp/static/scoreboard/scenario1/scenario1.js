@@ -83,8 +83,8 @@ App.Scenario1ChartView = Backbone.View.extend({
     filters_changed: function() {
         var incomplete = false;
         var args = this.model.toJSON();
-        _(['indicator-group', 'indicator', 'time-period', 'breakdown-group',
-           'breakdown', 'unit-measure']).forEach(function(field) {
+        var required = _(App.scenario1_filters_schema['filters']).pluck('name');
+        _(required).forEach(function(field) {
             if(! args[field]) { incomplete = true; }
             if(this.loadstate.get(field)) { incomplete = true; }
         }, this);
@@ -111,7 +111,7 @@ App.Scenario1ChartView = Backbone.View.extend({
                     return;
                 }
                 if(result[type]){
-                    return result[type]
+                    return result[type];
                 }
                 else{
                     label_types.pop(type);

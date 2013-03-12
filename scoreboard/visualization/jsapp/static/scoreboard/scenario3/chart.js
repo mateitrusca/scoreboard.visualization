@@ -20,15 +20,15 @@ App.scenario3_chart = function(container, options) {
     };
 
     var series = _(options['series']).map(function(datapoint) {
-        var name = datapoint['country_name'];
+        var name = datapoint['ref-area'];
         var code = App.COUNTRY_CODE[name];
         return {
             'name': name + ' ' + code,
             'color': countrycolor(code),
             'data': [{
                 'name': code,
-                'x': datapoint['value_x'],
-                'y': datapoint['value_y']
+                'x': datapoint['value']['x'],
+                'y': datapoint['value']['y']
             }],
             'marker': {
                 'radius': 5,

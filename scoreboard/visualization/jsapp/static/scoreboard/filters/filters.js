@@ -16,6 +16,7 @@ App.SelectFilter = Backbone.View.extend({
     initialize: function(options) {
         this.name = options['name'];
         this.dimension = options['dimension'];
+        this.xy = options['xy'] || false;
         this.constraints = options['constraints'] || [];
         this.dimension_options = [];
         this.ajax = null;
@@ -76,7 +77,8 @@ App.SelectFilter = Backbone.View.extend({
     },
 
     fetch_options: function(args) {
-        return $.get(App.URL + '/dimension_values', args);
+        var view_name = this.xy ? 'dimension_values_xy' : 'dimension_values';
+        return $.get(App.URL + '/' + view_name, args);
     },
 
     render: function() {
@@ -132,6 +134,7 @@ App.FiltersBox = Backbone.View.extend({
             var filter = new cls({
                 model: this.model,
                 loadstate: this.loadstate,
+                xy: item['xy'],
                 name: item['name'],
                 dimension: item['dimension'],
                 constraints: item['constraints']

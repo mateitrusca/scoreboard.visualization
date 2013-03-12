@@ -150,6 +150,18 @@ describe('modular filters', function() {
             expect(model.get('this-time-period')).to.equal('two');
         });
 
+        it('should call dimension_values_xy view if xy is set', function() {
+            this.sandbox.useFakeServer();
+            var server = this.sandbox.server;
+            var view = new App.SelectFilter({
+                xy: true,
+                model: new Backbone.Model(),
+                name: 'this-time-period',
+                dimension: 'time-period'
+            });
+            expect(server.requests[0].url).to.contain('/dimension_values_xy?');
+        });
+
     });
 
     describe('RadioFilter', function() {
