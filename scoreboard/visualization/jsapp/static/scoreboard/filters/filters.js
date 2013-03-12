@@ -103,9 +103,9 @@ App.RadioFilter = App.SelectFilter.extend({
     render: function() {
         this.$el.html(this.template({
             'dimension_options': this.dimension_options,
-            'dimension_id': this.dimension
+            'name': this.dimension
         }));
-        App.plone_jQuery(this.$el.find("#"+this.dimension)).buttonset();
+        App.plone_jQuery(this.$el.find('.radio-filter-container')).buttonset();
     },
 
     on_selection_change: function() {
