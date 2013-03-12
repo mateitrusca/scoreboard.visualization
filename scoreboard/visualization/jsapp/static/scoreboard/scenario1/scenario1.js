@@ -152,33 +152,49 @@ App.Scenario1ChartView = Backbone.View.extend({
 App.scenario1_filters_schema = {
     filters: [
         {type: 'select',
+         name: 'indicator-group',
          dimension: 'indicator-group',
-         constraints: []},
+         constraints: {}},
         {type: 'select',
+         name: 'indicator',
          dimension: 'indicator',
-         constraints: ['indicator-group']},
+         constraints: {
+             'indicator-group': 'indicator-group'
+         }},
         {type: 'select',
+         name: 'time-period',
          dimension: 'time-period',
-         constraints: ['indicator-group',
-                       'indicator']},
+         constraints: {
+             'indicator-group': 'indicator-group',
+             'indicator': 'indicator'
+         }},
         {type: 'select',
+         name: 'breakdown-group',
          dimension: 'breakdown-group',
-         constraints: ['time-period',
-                       'indicator-group',
-                       'indicator']},
+         constraints: {
+             'time-period': 'time-period',
+             'indicator-group': 'indicator-group',
+             'indicator': 'indicator'
+         }},
         {type: 'radio',
+         name: 'breakdown',
          dimension: 'breakdown',
-         constraints: ['breakdown-group',
-                       'time-period',
-                       'indicator-group',
-                       'indicator']},
+         constraints: {
+             'breakdown-group': 'breakdown-group',
+             'time-period': 'time-period',
+             'indicator-group': 'indicator-group',
+             'indicator': 'indicator'
+         }},
         {type: 'radio',
+         name: 'unit-measure',
          dimension: 'unit-measure',
-         constraints: ['breakdown-group',
-                       'breakdown',
-                       'time-period',
-                       'indicator-group',
-                       'indicator']}
+         constraints: {
+             'breakdown-group': 'breakdown-group',
+             'breakdown': 'breakdown',
+             'time-period': 'time-period',
+             'indicator-group': 'indicator-group',
+             'indicator': 'indicator'
+         }}
     ]
 };
 

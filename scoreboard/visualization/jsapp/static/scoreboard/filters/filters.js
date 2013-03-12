@@ -132,6 +132,7 @@ App.FiltersBox = Backbone.View.extend({
             var filter = new cls({
                 model: this.model,
                 loadstate: this.loadstate,
+                name: item['name'],
                 dimension: item['dimension'],
                 constraints: item['constraints']
             });
