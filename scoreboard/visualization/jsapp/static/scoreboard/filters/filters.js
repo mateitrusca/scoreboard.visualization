@@ -14,14 +14,15 @@ App.SelectFilter = Backbone.View.extend({
     },
 
     initialize: function(options) {
+        this.name = options['name'];
         this.dimension = options['dimension'];
         this.constraints = options['constraints'] || [];
         this.dimension_options = [];
         this.ajax = null;
         this.loadstate = options['loadstate'] || new Backbone.Model();
-        _(this.constraints).forEach(function(other_dimension) {
-            this.model.on('change:' + other_dimension, this.update, this);
-            this.loadstate.on('change:' + other_dimension, this.update, this);
+        _(this.constraints).forEach(function(other_name, other_dimension) {
+            this.model.on('change:' + other_name, this.update, this);
+            this.loadstate.on('change:' + other_name, this.update, this);
         }, this);
         this.update();
     },
@@ -30,7 +31,7 @@ App.SelectFilter = Backbone.View.extend({
         this.dimension_options = new_options;
         this.render();
         if(new_options.length > 0) {
-            this.model.set(this.dimension, new_options[0]['notation']);
+            this.model.set(this.name, new_options[0]['notation']);
         }
     },
 
@@ -39,12 +40,12 @@ App.SelectFilter = Backbone.View.extend({
             this.ajax.abort();
             this.ajax = null;
         }
-        this.loadstate.set(this.dimension, true);
+        this.loadstate.set(this.name, true);
         var incomplete = false;
         var args = {'dimension': this.dimension};
-        _(this.constraints).forEach(function(other_dimension) {
-            var other_option = this.model.get(other_dimension);
-            var other_loading = this.loadstate.get(other_dimension);
+        _(this.constraints).forEach(function(other_name, other_dimension) {
+            var other_option = this.model.get(other_name);
+            var other_loading = this.loadstate.get(other_name);
             if(other_loading || ! other_option) {
                 incomplete = true;
             }
@@ -58,7 +59,7 @@ App.SelectFilter = Backbone.View.extend({
         this.ajax = this.fetch_options(args);
         this.ajax.done(_.bind(function(data) {
             this.ajax = null;
-            this.loadstate.set(this.dimension, false);
+            this.loadstate.set(this.name, false);
             this.received_new_options(data['options']);
             if(_.contains(['indicator', 'unit-measure'], this.dimension)){
                 App[this.dimension + '_labels'] = _.map(data['options'],
@@ -86,7 +87,7 @@ App.SelectFilter = Backbone.View.extend({
 
     on_selection_change: function() {
         var value = this.$el.find('select').val();
-        var key = this.dimension;
+        var key = this.name;
         this.model.set(key, value);
     }
 
@@ -103,14 +104,14 @@ App.RadioFilter = App.SelectFilter.extend({
     render: function() {
         this.$el.html(this.template({
             'dimension_options': this.dimension_options,
-            'dimension_id': this.dimension
+            'name': this.name
         }));
-        App.plone_jQuery(this.$el.find("#"+this.dimension)).buttonset();
+        App.plone_jQuery(this.$el.find('.radio-filter-container')).buttonset();
     },
 
     on_selection_change: function() {
         var value = this.$el.find("input:radio[checked='checked']").val();
-        var key = this.dimension;
+        var key = this.name;
         this.model.set(key, value);
     }
 });
@@ -131,6 +132,7 @@ App.FiltersBox = Backbone.View.extend({
             var filter = new cls({
                 model: this.model,
                 loadstate: this.loadstate,
+                name: item['name'],
                 dimension: item['dimension'],
                 constraints: item['constraints']
             });
