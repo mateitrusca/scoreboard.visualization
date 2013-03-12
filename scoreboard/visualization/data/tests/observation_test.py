@@ -65,7 +65,7 @@ def test_get_data_by_time_period_and_ref_area_with_dimension_group_filters():
 
 @sparql_test
 def test_get_same_observation_in_two_dimensions():
-    xy_columns = ('value',)
+    xy_columns = ['value']
     filters = [
         ('time-period', '2011'),
         ('indicator', 'i_bfeu'),
@@ -81,8 +81,8 @@ def test_get_same_observation_in_two_dimensions():
 
 @sparql_test
 def test_get_xy_observations_for_2_countries_all_years():
-    columns = ('time-period',)
-    xy_columns = ('value',)
+    columns = ['time-period']
+    xy_columns = ['value']
     filters = [
         ('indicator', 'i_bfeu'),
         ('breakdown', 'IND_TOTAL'),
