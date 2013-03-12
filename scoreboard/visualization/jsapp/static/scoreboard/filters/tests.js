@@ -42,8 +42,10 @@ describe('modular filters', function() {
             this.sandbox.useFakeServer();
             var server = this.sandbox.server;
             var view = new App.SelectFilter({
-                model: new Backbone.Model({'indicator': 'i_iugm'}),
-                constraints: ['indicator'],
+                model: new Backbone.Model({'this-indicator': 'i_iugm'}),
+                constraints: {
+                    'indicator': 'this-indicator'
+                },
                 name: 'this-time-period',
                 dimension: 'time-period'
             });
@@ -58,14 +60,17 @@ describe('modular filters', function() {
             var server = this.sandbox.server;
             var model = new Backbone.Model();
             var c1 = new NoAjaxSelectFilter({model: model,
-                                             name: 'indicator',
+                                             name: 'this-indicator',
                                              dimension: 'indicator'});
             var c2 = new NoAjaxSelectFilter({model: model,
-                                             name: 'ref-area',
+                                             name: 'this-ref-area',
                                              dimension: 'ref-area'});
             var view = new NoAjaxSelectFilter({
                 model: model,
-                constraints: ['indicator', 'ref-area'],
+                constraints: {
+                    'indicator': 'this-indicator',
+                    'ref-area': 'this-ref-area'
+                },
                 name: 'this-time-period',
                 dimension: 'time-period'
             });
@@ -81,15 +86,18 @@ describe('modular filters', function() {
         it('should wait until constraints finish loading', function() {
             this.sandbox.useFakeServer();
             var server = this.sandbox.server;
-            var model = new Backbone.Model({'ref-area': 'country1'});
+            var model = new Backbone.Model({'this-ref-area': 'country1'});
             var loadstate = new Backbone.Model();
             var c1 = new NoAjaxSelectFilter({model: model,
                                              loadstate: loadstate,
+                                             name: 'this-ref-area',
                                              dimension: 'ref-area'});
             var view = new NoAjaxSelectFilter({
                 model: model,
                 loadstate: loadstate,
-                constraints: ['ref-area'],
+                constraints: {
+                    'ref-area': 'this-ref-area'
+                },
                 name: 'this-time-period',
                 dimension: 'time-period'
             });
