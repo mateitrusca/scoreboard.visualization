@@ -13,6 +13,24 @@ def test_dimensions_query():
 
 
 @sparql_test
+def test_unit_measure_labels_query():
+    cube = create_cube()
+    [res] = cube.get_dimension_labels(dimension='unit-measure', value='pc_ind')
+    expected = {'short_label': '% ind', 'label': 'Percentage of individuals'}
+
+
+@sparql_test
+def test_indicator_labels_query():
+    cube = create_cube()
+    [res] = cube.get_dimension_labels(dimension='indicator', value='i_iusnet')
+    expected = {
+        'short_label': 'Participating in social networks',
+        'label': 'participating in social networks'}
+    assert expected['short_label'] == res['short_label']
+    assert expected['label'] in res['label']
+
+
+@sparql_test
 def test_get_all_year_options():
     cube = create_cube()
     items = cube.get_dimension_options('ref-area')
