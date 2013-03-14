@@ -69,15 +69,77 @@ App.Scenario1ChartView = Backbone.View.extend({
 
     initialize: function(options) {
         this.model.on('change', this.filters_changed, this);
+        this.meta_data = options['meta_data'];
         this.loadstate = options['loadstate'] || new Backbone.Model();
         this.loadstate.on('change', this.filters_changed, this);
         this.filters_changed();
     },
 
     render: function() {
-        if(this.data) {
-            App.scenario1_chart(this.el, this.data);
+        if(this.data && this.meta_data) {
+            App.scenario1_chart(this.el, this.data, this.meta_data);
         }
+    },
+
+    get_meta_data: function(){
+
+        function construct_ajax(args){
+            var ajax = $.get(App.URL + '/dimension_labels',
+                {
+                    'dimension': args['dimension'],
+                    'value': this.model.get(args['dimension'])
+                }
+            );
+            return ajax;
+        }
+
+        function process_ajax(args){
+            var ajax = _.bind(construct_ajax, this, args)();
+            return ajax.done(
+                _.bind(function(data) {
+                    args['execute'](data);
+                }, this)
+            );
+        }
+
+        function process_queue(queue, result){
+            var item = queue.pop();
+            if(item){
+                return item.pipe(process_queue(queue, item));
+            }
+            else{
+                return result;
+            }
+        }
+
+        var ajax_queue = [
+            _.bind(
+                process_ajax, this,
+                {dimension: 'unit-measure',
+                 execute: _.bind(function(args, data){
+                    this.meta_data[args['target']] = data[args['label_type']];
+                    this.meta_data['tooltip_label'] = data[args['label_type']];
+                 }, this, {target: 'y_title', label_type: 'short_label'})
+                }
+            )(),
+            _.bind(
+                process_ajax, this,
+                {dimension: 'indicator',
+                 execute: _.bind(function(args, data){
+
+                    this.meta_data[args['target']] = data[args['label_type']];
+
+                 }, this, {target: 'x_title', label_type: 'label'})
+                }
+            )(),
+        ]
+
+        _.reduceRight(ajax_queue, _.bind(function(prev, current){
+            return current.done(prev)
+        }, this)).done(
+            _.bind(this.render, this)
+        );
+
     },
 
     filters_changed: function() {
@@ -96,50 +158,19 @@ App.Scenario1ChartView = Backbone.View.extend({
         args['fields'] = 'ref-area,value';
         this.$el.html('-- loading --');
         var series_ajax = $.get(App.URL + '/datapoints', args);
-        series_ajax.done(_.bind(function(data) {
-            function get_label(dimension, type, labels){
-                var label_types = ['label', 'short_label'];
-                if(! _.contains(label_types, type)){
-                    return;
-                }
-                var result = _.find(labels,
-                    function(item){
-                        return item.id == args[dimension];
-                    }
-                );
-                if(!result){
-                    return;
-                }
-                if(result[type]){
-                    return result[type];
-                }
-                else{
-                    label_types.pop(type);
-                    return result[label_types[0]];
-                }
-            }
-            var x_label = get_label(
-                    'indicator',
-                    'label',
-                    App['indicator_labels']
-            );
-            var y_label = get_label(
-                    'unit-measure',
-                    'short_label',
-                    App['unit-measure_labels']
-            );
+        var series_ajax_result = series_ajax.done(_.bind(function(data) {
             this.data = {
                 'series': data['datapoints'],
                 'year_text': "Year 2011",
-                'indicator_label': x_label,
-                'unit_measure': y_label,
+                'tooltip_formatter': function() {
+                    var chart_view = App.scenario1_chart_view;
+                    var tooltip_label = chart_view.meta_data['tooltip_label'];
+                    return '<b>'+ this.x +'</b><br>: ' +
+                           Math.round(this.y*10)/10 + ' ' + tooltip_label;
+                },
                 'credits': {
                     'href': 'http://ec.europa.eu/digital-agenda/en/graphs/',
                     'text': 'European Commission, Digital Agenda Scoreboard'
-                },
-                'tooltip_formatter': function() {
-                    return '<b>'+ this.x +'</b><br>: ' +
-                           Math.round(this.y*10)/10 + ' ' + y_label;
                 },
                 'xlabels_formatter': function() {
                     var max_length = 15;
@@ -149,8 +180,13 @@ App.Scenario1ChartView = Backbone.View.extend({
                     return this.value
                 },
             };
-            this.render();
         }, this));
+
+        //TODO gets meta data everytime filters changed
+        //if needed, it could be optimized to fetch labels
+        //only when relevant filters change
+        series_ajax_result.done( _.bind(this.get_meta_data, this) );
+
     }
 
 });
@@ -230,6 +266,7 @@ App.scenario1_initialize = function() {
     App.scenario1_chart_view = new App.Scenario1ChartView({
         model: App.filters,
         loadstate: App.filter_loadstate,
+        meta_data: {},
         indicator_labels: {}
     });
     $('#the-chart').append(App.scenario1_chart_view.el);

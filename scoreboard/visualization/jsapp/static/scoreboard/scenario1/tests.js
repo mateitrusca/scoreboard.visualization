@@ -117,7 +117,11 @@ describe('Scenario1ChartView', function() {
         var server = this.sandbox.server;
         var ajax_data = [{'ref-area': "Austria", 'value': 0.18},
                          {'ref-area': "Belgium", 'value': 0.14}];
+
+        this.chart.meta_data = {};
         App.respond_json(server.requests[0], {'datapoints': ajax_data});
+        App.respond_json(server.requests[1],
+            {'label': 'new', 'short_label': 'new unit-measure short_label'});
 
         expect(this.scenario1_chart.calledOnce).to.equal(true);
         var call_args = this.scenario1_chart.getCall(0).args;
@@ -126,27 +130,44 @@ describe('Scenario1ChartView', function() {
         //expect(call_args[1]['indicator_label']).to.equal("The Label!");
     });
 
-    it('should render with the selected indicator', function() {
+    it('should save the selected indicator as x_title', function() {
         var server = this.sandbox.server;
         App.indicator_labels = [{
             'id': 'asdf',
             'label': 'new indicator',
             'short_label': 'short_label'
         }];
+        this.chart.meta_data = {};
         this.chart.filters_changed();
         App.respond_json(server.requests[0], {'datapoints': []});
-        expect(this.chart.data.indicator_label).to.equal('new indicator');
+        App.respond_json(server.requests[1], {'datapoints': []});
+        App.respond_json(server.requests[2],
+            {'label': '2', 'short_label': 'y_title'});
+        App.respond_json(server.requests[3],
+            {'label': '3', 'short_label': 'x_title'});
+        App.respond_json(server.requests[4],
+            {'label': '4', 'short_label': 'y_title'});
+        App.respond_json(server.requests[5],
+            {'label': '5', 'short_label': 'x_title'});
+        expect(this.chart.meta_data.x_title).to.equal('5');
     });
 
-    it('should render with the selected unit-measure', function() {
+    it('should save the selected unit-measure as y_title', function() {
         var server = this.sandbox.server;
         App['unit-measure_labels'] = [{
             'id': 'pc_ind',
             'label': 'new unit-measure',
             'short_label': 'new unit-measure short_label'
         }];
+        this.chart.meta_data = {};
+        this.chart.filters_changed();
         App.respond_json(server.requests[0], {'datapoints': []});
-        expect(this.chart.data.unit_measure).to.equal('new unit-measure short_label');
+        App.respond_json(server.requests[1], {'datapoints': []});
+        App.respond_json(server.requests[2], {'label': 'y_title', 'short_label': '2'});
+        App.respond_json(server.requests[3], {'label': 'x_title', 'short_label': '3'});
+        App.respond_json(server.requests[4], {'label': 'y_title', 'short_label': '4'});
+        App.respond_json(server.requests[5], {'label': 'x_title', 'short_label': '5'});
+        expect(this.chart.meta_data.y_title).to.equal('4');
     });
 
 });

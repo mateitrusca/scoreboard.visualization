@@ -5,7 +5,7 @@
 "use strict";
 
 
-App.scenario1_chart = function(container, options) {
+App.scenario1_chart = function(container, options, meta_data) {
     var series = _(options['series']).sortBy('value').reverse();
     var country_names = _(series).pluck('ref-area-label');
     var values = _(series).pluck('value');
@@ -39,7 +39,7 @@ App.scenario1_chart = function(container, options) {
             }
         },
         title: {
-            text: options['indicator_label'],
+            text: meta_data['x_title'],
             style: {
                 color: '#000000',
                 fontWeight: 'bold',
@@ -66,7 +66,7 @@ App.scenario1_chart = function(container, options) {
         yAxis: {
             min: 0,
             title: {
-                text: options['unit_measure'],
+                text: meta_data['y_title'],
                 style: {
                     color: '#000000',
                     fontWeight: 'bold'
