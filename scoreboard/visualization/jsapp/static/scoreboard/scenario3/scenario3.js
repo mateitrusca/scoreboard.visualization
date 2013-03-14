@@ -214,6 +214,7 @@ App.scenario3_initialize = function() {
     box.addClass('scenario3');
 
     App.filters = new Backbone.Model();
+    App.filter_loadstate = new Backbone.Model();
     App.router = new App.ChartRouter(App.filters);
 
     App.filters_box = new App.FiltersBox({

@@ -60,8 +60,8 @@ App.SelectFilter = Backbone.View.extend({
         this.ajax = this.fetch_options(args);
         this.ajax.done(_.bind(function(data) {
             this.ajax = null;
-            this.loadstate.set(this.name, false);
             this.received_new_options(data['options']);
+            this.loadstate.set(this.name, false);
             if(_.contains(['indicator', 'unit-measure'], this.dimension)){
                 App[this.dimension + '_labels'] = _.map(data['options'],
                     function(item){
