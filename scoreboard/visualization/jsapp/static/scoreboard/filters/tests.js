@@ -206,6 +206,21 @@ describe('modular filters', function() {
             App.testing.choose_radio(view.$el.find('input:radio'), 'two');
             expect(model.get('this-breakdown')).to.equal('two');
         });
+
+        it('should render with current value selected', function() {
+            var model = new Backbone.Model({'this-time-period': 'two'});
+            var options = [{'label': "Option One", 'notation': 'one'},
+                           {'label': "Option Two", 'notation': 'two'}];
+            var view = new NoAjaxSelectFilter({
+                model: model,
+                name: 'this-time-period',
+                dimension: 'time-period'
+            });
+            view.ajax.resolve({options: options});
+            expect(view.$el.find('[checked=checked]').val()).to.equal('two');
+            expect(model.get('this-time-period')).to.equal('two');
+        });
+
     });
 
 
