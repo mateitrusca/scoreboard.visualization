@@ -250,7 +250,6 @@ App.scenario1_initialize = function() {
         model: App.filters,
         loadstate: App.filter_loadstate,
         meta_data: {},
-        indicator_labels: {},
         titles: {
             'x_title': {dimension: 'indicator', type: 'label'},
             'y_title': {dimension: 'unit-measure', type: 'short_label'}
