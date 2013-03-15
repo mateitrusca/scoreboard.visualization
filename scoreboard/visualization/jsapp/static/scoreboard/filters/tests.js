@@ -162,6 +162,34 @@ describe('modular filters', function() {
             expect(server.requests[0].url).to.contain('/dimension_values_xy?');
         });
 
+        it('should render with current value selected', function() {
+            var model = new Backbone.Model({'this-time-period': 'two'});
+            var options = [{'label': "Option One", 'notation': 'one'},
+                           {'label': "Option Two", 'notation': 'two'}];
+            var view = new NoAjaxSelectFilter({
+                model: model,
+                name: 'this-time-period',
+                dimension: 'time-period'
+            });
+            view.ajax.resolve({options: options});
+            expect(view.$el.find('select').val()).to.equal('two');
+            expect(model.get('this-time-period')).to.equal('two');
+        });
+
+        it('should pick first value if old value is invalid', function() {
+            var model = new Backbone.Model({'this-time-period': 'other'});
+            var options = [{'label': "Option One", 'notation': 'one'},
+                           {'label': "Option Two", 'notation': 'two'}];
+            var view = new NoAjaxSelectFilter({
+                model: model,
+                name: 'this-time-period',
+                dimension: 'time-period'
+            });
+            view.ajax.resolve({options: options});
+            expect(view.$el.find('select').val()).to.equal('one');
+            expect(model.get('this-time-period')).to.equal('one');
+        });
+
     });
 
     describe('RadioFilter', function() {
@@ -192,6 +220,21 @@ describe('modular filters', function() {
             App.testing.choose_radio(view.$el.find('input:radio'), 'two');
             expect(model.get('this-breakdown')).to.equal('two');
         });
+
+        it('should render with current value selected', function() {
+            var model = new Backbone.Model({'this-time-period': 'two'});
+            var options = [{'label': "Option One", 'notation': 'one'},
+                           {'label': "Option Two", 'notation': 'two'}];
+            var view = new NoAjaxSelectFilter({
+                model: model,
+                name: 'this-time-period',
+                dimension: 'time-period'
+            });
+            view.ajax.resolve({options: options});
+            expect(view.$el.find('[checked=checked]').val()).to.equal('two');
+            expect(model.get('this-time-period')).to.equal('two');
+        });
+
     });
 
 
