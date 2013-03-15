@@ -73,6 +73,7 @@ App.Scenario1ChartView = Backbone.View.extend({
         this.loadstate = options['loadstate'] || new Backbone.Model();
         this.loadstate.on('change', this.filters_changed, this);
         this.titles = options['titles'];
+        this.schema = options['schema'];
         this.filters_changed();
     },
 
@@ -250,6 +251,7 @@ App.scenario1_initialize = function() {
         model: App.filters,
         loadstate: App.filter_loadstate,
         meta_data: {},
+        schema: App.filters_box.schema,
         titles: {
             'x_title': {dimension: 'indicator', type: 'label'},
             'y_title': {dimension: 'unit-measure', type: 'short_label'}

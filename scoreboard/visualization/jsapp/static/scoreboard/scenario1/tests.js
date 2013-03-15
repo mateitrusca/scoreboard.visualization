@@ -94,7 +94,8 @@ describe('Scenario1ChartView', function() {
                 // here are inteantionally inversely initialized
                 'x_title': {dimension: 'indicator', type: 'short_label'},
                 'y_title': {dimension: 'unit_measure', type: 'label'}
-            }
+            },
+            schema: {filters: []}
         });
         this.model.set({
             'indicator-group': 'qq',
@@ -113,6 +114,12 @@ describe('Scenario1ChartView', function() {
     it('should be initialized with titles dimensions', function(){
         expect(_(this.chart.titles).keys()).to.deep.equal(
             ['x_title', 'y_title']
+        );
+    });
+
+    it('should be initialized with schema', function(){
+        expect(_(this.chart.schema).keys()).to.deep.equal(
+            ['filters']
         );
     });
 
