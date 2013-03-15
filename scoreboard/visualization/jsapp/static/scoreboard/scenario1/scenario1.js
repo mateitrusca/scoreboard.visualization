@@ -84,6 +84,7 @@ App.Scenario1ChartView = Backbone.View.extend({
     get_meta_data: function(){
 
         var view = this;
+        var meta_data = {};
 
         function process_ajax(args){
             var ajax = $.get(App.URL + '/dimension_labels',
@@ -100,14 +101,14 @@ App.Scenario1ChartView = Backbone.View.extend({
              target: 'y_title',
              label_type: 'short_label',
              callback: function(args, data){
-                view.meta_data[args['target']] = data[args['label_type']];
-                view.meta_data['tooltip_label'] = data[args['label_type']];}
+                meta_data[args['target']] = data[args['label_type']];
+                meta_data['tooltip_label'] = data[args['label_type']];}
             },
             {dimension: 'indicator',
              target: 'x_title',
              label_type: 'label',
              callback: function(args, data){
-                view.meta_data[args['target']] = data[args['label_type']];}
+                meta_data[args['target']] = data[args['label_type']];}
             }
         ]
 
@@ -115,6 +116,7 @@ App.Scenario1ChartView = Backbone.View.extend({
         var ajax_calls = $.when.apply($, ajax_queue);
         ajax_calls.done(
             function(){
+                view.meta_data = meta_data;
                 view.render();
             }
         );
