@@ -97,18 +97,17 @@ App.Scenario1ChartView = Backbone.View.extend({
             );
             return ajax.done( function(data) { args.callback(args, data); });
         }
-
         var ajax_args = [
-            {dimension: view.titles['y_title'],
+            {dimension: view.titles.y_title.dimension,
              target: 'y_title',
-             label_type: 'short_label',
+             label_type: view.titles.y_title.type,
              callback: function(args, data){
                 meta_data[args['target']] = data[args['label_type']];
                 meta_data['tooltip_label'] = data[args['label_type']];}
             },
-            {dimension: view.titles['x_title'],
+            {dimension: view.titles.x_title.dimension,
              target: 'x_title',
-             label_type: 'label',
+             label_type: view.titles.x_title.type,
              callback: function(args, data){
                 meta_data[args['target']] = data[args['label_type']];}
             }
@@ -253,8 +252,8 @@ App.scenario1_initialize = function() {
         meta_data: {},
         indicator_labels: {},
         titles: {
-            'x_title': 'indicator',
-            'y_title': 'unit-measure'
+            'x_title': {dimension: 'indicator', type: 'label'},
+            'y_title': {dimension: 'unit-measure', type: 'short_label'}
         }
     });
     $('#the-chart').append(App.scenario1_chart_view.el);

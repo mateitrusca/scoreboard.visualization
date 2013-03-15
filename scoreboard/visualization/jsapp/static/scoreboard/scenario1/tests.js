@@ -89,8 +89,11 @@ describe('Scenario1ChartView', function() {
         this.chart = new App.Scenario1ChartView({
             model: this.model,
             titles: {
-                'x_title': 'indicator',
-                'y_title': 'unit-measure'
+                // normally x_title is normal label and
+                // y_title is short_label
+                // here are inteantionally inversely initialized
+                'x_title': {dimension: 'indicator', type: 'short_label'},
+                'y_title': {dimension: 'unit_measure', type: 'label'}
             }
         });
         this.model.set({
@@ -108,10 +111,24 @@ describe('Scenario1ChartView', function() {
     });
 
     it('should be initialized with titles dimensions', function(){
-        expect(_(this.chart.titles).pairs()).to.deep.equal([
-            ['x_title', 'indicator'],
-            ['y_title', 'unit-measure']
-        ]);
+        expect(_(this.chart.titles).keys()).to.deep.equal(
+            ['x_title', 'y_title']
+        );
+    });
+
+    it('should fetch titles according to init params', function(){
+        var server = this.sandbox.server;
+        this.chart.meta_data = {};
+        this.chart.filters_changed();
+        App.respond_json(server.requests[0], {'datapoints': []});
+        App.respond_json(server.requests[1], {'datapoints': []});
+        App.respond_json(server.requests[2],
+            {'label': 'normal_label', 'short_label': 'short_label'});
+        App.respond_json(server.requests[3],
+            {'label': 'normal_label', 'short_label': 'short_label'});
+        //see initialisation titles param
+        expect(this.chart.meta_data.x_title).to.equal('short_label');
+        expect(this.chart.meta_data.y_title).to.equal('normal_label');
     });
 
     it('should fetch data from server', function() {
@@ -152,11 +169,11 @@ describe('Scenario1ChartView', function() {
         App.respond_json(server.requests[2],
             {'label': '2', 'short_label': 'y_title'});
         App.respond_json(server.requests[3],
-            {'label': '3', 'short_label': 'x_title'});
+            {'label': 'x_title', 'short_label': '3'});
         App.respond_json(server.requests[4],
             {'label': '4', 'short_label': 'y_title'});
         App.respond_json(server.requests[5],
-            {'label': '5', 'short_label': 'x_title'});
+            {'label': 'x_title', 'short_label': '5'});
         expect(this.chart.meta_data.x_title).to.equal('5');
     });
 
@@ -166,9 +183,9 @@ describe('Scenario1ChartView', function() {
         this.chart.filters_changed();
         App.respond_json(server.requests[0], {'datapoints': []});
         App.respond_json(server.requests[1], {'datapoints': []});
-        App.respond_json(server.requests[2], {'label': 'y_title', 'short_label': '2'});
+        App.respond_json(server.requests[2], {'label': '2', 'short_label': 'y_title'});
         App.respond_json(server.requests[3], {'label': 'x_title', 'short_label': '3'});
-        App.respond_json(server.requests[4], {'label': 'y_title', 'short_label': '4'});
+        App.respond_json(server.requests[4], {'label': '4', 'short_label': 'y_title'});
         App.respond_json(server.requests[5], {'label': 'x_title', 'short_label': '5'});
         expect(this.chart.meta_data.y_title).to.equal('4');
     });
