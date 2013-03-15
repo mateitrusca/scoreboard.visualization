@@ -13,6 +13,13 @@ def test_dimensions_query():
 
 
 @sparql_test
+def test_get_group_dimensions():
+    cube = create_cube()
+    res = cube.get_group_dimensions()
+    assert res == ['breakdown-group', 'indicator-group']
+
+
+@sparql_test
 def test_unit_measure_labels_query():
     cube = create_cube()
     [res] = cube.get_dimension_labels(dimension='unit-measure', value='pc_ind')

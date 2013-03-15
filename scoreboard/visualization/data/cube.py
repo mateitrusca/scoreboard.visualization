@@ -25,7 +25,7 @@ class Cube(object):
         self.endpoint = endpoint
         self.dataset = sparql.IRI(dataset)
 
-    def _execute(self, query, as_dict=False):
+    def _execute(self, query, as_dict=True):
         if SPARQL_DEBUG:
             logger.info('Running query: \n%s', query)
         try:
@@ -47,21 +47,28 @@ class Cube(object):
             'dimension': dimension,
             'value': value
         })
-        return list(self._execute(query, as_dict=True))
+        return list(self._execute(query))
 
     def get_dimensions(self):
         query = sparql_env.get_template('dimensions.sparql').render(**{
             'dataset': self.dataset,
         })
-        return list(self._execute(query, as_dict=True))
+        return list(self._execute(query))
+
+    def get_group_dimensions(self):
+        query = sparql_env.get_template('group_dimensions.sparql').render(**{
+            'dataset': self.dataset,
+        })
+        return sorted([r['group_notation'] for r in self._execute(query)])
 
     def get_dimension_options(self, dimension, filters=[]):
         query = sparql_env.get_template('dimension_options.sparql').render(**{
             'dataset': self.dataset,
             'dimension_code': sparql.Literal(dimension),
             'filters': literal_pairs(filters),
+            'group_dimensions': self.get_group_dimensions(),
         })
-        return list(self._execute(query, as_dict=True))
+        return list(self._execute(query))
 
     def get_dimension_options_xy(self, dimension,
                                  filters, x_filters, y_filters):
@@ -72,8 +79,9 @@ class Cube(object):
             'filters': literal_pairs(filters),
             'x_filters': literal_pairs(x_filters),
             'y_filters': literal_pairs(y_filters),
+            'group_dimensions': self.get_group_dimensions(),
         })
-        return list(self._execute(query, as_dict=True))
+        return list(self._execute(query))
 
     def get_data(self, fields, filters):
         assert fields[-1] == 'value', "Last column must be 'value'"
@@ -81,6 +89,7 @@ class Cube(object):
             'dataset': self.dataset,
             'columns': [sparql.Literal(c) for c in fields[:-1]],
             'filters': literal_pairs(filters),
+            'group_dimensions': self.get_group_dimensions(),
         })
 
         columns = []
@@ -88,7 +97,7 @@ class Cube(object):
             columns.append(f);
             columns.append('%s-label' %f)
 
-        for row in self._execute(query):
+        for row in self._execute(query, as_dict=False):
             yield dict(zip(columns, row))
 
     def get_data_xy(self, columns, xy_columns, filters, x_filters, y_filters):
@@ -99,8 +108,9 @@ class Cube(object):
             'x_filters': literal_pairs(x_filters),
             'y_filters': literal_pairs(y_filters),
             'columns': [sparql.Literal(c) for c in columns],
+            'group_dimensions': self.get_group_dimensions(),
         })
-        for row in self._execute(query):
+        for row in self._execute(query, as_dict=False):
             out = dict(zip(columns, row))
             out['value'] = {'x': row[-2], 'y': row[-1]}
             yield out
