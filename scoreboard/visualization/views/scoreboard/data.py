@@ -76,6 +76,7 @@ class CubeView(BrowserView):
 
     def dimension_values(self):
         form = dict(self.request.form)
+        form.pop('rev', None)
         dimension = form.pop('dimension')
         filters = sorted(form.items())
         options = self.cube.get_dimension_options(dimension, filters)
@@ -83,6 +84,7 @@ class CubeView(BrowserView):
 
     def dimension_values_xy(self):
         form = dict(self.request.form)
+        form.pop('rev', None)
         dimension = form.pop('dimension')
         (filters, x_filters, y_filters) = ([], [], [])
         for k, v in sorted(form.items()):
@@ -98,6 +100,7 @@ class CubeView(BrowserView):
 
     def datapoints(self):
         form = dict(self.request.form)
+        form.pop('rev', None)
         fields = form.pop('fields').split(',')
         filters = sorted(form.items())
         rows = list(self.cube.get_data(fields=fields, filters=filters))
@@ -105,6 +108,7 @@ class CubeView(BrowserView):
 
     def datapoints_xy(self):
         form = dict(self.request.form)
+        form.pop('rev', None)
         columns = form.pop('columns').split(',')
         xy_columns = form.pop('xy_columns').split(',')
         (filters, x_filters, y_filters) = ([], [], [])
