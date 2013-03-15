@@ -87,7 +87,11 @@ describe('Scenario1ChartView', function() {
 
         this.model = new Backbone.Model();
         this.chart = new App.Scenario1ChartView({
-            model: this.model
+            model: this.model,
+            titles: {
+                'x_title': 'indicator',
+                'y_title': 'unit-measure'
+            }
         });
         this.model.set({
             'indicator-group': 'qq',
@@ -101,6 +105,13 @@ describe('Scenario1ChartView', function() {
 
     afterEach(function () {
         this.sandbox.restore();
+    });
+
+    it('should be initialized with titles dimensions', function(){
+        expect(_(this.chart.titles).pairs()).to.deep.equal([
+            ['x_title', 'indicator'],
+            ['y_title', 'unit-measure']
+        ]);
     });
 
     it('should fetch data from server', function() {
@@ -134,11 +145,6 @@ describe('Scenario1ChartView', function() {
 
     it('should save the selected indicator as x_title', function() {
         var server = this.sandbox.server;
-        App.indicator_labels = [{
-            'id': 'asdf',
-            'label': 'new indicator',
-            'short_label': 'short_label'
-        }];
         this.chart.meta_data = {};
         this.chart.filters_changed();
         App.respond_json(server.requests[0], {'datapoints': []});
@@ -156,11 +162,6 @@ describe('Scenario1ChartView', function() {
 
     it('should save the selected unit-measure as y_title', function() {
         var server = this.sandbox.server;
-        App['unit-measure_labels'] = [{
-            'id': 'pc_ind',
-            'label': 'new unit-measure',
-            'short_label': 'new unit-measure short_label'
-        }];
         this.chart.meta_data = {};
         this.chart.filters_changed();
         App.respond_json(server.requests[0], {'datapoints': []});
