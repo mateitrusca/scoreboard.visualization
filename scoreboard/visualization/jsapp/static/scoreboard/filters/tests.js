@@ -162,6 +162,19 @@ describe('modular filters', function() {
             expect(server.requests[0].url).to.contain('/dimension_values_xy?');
         });
 
+        it('should render with current value selected', function() {
+            var model = new Backbone.Model({'this-time-period': 'two'});
+            var options = [{'label': "Option One", 'notation': 'one'},
+                           {'label': "Option Two", 'notation': 'two'}];
+            var view = new NoAjaxSelectFilter({
+                model: model,
+                name: 'this-time-period',
+                dimension: 'time-period'
+            });
+            view.ajax.resolve({options: options});
+            expect(view.$el.find('select').val()).to.equal('two');
+        });
+
     });
 
     describe('RadioFilter', function() {

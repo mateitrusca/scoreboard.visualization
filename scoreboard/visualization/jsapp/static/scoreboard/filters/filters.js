@@ -82,9 +82,12 @@ App.SelectFilter = Backbone.View.extend({
     },
 
     render: function() {
-        this.$el.html(this.template({
-            'dimension_options': this.dimension_options
-        }));
+        var selected_value = this.model.get(this.name);
+        var options = _(this.dimension_options).map(function(item) {
+            var selected = (item['notation'] == selected_value);
+            return _({'selected': selected}).extend(item);
+        });
+        this.$el.html(this.template({'dimension_options': options}));
     },
 
     on_selection_change: function() {
