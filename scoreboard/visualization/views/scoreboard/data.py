@@ -1,3 +1,4 @@
+import time
 from collections import defaultdict
 import simplejson as json
 from path import path
@@ -12,6 +13,9 @@ queries = {q['id']: q for q in json.loads(
 
 SPARQL_ENDPOINT = 'http://virtuoso.scoreboardtest.edw.ro/sparql'
 DATASET = 'http://semantic.digital-agenda-data.eu/dataset/scoreboard'
+
+# DATA_REVISION should be the time of last database modification
+DATA_REVISION = str(int(time.time()))
 
 
 def run_query(method_name, **kwargs):
