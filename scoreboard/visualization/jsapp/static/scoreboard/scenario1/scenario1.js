@@ -83,45 +83,40 @@ App.Scenario1ChartView = Backbone.View.extend({
 
     get_meta_data: function(){
 
-        function construct_ajax(args){
+        var view = this;
+
+        function process_ajax(args){
             var ajax = $.get(App.URL + '/dimension_labels',
                 {
                     'dimension': args['dimension'],
-                    'value': this.model.get(args['dimension'])
+                    'value': view.model.get(args['dimension'])
                 }
             );
-            return ajax;
-        }
-
-        function process_ajax(args){
-            var ajax = _.bind(construct_ajax, this, args)();
-            return ajax.done(
-                _.bind(function(data) {
-                    args['execute'](data);
-                }, this)
-            );
+            return ajax.done( function(data) { args.callback(args, data); });
         }
 
         var args = [
             {dimension: 'unit-measure',
-             execute: _.bind(function(args, data){
-                this.meta_data[args['target']] = data[args['label_type']];
-                this.meta_data['tooltip_label'] = data[args['label_type']];
-             }, this, {target: 'y_title', label_type: 'short_label'})
+             target: 'y_title',
+             label_type: 'short_label',
+             callback: function(args, data){
+                view.meta_data[args['target']] = data[args['label_type']];
+                view.meta_data['tooltip_label'] = data[args['label_type']];}
             },
             {dimension: 'indicator',
-             execute: _.bind(function(args, data){
-
-                this.meta_data[args['target']] = data[args['label_type']];
-
-             }, this, {target: 'x_title', label_type: 'label'})
+             target: 'x_title',
+             label_type: 'label',
+             callback: function(args, data){
+                view.meta_data[args['target']] = data[args['label_type']];}
             }
         ]
 
-        var ajax_queue = _(args).map( _.bind(process_ajax, this) );
+        var ajax_queue = _(args).map(process_ajax);
         var ajax_calls = $.when.apply($, ajax_queue);
         ajax_calls.done(
-            _.bind(this.render, this)
+            function(){
+                view.render()
+            }
         );
 
     },
