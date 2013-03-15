@@ -1,4 +1,4 @@
-{%- from 'bits.sparql' import one_filter, one_column -%}
+{%- from 'bits.sparql' import one_filter, one_column with context -%}
 PREFIX qb: <http://purl.org/linked-data/cube#>
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 PREFIX sdmx-measure: <http://purl.org/linked-data/sdmx/2009/measure#>

@@ -66,6 +66,7 @@ class Cube(object):
             'dataset': self.dataset,
             'dimension_code': sparql.Literal(dimension),
             'filters': literal_pairs(filters),
+            'group_dimensions': self.get_group_dimensions(),
         })
         return list(self._execute(query))
 
@@ -78,6 +79,7 @@ class Cube(object):
             'filters': literal_pairs(filters),
             'x_filters': literal_pairs(x_filters),
             'y_filters': literal_pairs(y_filters),
+            'group_dimensions': self.get_group_dimensions(),
         })
         return list(self._execute(query))
 
@@ -87,6 +89,7 @@ class Cube(object):
             'dataset': self.dataset,
             'columns': [sparql.Literal(c) for c in fields[:-1]],
             'filters': literal_pairs(filters),
+            'group_dimensions': self.get_group_dimensions(),
         })
 
         columns = []
@@ -105,6 +108,7 @@ class Cube(object):
             'x_filters': literal_pairs(x_filters),
             'y_filters': literal_pairs(y_filters),
             'columns': [sparql.Literal(c) for c in columns],
+            'group_dimensions': self.get_group_dimensions(),
         })
         for row in self._execute(query, as_dict=False):
             out = dict(zip(columns, row))

@@ -1,4 +1,3 @@
-{%- set group_dimensions = ['indicator-group', 'breakdown-group'] -%}
 {% macro one_filter(observation, prefix, dimension_code, option_code) %}
   ?{{ observation }}
     ?{{ prefix }}_dimension ?{{ prefix }}_option .
