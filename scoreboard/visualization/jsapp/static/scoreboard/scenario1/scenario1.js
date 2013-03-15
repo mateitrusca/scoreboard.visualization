@@ -102,28 +102,23 @@ App.Scenario1ChartView = Backbone.View.extend({
             );
         }
 
-        var ajax_queue = [
-            _.bind(
-                process_ajax, this,
-                {dimension: 'unit-measure',
-                 execute: _.bind(function(args, data){
-                    this.meta_data[args['target']] = data[args['label_type']];
-                    this.meta_data['tooltip_label'] = data[args['label_type']];
-                 }, this, {target: 'y_title', label_type: 'short_label'})
-                }
-            )(),
-            _.bind(
-                process_ajax, this,
-                {dimension: 'indicator',
-                 execute: _.bind(function(args, data){
+        var args = [
+            {dimension: 'unit-measure',
+             execute: _.bind(function(args, data){
+                this.meta_data[args['target']] = data[args['label_type']];
+                this.meta_data['tooltip_label'] = data[args['label_type']];
+             }, this, {target: 'y_title', label_type: 'short_label'})
+            },
+            {dimension: 'indicator',
+             execute: _.bind(function(args, data){
 
-                    this.meta_data[args['target']] = data[args['label_type']];
+                this.meta_data[args['target']] = data[args['label_type']];
 
-                 }, this, {target: 'x_title', label_type: 'label'})
-                }
-            )(),
+             }, this, {target: 'x_title', label_type: 'label'})
+            }
         ]
 
+        var ajax_queue = _(args).map( _.bind(process_ajax, this) );
         var ajax_calls = $.when.apply($, ajax_queue);
         ajax_calls.done(
             _.bind(this.render, this)
