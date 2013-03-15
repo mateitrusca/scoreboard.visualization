@@ -31,7 +31,7 @@ def test_indicator_labels_query():
 
 
 @sparql_test
-def test_get_all_year_options():
+def test_get_all_country_options():
     cube = create_cube()
     items = cube.get_dimension_options('ref-area')
     codes = [y['notation'] for y in items]
