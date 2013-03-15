@@ -173,6 +173,7 @@ describe('modular filters', function() {
             });
             view.ajax.resolve({options: options});
             expect(view.$el.find('select').val()).to.equal('two');
+            expect(model.get('this-time-period')).to.equal('two');
         });
 
     });

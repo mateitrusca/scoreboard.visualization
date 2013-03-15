@@ -30,10 +30,10 @@ App.SelectFilter = Backbone.View.extend({
 
     received_new_options: function(new_options) {
         this.dimension_options = new_options;
-        this.render();
-        if(new_options.length > 0) {
+        if(! this.model.get(this.name) && new_options.length > 0) {
             this.model.set(this.name, new_options[0]['notation']);
         }
+        this.render();
     },
 
     update: function() {
