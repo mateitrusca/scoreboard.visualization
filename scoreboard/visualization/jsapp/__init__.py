@@ -24,5 +24,5 @@ def render_template(name, **kwargs):
     return jinja_env.get_template(name).render(**kwargs)
 
 
-def jsapp_html(URL):
-    return render_template('jsapp.html', URL=URL)
+def jsapp_html(URL, DATA_REVISION):
+    return render_template('jsapp.html', URL=URL, DATA_REVISION=DATA_REVISION)

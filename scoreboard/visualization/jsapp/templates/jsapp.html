@@ -28,9 +28,11 @@
 
     templates: {{ get_js_templates()|json|safe }},
 
-    STATIC: {{ STATIC|json }},
+    STATIC: {{ STATIC|json|safe }},
 
-    URL: {{ URL|json }},
+    URL: {{ URL|json|safe }},
+
+    DATA_REVISION: {{ DATA_REVISION|json|safe }},
 
     get_template: function(name) {
         return Handlebars.compile(App.templates[name]);

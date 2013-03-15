@@ -1,3 +1,4 @@
+import time
 from collections import defaultdict
 import simplejson as json
 from path import path
@@ -12,6 +13,9 @@ queries = {q['id']: q for q in json.loads(
 
 SPARQL_ENDPOINT = 'http://virtuoso.scoreboardtest.edw.ro/sparql'
 DATASET = 'http://semantic.digital-agenda-data.eu/dataset/scoreboard'
+
+# DATA_REVISION should be the time of last database modification
+DATA_REVISION = str(int(time.time()))
 
 
 def run_query(method_name, **kwargs):
@@ -64,7 +68,9 @@ class CubeView(BrowserView):
         self.cube = Cube(SPARQL_ENDPOINT, DATASET)
 
     def jsonify(self, data):
-        self.request.RESPONSE.setHeader("Content-Type", "application/json")
+        header = self.request.RESPONSE.setHeader
+        header("Content-Type", "application/json")
+        header("Expires", "Sun, 17-Jan-2038 19:14:07 GMT")
         return json.dumps(data, indent=2, sort_keys=True)
 
     def dimension_labels(self):
@@ -76,6 +82,7 @@ class CubeView(BrowserView):
 
     def dimension_values(self):
         form = dict(self.request.form)
+        form.pop('rev', None)
         dimension = form.pop('dimension')
         filters = sorted(form.items())
         options = self.cube.get_dimension_options(dimension, filters)
@@ -83,6 +90,7 @@ class CubeView(BrowserView):
 
     def dimension_values_xy(self):
         form = dict(self.request.form)
+        form.pop('rev', None)
         dimension = form.pop('dimension')
         (filters, x_filters, y_filters) = ([], [], [])
         for k, v in sorted(form.items()):
@@ -98,6 +106,7 @@ class CubeView(BrowserView):
 
     def datapoints(self):
         form = dict(self.request.form)
+        form.pop('rev', None)
         fields = form.pop('fields').split(',')
         filters = sorted(form.items())
         rows = list(self.cube.get_data(fields=fields, filters=filters))
@@ -105,6 +114,7 @@ class CubeView(BrowserView):
 
     def datapoints_xy(self):
         form = dict(self.request.form)
+        form.pop('rev', None)
         columns = form.pop('columns').split(',')
         xy_columns = form.pop('xy_columns').split(',')
         (filters, x_filters, y_filters) = ([], [], [])

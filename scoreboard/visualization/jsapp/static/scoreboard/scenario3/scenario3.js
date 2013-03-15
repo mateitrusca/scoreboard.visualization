@@ -114,6 +114,7 @@ App.Scenario3ChartView = Backbone.View.extend({
         }
         args['columns'] = 'ref-area';
         args['xy_columns'] = 'value';
+        args['rev'] = App.DATA_REVISION;
         this.$el.html('-- loading --');
         var series_ajax = $.get(App.URL + '/datapoints_xy', args);
         series_ajax.done(_.bind(function(data) {

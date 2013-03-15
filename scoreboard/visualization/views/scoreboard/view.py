@@ -5,6 +5,7 @@ from zope.interface import implements
 from eea.app.visualization.views.view import ViewForm
 from scoreboard.visualization.views.scoreboard.interfaces import IScoreboardView
 from scoreboard.visualization.jsapp import jsapp_html
+from .data import DATA_REVISION
 
 
 class View(ViewForm):
@@ -30,4 +31,5 @@ class View(ViewForm):
         return self.context.absolute_url()
 
     def jsapp_html(self):
-        return jsapp_html(URL=self.context.absolute_url())
+        return jsapp_html(URL=self.context.absolute_url(),
+                          DATA_REVISION=DATA_REVISION)

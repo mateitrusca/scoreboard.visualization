@@ -9,4 +9,5 @@ class TestsView(BrowserView):
         return '/++resource++scoreboard'
 
     def jsapp_html(self):
-        return jsapp_html(URL=self.context.absolute_url())
+        return jsapp_html(URL=self.context.absolute_url(),
+                          DATA_REVISION='')

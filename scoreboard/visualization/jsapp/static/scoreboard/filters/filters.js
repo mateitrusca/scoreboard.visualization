@@ -69,6 +69,7 @@ App.SelectFilter = Backbone.View.extend({
 
     fetch_options: function(args) {
         var view_name = this.xy ? 'dimension_values_xy' : 'dimension_values';
+        args = _({rev: App.DATA_REVISION}).extend(args);
         return $.get(App.URL + '/' + view_name, args);
     },
 
