@@ -68,7 +68,9 @@ class CubeView(BrowserView):
         self.cube = Cube(SPARQL_ENDPOINT, DATASET)
 
     def jsonify(self, data):
-        self.request.RESPONSE.setHeader("Content-Type", "application/json")
+        header = self.request.RESPONSE.setHeader
+        header("Content-Type", "application/json")
+        header("Expires", "Sun, 17-Jan-2038 19:14:07 GMT")
         return json.dumps(data, indent=2, sort_keys=True)
 
     def dimension_labels(self):
