@@ -55,6 +55,12 @@ class Cube(object):
         })
         return list(self._execute(query))
 
+    def get_group_dimensions(self):
+        query = sparql_env.get_template('group_dimensions.sparql').render(**{
+            'dataset': self.dataset,
+        })
+        return sorted([r['group_notation'] for r in self._execute(query)])
+
     def get_dimension_options(self, dimension, filters=[]):
         query = sparql_env.get_template('dimension_options.sparql').render(**{
             'dataset': self.dataset,
