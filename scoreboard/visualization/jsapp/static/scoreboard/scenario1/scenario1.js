@@ -95,7 +95,7 @@ App.Scenario1ChartView = Backbone.View.extend({
             return ajax.done( function(data) { args.callback(args, data); });
         }
 
-        var args = [
+        var ajax_args = [
             {dimension: 'unit-measure',
              target: 'y_title',
              label_type: 'short_label',
@@ -111,11 +111,11 @@ App.Scenario1ChartView = Backbone.View.extend({
             }
         ]
 
-        var ajax_queue = _(args).map(process_ajax);
+        var ajax_queue = _(ajax_args).map(process_ajax);
         var ajax_calls = $.when.apply($, ajax_queue);
         ajax_calls.done(
             function(){
-                view.render()
+                view.render();
             }
         );
 
