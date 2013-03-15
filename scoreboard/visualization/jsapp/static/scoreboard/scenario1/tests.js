@@ -121,7 +121,9 @@ describe('Scenario1ChartView', function() {
         this.chart.meta_data = {};
         App.respond_json(server.requests[0], {'datapoints': ajax_data});
         App.respond_json(server.requests[1],
-            {'label': 'new', 'short_label': 'new unit-measure short_label'});
+            {'label': 'request 1', 'short_label': 'lbl 1'});
+        App.respond_json(server.requests[2],
+            {'label': 'request 2', 'short_label': 'lbl 2'});
 
         expect(this.scenario1_chart.calledOnce).to.equal(true);
         var call_args = this.scenario1_chart.getCall(0).args;

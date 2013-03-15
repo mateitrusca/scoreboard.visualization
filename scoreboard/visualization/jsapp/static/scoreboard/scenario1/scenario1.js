@@ -102,16 +102,6 @@ App.Scenario1ChartView = Backbone.View.extend({
             );
         }
 
-        function process_queue(queue, result){
-            var item = queue.pop();
-            if(item){
-                return item.pipe(process_queue(queue, item));
-            }
-            else{
-                return result;
-            }
-        }
-
         var ajax_queue = [
             _.bind(
                 process_ajax, this,
@@ -134,9 +124,8 @@ App.Scenario1ChartView = Backbone.View.extend({
             )(),
         ]
 
-        _.reduceRight(ajax_queue, _.bind(function(prev, current){
-            return current.done(prev)
-        }, this)).done(
+        var ajax_calls = $.when.apply($, ajax_queue);
+        ajax_calls.done(
             _.bind(this.render, this)
         );
 
