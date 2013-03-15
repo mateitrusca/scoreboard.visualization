@@ -90,7 +90,8 @@ App.Scenario1ChartView = Backbone.View.extend({
             var ajax = $.get(App.URL + '/dimension_labels',
                 {
                     'dimension': args['dimension'],
-                    'value': view.model.get(args['dimension'])
+                    'value': view.model.get(args['dimension']),
+                    'rev': App.DATA_REVISION
                 }
             );
             return ajax.done( function(data) { args.callback(args, data); });
@@ -137,6 +138,7 @@ App.Scenario1ChartView = Backbone.View.extend({
             return;
         }
         args['fields'] = 'ref-area,value';
+        args['rev'] = App.DATA_REVISION;
         this.$el.html('-- loading --');
         var series_ajax = $.get(App.URL + '/datapoints', args);
         var series_ajax_result = series_ajax.done(_.bind(function(data) {
