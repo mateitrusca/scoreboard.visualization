@@ -120,7 +120,6 @@ App.Scenario1ChartView = Backbone.View.extend({
         var ajax_calls = $.when.apply($, ajax_queue);
         ajax_calls.done(
             function(){
-                meta_data['year_text'] = 'Year ' + view.model.get('time-period');
                 view.meta_data = meta_data;
                 view.render();
             }
@@ -256,7 +255,8 @@ App.scenario1_initialize = function() {
         schema: App.scenario1_filters_schema,
         dynamic_labels: [
             { targets: ['x_title'], filter_name: 'indicator', type: 'label' },
-            { targets: ['y_title', 'tooltip_label'], filter_name: 'unit-measure', type: 'short_label' }
+            { targets: ['y_title', 'tooltip_label'], filter_name: 'unit-measure', type: 'short_label' },
+            { targets: ['year_text'], filter_name: 'time-period', type: 'label' },
         ]
     });
     $('#the-chart').append(App.scenario1_chart_view.el);

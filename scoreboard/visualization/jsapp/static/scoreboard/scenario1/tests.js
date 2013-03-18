@@ -190,9 +190,9 @@ describe('Scenario1ChartView', function() {
         App.respond_json(server.requests[3],
             {'label': 'request 3', 'short_label': 'lbl 1'});
         App.respond_json(server.requests[4],
-            {'label': 'request 4', 'short_label': 'lbl 2'});
+            {'label': 'Year 2003', 'short_label': 'lbl 2'});
         expect(this.scenario1_chart.calledOnce).to.equal(true);
-        expect(this.chart.meta_data['year_text']).to.equal('Year 2003');
+        expect(this.chart.meta_data['extra_label']).to.equal('Year 2003');
     });
 
     it('should fetch data from server', function() {
