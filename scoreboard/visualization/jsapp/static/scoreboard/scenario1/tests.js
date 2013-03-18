@@ -92,8 +92,8 @@ describe('Scenario1ChartView', function() {
                 // normally x_title is normal label and
                 // y_title is short_label
                 // here are inteantionally inversely initialized
-                'x_title': {dimension: 'indicator', type: 'short_label'},
-                'y_title': {dimension: 'unit-measure', type: 'label'}
+                'x_title': {filter_name: 'indicator', type: 'short_label'},
+                'y_title': {filter_name: 'unit-measure', type: 'label'}
             },
             schema: {filters: [
                 {name: 'indicator',
