@@ -121,6 +121,7 @@ App.Scenario1ChartView = Backbone.View.extend({
         var ajax_calls = $.when.apply($, ajax_queue);
         ajax_calls.done(
             function(){
+                meta_data['year_text'] = 'Year ' + view.model.get('time-period');
                 view.meta_data = meta_data;
                 view.render();
             }
@@ -148,7 +149,6 @@ App.Scenario1ChartView = Backbone.View.extend({
         var series_ajax_result = series_ajax.done(_.bind(function(data) {
             this.data = {
                 'series': data['datapoints'],
-                'year_text': "Year " + this.model.get('time-period'),
                 'tooltip_formatter': function() {
                     var chart_view = App.scenario1_chart_view;
                     var tooltip_label = chart_view.meta_data['tooltip_label'];
