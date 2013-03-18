@@ -88,7 +88,7 @@ describe('Scenario1ChartView', function() {
         this.model = new Backbone.Model();
         this.chart = new App.Scenario1ChartView({
             model: this.model,
-            titles: {
+            dynamic_labels: {
                 // normally x_title is normal label and
                 // y_title is short_label
                 // here are inteantionally inversely initialized
@@ -121,7 +121,7 @@ describe('Scenario1ChartView', function() {
     });
 
     it('should be initialized with titles dimensions', function(){
-        expect(_(this.chart.titles).keys()).to.deep.equal(
+        expect(_(this.chart.dynamic_labels).keys()).to.deep.equal(
             ['x_title', 'y_title']
         );
     });

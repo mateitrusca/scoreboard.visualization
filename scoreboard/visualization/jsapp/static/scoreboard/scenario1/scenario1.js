@@ -72,7 +72,7 @@ App.Scenario1ChartView = Backbone.View.extend({
         this.meta_data = options['meta_data'];
         this.loadstate = options['loadstate'] || new Backbone.Model();
         this.loadstate.on('change', this.filters_changed, this);
-        this.titles = options['titles'];
+        this.dynamic_labels = options['dynamic_labels'];
         this.dimensions_mapping = _.object(
             _(options.schema.filters).pluck('name'),
             _(options.schema.filters).pluck('dimension')
@@ -102,16 +102,16 @@ App.Scenario1ChartView = Backbone.View.extend({
             return ajax.done( function(data) { args.callback(args, data); });
         }
         var ajax_args = [
-            {dimension: view.dimensions_mapping[view.titles.y_title.filter_name],
+            {dimension: view.dimensions_mapping[view.dynamic_labels.y_title.filter_name],
              target: 'y_title',
-             label_type: view.titles.y_title.type,
+             label_type: view.dynamic_labels.y_title.type,
              callback: function(args, data){
                 meta_data[args['target']] = data[args['label_type']];
                 meta_data['tooltip_label'] = data[args['label_type']];}
             },
-            {dimension: view.dimensions_mapping[view.titles.x_title.filter_name],
+            {dimension: view.dimensions_mapping[view.dynamic_labels.x_title.filter_name],
              target: 'x_title',
-             label_type: view.titles.x_title.type,
+             label_type: view.dynamic_labels.x_title.type,
              callback: function(args, data){
                 meta_data[args['target']] = data[args['label_type']];}
             }
@@ -255,9 +255,9 @@ App.scenario1_initialize = function() {
         loadstate: App.filter_loadstate,
         meta_data: {},
         schema: App.scenario1_filters_schema,
-        titles: {
+        dynamic_labels: {
             'x_title': {filter_name: 'indicator', type: 'label'},
-            'y_title': {filter_name: 'unit-measure', type: 'short_label'}
+            'y_title': {filter_name: 'unit-measure', type: 'short_label'},
         }
     });
     $('#the-chart').append(App.scenario1_chart_view.el);
