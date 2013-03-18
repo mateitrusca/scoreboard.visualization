@@ -93,9 +93,18 @@ describe('Scenario1ChartView', function() {
                 // y_title is short_label
                 // here are inteantionally inversely initialized
                 'x_title': {dimension: 'indicator', type: 'short_label'},
-                'y_title': {dimension: 'unit_measure', type: 'label'}
+                'y_title': {dimension: 'unit-measure', type: 'label'}
             },
-            schema: {filters: []}
+            schema: {filters: [
+                {name: 'indicator',
+                 label: 'Select indicator',
+                 dimension: 'dim1',
+                },
+                {name: 'unit-measure',
+                 label: 'Select unit of measure',
+                 dimension: 'dim2',
+                }
+            ]}
         });
         this.model.set({
             'indicator-group': 'qq',
@@ -117,10 +126,25 @@ describe('Scenario1ChartView', function() {
         );
     });
 
-    it('should be initialized with schema', function(){
-        expect(_(this.chart.schema).keys()).to.deep.equal(
-            ['filters']
+    it('should build dimensions_mapping from received filters schema', function(){
+        expect(this.chart.dimensions_mapping).to.deep.equal(
+            _.object(['indicator', 'unit-measure'], ['dim1', 'dim2'])
         );
+    });
+
+    it('should request labels for the right dimension', function(){
+        var server = this.sandbox.server;
+        this.chart.filters_changed();
+        App.respond_json(server.requests[0], {'datapoints': []});
+        App.respond_json(server.requests[1], {'datapoints': []});
+        App.respond_json(server.requests[2],
+            {'label': '2', 'short_label': 'y_title'});
+        App.respond_json(server.requests[3],
+            {'label': 'x_title', 'short_label': '3'});
+        var url = server.requests[2].url;
+        expect(url).to.have.string('dimension=dim2');
+        var url = server.requests[3].url;
+        expect(url).to.have.string('dimension=dim1');
     });
 
     it('should fetch titles according to init params', function(){

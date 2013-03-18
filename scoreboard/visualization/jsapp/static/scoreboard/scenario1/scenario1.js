@@ -73,7 +73,10 @@ App.Scenario1ChartView = Backbone.View.extend({
         this.loadstate = options['loadstate'] || new Backbone.Model();
         this.loadstate.on('change', this.filters_changed, this);
         this.titles = options['titles'];
-        this.schema = options['schema'];
+        this.dimensions_mapping = _.object(
+            _(options.schema.filters).pluck('name'),
+            _(options.schema.filters).pluck('dimension')
+        );
         this.filters_changed();
     },
 
@@ -99,14 +102,14 @@ App.Scenario1ChartView = Backbone.View.extend({
             return ajax.done( function(data) { args.callback(args, data); });
         }
         var ajax_args = [
-            {dimension: view.titles.y_title.dimension,
+            {dimension: view.dimensions_mapping[view.titles.y_title.dimension],
              target: 'y_title',
              label_type: view.titles.y_title.type,
              callback: function(args, data){
                 meta_data[args['target']] = data[args['label_type']];
                 meta_data['tooltip_label'] = data[args['label_type']];}
             },
-            {dimension: view.titles.x_title.dimension,
+            {dimension: view.dimensions_mapping[view.titles.x_title.dimension],
              target: 'x_title',
              label_type: view.titles.x_title.type,
              callback: function(args, data){
@@ -251,8 +254,9 @@ App.scenario1_initialize = function() {
         model: App.filters,
         loadstate: App.filter_loadstate,
         meta_data: {},
-        schema: App.filters_box.schema,
+        schema: App.scenario1_filters_schema,
         titles: {
+            //TODO dimension key should be changed to filter_name
             'x_title': {dimension: 'indicator', type: 'label'},
             'y_title': {dimension: 'unit-measure', type: 'short_label'}
         }
