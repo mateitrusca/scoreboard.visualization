@@ -105,11 +105,12 @@ App.Scenario1ChartView = Backbone.View.extend({
         var ajax_args = _(this.dynamic_labels).map(function(item){
             var result = {
                 dimension: view.dimensions_mapping[item.filter_name],
-                 target: item.target,
+                 targets: item.targets,
                  label_type: item.type,
                  callback: function(args, data){
-                    meta_data[args['target']] = data[args['label_type']];
-                    //meta_data['tooltip_label'] = data[args['label_type']];}
+                    _(args['targets']).each(function(target){
+                        meta_data[target] = data[args['label_type']];
+                    });
                 }
             };
             return result;
@@ -254,8 +255,8 @@ App.scenario1_initialize = function() {
         meta_data: {},
         schema: App.scenario1_filters_schema,
         dynamic_labels: [
-            { target: 'x_title', filter_name: 'indicator', type: 'label' },
-            { target: 'y_title', filter_name: 'unit-measure', type: 'short_label' }
+            { targets: ['x_title'], filter_name: 'indicator', type: 'label' },
+            { targets: ['y_title'], filter_name: 'unit-measure', type: 'short_label' }
         ]
     });
     $('#the-chart').append(App.scenario1_chart_view.el);

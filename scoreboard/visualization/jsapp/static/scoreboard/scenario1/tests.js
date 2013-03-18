@@ -92,9 +92,9 @@ describe('Scenario1ChartView', function() {
                 // normally x_title is normal label and
                 // y_title is short_label
                 // here are intentionally inversely initialized
-                {target: 'x_title', filter_name: 'indicator', type: 'short_label'},
-                {target: 'y_title', filter_name: 'unit-measure', type: 'label'},
-                {target: 'extra_label', filter_name: 'time-period', type: 'label'}
+                {targets: ['x_title'], filter_name: 'indicator', type: 'short_label'},
+                {targets: ['y_title', 'tooltip'], filter_name: 'unit-measure', type: 'label'},
+                {targets: ['extra_label'], filter_name: 'time-period', type: 'label'}
             ],
             schema: {filters: [
                 {name: 'indicator',
@@ -127,8 +127,8 @@ describe('Scenario1ChartView', function() {
     });
 
     it('should be initialized with dynamic labels', function(){
-        expect(_(this.chart.dynamic_labels).pluck('target')).to.deep.equal(
-            ['x_title', 'y_title', 'extra_label']
+        expect(_(this.chart.dynamic_labels).pluck('targets')).to.deep.equal(
+            [['x_title'], ['y_title', 'tooltip'], ['extra_label']]
         );
     });
 
@@ -158,7 +158,7 @@ describe('Scenario1ChartView', function() {
         expect(url).to.have.string('dimension=dim3');
     });
 
-    it('should fetch titles according to init params', function(){
+    it('should fetch labels according to init params', function(){
         var server = this.sandbox.server;
         this.chart.meta_data = {};
         this.chart.filters_changed();
@@ -174,6 +174,8 @@ describe('Scenario1ChartView', function() {
         expect(this.chart.meta_data.x_title).to.equal('short_label');
         expect(this.chart.meta_data.y_title).to.equal('normal_label');
         expect(this.chart.meta_data.extra_label).to.equal('normal_label');
+        expect(this.chart.meta_data.y_title).to.equal(
+               this.chart.meta_data.tooltip);
     });
 
     it('should update year text according to selection', function(){
