@@ -148,7 +148,7 @@ App.Scenario1ChartView = Backbone.View.extend({
         var series_ajax_result = series_ajax.done(_.bind(function(data) {
             this.data = {
                 'series': data['datapoints'],
-                'year_text': "Year 2011",
+                'year_text': "Year " + this.model.get('time-period'),
                 'tooltip_formatter': function() {
                     var chart_view = App.scenario1_chart_view;
                     var tooltip_label = chart_view.meta_data['tooltip_label'];
@@ -256,7 +256,6 @@ App.scenario1_initialize = function() {
         meta_data: {},
         schema: App.scenario1_filters_schema,
         titles: {
-            //TODO dimension key should be changed to filter_name
             'x_title': {filter_name: 'indicator', type: 'label'},
             'y_title': {filter_name: 'unit-measure', type: 'short_label'}
         }

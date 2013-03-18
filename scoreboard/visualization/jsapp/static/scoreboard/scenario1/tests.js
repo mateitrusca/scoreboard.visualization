@@ -162,6 +162,23 @@ describe('Scenario1ChartView', function() {
         expect(this.chart.meta_data.y_title).to.equal('normal_label');
     });
 
+    it('should update year text according to selection', function(){
+        var server = this.sandbox.server;
+        this.chart.meta_data = {};
+        this.model.set({'time-period': '2003'});
+        App.respond_json(server.requests[0], {'datapoints': []});
+        App.respond_json(server.requests[1],
+            {'label': 'request 1', 'short_label': 'lbl 1'});
+        App.respond_json(server.requests[2],
+            {'label': 'request 2', 'short_label': 'lbl 2'});
+        App.respond_json(server.requests[3],
+            {'label': 'request 3', 'short_label': 'lbl 1'});
+        App.respond_json(server.requests[4],
+            {'label': 'request 4', 'short_label': 'lbl 2'});
+        expect(this.scenario1_chart.calledOnce).to.equal(true);
+        expect(this.chart.data['year_text']).to.equal('Year 2003');
+    });
+
     it('should fetch data from server', function() {
         var server = this.sandbox.server;
         var url = server.requests[0].url;
