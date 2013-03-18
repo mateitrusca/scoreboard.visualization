@@ -63,7 +63,7 @@ App.Scenario1FiltersView = Backbone.View.extend({
 });
 
 
-App.Scenario1ChartView = Backbone.View.extend({
+App.ScenarioChartView = Backbone.View.extend({
 
     className: 'highcharts-chart',
 
@@ -82,7 +82,7 @@ App.Scenario1ChartView = Backbone.View.extend({
 
     render: function() {
         if(this.data && this.meta_data) {
-            App.scenario1_chart(this.el, this.data, this.meta_data);
+            App.scenario_chart(this.el, this.data, this.meta_data);
         }
     },
 
@@ -148,7 +148,7 @@ App.Scenario1ChartView = Backbone.View.extend({
             this.data = {
                 'series': data['datapoints'],
                 'tooltip_formatter': function() {
-                    var chart_view = App.scenario1_chart_view;
+                    var chart_view = App.scenario_chart_view;
                     var tooltip_label = chart_view.meta_data['tooltip_label'];
                     return '<b>'+ this.x +'</b><br>: ' +
                            Math.round(this.y*10)/10 + ' ' + tooltip_label;
@@ -248,7 +248,7 @@ App.scenario1_initialize = function() {
         schema: App.scenario1_filters_schema
     });
 
-    App.scenario1_chart_view = new App.Scenario1ChartView({
+    App.scenario_chart_view = new App.ScenarioChartView({
         model: App.filters,
         loadstate: App.filter_loadstate,
         meta_data: {},
@@ -259,7 +259,7 @@ App.scenario1_initialize = function() {
             { targets: ['year_text'], filter_name: 'time-period', type: 'label' },
         ]
     });
-    $('#the-chart').append(App.scenario1_chart_view.el);
+    $('#the-chart').append(App.scenario_chart_view.el);
 
     Backbone.history.start();
 };

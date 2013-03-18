@@ -77,16 +77,16 @@ describe('Scenario1FiltersView', function() {
 });
 
 
-describe('Scenario1ChartView', function() {
+describe('ScenarioChartView', function() {
     "use strict";
 
     beforeEach(function() {
         this.sandbox = sinon.sandbox.create();
         this.sandbox.useFakeServer();
-        this.scenario1_chart = this.sandbox.stub(App, 'scenario1_chart');
+        this.scenario_chart = this.sandbox.stub(App, 'scenario_chart');
 
         this.model = new Backbone.Model();
-        this.chart = new App.Scenario1ChartView({
+        this.chart = new App.ScenarioChartView({
             model: this.model,
             dynamic_labels: [
                 // normally x_title is normal label and
@@ -191,7 +191,7 @@ describe('Scenario1ChartView', function() {
             {'label': 'request 3', 'short_label': 'lbl 1'});
         App.respond_json(server.requests[4],
             {'label': 'Year 2003', 'short_label': 'lbl 2'});
-        expect(this.scenario1_chart.calledOnce).to.equal(true);
+        expect(this.scenario_chart.calledOnce).to.equal(true);
         expect(this.chart.meta_data['extra_label']).to.equal('Year 2003');
     });
 
@@ -218,8 +218,8 @@ describe('Scenario1ChartView', function() {
             {'label': 'request 2', 'short_label': 'lbl 2'});
         App.respond_json(server.requests[3],
             {'label': 'request 3', 'short_label': 'lbl 3'});
-        expect(this.scenario1_chart.calledOnce).to.equal(true);
-        var call_args = this.scenario1_chart.getCall(0).args;
+        expect(this.scenario_chart.calledOnce).to.equal(true);
+        var call_args = this.scenario_chart.getCall(0).args;
         expect(call_args[0]).to.equal(this.chart.el);
         expect(call_args[1]['series']).to.deep.equal(ajax_data);
         //expect(call_args[1]['indicator_label']).to.equal("The Label!");
