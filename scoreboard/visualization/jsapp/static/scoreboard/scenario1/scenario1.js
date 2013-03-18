@@ -256,7 +256,7 @@ App.scenario1_initialize = function() {
         schema: App.scenario1_filters_schema,
         dynamic_labels: [
             { targets: ['x_title'], filter_name: 'indicator', type: 'label' },
-            { targets: ['y_title'], filter_name: 'unit-measure', type: 'short_label' }
+            { targets: ['y_title', 'tooltip_label'], filter_name: 'unit-measure', type: 'short_label' }
         ]
     });
     $('#the-chart').append(App.scenario1_chart_view.el);
