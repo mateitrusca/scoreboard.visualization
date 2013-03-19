@@ -78,6 +78,7 @@ App.ScenarioChartView = Backbone.View.extend({
             _(options.schema.filters).pluck('name'),
             _(options.schema.filters).pluck('dimension')
         );
+        this.datasource = options['datasource']
         this.filters_changed();
     },
 
@@ -105,9 +106,9 @@ App.ScenarioChartView = Backbone.View.extend({
         var ajax_args = _(this.dynamic_labels).map(function(item){
             var result = {
                 dimension: view.dimensions_mapping[item.filter_name],
-                 targets: item.targets,
-                 label_type: item.type,
-                 callback: function(args, data){
+                targets: item.targets,
+                label_type: item.type,
+                callback: function(args, data){
                     _(args['targets']).each(function(target){
                         meta_data[target] = data[args['label_type']];
                     });
@@ -140,10 +141,11 @@ App.ScenarioChartView = Backbone.View.extend({
             this.$el.html('--');
             return;
         }
-        args['fields'] = 'ref-area,value';
-        args['rev'] = App.DATA_REVISION;
         this.$el.html('-- loading --');
-        var series_ajax = $.get(App.URL + '/datapoints', args);
+        _(this.datasource['extra_args']).each(function(item){
+            args[item[0]] = item[1];
+        });
+        var series_ajax = $.get(App.URL + this.datasource['rel_url'], args);
         var series_ajax_result = series_ajax.done(_.bind(function(data) {
             this.data = {
                 'series': data['datapoints'],
@@ -253,6 +255,13 @@ App.scenario1_initialize = function() {
         loadstate: App.filter_loadstate,
         meta_data: {},
         schema: App.scenario1_filters_schema,
+        datasource: {
+            rel_url: '/datapoints',
+            extra_args: [
+                ['fields', 'ref-area,value'],
+                ['rev', App.DATA_REVISION]
+            ]
+        },
         dynamic_labels: [
             { targets: ['x_title'], filter_name: 'indicator', type: 'label' },
             { targets: ['y_title', 'tooltip_label'], filter_name: 'unit-measure', type: 'short_label' },

@@ -76,6 +76,75 @@ describe('Scenario1FiltersView', function() {
 
 });
 
+describe('ScenarioChartViewParameters', function() {
+    "use strict";
+
+    beforeEach(function() {
+        this.sandbox = sinon.sandbox.create();
+        this.sandbox.useFakeServer();
+        this.model = new Backbone.Model();
+        this.scenario_chart = this.sandbox.stub(App, 'scenario_chart');
+    });
+
+    afterEach(function () {
+        this.sandbox.restore();
+    });
+
+    it('should use the datasource init param', function(){
+        var server = this.sandbox.server;
+        var schema = {
+            filters: [
+                {type: 'select',
+                 name: 'indicator-group',
+                 label: 'Select indicator group',
+                 dimension: 'indicator-group',
+                 constraints: {}}
+            ]
+        };
+        var chart = new App.ScenarioChartView({
+            model: this.model,
+            datasource: {
+                rel_url: '/test_view',
+                args: {
+                    fields: 'ref-area,value',
+                    rev: App.DATA_REVISION
+                }
+            },
+            dynamic_labels: [ ],
+            schema: {filters: [ ]}
+        });
+        var url = server.requests[0].url;
+        expect(url).to.have.string('test_view');
+    });
+
+    it('should append extra_args to args', function(){
+        var server = this.sandbox.server;
+        var schema = {
+            filters: [
+                {type: 'select',
+                 name: 'indicator-group',
+                 label: 'Select indicator group',
+                 dimension: 'indicator-group',
+                 constraints: {}}
+            ]
+        };
+        var chart = new App.ScenarioChartView({
+            model: this.model,
+            datasource: {
+                rel_url: '/test_view',
+                extra_args: [
+                    ['param1', 'value1'],
+                    ['param2', 'value2']
+                ]
+            },
+            dynamic_labels: [ ],
+            schema: {filters: [ ]}
+        });
+        var url = server.requests[0].url;
+        expect(url).to.have.string('param1=value1');
+    });
+});
+
 
 describe('ScenarioChartView', function() {
     "use strict";
@@ -110,7 +179,14 @@ describe('ScenarioChartView', function() {
                  dimension: 'dim3',
                 }
 
-            ]}
+            ]},
+            datasource: {
+                rel_url: '/datapoints',
+                extra_args: [
+                    ['fields', 'ref-area,value'],
+                    ['rev', App.DATA_REVISION]
+                ]
+            }
         });
         this.model.set({
             'indicator-group': 'qq',
