@@ -73,6 +73,7 @@ App.ScenarioChartView = Backbone.View.extend({
         this.loadstate = options['loadstate'] || new Backbone.Model();
         this.loadstate.on('change', this.filters_changed, this);
         this.dynamic_labels = options['dynamic_labels'];
+        this.schema = options['schema'];
         this.dimensions_mapping = _.object(
             _(options.schema.filters).pluck('name'),
             _(options.schema.filters).pluck('dimension')
@@ -87,7 +88,6 @@ App.ScenarioChartView = Backbone.View.extend({
     },
 
     get_meta_data: function(){
-
         var view = this;
         var meta_data = {};
 
@@ -130,7 +130,7 @@ App.ScenarioChartView = Backbone.View.extend({
     filters_changed: function() {
         var incomplete = false;
         var args = this.model.toJSON();
-        var required = _(App.scenario1_filters_schema['filters']).pluck('name');
+        var required = _(this.schema['filters']).pluck('name');
         _(required).forEach(function(field) {
             if(! args[field]) { incomplete = true; }
             if(this.loadstate.get(field)) { incomplete = true; }
