@@ -225,9 +225,19 @@ App.scenario3_initialize = function() {
         schema: App.scenario3_filters_schema
     });
 
-    App.scenario3_chart_view = new App.Scenario3ChartView({
+    App.scenario3_chart_view = new App.ScenarioChartView({
         model: App.filters,
         loadstate: App.filter_loadstate,
+        schema: App.scenario3_filters_schema,
+        scenario_chart: App.scenario3_chart,
+        datasource: {
+            rel_url: '/datapoints_xy',
+            extra_args: [
+                ['columns', 'ref-area'],
+                ['xy_columns', 'value'],
+                ['rev', App.DATA_REVISION]
+            ]
+        }
     });
     $('#the-chart').append(App.scenario3_chart_view.el);
 
