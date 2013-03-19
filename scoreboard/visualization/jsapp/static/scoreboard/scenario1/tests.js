@@ -90,6 +90,85 @@ describe('ScenarioChartViewParameters', function() {
         this.sandbox.restore();
     });
 
+    it('should be initialized with dynamic labels', function(){
+        var server = this.sandbox.server;
+        var schema = {
+            filters: [
+                {type: 'select',
+                 name: 'indicator-group',
+                 label: 'Select indicator group',
+                 dimension: 'indicator-group',
+                 constraints: {}}
+            ]
+        };
+        var chart = new App.ScenarioChartView({
+            model: this.model,
+            datasource: {
+                rel_url: '/test_view',
+                extra_args: [
+                ]
+            },
+            dynamic_labels: [
+                { targets: ['dyn_lbl'], filter_name: 'indicator', type: 'label' },
+            ],
+            schema: {filters: [ ]},
+            scenario_chart: this.scenario_chart
+        });
+        var url = server.requests[0].url;
+        expect(_(chart.dynamic_labels).pluck('targets')).to.deep.equal(
+            [['dyn_lbl']]
+        );
+    });
+
+    it('should build dimensions_mapping from received filters schema', function(){
+        var chart = new App.ScenarioChartView({
+            model: this.model,
+            datasource: {
+                rel_url: '/test_view',
+                extra_args: [
+                ]
+            },
+            dynamic_labels: [
+            ],
+            schema: {filters: [
+                {name: 'indicator',
+                 dimension: 'dim1'}
+            ]},
+            scenario_chart: this.scenario_chart
+        });
+        expect(chart.dimensions_mapping).to.deep.equal(
+            _.object(
+                ['indicator'],
+                ['dim1'])
+        );
+    });
+
+    it('should request labels for the right dimension', function(){
+        var server = this.sandbox.server;
+        var chart = new App.ScenarioChartView({
+            model: this.model,
+            datasource: {
+                rel_url: '/test_view',
+                extra_args: [
+                ]
+            },
+            dynamic_labels: [
+                {targets: ['x_title'], filter_name: 'indicator', type: 'short_label'}
+            ],
+            schema: {filters: [
+                {name: 'indicator',
+                 dimension: 'dim1'}
+            ]},
+            scenario_chart: this.scenario_chart
+        });
+        chart.model.set({'indicator': 'dim1'});
+        App.respond_json(server.requests[0], {'datapoints': []});
+        var url = server.requests[1].url;
+        expect(url).to.have.string('dimension=dim1');
+    });
+
+
+
     it('should use the datasource init param', function(){
         var server = this.sandbox.server;
         var schema = {
@@ -174,6 +253,33 @@ describe('ScenarioChartViewParameters', function() {
         App.respond_json(server.requests[0], {'datapoints': []});
         expect(scenario_chart.calledOnce).to.equal(true);
     });
+
+    it('should fetch labels according to init params', function(){
+        var server = this.sandbox.server;
+        var chart = new App.ScenarioChartView({
+            model: this.model,
+            datasource: {
+                rel_url: '/test_view',
+                extra_args: [
+                ]
+            },
+            dynamic_labels: [
+                {targets: ['label1'], filter_name: 'indicator', type: 'label'},
+                {targets: ['label2', 'label3'], filter_name: 'indicator', type: 'short_label'}
+            ],
+            schema: {filters: [ ]},
+            scenario_chart: this.scenario_chart
+        });
+        App.respond_json(server.requests[0], {'datapoints': []});
+        App.respond_json(server.requests[1],
+            {'label': 'normal_label', 'short_label': 'short_label'});
+        App.respond_json(server.requests[2],
+            {'label': 'normal_label', 'short_label': 'short_label'});
+        expect(chart.meta_data.label1).to.equal('normal_label');
+        expect(chart.meta_data.label2).to.equal('short_label');
+        expect(chart.meta_data.label3).to.equal(chart.meta_data.label2);
+    });
+
 });
 
 
@@ -189,11 +295,6 @@ describe('ScenarioChartView', function() {
         this.chart = new App.ScenarioChartView({
             model: this.model,
             dynamic_labels: [
-                // normally x_title is normal label and
-                // y_title is short_label
-                // here are intentionally inversely initialized
-                {targets: ['x_title'], filter_name: 'indicator', type: 'short_label'},
-                {targets: ['y_title', 'tooltip'], filter_name: 'unit-measure', type: 'label'},
                 {targets: ['extra_label'], filter_name: 'time-period', type: 'label'}
             ],
             schema: {filters: [
@@ -234,70 +335,14 @@ describe('ScenarioChartView', function() {
         this.sandbox.restore();
     });
 
-    it('should be initialized with dynamic labels', function(){
-        expect(_(this.chart.dynamic_labels).pluck('targets')).to.deep.equal(
-            [['x_title'], ['y_title', 'tooltip'], ['extra_label']]
-        );
-    });
-
-    it('should build dimensions_mapping from received filters schema', function(){
-        expect(this.chart.dimensions_mapping).to.deep.equal(
-            _.object(
-                ['indicator', 'unit-measure', 'time-period'],
-                ['dim1', 'dim2', 'dim3'])
-        );
-    });
-
-    it('should request labels for the right dimension', function(){
-        var server = this.sandbox.server;
-        this.chart.filters_changed();
-        App.respond_json(server.requests[0], {'datapoints': []});
-        App.respond_json(server.requests[1], {'datapoints': []});
-        App.respond_json(server.requests[2], {'label': '2', 'short_label': 'y_title'});
-        App.respond_json(server.requests[3],
-            {'label': 'x_title', 'short_label': '3'});
-        App.respond_json(server.requests[4],
-            {'label': '4', 'short_label': 'extra_label'});
-        var url = server.requests[2].url;
-        expect(url).to.have.string('dimension=dim1');
-        url = server.requests[3].url;
-        expect(url).to.have.string('dimension=dim2');
-        url = server.requests[4].url;
-        expect(url).to.have.string('dimension=dim3');
-    });
-
-    it('should fetch labels according to init params', function(){
-        var server = this.sandbox.server;
-        this.chart.meta_data = {};
-        this.chart.filters_changed();
-        App.respond_json(server.requests[0], {'datapoints': []});
-        App.respond_json(server.requests[1], {'datapoints': []});
-        App.respond_json(server.requests[2],
-            {'label': 'normal_label', 'short_label': 'short_label'});
-        App.respond_json(server.requests[3],
-            {'label': 'normal_label', 'short_label': 'short_label'});
-        App.respond_json(server.requests[4],
-            {'label': 'normal_label', 'short_label': 'short_label'});
-        //see initialisation dynamic_labels
-        expect(this.chart.meta_data.x_title).to.equal('short_label');
-        expect(this.chart.meta_data.y_title).to.equal('normal_label');
-        expect(this.chart.meta_data.extra_label).to.equal('normal_label');
-        expect(this.chart.meta_data.y_title).to.equal(
-               this.chart.meta_data.tooltip);
-    });
-
     it('should update year text according to selection', function(){
         var server = this.sandbox.server;
         this.chart.meta_data = {};
         this.model.set({'time-period': '2003'});
         App.respond_json(server.requests[0], {'datapoints': []});
         App.respond_json(server.requests[1],
-            {'label': 'request 1', 'short_label': 'lbl 1'});
-        App.respond_json(server.requests[2],
             {'label': 'request 2', 'short_label': 'lbl 2'});
-        App.respond_json(server.requests[3],
-            {'label': 'request 3', 'short_label': 'lbl 1'});
-        App.respond_json(server.requests[4],
+        App.respond_json(server.requests[2],
             {'label': 'Year 2003', 'short_label': 'lbl 2'});
         expect(this.scenario_chart.calledOnce).to.equal(true);
         expect(this.chart.meta_data['extra_label']).to.equal('Year 2003');
@@ -320,44 +365,12 @@ describe('ScenarioChartView', function() {
 
         this.chart.meta_data = {};
         App.respond_json(server.requests[0], {'datapoints': ajax_data});
-        App.respond_json(server.requests[1],
-            {'label': 'request 1', 'short_label': 'lbl 1'});
-        App.respond_json(server.requests[2],
-            {'label': 'request 2', 'short_label': 'lbl 2'});
-        App.respond_json(server.requests[3],
-            {'label': 'request 3', 'short_label': 'lbl 3'});
+        App.respond_json(server.requests[1], {'datapoints': ajax_data});
         expect(this.scenario_chart.calledOnce).to.equal(true);
         var call_args = this.scenario_chart.getCall(0).args;
         expect(call_args[0]).to.equal(this.chart.el);
         expect(call_args[1]['series']).to.deep.equal(ajax_data);
-        //expect(call_args[1]['indicator_label']).to.equal("The Label!");
     });
 
-    it('should save the selected indicator as x_title', function() {
-        var server = this.sandbox.server;
-        this.chart.meta_data = {};
-        this.chart.filters_changed();
-        App.respond_json(server.requests[0], {'datapoints': []});
-        App.respond_json(server.requests[1], {'datapoints': []});
-        App.respond_json(server.requests[2],
-            {'label': 'x_title', 'short_label': '3'});
-        App.respond_json(server.requests[3],
-            {'label': '2', 'short_label': 'y_title'});
-        App.respond_json(server.requests[4],
-            {'label': '4', 'short_label': 'extra_label'});
-        expect(this.chart.meta_data.x_title).to.equal('3');
-    });
-
-    it('should save the selected unit-measure as y_title', function() {
-        var server = this.sandbox.server;
-        this.chart.meta_data = {};
-        this.chart.filters_changed();
-        App.respond_json(server.requests[0], {'datapoints': []});
-        App.respond_json(server.requests[1], {'datapoints': []});
-        App.respond_json(server.requests[2], {'label': 'x_title', 'short_label': '2'});
-        App.respond_json(server.requests[3], {'label': '3', 'short_label': 'y_title'});
-        App.respond_json(server.requests[4], {'label': '4', 'short_label': 'extra_label'});
-        expect(this.chart.meta_data.y_title).to.equal('3');
-    });
 
 });
