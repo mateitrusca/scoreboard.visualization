@@ -74,6 +74,7 @@ App.ScenarioChartView = Backbone.View.extend({
         this.loadstate.on('change', this.filters_changed, this);
         this.dynamic_labels = options['dynamic_labels'];
         this.schema = options['schema'];
+        this.scenario_chart = options['scenario_chart'];
         this.dimensions_mapping = _.object(
             _(options.schema.filters).pluck('name'),
             _(options.schema.filters).pluck('dimension')
@@ -84,7 +85,7 @@ App.ScenarioChartView = Backbone.View.extend({
 
     render: function() {
         if(this.data && this.meta_data) {
-            App.scenario_chart(this.el, this.data, this.meta_data);
+            this.scenario_chart(this.el, this.data, this.meta_data);
         }
     },
 
@@ -255,6 +256,7 @@ App.scenario1_initialize = function() {
         loadstate: App.filter_loadstate,
         meta_data: {},
         schema: App.scenario1_filters_schema,
+        scenario_chart: App.scenario1_chart,
         datasource: {
             rel_url: '/datapoints',
             extra_args: [

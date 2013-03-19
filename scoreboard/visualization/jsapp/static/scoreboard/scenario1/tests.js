@@ -83,7 +83,7 @@ describe('ScenarioChartViewParameters', function() {
         this.sandbox = sinon.sandbox.create();
         this.sandbox.useFakeServer();
         this.model = new Backbone.Model();
-        this.scenario_chart = this.sandbox.stub(App, 'scenario_chart');
+        this.scenario_chart = this.sandbox.stub(App, 'scenario1_chart');
     });
 
     afterEach(function () {
@@ -111,7 +111,8 @@ describe('ScenarioChartViewParameters', function() {
                 }
             },
             dynamic_labels: [ ],
-            schema: {filters: [ ]}
+            schema: {filters: [ ]},
+            scenario_chart: this.scenario_chart
         });
         var url = server.requests[0].url;
         expect(url).to.have.string('test_view');
@@ -138,10 +139,40 @@ describe('ScenarioChartViewParameters', function() {
                 ]
             },
             dynamic_labels: [ ],
-            schema: {filters: [ ]}
+            schema: {filters: [ ]},
+            scenario_chart: this.scenario_chart
         });
         var url = server.requests[0].url;
         expect(url).to.have.string('param1=value1');
+    });
+
+    it('should render the chart passed as parameter', function(){
+        var server = this.sandbox.server;
+        var scenario_chart = sinon.spy();
+        var schema = {
+            filters: [
+                {type: 'select',
+                 name: 'indicator-group',
+                 label: 'Select indicator group',
+                 dimension: 'indicator-group',
+                 constraints: {}}
+            ]
+        };
+        var chart = new App.ScenarioChartView({
+            model: this.model,
+            datasource: {
+                rel_url: '/test_view',
+                extra_args: [
+                    ['param1', 'value1'],
+                    ['param2', 'value2']
+                ]
+            },
+            dynamic_labels: [ ],
+            schema: {filters: [ ]},
+            scenario_chart: scenario_chart
+        });
+        App.respond_json(server.requests[0], {'datapoints': []});
+        expect(scenario_chart.calledOnce).to.equal(true);
     });
 });
 
@@ -152,7 +183,7 @@ describe('ScenarioChartView', function() {
     beforeEach(function() {
         this.sandbox = sinon.sandbox.create();
         this.sandbox.useFakeServer();
-        this.scenario_chart = this.sandbox.stub(App, 'scenario_chart');
+        this.scenario_chart = this.sandbox.stub(App, 'scenario1_chart');
 
         this.model = new Backbone.Model();
         this.chart = new App.ScenarioChartView({
@@ -186,7 +217,8 @@ describe('ScenarioChartView', function() {
                     ['fields', 'ref-area,value'],
                     ['rev', App.DATA_REVISION]
                 ]
-            }
+            },
+            scenario_chart: this.scenario_chart
         });
         this.model.set({
             'indicator-group': 'qq',
