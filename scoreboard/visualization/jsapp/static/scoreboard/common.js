@@ -139,7 +139,7 @@ App.ScenarioChartView = Backbone.View.extend({
             this.data = {
                 'series': data['datapoints'],
                 'tooltip_formatter': function() {
-                    var chart_view = App.scenario_chart_view;
+                    var chart_view = App.scenario1_chart_view;
                     var tooltip_label = chart_view.meta_data['tooltip_label'];
                     return '<b>'+ this.x +'</b><br>: ' +
                            Math.round(this.y*10)/10 + ' ' + tooltip_label;

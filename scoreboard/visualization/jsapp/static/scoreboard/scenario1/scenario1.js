@@ -134,7 +134,7 @@ App.scenario1_initialize = function() {
         schema: App.scenario1_filters_schema
     });
 
-    App.scenario_chart_view = new App.ScenarioChartView({
+    App.scenario1_chart_view = new App.ScenarioChartView({
         model: App.filters,
         loadstate: App.filter_loadstate,
         meta_data: {},
@@ -153,7 +153,7 @@ App.scenario1_initialize = function() {
             { targets: ['year_text'], filter_name: 'time-period', type: 'label' },
         ]
     });
-    $('#the-chart').append(App.scenario_chart_view.el);
+    $('#the-chart').append(App.scenario1_chart_view.el);
 
     Backbone.history.start();
 };
