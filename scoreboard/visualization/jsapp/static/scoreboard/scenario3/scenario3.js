@@ -237,7 +237,12 @@ App.scenario3_initialize = function() {
                 ['xy_columns', 'value'],
                 ['rev', App.DATA_REVISION]
             ]
-        }
+        },
+        meta_labels: [
+            { targets: ['indicator_x_label'], filter_name: 'x-indicator', type: 'short_label' },
+            { targets: ['indicator_y_label'], filter_name: 'y-indicator', type: 'short_label' },
+            { targets: ['period_label'], filter_name: 'time-period', type: 'label' },
+        ]
     });
     $('#the-chart').append(App.scenario3_chart_view.el);
 
