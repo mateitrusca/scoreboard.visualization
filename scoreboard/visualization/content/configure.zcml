@@ -13,6 +13,12 @@
         interface="..interfaces.IScoreboardVisualization"
         />
   </class>
+  <class class=".datacube.DataCube">
+    <require
+        permission="zope2.View"
+        interface="..interfaces.IDataCube"
+        />
+  </class>
 
   <class class=".scoreboardvisualization.ScoreboardVisualization">
     <implements interface="eea.app.visualization.interfaces.IVisualizationEnabled" />
