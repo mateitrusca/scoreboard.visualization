@@ -242,6 +242,8 @@ App.scenario3_initialize = function() {
             { targets: ['indicator_x_label'], filter_name: 'x-indicator', type: 'short_label' },
             { targets: ['indicator_y_label'], filter_name: 'y-indicator', type: 'short_label' },
             { targets: ['period_label'], filter_name: 'time-period', type: 'label' },
+            { targets: ['x_unit_label'], filter_name: 'x-unit-measure', type: 'short_label' },
+            { targets: ['y_unit_label'], filter_name: 'y-unit-measure', type: 'short_label' },
         ]
     });
     $('#the-chart').append(App.scenario3_chart_view.el);

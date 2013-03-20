@@ -121,7 +121,9 @@ App.scenario3_chart = function(container, options, meta_data) {
         tooltip: {
             formatter: function() {
             return ('<b>'+ this.series.name +'</b><br/>x: '+
-                this.x +' %_of_total_cost,<br>y: '+ this.y +' %_ind_iu3');
+                this.x + ' ' + meta_data['x_unit_label'] + '<br>y: '+
+                this.y + ' ' + meta_data['y_unit_label']
+                );
             }
         },
         legend: {
