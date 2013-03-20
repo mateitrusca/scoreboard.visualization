@@ -90,12 +90,12 @@ describe('ScenarioChartViewParameters', function() {
         this.sandbox.restore();
     });
 
-    it('should be initialized with dynamic labels', function(){
+    it('should be initialized with meta labels', function(){
         var server = this.sandbox.server;
         var schema = {
             filters: [
                 {type: 'select',
-                 name: 'indicator-group',
+                 name: 'filter_name',
                  label: 'Select indicator group',
                  dimension: 'indicator-group',
                  constraints: {}}
@@ -148,23 +148,24 @@ describe('ScenarioChartViewParameters', function() {
         var chart = new App.ScenarioChartView({
             model: this.model,
             datasource: {
-                rel_url: '/test_view',
+                rel_url: '/datapoints_view',
                 extra_args: [
                 ]
             },
             meta_labels: [
-                {targets: ['x_title'], filter_name: 'indicator', type: 'short_label'}
+                {targets: ['x_title'], filter_name: 'filter1', type: 'short_label'}
             ],
             schema: {filters: [
-                {name: 'indicator',
+                {name: 'filter1',
                  dimension: 'dim1'}
             ]},
             scenario_chart: this.scenario_chart
         });
-        chart.model.set({'indicator': 'dim1'});
+        chart.model.set({'filter1': 'dim1'});
         App.respond_json(server.requests[0], {'datapoints': []});
         var url = server.requests[1].url;
         expect(url).to.have.string('dimension=dim1');
+        expect(url).to.have.string('value=dim1');
     });
 
 

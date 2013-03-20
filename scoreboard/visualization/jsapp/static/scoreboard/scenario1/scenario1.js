@@ -97,7 +97,7 @@ App.ScenarioChartView = Backbone.View.extend({
             var ajax = $.get(App.URL + '/dimension_labels',
                 {
                     'dimension': args['dimension'],
-                    'value': view.model.get(args['dimension']),
+                    'value': view.model.get(args['filter_name']),
                     'rev': App.DATA_REVISION
                 }
             );
@@ -106,6 +106,7 @@ App.ScenarioChartView = Backbone.View.extend({
 
         var ajax_args = _(this.meta_labels).map(function(item){
             var result = {
+                filter_name: item.filter_name,
                 dimension: view.dimensions_mapping[item.filter_name],
                 targets: item.targets,
                 label_type: item.type,
