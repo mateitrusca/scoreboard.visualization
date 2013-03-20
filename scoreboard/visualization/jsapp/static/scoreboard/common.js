@@ -134,29 +134,65 @@ App.ScenarioChartView = Backbone.View.extend({
         _(this.datasource['extra_args']).each(function(item){
             args[item[0]] = item[1];
         });
-        var series_ajax = $.get(App.URL + this.datasource['rel_url'], args);
-        var series_ajax_result = series_ajax.done(_.bind(function(data) {
-            this.data = {
-                'series': data['datapoints'],
-                'tooltip_formatter': function() {
-                    var chart_view = App.scenario1_chart_view;
-                    var tooltip_label = chart_view.meta_data['tooltip_label'];
-                    return '<b>'+ this.x +'</b><br>: ' +
-                           Math.round(this.y*10)/10 + ' ' + tooltip_label;
-                },
-                'credits': {
-                    'href': 'http://ec.europa.eu/digital-agenda/en/graphs/',
-                    'text': 'European Commission, Digital Agenda Scoreboard'
-                },
-                'xlabels_formatter': function() {
-                    var max_length = 15;
-                    if (this.value.length > max_length){
-                        return this.value.substr(0, max_length) + ' ...';
+        var preparation = this.datasource['data_preparation'];
+        if (preparation){
+            var countries = this.model.get(preparation.group.filter_name);
+            var requests = _(countries).map(function(country_uri) {
+                var data_ajax = $.get(App.URL + '/data', {
+                    'method': 'series_indicator_country',
+                    'indicator': args['indicator'],
+                    'country': country_uri
+                });
+                return data_ajax;
+            });
+            var country_labels = this.country_labels;
+
+            var ajax_calls = $.when.apply($, requests);
+            var view = this;
+            var series_ajax_result = ajax_calls.done(function() {
+                var responses = (requests.length == 1) ? _([arguments])
+                                                       : _(arguments).toArray();
+                var series = _(responses).map(function(resp, n) {
+                    return {
+                        'label': preparation.group.labels[countries[n]],
+                        'data': resp[0]
+                    };
+                });
+                view.data = {
+                    'series': series,
+                    'credits': {
+                        'href': 'http://ec.europa.eu/digital-agenda/en/graphs/',
+                        'text': 'European Commission, Digital Agenda Scoreboard'
                     }
-                    return this.value
-                },
-            };
-        }, this));
+                };
+            });
+            series_ajax_result.done( _.bind(this.get_meta_data, this) );
+        }
+        else{
+            var series_ajax = $.get(App.URL + this.datasource['rel_url'], args);
+            var series_ajax_result = series_ajax.done(_.bind(function(data) {
+                this.data = {
+                    'series': data['datapoints'],
+                    'tooltip_formatter': function() {
+                        var chart_view = App.scenario1_chart_view;
+                        var tooltip_label = chart_view.meta_data['tooltip_label'];
+                        return '<b>'+ this.x +'</b><br>: ' +
+                               Math.round(this.y*10)/10 + ' ' + tooltip_label;
+                    },
+                    'credits': {
+                        'href': 'http://ec.europa.eu/digital-agenda/en/graphs/',
+                        'text': 'European Commission, Digital Agenda Scoreboard'
+                    },
+                    'xlabels_formatter': function() {
+                        var max_length = 15;
+                        if (this.value.length > max_length){
+                            return this.value.substr(0, max_length) + ' ...';
+                        }
+                        return this.value
+                    },
+                };
+            }, this));
+        }
 
         //TODO gets meta data everytime filters changed
         //if needed, it could be optimized to fetch labels
