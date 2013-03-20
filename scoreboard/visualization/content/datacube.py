@@ -26,17 +26,6 @@ DataCubeSchema = folder.ATFolderSchema.copy() + atapi.Schema((
         )
     ),
     atapi.TextField(
-        'dataset_query',
-        schemata="default",
-        required=False,
-        default_content_type='text/plain',
-        allowable_content_types=('text/plain',),
-        languageIndependent=True,
-        widget=atapi.TextAreaWidget(
-            label=_(u"Dataset Query"),
-        )
-    ),
-    atapi.TextField(
         'dataset',
         schemata="default",
         required=False,
@@ -56,6 +45,8 @@ DataCubeSchema['title'].storage = atapi.AnnotationStorage()
 DataCubeSchema['description'].storage = atapi.AnnotationStorage()
 DataCubeSchema['description'].widget.visible = {'view': 'invisible',
                                                 'edit': 'invisible'}
+DataCubeSchema['dataset'].widget.visible = {'view': 'invisible',
+                                            'edit': 'hidden'}
 
 schemata.finalizeATCTSchema(
     DataCubeSchema,
