@@ -108,14 +108,14 @@ describe('ScenarioChartViewParameters', function() {
                 extra_args: [
                 ]
             },
-            dynamic_labels: [
+            meta_labels: [
                 { targets: ['dyn_lbl'], filter_name: 'indicator', type: 'label' },
             ],
             schema: {filters: [ ]},
             scenario_chart: this.scenario_chart
         });
         var url = server.requests[0].url;
-        expect(_(chart.dynamic_labels).pluck('targets')).to.deep.equal(
+        expect(_(chart.meta_labels).pluck('targets')).to.deep.equal(
             [['dyn_lbl']]
         );
     });
@@ -128,7 +128,7 @@ describe('ScenarioChartViewParameters', function() {
                 extra_args: [
                 ]
             },
-            dynamic_labels: [
+            meta_labels: [
             ],
             schema: {filters: [
                 {name: 'indicator',
@@ -152,7 +152,7 @@ describe('ScenarioChartViewParameters', function() {
                 extra_args: [
                 ]
             },
-            dynamic_labels: [
+            meta_labels: [
                 {targets: ['x_title'], filter_name: 'indicator', type: 'short_label'}
             ],
             schema: {filters: [
@@ -189,7 +189,7 @@ describe('ScenarioChartViewParameters', function() {
                     rev: App.DATA_REVISION
                 }
             },
-            dynamic_labels: [ ],
+            meta_labels: [ ],
             schema: {filters: [ ]},
             scenario_chart: this.scenario_chart
         });
@@ -217,7 +217,7 @@ describe('ScenarioChartViewParameters', function() {
                     ['param2', 'value2']
                 ]
             },
-            dynamic_labels: [ ],
+            meta_labels: [ ],
             schema: {filters: [ ]},
             scenario_chart: this.scenario_chart
         });
@@ -246,7 +246,7 @@ describe('ScenarioChartViewParameters', function() {
                     ['param2', 'value2']
                 ]
             },
-            dynamic_labels: [ ],
+            meta_labels: [ ],
             schema: {filters: [ ]},
             scenario_chart: scenario_chart
         });
@@ -263,7 +263,7 @@ describe('ScenarioChartViewParameters', function() {
                 extra_args: [
                 ]
             },
-            dynamic_labels: [
+            meta_labels: [
                 {targets: ['label1'], filter_name: 'indicator', type: 'label'},
                 {targets: ['label2', 'label3'], filter_name: 'indicator', type: 'short_label'}
             ],
@@ -294,7 +294,7 @@ describe('ScenarioChartView', function() {
         this.model = new Backbone.Model();
         this.chart = new App.ScenarioChartView({
             model: this.model,
-            dynamic_labels: [
+            meta_labels: [
                 {targets: ['extra_label'], filter_name: 'time-period', type: 'label'}
             ],
             schema: {filters: [

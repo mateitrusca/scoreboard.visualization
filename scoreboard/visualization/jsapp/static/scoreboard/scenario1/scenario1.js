@@ -72,7 +72,7 @@ App.ScenarioChartView = Backbone.View.extend({
         this.meta_data = options['meta_data'];
         this.loadstate = options['loadstate'] || new Backbone.Model();
         this.loadstate.on('change', this.filters_changed, this);
-        this.dynamic_labels = options['dynamic_labels'];
+        this.meta_labels = options['meta_labels'];
         this.schema = options['schema'];
         this.scenario_chart = options['scenario_chart'];
         this.dimensions_mapping = _.object(
@@ -104,7 +104,7 @@ App.ScenarioChartView = Backbone.View.extend({
             return ajax.done( function(data) { args.callback(args, data); });
         }
 
-        var ajax_args = _(this.dynamic_labels).map(function(item){
+        var ajax_args = _(this.meta_labels).map(function(item){
             var result = {
                 dimension: view.dimensions_mapping[item.filter_name],
                 targets: item.targets,
@@ -264,7 +264,7 @@ App.scenario1_initialize = function() {
                 ['rev', App.DATA_REVISION]
             ]
         },
-        dynamic_labels: [
+        meta_labels: [
             { targets: ['x_title'], filter_name: 'indicator', type: 'label' },
             { targets: ['y_title', 'tooltip_label'], filter_name: 'unit-measure', type: 'short_label' },
             { targets: ['year_text'], filter_name: 'time-period', type: 'label' },
