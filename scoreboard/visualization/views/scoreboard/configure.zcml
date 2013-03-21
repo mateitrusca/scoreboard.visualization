@@ -22,7 +22,7 @@
 
   <browser:page
     name="dimension_values"
-    for="...interfaces.IScoreboardVisualization"
+    for="...interfaces.IDataCube"
     class=".data.CubeView"
     attribute="dimension_values"
     permission="zope2.View"
@@ -30,7 +30,7 @@
 
   <browser:page
     name="dimension_labels"
-    for="...interfaces.IScoreboardVisualization"
+    for="...interfaces.IDataCube"
     class=".data.CubeView"
     attribute="dimension_labels"
     permission="zope2.View"
@@ -38,7 +38,7 @@
 
   <browser:page
     name="dimension_values_xy"
-    for="...interfaces.IScoreboardVisualization"
+    for="...interfaces.IDataCube"
     class=".data.CubeView"
     attribute="dimension_values_xy"
     permission="zope2.View"
@@ -46,7 +46,7 @@
 
   <browser:page
     name="datapoints"
-    for="...interfaces.IScoreboardVisualization"
+    for="...interfaces.IDataCube"
     class=".data.CubeView"
     attribute="datapoints"
     permission="zope2.View"
@@ -54,7 +54,7 @@
 
   <browser:page
     name="datapoints_xy"
-    for="...interfaces.IScoreboardVisualization"
+    for="...interfaces.IDataCube"
     class=".data.CubeView"
     attribute="datapoints_xy"
     permission="zope2.View"

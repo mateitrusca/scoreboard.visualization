@@ -5,7 +5,7 @@ from zope.interface import implements
 from eea.app.visualization.views.view import ViewForm
 from scoreboard.visualization.views.scoreboard.interfaces import IScoreboardView
 from scoreboard.visualization.jsapp import jsapp_html
-from .data import DATA_REVISION
+from .data import DATA_REVISION, DATASOURCE_NAME
 
 
 class View(ViewForm):
@@ -27,5 +27,6 @@ class View(ViewForm):
                                  'App.scenario1_initialize')
 
     def jsapp_html(self):
-        return jsapp_html(DATASOURCE_URL=self.context.absolute_url(),
+        source = self.context.aq_parent[DATASOURCE_NAME]
+        return jsapp_html(DATASOURCE_URL=source.absolute_url(),
                           DATA_REVISION=DATA_REVISION)
