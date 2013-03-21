@@ -31,5 +31,5 @@ class View(ViewForm):
         return self.context.absolute_url()
 
     def jsapp_html(self):
-        return jsapp_html(URL=self.context.absolute_url(),
+        return jsapp_html(DATASOURCE_URL=self.context.absolute_url(),
                           DATA_REVISION=DATA_REVISION)
