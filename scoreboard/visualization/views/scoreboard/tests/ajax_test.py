@@ -1,19 +1,20 @@
-from mock import Mock, patch, call
+from mock import Mock, MagicMock, patch, call
 import simplejson as json
 import pytest
 
 
-def ajax(name, form):
+def ajax(cube, name, form):
     from scoreboard.visualization.views.scoreboard import data
-    view = data.CubeView(Mock(), Mock(form=form))
-    return json.loads(getattr(view, name)())
+    with patch('scoreboard.visualization.views.scoreboard.data.Cube') as p:
+        p.return_value = cube
+        view = data.CubeView(Mock(), Mock(form=form))
+        return json.loads(getattr(view, name)())
 
 
 @pytest.fixture()
 def mock_cube(request):
-    p = patch('scoreboard.visualization.views.scoreboard.data.Cube')
-    request.addfinalizer(p.stop)
-    return p.start().return_value
+    from scoreboard.visualization.data.cube import Cube
+    return MagicMock(spec=Cube)
 
 
 def test_dimension_all_indicator_values(mock_cube):
@@ -21,13 +22,13 @@ def test_dimension_all_indicator_values(mock_cube):
         {'label': 'indicator one', 'notation': 'one'},
         {'label': 'indicator two', 'notation': 'two'},
     ]
-    res = ajax('dimension_values', {'dimension': 'indicator'})
+    res = ajax(mock_cube, 'dimension_values', {'dimension': 'indicator'})
     assert {'label': 'indicator one', 'notation': 'one'} in res['options']
     assert {'label': 'indicator two', 'notation': 'two'} in res['options']
 
 
 def test_dimension_single_filter_passed_on_to_query(mock_cube):
-    ajax('dimension_values', {
+    ajax(mock_cube, 'dimension_values', {
         'dimension': 'ref-area',
         'time-period': '2002',
         'rev': '123',
@@ -40,7 +41,7 @@ def test_dimension_labels_passed_on_to_query(mock_cube):
     mock_cube.get_dimension_labels.return_value = [
         {'label': 'indicator one', 'short_label': 'ind one'},
     ]
-    ajax('dimension_labels', {
+    ajax(mock_cube, 'dimension_labels', {
         'dimension': 'unit-measure',
         'value': 'pc_ind',
         'rev': '123',
@@ -50,7 +51,7 @@ def test_dimension_labels_passed_on_to_query(mock_cube):
 
 
 def test_dimension_filters_passed_on_to_query(mock_cube):
-    ajax('dimension_values', {
+    ajax(mock_cube, 'dimension_values', {
         'dimension': 'ref-area',
         'time-period': '2002',
         'indicator': 'h_iacc',
@@ -63,7 +64,7 @@ def test_dimension_filters_passed_on_to_query(mock_cube):
 
 def test_dimension_xy_filters_passed_on_to_query(mock_cube):
     mock_cube.get_dimension_options_xy.return_value = ['something']
-    res = ajax('dimension_values_xy', {
+    res = ajax(mock_cube, 'dimension_values_xy', {
         'dimension': 'ref-area',
         'time-period': '2002',
         'breakdown': 'blahblah',
@@ -80,7 +81,7 @@ def test_dimension_xy_filters_passed_on_to_query(mock_cube):
 
 
 def test_data_query_sends_filters_and_columns(mock_cube):
-    ajax('datapoints', {
+    ajax(mock_cube, 'datapoints', {
         'fields': 'time-period,ref-area,value',
         'indicator': 'i_bfeu',
         'breakdown': 'IND_TOTAL',
@@ -98,7 +99,7 @@ def test_data_query_returns_rows(mock_cube):
     rows = [{'time-period': '2011', 'ref-area': 'IE', 'value': 0.2222},
             {'time-period': '2010', 'ref-area': 'PT', 'value': 0.0609}]
     mock_cube.get_data.return_value = iter(rows)
-    res = ajax('datapoints', {
+    res = ajax(mock_cube, 'datapoints', {
         'fields': 'time-period,ref-area,value',
         'indicator': 'i_bfeu',
         'breakdown': 'IND_TOTAL',
@@ -114,7 +115,7 @@ def test_data_query_returns_rows(mock_cube):
 
 def test_data_xy_query_sends_filters_and_columns(mock_cube):
     mock_cube.get_data_xy.return_value = ['something']
-    res = ajax('datapoints_xy', {
+    res = ajax(mock_cube, 'datapoints_xy', {
         'x-indicator': 'i_iuse',
         'y-indicator': 'i_iu3g',
         'unit-measure': 'pc_ind',
