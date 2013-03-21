@@ -11,6 +11,5 @@
   <factorytypes>
     <!-- -*- extra stuff goes here -*- -->
     <type portal_type="ScoreboardVisualization" />
-    <type portal_type="DataCube" />
   </factorytypes>
 </object>

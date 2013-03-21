@@ -6,26 +6,6 @@
   <include package=".resources" />
 
   <browser:resource
-    name="scoreboard.visualization.datacube.edit.css"
-    file="./css/datacube-edit.css"
-   />
-
-  <browser:resource
-    name="scoreboard.visualization.datacube.view.css"
-    file="./css/datacube-view.css"
-   />
-
-  <browser:resource
-    name="scoreboard.visualization.datacube.edit.js"
-    file="./js/datacube-edit.js"
-   />
-
-  <browser:resource
-    name="scoreboard.visualization.datacube.view.js"
-    file="./js/datacube-view.js"
-   />
-
-  <browser:resource
     name="scoreboard.visualization.view.css"
     file="./css/view.css"
    />
@@ -44,13 +24,6 @@
     name="scoreboard.visualization.edit.js"
     file="./js/edit.js"
    />
-
-  <browser:page
-    name="datacube-view.html"
-    for="..interfaces.IDataCube"
-    permission="zope2.View"
-    template="datacube-view.pt"
-    />
 
   <browser:page
     name="tests"
