@@ -1,14 +1,14 @@
-from mock import Mock, MagicMock, patch, call
+from mock import Mock, MagicMock, call
 import simplejson as json
 import pytest
 
 
 def ajax(cube, name, form):
     from scoreboard.visualization.views.scoreboard import data
-    with patch('scoreboard.visualization.views.scoreboard.data.Cube') as p:
-        p.return_value = cube
-        view = data.CubeView(Mock(), Mock(form=form))
-        return json.loads(getattr(view, name)())
+    datasource = Mock(get_cube=Mock(return_value=cube))
+    ctx = Mock(aq_parent={'scoreboard-test-cube': datasource})
+    view = data.CubeView(ctx, Mock(form=form))
+    return json.loads(getattr(view, name)())
 
 
 @pytest.fixture()

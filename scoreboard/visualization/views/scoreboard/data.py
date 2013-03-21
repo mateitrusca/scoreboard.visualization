@@ -5,14 +5,13 @@ from path import path
 from Products.Five.browser import BrowserView
 from sparql import unpack_row
 from Products.ZSPARQLMethod.Method import ZSPARQLMethod
-from ...data.cube import Cube
 
 
 queries = {q['id']: q for q in json.loads(
     (path(__file__).parent / 'queries.json').bytes())}
 
 SPARQL_ENDPOINT = 'http://virtuoso.scoreboardtest.edw.ro/sparql'
-DATASET = 'http://semantic.digital-agenda-data.eu/dataset/scoreboard'
+DATASOURCE_NAME = 'scoreboard-test-cube'  # TODO should not be hardcoded
 
 # DATA_REVISION should be the time of last database modification
 DATA_REVISION = str(int(time.time()))
@@ -65,7 +64,7 @@ class CubeView(BrowserView):
 
     def __init__(self, ctx, request):
         super(CubeView, self).__init__(ctx, request)
-        self.cube = Cube(SPARQL_ENDPOINT, DATASET)
+        self.cube = ctx.aq_parent[DATASOURCE_NAME].get_cube()
 
     def jsonify(self, data):
         header = self.request.RESPONSE.setHeader
