@@ -26,10 +26,6 @@ class View(ViewForm):
         return configuration.get('chart_entry_point',
                                  'App.scenario1_initialize')
 
-    @property
-    def URL(self):
-        return self.context.absolute_url()
-
     def jsapp_html(self):
         return jsapp_html(DATASOURCE_URL=self.context.absolute_url(),
                           DATA_REVISION=DATA_REVISION)
