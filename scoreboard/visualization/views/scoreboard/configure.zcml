@@ -21,13 +21,6 @@
     />
 
   <browser:page
-    name="filters_data"
-    for="...interfaces.IScoreboardVisualization"
-    class=".data.FiltersView"
-    permission="zope2.View"
-    />
-
-  <browser:page
     name="dimension_values"
     for="...interfaces.IScoreboardVisualization"
     class=".data.CubeView"
@@ -64,13 +57,6 @@
     for="...interfaces.IScoreboardVisualization"
     class=".data.CubeView"
     attribute="datapoints_xy"
-    permission="zope2.View"
-    />
-
-  <browser:page
-    name="data"
-    for="...interfaces.IScoreboardVisualization"
-    class=".data.DataView"
     permission="zope2.View"
     />
 
