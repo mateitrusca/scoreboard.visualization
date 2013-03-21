@@ -20,7 +20,7 @@ def create_default_views(obj, evt):
         return
 
     # Views already configure, do nothing
-    if mutator.views:
+    if mutator.view('scoreboard.highchart'):
         return
 
     mutator.add_view('scoreboard.highchart')

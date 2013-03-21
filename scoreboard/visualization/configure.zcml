@@ -29,5 +29,12 @@
       />
 
   <!-- -*- extra stuff goes here -*- -->
+  <genericsetup:importStep
+    name="scoreboard-various"
+    title="Scoreboard Visualization: miscellaneous import steps"
+    description="Various setup for Scoreboard Visualization"
+    handler="scoreboard.visualization.setuphandlers.setupVarious">
+    <depends name="typeinfo" />
+  </genericsetup:importStep>
 
 </configure>
