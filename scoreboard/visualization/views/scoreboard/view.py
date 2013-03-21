@@ -5,7 +5,6 @@ from zope.interface import implements
 from eea.app.visualization.views.view import ViewForm
 from scoreboard.visualization.views.scoreboard.interfaces import IScoreboardView
 from scoreboard.visualization.jsapp import jsapp_html
-from ...browser.views import DATA_REVISION
 
 DATASOURCE_NAME = 'scoreboard-test-cube'  # TODO should not be hardcoded
 
@@ -30,5 +29,6 @@ class View(ViewForm):
 
     def jsapp_html(self):
         source = self.context.aq_parent[DATASOURCE_NAME]
+        cube = source.get_cube()
         return jsapp_html(DATASOURCE_URL=source.absolute_url(),
-                          DATA_REVISION=DATA_REVISION)
+                          DATA_REVISION=cube.get_revision())

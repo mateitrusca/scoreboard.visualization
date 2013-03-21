@@ -1,3 +1,4 @@
+import time
 import urllib2
 import os
 import logging
@@ -9,6 +10,9 @@ SPARQL_DEBUG = bool(os.environ.get('SPARQL_DEBUG') == 'on')
 logger = logging.getLogger(__name__)
 
 sparql_env = jinja2.Environment(loader=jinja2.PackageLoader(__name__))
+
+# DATA_REVISION should be the time of last database modification
+DATA_REVISION = str(int(time.time()))
 
 
 class QueryError(Exception):
@@ -114,3 +118,6 @@ class Cube(object):
             out = dict(zip(columns, row))
             out['value'] = {'x': row[-2], 'y': row[-1]}
             yield out
+
+    def get_revision(self):
+        return DATA_REVISION

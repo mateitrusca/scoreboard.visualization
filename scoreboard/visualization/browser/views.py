@@ -1,11 +1,6 @@
-import time
 import simplejson as json
 from Products.Five.browser import BrowserView
 from scoreboard.visualization.jsapp import jsapp_html
-
-
-# DATA_REVISION should be the time of last database modification
-DATA_REVISION = str(int(time.time()))
 
 
 class TestsView(BrowserView):
