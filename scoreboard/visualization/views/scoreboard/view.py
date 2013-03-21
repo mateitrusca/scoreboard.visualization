@@ -5,7 +5,9 @@ from zope.interface import implements
 from eea.app.visualization.views.view import ViewForm
 from scoreboard.visualization.views.scoreboard.interfaces import IScoreboardView
 from scoreboard.visualization.jsapp import jsapp_html
-from .data import DATA_REVISION, DATASOURCE_NAME
+from ...browser.views import DATA_REVISION
+
+DATASOURCE_NAME = 'scoreboard-test-cube'  # TODO should not be hardcoded
 
 
 class View(ViewForm):

@@ -4,10 +4,9 @@ import pytest
 
 
 def ajax(cube, name, form):
-    from scoreboard.visualization.views.scoreboard import data
+    from scoreboard.visualization.browser.views import AjaxDataView
     datasource = Mock(get_cube=Mock(return_value=cube))
-    ctx = Mock(aq_parent={'scoreboard-test-cube': datasource})
-    view = data.CubeView(ctx, Mock(form=form))
+    view = AjaxDataView(datasource, Mock(form=form))
     return json.loads(getattr(view, name)())
 
 
