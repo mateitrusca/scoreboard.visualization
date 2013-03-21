@@ -54,6 +54,23 @@ App.Scenario2FiltersView = Backbone.View.extend({
 
 });
 
+App.scenario2_filters_schema = {
+    filters: [
+        {type: 'select',
+         name: 'indicator',
+         label: 'Select one indicator',
+         dimension: 'indicator',
+         constraints: { }
+        },
+        {type: 'select',
+         name: 'country',
+         label: 'Select the countries',
+         dimension: 'breakdown',
+         constraints: {
+             'indicator': 'indicator'
+         }},
+    ]
+};
 
 App.scenario2_initialize = function() {
 
@@ -73,23 +90,7 @@ App.scenario2_initialize = function() {
 
         App.scenario2_chart_view = new App.ScenarioChartView({
             model: App.filters,
-            schema: {
-                filters: [
-                    {type: 'select',
-                     name: 'indicator',
-                     label: 'Select one indicator',
-                     dimension: 'indicator',
-                     constraints: { }
-                    },
-                    {type: 'select',
-                     name: 'country',
-                     label: 'Select the countries',
-                     dimension: 'breakdown',
-                     constraints: {
-                         'indicator': 'indicator'
-                     }},
-                ]
-            },
+            schema: App.scenario2_filters_schema,
             datasource: {
                 data_preparation: {
                     group: {
