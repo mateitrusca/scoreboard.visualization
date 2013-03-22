@@ -3,10 +3,8 @@
 import json
 from zope.interface import implements
 from eea.app.visualization.views.view import ViewForm
-from scoreboard.visualization.views.scoreboard.interfaces import IScoreboardView
+from .interfaces import IScoreboardView
 from scoreboard.visualization.jsapp import jsapp_html
-
-DATASOURCE_NAME = 'scoreboard-test-cube'  # TODO should not be hardcoded
 
 
 class View(ViewForm):
@@ -27,8 +25,16 @@ class View(ViewForm):
         return configuration.get('chart_entry_point',
                                  'App.scenario1_initialize')
 
+    def get_source(self):
+        from edw.datacube.interfaces import IDataCube
+        for source in self.context.getRelatedItems():
+            if IDataCube.providedBy(source):
+                return source
+
     def jsapp_html(self):
-        source = self.context.aq_parent[DATASOURCE_NAME]
+        source = self.get_source()
+        if source is None:
+            return "No data source available"
         cube = source.get_cube()
         return jsapp_html(DATASOURCE_URL=source.absolute_url(),
                           DATA_REVISION=cube.get_revision())
