@@ -1,69 +1,6 @@
 /*global App, Backbone, describe, beforeEach, afterEach, it, expect, sinon */
 /*jshint sub:true */
 
-describe('Scenario2FiltersView', function() {
-    "use strict";
-
-    var $ = App.jQuery;
-    var choose = App.testing.choose_option;
-
-    beforeEach(function() {
-        this.filters_data = {
-            'indicators': [{'uri': 'ind1'}, {'uri': 'ind2'}],
-            'countries': [{'uri': 'fr'}, {'uri': 'dk'}, {'uri': 'es'}]
-        };
-        this.model = new Backbone.Model();
-        this.view = new App.Scenario2FiltersView({
-            model: this.model,
-            filters_data: this.filters_data
-        });
-    });
-
-    describe('indicators selector', function() {
-
-        it('should update model', function() {
-            choose(this.view.$el.find('select[name=indicator]'), 'ind2');
-            expect(this.model.get('indicator')).to.equal('ind2');
-        });
-
-        it('should select the current indicator', function() {
-            this.model.set({'indicator': 'ind2'});
-            choose(this.view.$el.find('select[name=indicator]'), 'ind2');
-            var option_two = this.view.$el.find('select[name=indicator] ' +
-                                                'option[value=ind2]');
-            expect(option_two.attr('selected')).to.equal('selected');
-        });
-
-        it('should make an initial selection', function() {
-            expect(this.model.get('indicator')).to.equal('ind1');
-        });
-
-    });
-
-    describe('countries selector', function() {
-
-        it('should update model', function() {
-            choose(this.view.$el.find('select[name=country]'), 'dk');
-            expect(this.model.get('country')).to.deep.equal(['dk']);
-        });
-
-        it('should update model with multiple values', function() {
-            choose(this.view.$el.find('select[name=country]'), 'dk');
-            choose(this.view.$el.find('select[name=country]'), 'es');
-            this.view.$el.filter('select[name=country]').change();
-            expect(this.model.get('country')).to.deep.equal(['dk', 'es']);
-        });
-
-        it('should select the current values', function() {
-            this.model.set({'country': ['dk', 'es']});
-            var sel = this.view.$el.find('select[name=country]');
-            expect(sel.val()).to.deep.equal(['dk', 'es']);
-        });
-
-    });
-
-});
-
 describe('Scenario2ChartView', function() {
     "use strict";
 
