@@ -20,60 +20,6 @@
     title="Scoreboad View"
     />
 
-  <browser:page
-    name="filters_data"
-    for="...interfaces.IScoreboardVisualization"
-    class=".data.FiltersView"
-    permission="zope2.View"
-    />
-
-  <browser:page
-    name="dimension_values"
-    for="...interfaces.IScoreboardVisualization"
-    class=".data.CubeView"
-    attribute="dimension_values"
-    permission="zope2.View"
-    />
-
-  <browser:page
-    name="dimension_labels"
-    for="...interfaces.IScoreboardVisualization"
-    class=".data.CubeView"
-    attribute="dimension_labels"
-    permission="zope2.View"
-    />
-
-  <browser:page
-    name="dimension_values_xy"
-    for="...interfaces.IScoreboardVisualization"
-    class=".data.CubeView"
-    attribute="dimension_values_xy"
-    permission="zope2.View"
-    />
-
-  <browser:page
-    name="datapoints"
-    for="...interfaces.IScoreboardVisualization"
-    class=".data.CubeView"
-    attribute="datapoints"
-    permission="zope2.View"
-    />
-
-  <browser:page
-    name="datapoints_xy"
-    for="...interfaces.IScoreboardVisualization"
-    class=".data.CubeView"
-    attribute="datapoints_xy"
-    permission="zope2.View"
-    />
-
-  <browser:page
-    name="data"
-    for="...interfaces.IScoreboardVisualization"
-    class=".data.DataView"
-    permission="zope2.View"
-    />
-
   <browser:resource name="scoreboard.highchart.icon.png" file="icon.png" />
   <browser:resource name="scoreboard.highchart.preview.png" file="preview.png" />
 

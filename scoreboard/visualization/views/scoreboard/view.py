@@ -5,7 +5,8 @@ from zope.interface import implements
 from eea.app.visualization.views.view import ViewForm
 from scoreboard.visualization.views.scoreboard.interfaces import IScoreboardView
 from scoreboard.visualization.jsapp import jsapp_html
-from .data import DATA_REVISION
+
+DATASOURCE_NAME = 'scoreboard-test-cube'  # TODO should not be hardcoded
 
 
 class View(ViewForm):
@@ -26,10 +27,8 @@ class View(ViewForm):
         return configuration.get('chart_entry_point',
                                  'App.scenario1_initialize')
 
-    @property
-    def URL(self):
-        return self.context.absolute_url()
-
     def jsapp_html(self):
-        return jsapp_html(URL=self.context.absolute_url(),
-                          DATA_REVISION=DATA_REVISION)
+        source = self.context.aq_parent[DATASOURCE_NAME]
+        cube = source.get_cube()
+        return jsapp_html(DATASOURCE_URL=source.absolute_url(),
+                          DATA_REVISION=cube.get_revision())
