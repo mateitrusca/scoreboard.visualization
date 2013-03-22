@@ -20,9 +20,9 @@ describe('Scenario2ChartView', function() {
                      constraints: { }
                     },
                     {type: 'select',
-                     name: 'country',
+                     name: 'countries',
                      label: 'Select one indicator',
-                     dimension: 'breakdown',
+                     dimension: 'ref-area',
                      constraints: {
                          'indicator': 'indicator'
                      }},
@@ -31,17 +31,17 @@ describe('Scenario2ChartView', function() {
             datasource: {
                 data_preparation: {
                     group: {
-                        filter_name: 'country',
+                        filter_name: 'countries',
                         labels: {
-                            'http://data.lod2.eu/scoreboard/country/Denmark': "Denmark",
-                            'http://data.lod2.eu/scoreboard/country/Spain': "Spain"
+                            'BE': "Belgium",
+                            'DK': "Denmark",
+                            'ES': "Spain"
                         }
                     }
                 },
-                rel_url: '/data',
+                rel_url: '/source_view',
                 extra_args: [
-                    ['method', 'series_indicator_country'],
-                    ['fields', 'ref-area,value'],
+                    ['fields', 'dimension1,value1'],
                     ['rev', App.DATA_REVISION]
                 ]
             },
@@ -62,15 +62,14 @@ describe('Scenario2ChartView', function() {
         var server = this.sandbox.server;
         this.model.set({
             'indicator': 'ind1',
-            'country': ['http://data.lod2.eu/scoreboard/country/Denmark']
+            'countries': ['BE']
         });
         var url = server.requests[0].url;
-        expect(url).to.have.string(App.URL + '/data?');
+        expect(url).to.have.string(App.URL + '/source_view?');
         var url_param = App.testing.url_param;
-        expect(url_param(url, 'method')).to.equal('series_indicator_country');
         expect(url_param(url, 'indicator')).to.equal('ind1');
-        expect(url_param(url, 'country')).to.equal(
-            'http://data.lod2.eu/scoreboard/country/Denmark');
+        expect(url_param(url, 'fields')).to.equal('dimension1,value1');
+        expect(url_param(url, 'ref-area')).to.equal('BE');
     });
 
     it('should render chart with the data received', function() {
@@ -78,12 +77,14 @@ describe('Scenario2ChartView', function() {
         var server = this.sandbox.server;
         this.model.set({
             'indicator': 'ind1',
-            'country': ['http://data.lod2.eu/scoreboard/country/Denmark']
+            'countries': ['BE']
         });
 
-        var data_dk = [{'year': "2010", 'value': 0.18},
-                       {'year': "2011", 'value': 0.14}];
-        App.respond_json(server.requests[0], data_dk);
+        var data_be = {datapoints: [
+                        {'year': "2010", 'value': 0.18},
+                        {'year': "2011", 'value': 0.14}]
+                      };
+        App.respond_json(server.requests[0], data_be);
         App.respond_json(server.requests[1],
             {'label': 'normal_label', 'short_label': 'short_label'});
         App.respond_json(server.requests[2],
@@ -93,9 +94,10 @@ describe('Scenario2ChartView', function() {
         expect(this.scenario2_chart.calledTwice).to.equal(true);
         var call_args = this.scenario2_chart.getCall(0).args;
         expect(call_args[0]).to.equal(container);
-        expect(call_args[1]['series']).to.deep.equal([
-            {'label': "Denmark", 'data': data_dk}
-        ]);
+        expect(call_args[1]['series'][0]['data']).to.deep.equal(
+            data_be['datapoints']
+        );
+        expect(call_args[1]['series'][0]['label']).to.equal("Belgium");
     });
 
     it('should render chart with multiple countries', function() {
@@ -103,14 +105,13 @@ describe('Scenario2ChartView', function() {
         var server = this.sandbox.server;
         this.model.set({
             'indicator': 'ind1',
-            'country': ['http://data.lod2.eu/scoreboard/country/Denmark',
-                        'http://data.lod2.eu/scoreboard/country/Spain']
+            'countries': ['DK', 'ES']
         });
 
-        var data_dk = [{'year': "2010", 'value': 0.18},
-                       {'year': "2011", 'value': 0.14}];
-        var data_es = [{'year': "2011", 'value': 0.22},
-                       {'year': "2012", 'value': 0.26}];
+        var data_dk = {datapoints: [{'year': "2010", 'value': 0.18},
+                       {'year': "2011", 'value': 0.14}]};
+        var data_es = {datapoints: [{'year': "2011", 'value': 0.22},
+                       {'year': "2012", 'value': 0.26}]};
 
         App.respond_json(server.requests[0], data_dk);
         App.respond_json(server.requests[1], data_es);
@@ -121,8 +122,8 @@ describe('Scenario2ChartView', function() {
 
         var call_args = this.scenario2_chart.getCall(0).args;
         expect(call_args[1]['series']).to.deep.equal([
-            {'label': "Denmark", 'data': data_dk},
-            {'label': "Spain", 'data': data_es}
+            {'label': "Denmark", 'data': data_dk['datapoints']},
+            {'label': "Spain", 'data': data_es['datapoints']}
         ]);
     });
 

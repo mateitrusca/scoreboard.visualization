@@ -13,10 +13,10 @@ App.scenario2_filters_schema = {
          dimension: 'indicator',
          constraints: { }
         },
-        {type: 'select',
-         name: 'country',
+        {type: 'multiple_select',
+         name: 'countries',
          label: 'Select the countries',
-         dimension: 'breakdown',
+         dimension: 'ref-area',
          constraints: {
              'indicator': 'indicator'
          }},
@@ -31,6 +31,14 @@ App.scenario2_initialize = function() {
 
     App.filters = new Backbone.Model();
     App.router = new App.ChartRouter(App.filters);
+    App.filter_loadstate = new Backbone.Model();
+
+    App.filters_box = new App.FiltersBox({
+        el: $('#new-filters')[0],
+        model: App.filters,
+        loadstate: App.filter_loadstate,
+        schema: App.scenario2_filters_schema
+    });
 
     $.getJSON(App.URL + '/filters_data', function(data) {
         App.scenario2_chart_view = new App.ScenarioChartView({
@@ -39,37 +47,37 @@ App.scenario2_initialize = function() {
             datasource: {
                 data_preparation: {
                     group: {
-                        filter_name: 'country',
+                        filter_name: 'countries',
                         labels: App.get_country_labels(data),
                     }
                 },
-                rel_url: '/data',
+                rel_url: '/datapoints',
                 extra_args: [
-                    ['method', 'series_indicator_country'],
-                    ['fields', 'ref-area,value'],
+                    ['fields', 'time-period,value'],
                     ['rev', App.DATA_REVISION]
                 ]
             },
             scenario_chart: App.scenario2_chart
         });
         $('#the-chart').append(App.scenario2_chart_view.el);
-        App.scenario2_chart_view.filters_changed();
-
+        //App.scenario2_chart_view.filters_changed();
+        /*
         App.metadata = new App.IndicatorMetadataView({
             model: App.filters,
             field: 'indicator',
             indicators: App.get_indicators(data)
         });
         $('#the-metadata').append(App.metadata.el);
+        */
 
     });
 
     Backbone.history.start();
 
-    if(! App.filters.get('country')) {
+    if(! App.filters.get('countries')) {
         var EU27 = ("http://data.lod2.eu/scoreboard/country/" +
                     "European+Union+-+27+countries");
-        App.filters.set('country', [EU27]);
+        App.filters.set('countries', ['EU27']);
     }
 };
 

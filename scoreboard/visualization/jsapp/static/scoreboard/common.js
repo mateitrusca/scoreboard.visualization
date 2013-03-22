@@ -45,7 +45,7 @@ App.get_indicator_labels = function(filters_data) {
 
 App.get_country_labels = function(filters_data) {
     var countries = filters_data['countries'];
-    return _.object(_(countries).pluck('uri'),
+    return _.object(_(countries).pluck('notation'),
                     _(countries).pluck('label'));
 };
 
@@ -119,8 +119,21 @@ App.ScenarioChartView = Backbone.View.extend({
 
     filters_changed: function() {
         var incomplete = false;
-        var args = this.model.toJSON();
-        var required = _(this.schema['filters']).pluck('name');
+        var args = {};
+        var preparation = this.datasource['data_preparation'];
+        var group_by_name = ''
+        if (preparation){
+            group_by_name = this.datasource.data_preparation.group.filter_name
+        }
+        _(this.dimensions_mapping).each(_.bind(function(dimension, filter_name){
+            if(filter_name != group_by_name){
+                args[dimension] = this.model.get(filter_name);
+            }
+        }, this));
+        var required_filters = _(this.schema['filters']).reject(_.bind(function(item){
+            return item['name'] === group_by_name;
+        }, this))
+        var required = _(required_filters).pluck('dimension');
         _(required).forEach(function(field) {
             if(! args[field]) { incomplete = true; }
             if(this.loadstate.get(field)) { incomplete = true; }
@@ -134,17 +147,14 @@ App.ScenarioChartView = Backbone.View.extend({
         _(this.datasource['extra_args']).each(function(item){
             args[item[0]] = item[1];
         });
-        var preparation = this.datasource['data_preparation'];
         if (preparation){
-            var countries = this.model.get(preparation.group.filter_name);
-            var requests = _(countries).map(function(country_uri) {
-                var data_ajax = $.get(App.URL + '/data', {
-                    'method': 'series_indicator_country',
-                    'indicator': args['indicator'],
-                    'country': country_uri
-                });
+            var countries = this.model.get(group_by_name);
+            var requests = _(countries).map(_.bind(function(country) {
+                var dimension = this.dimensions_mapping[group_by_name];
+                args[dimension] = country;
+                var data_ajax = $.get(App.URL + this.datasource['rel_url'], args);
                 return data_ajax;
-            });
+            }, this));
             var country_labels = this.country_labels;
 
             var ajax_calls = $.when.apply($, requests);
@@ -155,7 +165,7 @@ App.ScenarioChartView = Backbone.View.extend({
                 var series = _(responses).map(function(resp, n) {
                     return {
                         'label': preparation.group.labels[countries[n]],
-                        'data': resp[0]
+                        'data': resp[0]['datapoints']
                     };
                 });
                 view.data = {

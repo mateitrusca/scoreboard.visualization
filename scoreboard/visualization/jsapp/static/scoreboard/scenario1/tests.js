@@ -206,6 +206,59 @@ describe('ScenarioChartViewParameters', function() {
         expect(chart.meta_data.label3).to.equal(chart.meta_data.label2);
     });
 
+    it('should fetch data using init filters dimensions', function(){
+        var server = this.sandbox.server;
+        var chart = new App.ScenarioChartView({
+            model: this.model,
+            datasource: {
+                data_preparation: {
+                    group: {
+                        filter_name: 'country',
+                        labels: {
+                            'http://data.lod2.eu/scoreboard/country/Denmark': "Denmark",
+                            'http://data.lod2.eu/scoreboard/country/Spain': "Spain"
+                        }
+                    }
+                },
+                rel_url: '/source_view',
+                extra_args: [
+                    ['fields', 'dimension1,value1'],
+                    ['rev', App.DATA_REVISION]
+                ]
+            },
+            meta_labels: [
+                {targets: ['label1'], filter_name: 'indicator', type: 'label'}
+            ],
+            schema: {
+                filters: [
+                    {type: 'select',
+                     name: 'indicator',
+                     label: 'Select one indicator',
+                     dimension: 'indicator',
+                     constraints: { }
+                    },
+                    {type: 'select',
+                     name: 'country',
+                     label: 'Select one indicator',
+                     dimension: 'ref-area',
+                     constraints: {
+                         'indicator': 'indicator'
+                     }},
+                ]
+            },
+            scenario_chart: this.scenario_chart
+        });
+        this.model.set({
+            'indicator': 'ind1',
+            'country': ['BE']
+        });
+        var url = server.requests[0].url;
+        var url_param = App.testing.url_param;
+        expect(url_param(url, 'indicator')).to.equal('ind1');
+        expect(url_param(url, 'fields')).to.equal('dimension1,value1');
+        expect(url_param(url, 'ref-area')).to.equal('BE');
+    });
+
 });
 
 
@@ -280,8 +333,8 @@ describe('ScenarioChartView', function() {
         expect(url).to.have.string(App.URL + '/datapoints?');
         var url_param = App.testing.url_param;
         expect(url_param(url, 'fields')).to.equal('ref-area,value');
-        expect(url_param(url, 'indicator')).to.equal('asdf');
-        expect(url_param(url, 'time-period')).to.equal('2002');
+        expect(url_param(url, 'dim1')).to.equal('asdf');
+        expect(url_param(url, 'dim3')).to.equal('2002');
     });
 
     it('should render chart with the data received', function() {
