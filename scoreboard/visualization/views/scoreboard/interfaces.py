@@ -12,12 +12,6 @@ class IScoreboardView(IVisualizationView):
 class IScoreboardEdit(Interface):
     """ Edit Scoreboard
     """
-    title = schema.TextLine(
-        title=_(u"Title"),
-        description=_(u"Friendly name for this visualization"),
-        default=u"Scoreboard",
-        required=True,
-    )
     configuration = schema.Text(
         title=_(u"Configuration"),
         description=_(u"JSON that configures this visualization"),
