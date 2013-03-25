@@ -4,5 +4,6 @@
   <dependencies>
    <dependency>profile-eea.app.visualization:default</dependency>
    <dependency>profile-edw.highcharts:default</dependency>
+   <dependency>profile-edw.datacube:default</dependency>
  </dependencies>
 </metadata>
