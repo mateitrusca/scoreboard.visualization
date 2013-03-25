@@ -5,14 +5,14 @@
 "use strict";
 
 
-App.scenario2_chart = function(container, options) {
+App.scenario2_chart = function(container, options, meta_data) {
     var year_min = 2004;
     var year_max = 2012;
     var all_years = _.range(year_min, year_max);
 
     var series = _(options['series']).map(function(info) {
         var pairs = _(info['data']).sortBy('year');
-        var chart_data = _.zip(_(pairs).pluck('year'),
+        var chart_data = _.zip(_(pairs).pluck('time-period'),
                                _(pairs).pluck('value'));
         return {
             'name': info['label'],
@@ -39,7 +39,7 @@ App.scenario2_chart = function(container, options) {
             }
         },
         title: {
-            text: options['indicator_label'],
+            text: meta_data['x_title'],
             x: -20,
             margin: 30,
             style: {

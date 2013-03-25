@@ -8,18 +8,42 @@
 App.scenario2_filters_schema = {
     filters: [
         {type: 'select',
+         name: 'indicator-group',
+         label: 'Select indicator group',
+         dimension: 'indicator-group',
+         constraints: {}},
+        {type: 'select',
          name: 'indicator',
          label: 'Select one indicator',
          dimension: 'indicator',
-         constraints: { }
+         constraints: {
+             'indicator-group': 'indicator-group'
+         }
         },
         {type: 'multiple_select',
          name: 'countries',
          label: 'Select the countries',
          dimension: 'ref-area',
          constraints: {
+             'indicator-group': 'indicator-group',
              'indicator': 'indicator'
          }},
+        {type: 'radio',
+         name: 'breakdown',
+         label: 'Select breakdown',
+         dimension: 'breakdown',
+         constraints: {
+             'indicator-group': 'indicator-group',
+             'indicator': 'indicator'
+         }},
+        {type: 'radio',
+         name: 'unit-measure',
+         label: 'Select unit of measure',
+         dimension: 'unit-measure',
+         constraints: {
+             'indicator-group': 'indicator-group',
+             'indicator': 'indicator'
+         }}
     ]
 };
 
@@ -57,6 +81,11 @@ App.scenario2_initialize = function() {
                     ['rev', App.DATA_REVISION]
                 ]
             },
+            meta_labels: [
+                { targets: ['x_title'],
+                  filter_name: 'indicator',
+                  type: 'short_label' }
+            ],
             scenario_chart: App.scenario2_chart
         });
         $('#the-chart').append(App.scenario2_chart_view.el);
