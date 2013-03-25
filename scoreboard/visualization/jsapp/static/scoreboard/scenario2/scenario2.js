@@ -84,6 +84,9 @@ App.scenario2_initialize = function() {
             meta_labels: [
                 { targets: ['x_title'],
                   filter_name: 'indicator',
+                  type: 'short_label' },
+                { targets: ['y_title', 'unit'],
+                  filter_name: 'unit-measure',
                   type: 'short_label' }
             ],
             scenario_chart: App.scenario2_chart

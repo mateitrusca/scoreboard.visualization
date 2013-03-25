@@ -59,7 +59,7 @@ App.scenario2_chart = function(container, options, meta_data) {
         },
         yAxis: {
             title: {
-                text: options['indicator_label'],
+                text: meta_data['y_title'],
                 style: {
                     color: '#000000',
                     fontWeight: 'bold'
@@ -75,7 +75,7 @@ App.scenario2_chart = function(container, options, meta_data) {
         tooltip: {
             formatter: function() {
             return '<b>'+ this.series.name +'</b><br/>'+
-                            this.x +': '+ Math.round(this.y*10)/10 +' %_ent';
+                            this.x +': '+ Math.round(this.y*10)/10 + meta_data['unit'];
             }
         },
         legend: {
