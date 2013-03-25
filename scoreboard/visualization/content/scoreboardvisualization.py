@@ -7,7 +7,6 @@ from zope.event import notify
 from Products.Archetypes import atapi
 from Products.ATContentTypes.content import folder
 from Products.ATContentTypes.content import schemata
-from archetypes.referencebrowserwidget import ReferenceBrowserWidget
 
 # -*- Message Factory Imported Here -*-
 from eea.app.visualization.events import VisualizationEnabledEvent
@@ -35,13 +34,10 @@ ScoreboardVisualizationSchema = folder.ATFolderSchema.copy() + atapi.Schema((
         index='KeywordIndex',
         referencesSortable=True,
         #required=True,
-        widget=ReferenceBrowserWidget(
-            allow_search=True,
-            allow_browse=True,
-            allow_sorting=True,
-            show_indexes=False,
-            force_close_on_insert=True,
-            label=_(u'label_related_items', default=u'Related Items'),
+        vocabulary_factory=u'scoreboard.visualization.vocabulary.DataCube',
+        widget=atapi.SelectionWidget(
+            format=u'select',
+            label=_(u'Data source'),
             description='',
             visible={'edit': 'visible', 'view': 'invisible'}
             )

@@ -26,4 +26,9 @@
     allowed_interface="eea.app.visualization.subtypes.interfaces.IVisualizationSubtyper"
     />
 
+  <utility
+    factory=".vocabularies.DataCubeVocabulary"
+    name="scoreboard.visualization.vocabulary.DataCube"
+    />
+
 </configure>
