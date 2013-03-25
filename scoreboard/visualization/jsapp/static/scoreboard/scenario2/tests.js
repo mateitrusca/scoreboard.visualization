@@ -45,7 +45,6 @@ describe('Scenario2ChartView', function() {
                     ['rev', App.DATA_REVISION]
                 ]
             },
-            indicator_labels: {'ind1': "The Label!"},
             meta_labels: [
                 { targets: ['label'], filter_name: 'indicator', type: 'label' },
             ],
@@ -93,11 +92,8 @@ describe('Scenario2ChartView', function() {
         App.respond_json(server.requests[1], country_labels);
         App.respond_json(server.requests[2],
             {'label': 'normal_label', 'short_label': 'short_label'});
-        App.respond_json(server.requests[3],
-            {'label': 'normal_label', 'short_label': 'short_label'});
-
         var container = this.chart.el;
-        expect(this.scenario2_chart.calledTwice).to.equal(true);
+        expect(this.scenario2_chart.calledOnce).to.equal(true);
         var call_args = this.scenario2_chart.getCall(0).args;
         expect(call_args[0]).to.equal(container);
         expect(call_args[1]['series'][0]['data']).to.deep.equal(
@@ -129,8 +125,6 @@ describe('Scenario2ChartView', function() {
         App.respond_json(server.requests[1], data_es);
         App.respond_json(server.requests[2], country_labels);
         App.respond_json(server.requests[3],
-            {'label': 'normal_label', 'short_label': 'short_label'});
-        App.respond_json(server.requests[4],
             {'label': 'normal_label', 'short_label': 'short_label'});
         var call_args = this.scenario2_chart.getCall(0).args;
         expect(call_args[1]['series']).to.deep.equal([

@@ -71,7 +71,7 @@ App.ScenarioChartView = Backbone.View.extend({
     },
 
     render: function() {
-        if(this.data && this.meta_data) {
+        if(this.data) {
             this.scenario_chart(this.el, this.data, this.meta_data);
         }
     },
@@ -108,10 +108,10 @@ App.ScenarioChartView = Backbone.View.extend({
 
         var ajax_queue = _(ajax_args).map(process_ajax);
         var ajax_calls = $.when.apply($, ajax_queue);
-        ajax_calls.done(
+        return ajax_calls.done(
             function(){
                 view.meta_data = meta_data;
-                view.render();
+                //view.render();
             }
         );
 
@@ -121,7 +121,9 @@ App.ScenarioChartView = Backbone.View.extend({
         var incomplete = false;
         var args = {};
         var preparation = this.datasource['data_preparation'];
-        var group_by_name = ''
+        var group_by_name = '';
+        var requests = [];
+        var view = this;
         if (preparation){
             group_by_name = this.datasource.data_preparation.group.filter_name
         }
@@ -149,14 +151,13 @@ App.ScenarioChartView = Backbone.View.extend({
         });
         if (preparation){
             var countries = this.model.get(group_by_name);
-            var requests = _(countries).map(_.bind(function(country) {
+            requests = _(countries).map(_.bind(function(country) {
                 var dimension = this.dimensions_mapping[group_by_name];
                 args[dimension] = country;
                 var data_ajax = $.get(App.URL + this.datasource['rel_url'], args);
                 return data_ajax;
             }, this));
 
-            var view = this;
             requests.push( $.get(App.URL + '/dimension_values',
                 {
                     'dimension': this.dimensions_mapping[group_by_name],
@@ -171,10 +172,12 @@ App.ScenarioChartView = Backbone.View.extend({
                 }
             ));
 
+            requests.push(_.bind(this.get_meta_data, this)());
+
             var ajax_calls = $.when.apply($, requests);
             var series_ajax_result = ajax_calls.done(function() {
                 var responses = (requests.length == 1) ? _([arguments])
-                                                       : _(arguments).toArray().slice(0,-1);
+                                                       : _(arguments).toArray().slice(0,-2);
                 var series = _(responses).map(function(resp, n) {
                     return {
                         'label': view.group_labels[countries[n]],
@@ -189,12 +192,14 @@ App.ScenarioChartView = Backbone.View.extend({
                     }
                 };
             });
-            series_ajax_result.done( _.bind(this.get_meta_data, this) );
         }
         else{
-            var series_ajax = $.get(App.URL + this.datasource['rel_url'], args);
-            var series_ajax_result = series_ajax.done(_.bind(function(data) {
-                this.data = {
+            requests.push($.get(App.URL + this.datasource['rel_url'], args));
+            requests.push(_.bind(this.get_meta_data, this)());
+            var ajax_calls = $.when.apply($, requests);
+            var series_ajax_result = ajax_calls.done(function() {
+                var data = arguments[0][0];
+                view.data = {
                     'series': data['datapoints'],
                     'tooltip_formatter': function() {
                         var chart_view = App.scenario1_chart_view;
@@ -214,13 +219,15 @@ App.ScenarioChartView = Backbone.View.extend({
                         return this.value
                     },
                 };
-            }, this));
+            });
         }
 
         //TODO gets meta data everytime filters changed
         //if needed, it could be optimized to fetch labels
         //only when relevant filters change
-        series_ajax_result.done( _.bind(this.get_meta_data, this) );
+        series_ajax_result.done(_.bind(function(){
+            this.render();
+        }, this));
 
     }
 

@@ -321,7 +321,7 @@ describe('ScenarioChartView', function() {
         App.respond_json(server.requests[0], {'datapoints': []});
         App.respond_json(server.requests[1],
             {'label': 'request 2', 'short_label': 'lbl 2'});
-        App.respond_json(server.requests[2],
+        App.respond_json(server.requests[3],
             {'label': 'Year 2003', 'short_label': 'lbl 2'});
         expect(this.scenario_chart.calledOnce).to.equal(true);
         expect(this.chart.meta_data['extra_label']).to.equal('Year 2003');
@@ -344,7 +344,8 @@ describe('ScenarioChartView', function() {
 
         this.chart.meta_data = {};
         App.respond_json(server.requests[0], {'datapoints': ajax_data});
-        App.respond_json(server.requests[1], {'datapoints': ajax_data});
+        App.respond_json(server.requests[1],
+            {'label': 'request 2', 'short_label': 'lbl 2'});
         expect(this.scenario_chart.calledOnce).to.equal(true);
         var call_args = this.scenario_chart.getCall(0).args;
         expect(call_args[0]).to.equal(this.chart.el);
