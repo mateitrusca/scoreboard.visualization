@@ -84,10 +84,16 @@ describe('Scenario2ChartView', function() {
                         {'year': "2010", 'value': 0.18},
                         {'year': "2011", 'value': 0.14}]
                       };
+        var country_labels = {options: [{
+                label: 'Belgium',
+                notation: 'BE'
+            }]
+        }
         App.respond_json(server.requests[0], data_be);
-        App.respond_json(server.requests[1],
-            {'label': 'normal_label', 'short_label': 'short_label'});
+        App.respond_json(server.requests[1], country_labels);
         App.respond_json(server.requests[2],
+            {'label': 'normal_label', 'short_label': 'short_label'});
+        App.respond_json(server.requests[3],
             {'label': 'normal_label', 'short_label': 'short_label'});
 
         var container = this.chart.el;
@@ -112,14 +118,20 @@ describe('Scenario2ChartView', function() {
                        {'year': "2011", 'value': 0.14}]};
         var data_es = {datapoints: [{'year': "2011", 'value': 0.22},
                        {'year': "2012", 'value': 0.26}]};
+        var country_labels = {options: [
+            { label: 'Denmark',
+              notation: 'DK' },
+            { label: 'Spain',
+              notation: 'ES' },
+        ]};
 
         App.respond_json(server.requests[0], data_dk);
         App.respond_json(server.requests[1], data_es);
-        App.respond_json(server.requests[2],
-            {'label': 'normal_label', 'short_label': 'short_label'});
+        App.respond_json(server.requests[2], country_labels);
         App.respond_json(server.requests[3],
             {'label': 'normal_label', 'short_label': 'short_label'});
-
+        App.respond_json(server.requests[4],
+            {'label': 'normal_label', 'short_label': 'short_label'});
         var call_args = this.scenario2_chart.getCall(0).args;
         expect(call_args[1]['series']).to.deep.equal([
             {'label': "Denmark", 'data': data_dk['datapoints']},

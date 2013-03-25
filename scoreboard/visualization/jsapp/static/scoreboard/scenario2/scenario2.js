@@ -72,7 +72,6 @@ App.scenario2_initialize = function() {
                 data_preparation: {
                     group: {
                         filter_name: 'countries',
-                        labels: App.get_country_labels(data),
                     }
                 },
                 rel_url: '/datapoints',

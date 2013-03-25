@@ -155,16 +155,29 @@ App.ScenarioChartView = Backbone.View.extend({
                 var data_ajax = $.get(App.URL + this.datasource['rel_url'], args);
                 return data_ajax;
             }, this));
-            var country_labels = this.country_labels;
+
+            var view = this;
+            requests.push( $.get(App.URL + '/dimension_values',
+                {
+                    'dimension': this.dimensions_mapping[group_by_name],
+                    'rev': App.DATA_REVISION
+                },
+                function(data){
+                    var results = data['options'];
+                    view.group_labels = _.object(
+                             _(results).pluck('notation'),
+                             _(results).pluck('label')
+                           );
+                }
+            ));
 
             var ajax_calls = $.when.apply($, requests);
-            var view = this;
             var series_ajax_result = ajax_calls.done(function() {
                 var responses = (requests.length == 1) ? _([arguments])
-                                                       : _(arguments).toArray();
+                                                       : _(arguments).toArray().slice(0,-1);
                 var series = _(responses).map(function(resp, n) {
                     return {
-                        'label': preparation.group.labels[countries[n]],
+                        'label': view.group_labels[countries[n]],
                         'data': resp[0]['datapoints']
                     };
                 });
