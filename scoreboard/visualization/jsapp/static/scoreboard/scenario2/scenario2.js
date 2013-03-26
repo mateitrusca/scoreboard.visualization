@@ -58,7 +58,7 @@ App.scenario2_initialize = function() {
     App.filter_loadstate = new Backbone.Model();
 
     App.filters_box = new App.FiltersBox({
-        el: $('#new-filters')[0],
+        el: $('#the-filters')[0],
         model: App.filters,
         loadstate: App.filter_loadstate,
         schema: App.scenario2_filters_schema
