@@ -94,6 +94,36 @@ App.SelectFilter = Backbone.View.extend({
 });
 
 
+App.MultipleSelectFilter = App.SelectFilter.extend({
+
+    template: App.get_template('scoreboard/filters/multiple_select.html'),
+
+    received_new_options: function(new_options) {
+        this.dimension_options = new_options;
+        var range = _(new_options).pluck('notation');
+        if(! _(range).contains(this.model.get(this.name))) {
+            this.model.set(this.name, [range[0]]);
+        }
+        this.render();
+    },
+
+    render: function() {
+        var selected_value = this.model.get(this.name);
+        var options = _(this.dimension_options).map(function(item) {
+            var selected = (item['notation'] == selected_value);
+            return _({'selected': selected}).extend(item);
+        });
+        this.$el.html(this.template({
+            'dimension_options': options,
+            'filter_label': this.label,
+            'filter_name': this.name
+        }));
+        App.jQuery(this.$el.find('select[name='+ this.name +']')).select2();
+    }
+
+});
+
+
 App.RadioFilter = App.SelectFilter.extend({
     template: App.get_template('scoreboard/filters/radio_buttons.html'),
 
@@ -127,6 +157,7 @@ App.FiltersBox = Backbone.View.extend({
 
     filter_types: {
         'select': App.SelectFilter,
+        'multiple_select': App.MultipleSelectFilter,
         'radio': App.RadioFilter
     },
 
