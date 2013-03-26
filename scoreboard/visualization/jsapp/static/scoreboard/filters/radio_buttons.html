@@ -2,12 +2,12 @@
 <label>{{ filter_label }}</label>
 {{# dimension_options }}
     <input type="radio"
-           id="{{ this.notation }}"
+           id="{{ ../name }}-{{ this.notation }}"
            value="{{ this.notation }}"
            name="{{ ../name }}"
            {{# if selected }} checked="checked" {{/ if }}
     />
-    <label for="{{ this.notation }}">
+    <label for="{{ ../name }}-{{ this.notation }}">
     {{# if short_label }}
         {{ short_label }}
     {{ else }}
