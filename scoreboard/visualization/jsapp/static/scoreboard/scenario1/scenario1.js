@@ -128,7 +128,7 @@ App.scenario1_initialize = function() {
     App.router = new App.ChartRouter(App.filters);
 
     App.filters_box = new App.FiltersBox({
-        el: $('#new-filters')[0],
+        el: $('#the-filters')[0],
         model: App.filters,
         loadstate: App.filter_loadstate,
         schema: App.scenario1_filters_schema
