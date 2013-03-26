@@ -206,6 +206,65 @@ describe('ScenarioChartViewParameters', function() {
         expect(chart.meta_data.label3).to.equal(chart.meta_data.label2);
     });
 
+
+    /*TODO skipped temporarelly
+    it('should render only selected countries', function(){
+        var server = this.sandbox.server;
+        var chart = new App.ScenarioChartView({
+            model: this.model,
+            datasource: {
+                data_preparation: {
+                    group: {
+                        filter_name: 'countries'
+                    }
+                },
+                rel_url: '/test_view',
+                extra_args: [
+                ]
+            },
+            meta_labels: [ ],
+            schema: {
+                filters: [
+                    {type: 'select',
+                     name: 'indicator-group',
+                     label: 'Select indicator group',
+                     dimension: 'indicator-group',
+                     constraints: {}},
+                    {type: 'select',
+                     name: 'indicator',
+                     label: 'Select indicator',
+                     dimension: 'indicator',
+                     constraints: {
+                         'indicator-group': 'indicator-group'
+                     }},
+                    {type: 'multiple_select',
+                     name: 'countries',
+                     label: 'Select the countries',
+                     dimension: 'ref-area',
+                     constraints: {
+                         'indicator-group': 'indicator-group',
+                         'indicator': 'indicator'
+                     }},
+                ]
+            },
+            scenario_chart: this.scenario_chart
+        });
+        chart.model.set(
+            {'indicator-group': 'val1',
+             'indicator': 'val2',
+             'countries': ['AT']});
+        var ajax_data = [{'ref-area': 'AT', 'ref-area-label': "Austria", 'value': 0.18}];
+        var country_labels = {options: [
+            { label: 'Denmark',
+              notation: 'DK' },
+            { label: 'Spain',
+              notation: 'ES' },
+        ]};
+        App.respond_json(server.requests[0], {'datapoints': ajax_data});
+        App.respond_json(server.requests[1], country_labels);
+    });
+    */
+
     it('should fetch data using init filters dimensions', function(){
         var server = this.sandbox.server;
         var chart = new App.ScenarioChartView({

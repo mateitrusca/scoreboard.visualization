@@ -114,7 +114,19 @@ App.scenario1_filters_schema = {
              'time-period': 'time-period',
              'indicator-group': 'indicator-group',
              'indicator': 'indicator'
-         }}
+         }},
+        {type: 'multiple_select',
+         name: 'countries',
+         label: 'Select the countries',
+         dimension: 'ref-area',
+         constraints: {
+             'unit-measure': 'unit-measure',
+             'breakdown-group': 'breakdown-group',
+             'breakdown': 'breakdown',
+             'time-period': 'time-period',
+             'indicator-group': 'indicator-group',
+             'indicator': 'indicator'
+         }},
     ]
 };
 
@@ -141,9 +153,15 @@ App.scenario1_initialize = function() {
         schema: App.scenario1_filters_schema,
         scenario_chart: App.scenario1_chart,
         datasource: {
+            data_preparation: {
+                group: {
+                    filter_name: 'countries'
+                }
+            },
             rel_url: '/datapoints',
             extra_args: [
-                ['fields', 'ref-area,value']
+                ['fields', 'ref-area,value'],
+                ['rev', App.DATA_REVISION]
             ]
         },
         meta_labels: [

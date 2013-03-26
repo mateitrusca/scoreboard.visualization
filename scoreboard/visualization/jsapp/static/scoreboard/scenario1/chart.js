@@ -7,13 +7,11 @@
 
 App.scenario1_chart = function(container, options, meta_data) {
     var series = _(options['series']).sortBy('value').reverse();
-    var country_names = _(series).pluck('ref-area-label');
-    var values = _(series).pluck('value');
-
+    var country_names = _(series).pluck('label');
     var values = _(series).map(
         function(value, key, list){
-            var result = value.value * 100;
-            if (value['ref-area'] === "EU27"){
+            var result = list[key].data[0]['value'] * 100;
+            if (list[key].data[0]['ref-area'] === "EU27"){
                 return {'y': result,
                         'color': '#35478C'}
             }
