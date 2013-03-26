@@ -48,7 +48,7 @@ App.scenario1_chart = function(container, options, meta_data) {
             }
         },
         subtitle: {
-            text: options['year_text'],
+            text: meta_data['year_text'],
             align: 'left'
 
         },

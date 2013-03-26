@@ -246,11 +246,23 @@ App.scenario1_initialize = function() {
         schema: App.scenario1_filters_schema
     });
 
-    App.scenario1_chart_view = new App.Scenario1ChartView({
+    App.scenario1_chart_view = new App.ScenarioChartView({
         model: App.filters,
         loadstate: App.filter_loadstate,
         meta_data: {},
-        indicator_labels: {}
+        schema: App.scenario1_filters_schema,
+        scenario_chart: App.scenario1_chart,
+        datasource: {
+            rel_url: '/datapoints',
+            extra_args: [
+                ['fields', 'ref-area,value']
+            ]
+        },
+        meta_labels: [
+            { targets: ['x_title'], filter_name: 'indicator', type: 'label' },
+            { targets: ['y_title', 'tooltip_label'], filter_name: 'unit-measure', type: 'short_label' },
+            { targets: ['year_text'], filter_name: 'time-period', type: 'label' },
+        ]
     });
     $('#the-chart').append(App.scenario1_chart_view.el);
 
