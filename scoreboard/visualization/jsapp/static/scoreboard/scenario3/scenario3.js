@@ -74,22 +74,26 @@ App.scenario3_filters_schema = {
     filters: [
         {type: 'select',
          name: 'x-indicator-group',
+         label: "(X) indicator group",
          dimension: 'indicator-group',
          constraints: {}},
         {type: 'select',
          name: 'x-indicator',
+         label: "(X) indicator",
          dimension: 'indicator',
          constraints: {
              'indicator-group': 'x-indicator-group'
          }},
         {type: 'select',
          name: 'x-breakdown-group',
+         label: "(X) breakdown group",
          dimension: 'breakdown-group',
          constraints: {
              'indicator':       'x-indicator'
          }},
         {type: 'select',
          name: 'x-breakdown',
+         label: "(X) breakdown",
          dimension: 'breakdown',
          constraints: {
              'indicator':       'x-indicator',
@@ -97,6 +101,7 @@ App.scenario3_filters_schema = {
          }},
         {type: 'select',
          name: 'x-unit-measure',
+         label: "(X) unit of measure",
          dimension: 'unit-measure',
          constraints: {
              'indicator':       'x-indicator',
@@ -105,22 +110,26 @@ App.scenario3_filters_schema = {
 
         {type: 'select',
          name: 'y-indicator-group',
+         label: "(Y) indicator group",
          dimension: 'indicator-group',
          constraints: {}},
         {type: 'select',
          name: 'y-indicator',
+         label: "(Y) indicator",
          dimension: 'indicator',
          constraints: {
              'indicator-group': 'y-indicator-group'
          }},
         {type: 'select',
          name: 'y-breakdown-group',
+         label: "(Y) breakdown group",
          dimension: 'breakdown-group',
          constraints: {
              'indicator':       'y-indicator'
          }},
         {type: 'select',
          name: 'y-breakdown',
+         label: "(Y) breakdown",
          dimension: 'breakdown',
          constraints: {
              'indicator':       'y-indicator',
@@ -128,6 +137,7 @@ App.scenario3_filters_schema = {
          }},
         {type: 'select',
          name: 'y-unit-measure',
+         label: "(Y) unit of measure",
          dimension: 'unit-measure',
          constraints: {
              'indicator':       'y-indicator',
@@ -137,6 +147,7 @@ App.scenario3_filters_schema = {
         {type: 'select',
          xy: true,
          name: 'time-period',
+         label: "Year",
          dimension: 'time-period',
          constraints: {
              'x-indicator':    'x-indicator',

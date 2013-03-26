@@ -9,12 +9,12 @@ App.scenario2_filters_schema = {
     filters: [
         {type: 'select',
          name: 'indicator-group',
-         label: 'Select indicator group',
+         label: 'Indicator group',
          dimension: 'indicator-group',
          constraints: {}},
         {type: 'select',
          name: 'indicator',
-         label: 'Select one indicator',
+         label: 'Indicator',
          dimension: 'indicator',
          constraints: {
              'indicator-group': 'indicator-group'
@@ -22,7 +22,7 @@ App.scenario2_filters_schema = {
         },
         {type: 'multiple_select',
          name: 'countries',
-         label: 'Select the countries',
+         label: 'Countries',
          dimension: 'ref-area',
          constraints: {
              'indicator-group': 'indicator-group',
@@ -30,7 +30,7 @@ App.scenario2_filters_schema = {
          }},
         {type: 'select',
          name: 'breakdown',
-         label: 'Select breakdown',
+         label: 'Breakdown',
          dimension: 'breakdown',
          constraints: {
              'indicator-group': 'indicator-group',
@@ -38,7 +38,7 @@ App.scenario2_filters_schema = {
          }},
         {type: 'select',
          name: 'unit-measure',
-         label: 'Select unit of measure',
+         label: 'Unit of measure',
          dimension: 'unit-measure',
          constraints: {
              'indicator-group': 'indicator-group',

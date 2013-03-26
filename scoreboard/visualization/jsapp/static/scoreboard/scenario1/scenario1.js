@@ -67,19 +67,19 @@ App.scenario1_filters_schema = {
     filters: [
         {type: 'select',
          name: 'indicator-group',
-         label: 'Select indicator group',
+         label: 'Indicator group',
          dimension: 'indicator-group',
          constraints: {}},
         {type: 'select',
          name: 'indicator',
-         label: 'Select indicator',
+         label: 'Indicator',
          dimension: 'indicator',
          constraints: {
              'indicator-group': 'indicator-group'
          }},
         {type: 'select',
          name: 'time-period',
-         label: 'Select period',
+         label: 'Period',
          dimension: 'time-period',
          constraints: {
              'indicator-group': 'indicator-group',
@@ -87,7 +87,7 @@ App.scenario1_filters_schema = {
          }},
         {type: 'select',
          name: 'breakdown-group',
-         label: 'Select breakdown group',
+         label: 'Breakdown group',
          dimension: 'breakdown-group',
          constraints: {
              'time-period': 'time-period',
@@ -96,7 +96,7 @@ App.scenario1_filters_schema = {
          }},
         {type: 'select',
          name: 'breakdown',
-         label: 'Select breakdown',
+         label: 'Breakdown',
          dimension: 'breakdown',
          constraints: {
              'breakdown-group': 'breakdown-group',
@@ -106,7 +106,7 @@ App.scenario1_filters_schema = {
          }},
         {type: 'select',
          name: 'unit-measure',
-         label: 'Select unit of measure',
+         label: 'Unit of measure',
          dimension: 'unit-measure',
          constraints: {
              'breakdown-group': 'breakdown-group',
