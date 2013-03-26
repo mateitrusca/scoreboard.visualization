@@ -225,9 +225,26 @@ App.scenario3_initialize = function() {
         schema: App.scenario3_filters_schema
     });
 
-    App.scenario3_chart_view = new App.Scenario3ChartView({
+    App.scenario3_chart_view = new App.ScenarioChartView({
         model: App.filters,
         loadstate: App.filter_loadstate,
+        schema: App.scenario3_filters_schema,
+        scenario_chart: App.scenario3_chart,
+        datasource: {
+            rel_url: '/datapoints_xy',
+            extra_args: [
+                ['columns', 'ref-area'],
+                ['xy_columns', 'value'],
+                ['rev', App.DATA_REVISION]
+            ]
+        },
+        meta_labels: [
+            { targets: ['indicator_x_label'], filter_name: 'x-indicator', type: 'short_label' },
+            { targets: ['indicator_y_label'], filter_name: 'y-indicator', type: 'short_label' },
+            { targets: ['period_label'], filter_name: 'time-period', type: 'label' },
+            { targets: ['x_unit_label'], filter_name: 'x-unit-measure', type: 'short_label' },
+            { targets: ['y_unit_label'], filter_name: 'y-unit-measure', type: 'short_label' },
+        ]
     });
     $('#the-chart').append(App.scenario3_chart_view.el);
 
