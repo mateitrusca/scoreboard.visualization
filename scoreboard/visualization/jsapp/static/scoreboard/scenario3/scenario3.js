@@ -88,14 +88,14 @@ App.scenario3_filters_schema = {
          constraints: {
              'indicator':       'x-indicator'
          }},
-        {type: 'radio',
+        {type: 'select',
          name: 'x-breakdown',
          dimension: 'breakdown',
          constraints: {
              'indicator':       'x-indicator',
              'breakdown-group': 'x-breakdown-group'
          }},
-        {type: 'radio',
+        {type: 'select',
          name: 'x-unit-measure',
          dimension: 'unit-measure',
          constraints: {
@@ -119,14 +119,14 @@ App.scenario3_filters_schema = {
          constraints: {
              'indicator':       'y-indicator'
          }},
-        {type: 'radio',
+        {type: 'select',
          name: 'y-breakdown',
          dimension: 'breakdown',
          constraints: {
              'indicator':       'y-indicator',
              'breakdown-group': 'y-breakdown-group'
          }},
-        {type: 'radio',
+        {type: 'select',
          name: 'y-unit-measure',
          dimension: 'unit-measure',
          constraints: {
