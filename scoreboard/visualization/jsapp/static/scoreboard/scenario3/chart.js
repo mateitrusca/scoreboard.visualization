@@ -5,7 +5,7 @@
 "use strict";
 
 
-App.scenario3_chart = function(container, options) {
+App.scenario3_chart = function(container, options, meta_data) {
     var countrycolor = function(code) {
         if (_.isNull(App.COUNTRY_COLOR[code])) {
             return '#1C3FFD';
@@ -67,8 +67,8 @@ App.scenario3_chart = function(container, options) {
             }
         },
         title: {
-            text: (options['indicator_x_label'] + ' ' +
-                   options['indicator_y_label']),
+            text: (meta_data['indicator_x_label'] + ' vs. ' +
+                   meta_data['indicator_y_label']),
             style: {
                 color: '#000000',
                 fontWeight: 'bold',
@@ -79,7 +79,7 @@ App.scenario3_chart = function(container, options) {
         xAxis: [{
             title: {
                 enabled: true,
-                text: options['indicator_x_label'],
+                text: meta_data['indicator_x_label'],
                 style: {
                     color: '#000000',
                     fontWeight: 'bold'
@@ -106,7 +106,7 @@ App.scenario3_chart = function(container, options) {
         }],
         yAxis: {
             title: {
-                text: options['indicator_y_label'],
+                text: meta_data['indicator_y_label'],
                 style: {
                     color: '#000000',
                     fontWeight: 'bold'
@@ -121,8 +121,9 @@ App.scenario3_chart = function(container, options) {
         tooltip: {
             formatter: function() {
             return ('<b>'+ this.series.name +'</b><br/>x: '+
-                this.x +' %_of_total_cost,<br>y: '+ this.y +' %_ind_iu3');
-            }
+                this.x + ' ' + meta_data['x_unit_label'] + '<br>y: '+
+                this.y + ' ' + meta_data['y_unit_label']
+            )}
         },
         legend: {
             layout: 'horizontal',
