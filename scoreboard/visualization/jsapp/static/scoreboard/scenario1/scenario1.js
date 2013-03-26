@@ -94,7 +94,7 @@ App.scenario1_filters_schema = {
              'indicator-group': 'indicator-group',
              'indicator': 'indicator'
          }},
-        {type: 'radio',
+        {type: 'select',
          name: 'breakdown',
          label: 'Select breakdown',
          dimension: 'breakdown',
@@ -104,7 +104,7 @@ App.scenario1_filters_schema = {
              'indicator-group': 'indicator-group',
              'indicator': 'indicator'
          }},
-        {type: 'radio',
+        {type: 'select',
          name: 'unit-measure',
          label: 'Select unit of measure',
          dimension: 'unit-measure',
