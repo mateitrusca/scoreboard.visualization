@@ -5,6 +5,190 @@
 "use strict";
 
 
+App.ScenarioChartView = Backbone.View.extend({
+
+    className: 'highcharts-chart',
+
+    initialize: function(options) {
+        this.model.on('change', this.filters_changed, this);
+        this.meta_data = options['meta_data'];
+        this.loadstate = options['loadstate'] || new Backbone.Model();
+        this.loadstate.on('change', this.filters_changed, this);
+        this.meta_labels = options['meta_labels'];
+        this.schema = options['schema'];
+        this.scenario_chart = options['scenario_chart'];
+        this.dimensions_mapping = _.object(
+            _(options.schema.filters).pluck('name'),
+            _(options.schema.filters).pluck('dimension')
+        );
+        this.datasource = options['datasource']
+        this.filters_changed();
+    },
+
+    render: function() {
+        if(this.data) {
+            this.scenario_chart(this.el, this.data, this.meta_data);
+        }
+    },
+
+    get_meta_data: function(){
+        var view = this;
+        var meta_data = {};
+
+        function process_ajax(args){
+            var ajax = $.get(App.URL + '/dimension_labels',
+                {
+                    'dimension': args['dimension'],
+                    'value': view.model.get(args['filter_name']),
+                    'rev': App.DATA_REVISION
+                }
+            );
+            return ajax.done( function(data) { args.callback(args, data); });
+        }
+
+        var ajax_args = _(this.meta_labels).map(function(item){
+            var result = {
+                filter_name: item.filter_name,
+                dimension: view.dimensions_mapping[item.filter_name],
+                targets: item.targets,
+                label_type: item.type,
+                callback: function(args, data){
+                    _(args['targets']).each(function(target){
+                        meta_data[target] = data[args['label_type']];
+                    });
+                }
+            };
+            return result;
+        });
+
+        var ajax_queue = _(ajax_args).map(process_ajax);
+        var ajax_calls = $.when.apply($, ajax_queue);
+        return ajax_calls.done(
+            function(){
+                view.meta_data = meta_data;
+                //view.render();
+            }
+        );
+
+    },
+
+    filters_changed: function() {
+        var incomplete = false;
+        var args = {};
+        var preparation = this.datasource['data_preparation'];
+        var group_by_name = '';
+        var requests = [];
+        var view = this;
+        if (preparation){
+            group_by_name = this.datasource.data_preparation.group.filter_name
+        }
+        _(this.dimensions_mapping).each(_.bind(function(dimension, filter_name){
+            if(filter_name != group_by_name){
+                args[dimension] = this.model.get(filter_name);
+            }
+        }, this));
+        var required_filters = _(this.schema['filters']).reject(_.bind(function(item){
+            return item['name'] === group_by_name;
+        }, this))
+        var required = _(required_filters).pluck('dimension');
+        _(required).forEach(function(field) {
+            if(! args[field]) { incomplete = true; }
+            if(this.loadstate.get(field)) { incomplete = true; }
+        }, this);
+        if(incomplete) {
+            // not all filters have values
+            this.$el.html('--');
+            return;
+        }
+        this.$el.html('-- loading --');
+        _(this.datasource['extra_args']).each(function(item){
+            args[item[0]] = item[1];
+        });
+        if (preparation){
+            var countries = this.model.get(group_by_name);
+            requests = _(countries).map(_.bind(function(country) {
+                var dimension = this.dimensions_mapping[group_by_name];
+                args[dimension] = country;
+                var data_ajax = $.get(App.URL + this.datasource['rel_url'], args);
+                return data_ajax;
+            }, this));
+
+            requests.push( $.get(App.URL + '/dimension_values',
+                {
+                    'dimension': this.dimensions_mapping[group_by_name],
+                    'rev': App.DATA_REVISION
+                },
+                function(data){
+                    var results = data['options'];
+                    view.group_labels = _.object(
+                             _(results).pluck('notation'),
+                             _(results).pluck('label')
+                           );
+                }
+            ));
+
+            requests.push(_.bind(this.get_meta_data, this)());
+
+            var ajax_calls = $.when.apply($, requests);
+            var series_ajax_result = ajax_calls.done(function() {
+                var responses = (requests.length == 1) ? _([arguments])
+                                                       : _(arguments).toArray().slice(0,-2);
+                var series = _(responses).map(function(resp, n) {
+                    return {
+                        'label': view.group_labels[countries[n]],
+                        'data': resp[0]['datapoints']
+                    };
+                });
+                view.data = {
+                    'series': series,
+                    'credits': {
+                        'href': 'http://ec.europa.eu/digital-agenda/en/graphs/',
+                        'text': 'European Commission, Digital Agenda Scoreboard'
+                    }
+                };
+            });
+        }
+        else{
+            requests.push($.get(App.URL + this.datasource['rel_url'], args));
+            requests.push(_.bind(this.get_meta_data, this)());
+            var ajax_calls = $.when.apply($, requests);
+            var series_ajax_result = ajax_calls.done(function() {
+                var data = arguments[0][0];
+                view.data = {
+                    'series': data['datapoints'],
+                    'tooltip_formatter': function() {
+                        var chart_view = App.scenario1_chart_view;
+                        var tooltip_label = chart_view.meta_data['tooltip_label'];
+                        return '<b>'+ this.x +'</b><br>: ' +
+                               Math.round(this.y*10)/10 + ' ' + tooltip_label;
+                    },
+                    'credits': {
+                        'href': 'http://ec.europa.eu/digital-agenda/en/graphs/',
+                        'text': 'European Commission, Digital Agenda Scoreboard'
+                    },
+                    'xlabels_formatter': function() {
+                        var max_length = 15;
+                        if (this.value.length > max_length){
+                            return this.value.substr(0, max_length) + ' ...';
+                        }
+                        return this.value
+                    },
+                };
+            });
+        }
+
+        //TODO gets meta data everytime filters changed
+        //if needed, it could be optimized to fetch labels
+        //only when relevant filters change
+        series_ajax_result.done(_.bind(function(){
+            this.render();
+        }, this));
+
+    }
+
+});
+
+
 App.IndicatorMetadataView = Backbone.View.extend({
 
     template: App.get_template('scoreboard/metadata.html'),
@@ -45,7 +229,7 @@ App.get_indicator_labels = function(filters_data) {
 
 App.get_country_labels = function(filters_data) {
     var countries = filters_data['countries'];
-    return _.object(_(countries).pluck('uri'),
+    return _.object(_(countries).pluck('notation'),
                     _(countries).pluck('label'));
 };
 
