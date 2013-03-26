@@ -21,6 +21,7 @@ App.SelectFilter = Backbone.View.extend({
         this.constraints = options['constraints'] || [];
         this.dimension_options = [];
         this.ajax = null;
+        this.default_all = options['default_all'] || false;
         this.loadstate = options['loadstate'] || new Backbone.Model();
         _(this.constraints).forEach(function(other_name, other_dimension) {
             this.model.on('change:' + other_name, this.update, this);
@@ -100,10 +101,21 @@ App.MultipleSelectFilter = App.SelectFilter.extend({
 
     received_new_options: function(new_options) {
         this.dimension_options = new_options;
+        this.dimension_options = new_options;
+        var current_value = this.model.get(this.name);
+
         var range = _(new_options).pluck('notation');
-        if(! _(range).contains(this.model.get(this.name))) {
-            this.model.set(this.name, [range[0]]);
+        if(_.intersection(range, current_value) != current_value){
+            if(this.default_all){
+                this.model.set(this.name, range);
+            }
+            else{
+                if(! current_value){
+                    this.model.set(this.name, [range[0]]);
+                }
+            }
         }
+
         this.render();
     },
 
@@ -172,6 +184,7 @@ App.FiltersBox = Backbone.View.extend({
                 xy: item['xy'],
                 name: item['name'],
                 label: item['label'],
+                default_all: item['default_all'],
                 dimension: item['dimension'],
                 constraints: item['constraints']
             });
