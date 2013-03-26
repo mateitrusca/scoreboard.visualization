@@ -70,64 +70,6 @@ App.Scenario3FiltersView = Backbone.View.extend({
 });
 
 
-App.Scenario3ChartView = Backbone.View.extend({
-
-    className: "highcharts-chart",
-
-    initialize: function(options) {
-        this.model.on('change', this.filters_changed, this);
-        this.loadstate = options['loadstate'] || new Backbone.Model();
-        this.loadstate.on('change', this.filters_changed, this);
-        this.filters_changed();
-    },
-
-    render: function() {
-        if(this.data) {
-            var options = {
-                'series': this.data['series'],
-                'indicator_x_label': this.data['indicator_x_label'],
-                'indicator_y_label': this.data['indicator_y_label'],
-                'credits': {
-                    'href': 'http://ec.europa.eu/digital-agenda/en/graphs/',
-                    'text': 'European Commission, Digital Agenda Scoreboard'
-                }
-            };
-            App.scenario3_chart(this.el, options);
-        }
-        else {
-            this.$el.html("Please select some filters.");
-        }
-    },
-
-    filters_changed: function() {
-        var incomplete = false;
-        var args = this.model.toJSON();
-        var required = _(App.scenario3_filters_schema['filters']).pluck('name');
-        _(required).forEach(function(field) {
-            if(! args[field]) { incomplete = true; }
-            if(this.loadstate.get(field)) { incomplete = true; }
-        }, this);
-        if(incomplete) {
-            // not all filters have values
-            this.$el.html('--');
-            return;
-        }
-        args['columns'] = 'ref-area';
-        args['xy_columns'] = 'value';
-        args['rev'] = App.DATA_REVISION;
-        this.$el.html('-- loading --');
-        var series_ajax = $.get(App.URL + '/datapoints_xy', args);
-        series_ajax.done(_.bind(function(data) {
-            this.data = {
-                'series': data['datapoints']
-            };
-            this.render();
-        }, this));
-    }
-
-});
-
-
 App.scenario3_filters_schema = {
     filters: [
         {type: 'select',
