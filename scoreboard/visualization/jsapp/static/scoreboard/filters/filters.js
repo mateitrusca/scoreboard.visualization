@@ -131,6 +131,8 @@ App.MultipleSelectFilter = App.SelectFilter.extend({
             'filter_name': this.name
         }));
         App.jQuery(this.$el.find('select[name='+ this.name +']')).select2();
+        App.jQuery(this.$el.find('select[name='+ this.name +']')).select2(
+            "val", this.model.get(this.name));
     }
 
 });
