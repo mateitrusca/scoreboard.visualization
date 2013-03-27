@@ -20,10 +20,9 @@ App.scenario3_chart = function(container, options, meta_data) {
     };
 
     var series = _(options['series']).map(function(datapoint) {
-        var name = datapoint['ref-area'];
-        var code = App.COUNTRY_CODE[name];
+        var code = datapoint['ref-area'];
         return {
-            'name': name + ' ' + code,
+            'name': code,
             'color': countrycolor(code),
             'data': [{
                 'name': code,
