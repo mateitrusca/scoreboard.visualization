@@ -20,14 +20,6 @@ App.scenario2_filters_schema = {
              'indicator-group': 'indicator-group'
          }
         },
-        {type: 'multiple_select',
-         name: 'countries',
-         label: 'Countries',
-         dimension: 'ref-area',
-         constraints: {
-             'indicator-group': 'indicator-group',
-             'indicator': 'indicator'
-         }},
         {type: 'select',
          name: 'breakdown',
          label: 'Breakdown',
@@ -42,7 +34,18 @@ App.scenario2_filters_schema = {
          dimension: 'unit-measure',
          constraints: {
              'indicator-group': 'indicator-group',
-             'indicator': 'indicator'
+             'indicator': 'indicator',
+             'breakdown': 'breakdown'
+         }},
+        {type: 'multiple_select',
+         name: 'countries',
+         label: 'Countries',
+         dimension: 'ref-area',
+         constraints: {
+             'indicator-group': 'indicator-group',
+             'indicator': 'indicator',
+             'breakdown': 'breakdown',
+             'unit-measure': 'unit-measure'
          }}
     ]
 };
