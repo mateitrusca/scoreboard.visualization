@@ -101,7 +101,6 @@ App.MultipleSelectFilter = App.SelectFilter.extend({
 
     received_new_options: function(new_options) {
         this.dimension_options = new_options;
-        this.dimension_options = new_options;
         var current_value = this.model.get(this.name);
 
         var range = _(new_options).pluck('notation');
@@ -133,6 +132,21 @@ App.MultipleSelectFilter = App.SelectFilter.extend({
         App.jQuery(this.$el.find('select[name='+ this.name +']')).select2();
         App.jQuery(this.$el.find('select[name='+ this.name +']')).select2(
             "val", this.model.get(this.name));
+
+        App.jQuery(this.$el.find('#' + this.name + "-add-all")).click(_.bind(function() {
+            var all = _(this.dimension_options).pluck('notation');
+            this.model.set(this.name, []);
+            App.jQuery(this.$el.find('select[name=' + this.name + ']')).select2("val", "");
+            this.model.set(this.name, all);
+            App.jQuery(this.$el.find('select[name=' + this.name + ']')).select2(
+                "val", all);
+        }, this));
+
+        App.jQuery(this.$el.find('#' + this.name + "-clear")).click(_.bind(function() {
+            App.jQuery(this.$el.find('select[name=' + this.name + ']')).select2("val", "");
+            this.model.set(this.name, []);
+        }, this));
+
     }
 
 });

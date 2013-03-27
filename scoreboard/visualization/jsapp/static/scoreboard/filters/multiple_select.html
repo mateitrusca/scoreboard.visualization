@@ -1,7 +1,9 @@
 <label>{{ filter_label }}</label>
 <select style="max-width: 500px" name="{{ filter_name }}" multiple="multiple">
 {{# dimension_options }}
-  <option {{# if selected }} selected="selected" {{/ if }}
-          value="{{ notation }}">{{ label }}</option>
+<option {{# if selected }} selected="selected" {{/ if }}
+        value="{{ notation }}">{{ label }}</option>
 {{/ dimension_options }}
 </select>
+<input type="button" id="{{ filter_name }}-add-all" value="Add All"/>
+<input type="button" id="{{ filter_name }}-clear" value="Remove All"/>
