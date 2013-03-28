@@ -408,7 +408,7 @@ describe('ScenarioChartView', function() {
         expect(this.scenario_chart.calledOnce).to.equal(true);
         var call_args = this.scenario_chart.getCall(0).args;
         expect(call_args[0]).to.equal(this.chart.el);
-        expect(call_args[1]['series']).to.deep.equal(ajax_data);
+        expect(call_args[1]['series'][0]['data']).to.deep.equal(ajax_data);
     });
 
 

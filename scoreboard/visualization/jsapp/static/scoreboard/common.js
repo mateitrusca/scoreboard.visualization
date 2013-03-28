@@ -161,8 +161,12 @@ App.ScenarioChartView = Backbone.View.extend({
             var ajax_calls = $.when.apply($, requests);
             var series_ajax_result = ajax_calls.done(function() {
                 var data = arguments[0][0];
+                var series0 = {
+                    'label': '',
+                    'data': data['datapoints']
+                };
                 _(chart_data).extend({
-                    'series': data['datapoints']
+                    'series': [series0]
                 });
                 view.data = chart_data;
             });

@@ -19,7 +19,7 @@ App.scenario3_chart = function(container, options, meta_data) {
         return this.point.name;
     };
 
-    var series = _(options['series']).map(function(datapoint) {
+    var series = _(options['series'][0]['data']).map(function(datapoint) {
         var code = datapoint['ref-area'];
         return {
             'name': code,
