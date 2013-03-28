@@ -115,7 +115,7 @@ App.scenario2_initialize = function() {
     App.share = new App.ShareOptionsView();
 
     $('#the-metadata').append(App.metadata.el);
-    $('#the-metadata').append(App.share.el);
+    $('#the-share').append(App.share.el);
 
 
     Backbone.history.start();
