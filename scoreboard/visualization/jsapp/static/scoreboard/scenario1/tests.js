@@ -380,9 +380,7 @@ describe('ScenarioChartView', function() {
     it('should update year text according to selection', function(){
         var server = this.sandbox.server;
         this.model.set({'time-period': '2003'});
-        App.respond_json(server.requests[0], {'datapoints': []});
-        App.respond_json(server.requests[1],
-            {'label': 'request 2', 'short_label': 'lbl 2'});
+        App.respond_json(server.requests[2], {'datapoints': []});
         App.respond_json(server.requests[3],
             {'label': 'Year 2003', 'short_label': 'lbl 2'});
         expect(this.scenario_chart.calledOnce).to.equal(true);
