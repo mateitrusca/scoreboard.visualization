@@ -43,7 +43,7 @@ App.scenario5_initialize = function() {
     var qtip_css = App.STATIC + '/lib/qtip-2.0.1/jquery.qtip.css';
     $('<link rel="stylesheet">').attr('href', qtip_css).appendTo($('head'));
     var box = $('#scenario-box');
-    box.html(App.get_template('scoreboard/scenario5/scenario5.html')());
+    box.html(App.get_template('scoreboard/scenario.html')());
     box.addClass('scenario5');
 
     App.filters = new Backbone.Model();

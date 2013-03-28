@@ -134,7 +134,7 @@ App.scenario1_filters_schema = {
 
 App.scenario1_initialize = function() {
     var box = $('#scenario-box');
-    box.html(App.get_template('scoreboard/scenario1/scenario1.html')());
+    box.html(App.get_template('scoreboard/scenario.html')());
 
     App.filters = new Backbone.Model();
     App.filter_loadstate = new Backbone.Model();
