@@ -100,6 +100,9 @@ App.ScenarioChartView = Backbone.View.extend({
         _(this.datasource['extra_args']).each(function(item){
             args[item[0]] = item[1];
         });
+
+        var chart_data = {};
+
         if (groupby){
             var countries = this.model.get(groupby);
             requests = _(countries).map(_.bind(function(country) {
@@ -150,7 +153,7 @@ App.ScenarioChartView = Backbone.View.extend({
             var ajax_calls = $.when.apply($, requests);
             var series_ajax_result = ajax_calls.done(function() {
                 var data = arguments[0][0];
-                view.data = {
+                _(chart_data).extend({
                     'series': data['datapoints'],
                     'tooltip_formatter': function() {
                         var chart_view = App.scenario1_chart_view;
@@ -169,7 +172,8 @@ App.ScenarioChartView = Backbone.View.extend({
                         }
                         return this.value
                     },
-                };
+                });
+                view.data = chart_data;
             });
         }
 
