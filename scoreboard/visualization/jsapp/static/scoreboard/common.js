@@ -138,13 +138,14 @@ App.ScenarioChartView = Backbone.View.extend({
                         'data': resp[0]['datapoints']
                     };
                 });
-                view.data = {
+                _(chart_data).extend({
                     'series': series,
                     'credits': {
                         'href': 'http://ec.europa.eu/digital-agenda/en/graphs/',
                         'text': 'European Commission, Digital Agenda Scoreboard'
                     }
-                };
+                });
+                view.data = chart_data;
             });
         }
         else{
