@@ -92,7 +92,7 @@ App.scenario2_initialize = function() {
         ],
         scenario_chart: App.scenario2_chart
     });
-    $('#the-chart').append(App.scenario2_chart_view.el);
+    $('#the-chart').prepend(App.scenario2_chart_view.el);
 
     App.metadata = new App.IndicatorMetadataView({
         model: App.filters,
@@ -111,7 +111,7 @@ App.scenario2_initialize = function() {
             }
           }
     });
-    $('#the-metadata').append(App.metadata.el);
+    $('#the-metadata').prepend(App.metadata.el);
 
 
     Backbone.history.start();
