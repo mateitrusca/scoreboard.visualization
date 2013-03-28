@@ -127,7 +127,7 @@ App.scenario1_filters_schema = {
              'time-period': 'time-period',
              'indicator-group': 'indicator-group',
              'indicator': 'indicator'
-         }},
+         }}
     ]
 };
 
@@ -168,7 +168,7 @@ App.scenario1_initialize = function() {
         meta_labels: [
             { targets: ['x_title'], filter_name: 'indicator', type: 'label' },
             { targets: ['y_title', 'tooltip_label'], filter_name: 'unit-measure', type: 'short_label' },
-            { targets: ['year_text'], filter_name: 'time-period', type: 'label' },
+            { targets: ['year_text'], filter_name: 'time-period', type: 'label' }
         ]
     });
     $('#the-chart').append(App.scenario1_chart_view.el);
