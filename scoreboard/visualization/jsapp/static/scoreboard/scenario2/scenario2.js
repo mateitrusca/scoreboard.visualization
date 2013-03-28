@@ -71,11 +71,7 @@ App.scenario2_initialize = function() {
         model: App.filters,
         schema: App.scenario2_filters_schema,
         datasource: {
-            data_preparation: {
-                group: {
-                    filter_name: 'countries',
-                }
-            },
+            groupby: 'countries',
             rel_url: '/datapoints',
             extra_args: [
                 ['fields', 'time-period,value'],

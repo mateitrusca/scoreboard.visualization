@@ -75,12 +75,12 @@ App.ScenarioChartView = Backbone.View.extend({
     filters_changed: function() {
         var incomplete = false;
         var args = {};
-        var preparation = this.datasource['data_preparation'];
+        var preparation = this.datasource['groupby'];
         var group_by_name = '';
         var requests = [];
         var view = this;
         if (preparation){
-            group_by_name = this.datasource.data_preparation.group.filter_name
+            group_by_name = this.datasource.groupby;
         }
         _(this.dimensions_mapping).each(_.bind(function(dimension, filter_name){
             if(filter_name != group_by_name){

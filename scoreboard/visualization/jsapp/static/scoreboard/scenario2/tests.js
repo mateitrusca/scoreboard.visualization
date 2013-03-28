@@ -29,11 +29,7 @@ describe('Scenario2ChartView', function() {
                 ]
             },
             datasource: {
-                data_preparation: {
-                    group: {
-                        filter_name: 'countries'
-                    }
-                },
+                groupby: 'countries',
                 rel_url: '/source_view',
                 extra_args: [
                     ['fields', 'dimension1,value1'],

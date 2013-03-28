@@ -280,11 +280,7 @@ describe('ScenarioChartViewParameters', function() {
         var chart = new App.ScenarioChartView({
             model: this.model,
             datasource: {
-                data_preparation: {
-                    group: {
-                        filter_name: 'country'
-                    }
-                },
+                groupby: 'country',
                 rel_url: '/source_view',
                 extra_args: [
                     ['fields', 'dimension1,value1'],

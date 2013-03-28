@@ -154,11 +154,7 @@ App.scenario1_initialize = function() {
         schema: App.scenario1_filters_schema,
         scenario_chart: App.scenario1_chart,
         datasource: {
-            data_preparation: {
-                group: {
-                    filter_name: 'countries'
-                }
-            },
+            groupby: 'countries',
             rel_url: '/datapoints',
             extra_args: [
                 ['fields', 'ref-area,value'],
