@@ -126,7 +126,7 @@ App.ScenarioChartView = Backbone.View.extend({
                 }
             ));
 
-            requests.push(_.bind(this.get_meta_data, this)());
+            requests.push(this.get_meta_data());
 
             var ajax_calls = $.when.apply($, requests);
             var series_ajax_result = ajax_calls.done(function() {
@@ -150,7 +150,7 @@ App.ScenarioChartView = Backbone.View.extend({
         }
         else{
             requests.push($.get(App.URL + this.datasource['rel_url'], args));
-            requests.push(_.bind(this.get_meta_data, this)());
+            requests.push(this.get_meta_data());
             var ajax_calls = $.when.apply($, requests);
             var series_ajax_result = ajax_calls.done(function() {
                 var data = arguments[0][0];
