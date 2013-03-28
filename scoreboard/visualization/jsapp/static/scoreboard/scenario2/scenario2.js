@@ -92,13 +92,15 @@ App.scenario2_initialize = function() {
         ],
         scenario_chart: App.scenario2_chart
     });
-    $('#the-chart').append(App.scenario2_chart_view.el);
+    $('#the-chart').prepend(App.scenario2_chart_view.el);
 
     App.metadata = new App.IndicatorMetadataView({
         model: App.filters,
         field: 'indicator',
+        schema: App.scenario2_filters_schema,
         footer_meta_sources:
           { 'description': {
+              title: "Label x-axis",
               source: '/dimension_value_metadata',
               filters: [
                 { target: 'indicator',
@@ -111,7 +113,11 @@ App.scenario2_initialize = function() {
             }
           }
     });
+
+    App.share = new App.ShareOptionsView();
+
     $('#the-metadata').append(App.metadata.el);
+    $('#the-share').append(App.share.el);
 
 
     Backbone.history.start();

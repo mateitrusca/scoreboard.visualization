@@ -173,6 +173,30 @@ App.scenario1_initialize = function() {
     });
     $('#the-chart').append(App.scenario1_chart_view.el);
 
+    App.metadata = new App.IndicatorMetadataView({
+        model: App.filters,
+        field: 'indicator',
+        schema: App.scenario1_filters_schema,
+        footer_meta_sources:
+          { 'description': {
+              source: '/dimension_value_metadata',
+              title: 'Label x-axis',
+              filters: [
+                { target: 'indicator',
+                  name: 'indicator',
+                  part: 'label' },
+                { target: 'breakdown',
+                  name: 'breakdown',
+                  part: 'label' }
+              ]
+            }
+          }
+    });
+    $('#the-metadata').append(App.metadata.el);
+
+    App.share = new App.ShareOptionsView();
+    $('#the-share').append(App.share.el);
+
     Backbone.history.start();
 };
 
