@@ -16,7 +16,7 @@ describe('ScenarioChartViewParameters', function() {
         this.sandbox.restore();
     });
 
-    it('should be initialized with meta labels', function(){
+    it('should be initialized with meta labels', function() {
         var server = this.sandbox.server;
         var schema = {
             filters: [
@@ -35,7 +35,9 @@ describe('ScenarioChartViewParameters', function() {
                 ]
             },
             meta_labels: [
-                { targets: ['dyn_lbl'], filter_name: 'indicator', type: 'label' },
+                {targets: ['dyn_lbl'],
+                 filter_name: 'indicator',
+                 type: 'label'},
             ],
             schema: {filters: [ ]},
             scenario_chart: this.scenario_chart
@@ -46,7 +48,8 @@ describe('ScenarioChartViewParameters', function() {
         );
     });
 
-    it('should build dimensions_mapping from received filters schema', function(){
+    it('should build dimensions_mapping from received filters schema',
+       function() {
         var chart = new App.ScenarioChartView({
             model: this.model,
             datasource: {
@@ -79,7 +82,9 @@ describe('ScenarioChartViewParameters', function() {
                 ]
             },
             meta_labels: [
-                {targets: ['x_title'], filter_name: 'filter1', type: 'short_label'}
+                {targets: ['x_title'],
+                 filter_name: 'filter1',
+                 type: 'short_label'}
             ],
             schema: {filters: [
                 {name: 'filter1',
@@ -96,7 +101,7 @@ describe('ScenarioChartViewParameters', function() {
 
 
 
-    it('should use the datasource init param', function(){
+    it('should use the datasource init param', function() {
         var server = this.sandbox.server;
         var schema = {
             filters: [
@@ -124,7 +129,7 @@ describe('ScenarioChartViewParameters', function() {
         expect(url).to.have.string('test_view');
     });
 
-    it('should append extra_args to args', function(){
+    it('should append extra_args to args', function() {
         var server = this.sandbox.server;
         var schema = {
             filters: [
@@ -152,7 +157,7 @@ describe('ScenarioChartViewParameters', function() {
         expect(url).to.have.string('param1=value1');
     });
 
-    it('should render the chart passed as parameter', function(){
+    it('should render the chart passed as parameter', function() {
         var server = this.sandbox.server;
         var scenario_chart = sinon.spy();
         var schema = {
@@ -181,7 +186,7 @@ describe('ScenarioChartViewParameters', function() {
         expect(scenario_chart.calledOnce).to.equal(true);
     });
 
-    it('should fetch labels according to init params', function(){
+    it('should fetch labels according to init params', function() {
         var server = this.sandbox.server;
         var chart = new App.ScenarioChartView({
             model: this.model,
@@ -191,8 +196,12 @@ describe('ScenarioChartViewParameters', function() {
                 ]
             },
             meta_labels: [
-                {targets: ['label1'], filter_name: 'indicator', type: 'label'},
-                {targets: ['label2', 'label3'], filter_name: 'indicator', type: 'short_label'}
+                {targets: ['label1'],
+                 filter_name: 'indicator',
+                 type: 'label'},
+                {targets: ['label2', 'label3'],
+                 filter_name: 'indicator',
+                 type: 'short_label'}
             ],
             schema: {filters: [ ]},
             scenario_chart: this.scenario_chart
@@ -266,18 +275,19 @@ describe('ScenarioChartViewParameters', function() {
     });
     */
 
-    it('should fetch data using init filters dimensions', function(){
+    it('should fetch data using init filters dimensions', function() {
         var server = this.sandbox.server;
+        var labels = {
+            'http://data.lod2.eu/scoreboard/country/Denmark': "Denmark",
+            'http://data.lod2.eu/scoreboard/country/Spain': "Spain"
+        };
         var chart = new App.ScenarioChartView({
             model: this.model,
             datasource: {
                 data_preparation: {
                     group: {
                         filter_name: 'country',
-                        labels: {
-                            'http://data.lod2.eu/scoreboard/country/Denmark': "Denmark",
-                            'http://data.lod2.eu/scoreboard/country/Spain': "Spain"
-                        }
+                        labels: labels
                     }
                 },
                 rel_url: '/source_view',
@@ -334,7 +344,9 @@ describe('ScenarioChartView', function() {
         this.chart = new App.ScenarioChartView({
             model: this.model,
             meta_labels: [
-                {targets: ['extra_label'], filter_name: 'time-period', type: 'label'}
+                {targets: ['extra_label'],
+                 filter_name: 'time-period',
+                 type: 'label'}
             ],
             schema: {filters: [
                 {name: 'indicator',
