@@ -119,7 +119,7 @@ App.ScenarioChartView = Backbone.View.extend({
                 },
                 function(data){
                     var results = data['options'];
-                    view.group_labels = _.object(
+                    chart_data['group_labels'] = _.object(
                              _(results).pluck('notation'),
                              _(results).pluck('label')
                            );
@@ -134,7 +134,7 @@ App.ScenarioChartView = Backbone.View.extend({
                                                        : _(arguments).toArray().slice(0,-2);
                 var series = _(responses).map(function(resp, n) {
                     return {
-                        'label': view.group_labels[countries[n]],
+                        'label': chart_data['group_labels'][countries[n]],
                         'data': resp[0]['datapoints']
                     };
                 });
