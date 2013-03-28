@@ -96,7 +96,24 @@ App.ScenarioChartView = Backbone.View.extend({
             args[item[0]] = item[1];
         });
 
-        var chart_data = {};
+        var chart_data = {
+            'tooltip_formatter': function() {
+                var tooltip_label = chart_data.meta_data['tooltip_label'];
+                return '<b>'+ this.x +'</b><br>: ' +
+                       Math.round(this.y*10)/10 + ' ' + tooltip_label;
+            },
+            'credits': {
+                'href': 'http://ec.europa.eu/digital-agenda/en/graphs/',
+                'text': 'European Commission, Digital Agenda Scoreboard'
+            },
+            'xlabels_formatter': function() {
+                var max_length = 15;
+                if (this.value.length > max_length){
+                    return this.value.substr(0, max_length) + ' ...';
+                }
+                return this.value
+            }
+        };
 
         if (groupby){
             var countries = this.model.get(groupby);
@@ -134,11 +151,7 @@ App.ScenarioChartView = Backbone.View.extend({
                     };
                 });
                 _(chart_data).extend({
-                    'series': series,
-                    'credits': {
-                        'href': 'http://ec.europa.eu/digital-agenda/en/graphs/',
-                        'text': 'European Commission, Digital Agenda Scoreboard'
-                    }
+                    'series': series
                 });
                 view.data = chart_data;
             });
@@ -150,24 +163,7 @@ App.ScenarioChartView = Backbone.View.extend({
             var series_ajax_result = ajax_calls.done(function() {
                 var data = arguments[0][0];
                 _(chart_data).extend({
-                    'series': data['datapoints'],
-                    'tooltip_formatter': function() {
-                        var chart_view = App.scenario1_chart_view;
-                        var tooltip_label = chart_data.meta_data['tooltip_label'];
-                        return '<b>'+ this.x +'</b><br>: ' +
-                               Math.round(this.y*10)/10 + ' ' + tooltip_label;
-                    },
-                    'credits': {
-                        'href': 'http://ec.europa.eu/digital-agenda/en/graphs/',
-                        'text': 'European Commission, Digital Agenda Scoreboard'
-                    },
-                    'xlabels_formatter': function() {
-                        var max_length = 15;
-                        if (this.value.length > max_length){
-                            return this.value.substr(0, max_length) + ' ...';
-                        }
-                        return this.value
-                    },
+                    'series': data['datapoints']
                 });
                 view.data = chart_data;
             });
