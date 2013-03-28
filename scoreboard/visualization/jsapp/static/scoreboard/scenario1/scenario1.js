@@ -150,7 +150,6 @@ App.scenario1_initialize = function() {
     App.scenario1_chart_view = new App.ScenarioChartView({
         model: App.filters,
         loadstate: App.filter_loadstate,
-        meta_data: {},
         schema: App.scenario1_filters_schema,
         scenario_chart: App.scenario1_chart,
         datasource: {

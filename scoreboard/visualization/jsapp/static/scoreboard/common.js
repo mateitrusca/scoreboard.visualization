@@ -11,7 +11,6 @@ App.ScenarioChartView = Backbone.View.extend({
 
     initialize: function(options) {
         this.model.on('change', this.filters_changed, this);
-        this.meta_data = options['meta_data'];
         this.loadstate = options['loadstate'] || new Backbone.Model();
         this.loadstate.on('change', this.filters_changed, this);
         this.meta_labels = options['meta_labels'];

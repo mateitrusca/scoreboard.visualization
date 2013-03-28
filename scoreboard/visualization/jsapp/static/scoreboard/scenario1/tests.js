@@ -379,7 +379,6 @@ describe('ScenarioChartView', function() {
 
     it('should update year text according to selection', function(){
         var server = this.sandbox.server;
-        this.chart.meta_data = {};
         this.model.set({'time-period': '2003'});
         App.respond_json(server.requests[0], {'datapoints': []});
         App.respond_json(server.requests[1],
@@ -405,7 +404,6 @@ describe('ScenarioChartView', function() {
         var ajax_data = [{'ref-area': "Austria", 'value': 0.18},
                          {'ref-area': "Belgium", 'value': 0.14}];
 
-        this.chart.meta_data = {};
         App.respond_json(server.requests[0], {'datapoints': ajax_data});
         App.respond_json(server.requests[1],
             {'label': 'request 2', 'short_label': 'lbl 2'});
