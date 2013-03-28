@@ -193,6 +193,10 @@ App.IndicatorMetadataView = Backbone.View.extend({
 
     template: App.get_template('scoreboard/metadata.html'),
 
+    tagName: 'div',
+    id: 'indicators',
+    className: 'legend',
+
     initialize: function(options) {
         this.field = options['field'];
         this.footer_meta_sources = options['footer_meta_sources'];
