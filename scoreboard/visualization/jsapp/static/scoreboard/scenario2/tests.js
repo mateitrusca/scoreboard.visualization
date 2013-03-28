@@ -31,12 +31,7 @@ describe('Scenario2ChartView', function() {
             datasource: {
                 data_preparation: {
                     group: {
-                        filter_name: 'countries',
-                        labels: {
-                            'BE': "Belgium",
-                            'DK': "Denmark",
-                            'ES': "Spain"
-                        }
+                        filter_name: 'countries'
                     }
                 },
                 rel_url: '/source_view',
