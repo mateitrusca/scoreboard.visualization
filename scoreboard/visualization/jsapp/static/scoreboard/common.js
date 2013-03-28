@@ -142,8 +142,7 @@ App.ScenarioChartView = Backbone.View.extend({
 
             var ajax_calls = $.when.apply($, requests);
             var series_ajax_result = ajax_calls.done(function() {
-                var responses = (requests.length == 1) ? _([arguments])
-                                                       : _(arguments).toArray().slice(0,-2);
+                var responses = _(arguments).toArray().slice(0,-2);
                 var series = _(responses).map(function(resp, n) {
                     return {
                         'label': chart_data['group_labels'][countries[n]],
