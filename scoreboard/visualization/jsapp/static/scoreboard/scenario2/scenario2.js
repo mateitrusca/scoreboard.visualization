@@ -69,6 +69,7 @@ App.scenario2_initialize = function() {
 
     App.scenario2_chart_view = new App.ScenarioChartView({
         model: App.filters,
+        loadstate: App.filter_loadstate,
         schema: App.scenario2_filters_schema,
         datasource: {
             groupby: 'countries',
