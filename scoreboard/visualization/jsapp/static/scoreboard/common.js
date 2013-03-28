@@ -75,20 +75,16 @@ App.ScenarioChartView = Backbone.View.extend({
     filters_changed: function() {
         var incomplete = false;
         var args = {};
-        var preparation = this.datasource['groupby'];
-        var group_by_name = '';
+        var groupby = this.datasource['groupby'];
         var requests = [];
         var view = this;
-        if (preparation){
-            group_by_name = this.datasource.groupby;
-        }
         _(this.dimensions_mapping).each(_.bind(function(dimension, filter_name){
-            if(filter_name != group_by_name){
+            if(filter_name != groupby){
                 args[dimension] = this.model.get(filter_name);
             }
         }, this));
         var required_filters = _(this.schema['filters']).reject(function(item){
-            return item['name'] === group_by_name;
+            return item['name'] === groupby;
         })
         var required = _(required_filters).pluck('dimension');
         _(required).forEach(function(field) {
@@ -104,10 +100,10 @@ App.ScenarioChartView = Backbone.View.extend({
         _(this.datasource['extra_args']).each(function(item){
             args[item[0]] = item[1];
         });
-        if (preparation){
-            var countries = this.model.get(group_by_name);
+        if (groupby){
+            var countries = this.model.get(groupby);
             requests = _(countries).map(_.bind(function(country) {
-                var dimension = this.dimensions_mapping[group_by_name];
+                var dimension = this.dimensions_mapping[groupby];
                 args[dimension] = country;
                 var data_ajax = $.get(App.URL + this.datasource['rel_url'], args);
                 return data_ajax;
@@ -115,7 +111,7 @@ App.ScenarioChartView = Backbone.View.extend({
 
             requests.push( $.get(App.URL + '/dimension_values',
                 {
-                    'dimension': this.dimensions_mapping[group_by_name],
+                    'dimension': this.dimensions_mapping[groupby],
                     'rev': App.DATA_REVISION
                 },
                 function(data){
