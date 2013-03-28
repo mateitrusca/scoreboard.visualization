@@ -211,9 +211,9 @@ describe('ScenarioChartViewParameters', function() {
             {'label': 'normal_label', 'short_label': 'short_label'});
         App.respond_json(server.requests[2],
             {'label': 'normal_label', 'short_label': 'short_label'});
-        expect(chart.meta_data.label1).to.equal('normal_label');
-        expect(chart.meta_data.label2).to.equal('short_label');
-        expect(chart.meta_data.label3).to.equal(chart.meta_data.label2);
+        expect(chart.data.meta_data.label1).to.equal('normal_label');
+        expect(chart.data.meta_data.label2).to.equal('short_label');
+        expect(chart.data.meta_data.label3).to.equal(chart.data.meta_data.label2);
     });
 
 
@@ -384,7 +384,7 @@ describe('ScenarioChartView', function() {
         App.respond_json(server.requests[3],
             {'label': 'Year 2003', 'short_label': 'lbl 2'});
         expect(this.scenario_chart.calledOnce).to.equal(true);
-        expect(this.chart.meta_data['extra_label']).to.equal('Year 2003');
+        expect(this.chart.data.meta_data['extra_label']).to.equal('Year 2003');
     });
 
     it('should fetch data from server', function() {

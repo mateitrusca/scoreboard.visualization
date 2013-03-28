@@ -26,7 +26,7 @@ App.ScenarioChartView = Backbone.View.extend({
 
     render: function() {
         if(this.data) {
-            this.scenario_chart(this.el, this.data, this.meta_data);
+            this.scenario_chart(this.el, this.data, this.data.meta_data);
         }
     },
 
@@ -141,7 +141,6 @@ App.ScenarioChartView = Backbone.View.extend({
                     }
                 });
                 view.data = chart_data;
-                view.meta_data = chart_data.meta_data;
             });
         }
         else{
@@ -171,7 +170,6 @@ App.ScenarioChartView = Backbone.View.extend({
                     },
                 });
                 view.data = chart_data;
-                view.meta_data = chart_data.meta_data;
             });
         }
 
