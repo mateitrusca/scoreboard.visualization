@@ -30,9 +30,10 @@ App.ScenarioChartView = Backbone.View.extend({
         }
     },
 
-    get_meta_data: function(){
+    get_meta_data: function(chart_data){
         var view = this;
         var meta_data = {};
+        chart_data['meta_data'] = meta_data;
 
         function process_ajax(args){
             var ajax = $.get(App.URL + '/dimension_labels',
@@ -62,12 +63,7 @@ App.ScenarioChartView = Backbone.View.extend({
 
         var ajax_queue = _(ajax_args).map(process_ajax);
         var ajax_calls = $.when.apply($, ajax_queue);
-        return ajax_calls.done(
-            function(){
-                view.meta_data = meta_data;
-                //view.render();
-            }
-        );
+        return ajax_calls;
 
     },
 
@@ -125,7 +121,7 @@ App.ScenarioChartView = Backbone.View.extend({
                 }
             ));
 
-            requests.push(this.get_meta_data());
+            requests.push(this.get_meta_data(chart_data));
 
             var ajax_calls = $.when.apply($, requests);
             var series_ajax_result = ajax_calls.done(function() {
@@ -145,11 +141,12 @@ App.ScenarioChartView = Backbone.View.extend({
                     }
                 });
                 view.data = chart_data;
+                view.meta_data = chart_data.meta_data;
             });
         }
         else{
             requests.push($.get(App.URL + this.datasource['rel_url'], args));
-            requests.push(this.get_meta_data());
+            requests.push(this.get_meta_data(chart_data));
             var ajax_calls = $.when.apply($, requests);
             var series_ajax_result = ajax_calls.done(function() {
                 var data = arguments[0][0];
@@ -157,7 +154,7 @@ App.ScenarioChartView = Backbone.View.extend({
                     'series': data['datapoints'],
                     'tooltip_formatter': function() {
                         var chart_view = App.scenario1_chart_view;
-                        var tooltip_label = chart_view.meta_data['tooltip_label'];
+                        var tooltip_label = chart_data.meta_data['tooltip_label'];
                         return '<b>'+ this.x +'</b><br>: ' +
                                Math.round(this.y*10)/10 + ' ' + tooltip_label;
                     },
@@ -174,6 +171,7 @@ App.ScenarioChartView = Backbone.View.extend({
                     },
                 });
                 view.data = chart_data;
+                view.meta_data = chart_data.meta_data;
             });
         }
 
