@@ -217,14 +217,22 @@ App.IndicatorMetadataView = Backbone.View.extend({
                 requests.push(
                     $.get(App.URL + this.source, args, _.bind(function(resp){
                         data[this.key] = data[this.key] || {};
+                        data[this.key]['title'] = this.title;
                         data[this.key][filter.target] = resp[filter.part];
-                    }, {'data': this.data, 'key': this.key, 'filter': filter}))
+                    }, {'data': this.data, 'key': this.key, 'filter': filter, 'title': this.title}))
                 )
-            }, {'source': source, 'model': this.model, 'data': data, 'key': key}));
+            },
+            {'source': source,
+             'model': this.model,
+             'data': data,
+             'key': key,
+             'title': item['title']}
+           ));
         }, this));
         var ajax_calls = $.when.apply($, requests);
         ajax_calls.done(_.bind(function(){
             if(data){
+                console.log(data);
                 this.$el.html(this.template(data));
             }
             else {

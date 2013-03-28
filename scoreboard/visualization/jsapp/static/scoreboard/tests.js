@@ -23,7 +23,8 @@ describe('IndicatorMetaDataView', function() {
             model: this.model,
             field: 'indicator',
             footer_meta_sources:
-              { 'description': {
+              { 'ind1': {
+                  title: 'meta_title',
                   source: '/test_view',
                   filters: [
                     { target: 'part1',
@@ -31,15 +32,17 @@ describe('IndicatorMetaDataView', function() {
                       part: 'label' },
                     { target: 'part2',
                       name: 'unit-measure',
-                      part: 'label' }
+                      part: 'note' }
                   ]
                 }
               }
         });
 
+        var template = this.sandbox.spy(view, 'template');
+
         var data_indicator = {
           "definition": "definition",
-          "label": "label",
+          "label": "label_indicator",
           "note": "note",
           "short_label": "short_label"
         }
@@ -50,21 +53,87 @@ describe('IndicatorMetaDataView', function() {
 
         var data_unit = {
           "definition": "definition",
-          "label": "label",
+          "label": "label_unit",
           "note": "note",
           "short_label": "short_label"
         }
         App.respond_json(server.requests[1], data_unit);
-        /*
         var data = {
-            description:{
-                'part1': data_indicator['label']
+            ind1:{
+                'title': 'meta_title',
+                'part1': data_indicator['label'],
+                'part2': data_unit['note']
             }
         }
-        var template = this.sandbox.spy(view, 'template');
         expect(template.calledOnce).to.equal(true);
-        expect(template.calledWith(data)).to.equal(true);
-        */
+        expect(template.getCall(0).args[0]).to.deep.equal(data);
+    });
+
+    it('should render the template with the right metadata', function(){
+        this.model.set({
+            'indicator': 'ind1',
+            'unit-measure': 'unit1'
+        });
+        var server = this.sandbox.server;
+        var view = new App.IndicatorMetadataView({
+            model: this.model,
+            field: 'indicator',
+            footer_meta_sources:
+              { 'x': {
+                  title: 'Label of x-axis',
+                  source: '/test_view',
+                  filters: [
+                    { target: 'part1',
+                      name: 'indicator',
+                      part: 'label' },
+                  ]
+                },
+                'y': {
+                  title: 'Label of y-axis',
+                  source: '/test_view',
+                  filters: [
+                    { target: 'part2',
+                      name: 'indicator',
+                      part: 'label' },
+                  ]
+                }
+              }
+        });
+
+        var template = this.sandbox.spy(view, 'template');
+
+        var data_1 = {
+          "title": "Label of x-axis",
+          "definition": "definition",
+          "label": "label_1",
+          "note": "note",
+          "short_label": "short_label"
+        };
+
+        var data_2 = {
+          "title": "Label of y-axis",
+          "definition": "definition",
+          "label": "label_2",
+          "note": "note",
+          "short_label": "short_label"
+        };
+
+        App.respond_json(server.requests[0], data_1);
+        App.respond_json(server.requests[1], data_2);
+
+        var data = {
+            x:{
+                'title': data_1['title'],
+                'part1': data_1['label']
+            },
+            y:{
+                'title': data_2['title'],
+                'part2': data_2['label']
+            }
+        }
+
+        expect(template.calledOnce).to.equal(true);
+        expect(template.getCall(0).args[0]).to.deep.equal(data);
     });
 });
 
