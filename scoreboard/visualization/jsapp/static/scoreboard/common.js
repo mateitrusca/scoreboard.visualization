@@ -194,46 +194,51 @@ App.IndicatorMetadataView = Backbone.View.extend({
     template: App.get_template('scoreboard/metadata.html'),
 
     initialize: function(options) {
-        this.field = options['field'];
+        this.dimensions_mapping = _.object(
+            _(options.schema.filters).pluck('name'),
+            _(options.schema.filters).pluck('dimension')
+        );
         this.footer_meta_sources = options['footer_meta_sources'];
-        this.model.on('change:' + this.field, this.render, this);
+        this.model.on('change', this.render, this);
         this.render();
     },
 
     render: function() {
-        var data = {};
+        var data = [];
         var requests = [];
         _(this.footer_meta_sources).map(_.bind(function(item, key){
             var source = item['source'];
             var filters = item['filters'];
+            var info_block = {};
             _(filters).map(_.bind(function(filter){
                 var args = {};
-                args['dimension'] = filter.name;
+                args['dimension'] = this.dimensions_mapping[filter.name];
                 args['value'] = this.model.get(filter.name);
                 if(! args['value']){
                     return;
                 }
                 args['rev'] = App.DATA_REVISION;
+                info_block['title'] = this.title;
                 requests.push(
                     $.get(App.URL + this.source, args, _.bind(function(resp){
-                        data[this.key] = data[this.key] || {};
-                        data[this.key]['title'] = this.title;
-                        data[this.key][filter.target] = resp[filter.part];
-                    }, {'data': this.data, 'key': this.key, 'filter': filter, 'title': this.title}))
+                        this.info_block['info'] = info_block['info'] || [];
+                        this.info_block['info'].push(resp[filter.part]);
+                    },
+                    {'filter': filter, 'info_block': this.info_block}))
                 )
             },
             {'source': source,
              'model': this.model,
-             'data': data,
-             'key': key,
-             'title': item['title']}
+             'title': item['title'],
+             'info_block': info_block,
+             'dimensions_mapping': this.dimensions_mapping}
            ));
+           data.push(info_block);
         }, this));
         var ajax_calls = $.when.apply($, requests);
         ajax_calls.done(_.bind(function(){
-            if(data){
-                console.log(data);
-                this.$el.html(this.template(data));
+            if(data != []){
+                this.$el.html(this.template({"blocks": data}));
             }
             else {
                 this.$el.empty();

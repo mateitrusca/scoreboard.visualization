@@ -97,8 +97,10 @@ App.scenario2_initialize = function() {
     App.metadata = new App.IndicatorMetadataView({
         model: App.filters,
         field: 'indicator',
+        schema: App.scenario2_filters_schema,
         footer_meta_sources:
           { 'description': {
+              title: "Label x-axis",
               source: '/dimension_value_metadata',
               filters: [
                 { target: 'indicator',

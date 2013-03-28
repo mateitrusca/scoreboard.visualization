@@ -1,12 +1,17 @@
 <h2>Annotations:</h2>
-<p>{{ description.note }}</p>
+{{#each blocks}}
+<p>{{ this.note }}</p>
 <p>
-  <b>Label of x-axis</b>
+  <b>{{ title }}</b>
 </p>
 <ul>
   <li>
     <strong>Definition and scope:</strong>
-    {{ description.indicator }} - {{ description.breakdown }}
+    <ul>
+      {{#each info}}
+        <li> {{ this }} </li>
+      {{/each}}
+    </ul>
   </li>
 
   <li>
@@ -19,3 +24,4 @@
     Consult the list of available indicators, their definition and sources.
   </a>
 </p>
+{{/each}}

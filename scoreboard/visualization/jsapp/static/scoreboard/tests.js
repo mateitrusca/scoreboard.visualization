@@ -22,6 +22,10 @@ describe('IndicatorMetaDataView', function() {
         var view = new App.IndicatorMetadataView({
             model: this.model,
             field: 'indicator',
+            schema: {filters: [
+                { name: 'indicator',
+                 dimension: 'dim1'}
+            ]},
             footer_meta_sources:
               { 'ind1': {
                   title: 'meta_title',
@@ -47,7 +51,7 @@ describe('IndicatorMetaDataView', function() {
           "short_label": "short_label"
         }
         expect(server.requests[0].url).to.equal(
-                '/test_view?dimension=indicator&value=ind1&rev='
+                '/test_view?dimension=dim1&value=ind1&rev='
         );
         App.respond_json(server.requests[0], data_indicator);
 
@@ -58,13 +62,15 @@ describe('IndicatorMetaDataView', function() {
           "short_label": "short_label"
         }
         App.respond_json(server.requests[1], data_unit);
-        var data = {
-            ind1:{
+        var data = {'blocks': [
+            {
                 'title': 'meta_title',
-                'part1': data_indicator['label'],
-                'part2': data_unit['note']
+                'info': [
+                    data_indicator['label'],
+                    data_unit['note']
+                ]
             }
-        }
+        ]}
         expect(template.calledOnce).to.equal(true);
         expect(template.getCall(0).args[0]).to.deep.equal(data);
     });
@@ -77,7 +83,12 @@ describe('IndicatorMetaDataView', function() {
         var server = this.sandbox.server;
         var view = new App.IndicatorMetadataView({
             model: this.model,
-            field: 'indicator',
+            schema: {filters: [
+                { name: 'indicator',
+                 dimension: 'dim1'},
+                { name: 'abc',
+                 dimension: 'dim2'}
+            ]},
             footer_meta_sources:
               { 'x': {
                   title: 'Label of x-axis',
@@ -121,16 +132,20 @@ describe('IndicatorMetaDataView', function() {
         App.respond_json(server.requests[0], data_1);
         App.respond_json(server.requests[1], data_2);
 
-        var data = {
-            x:{
+        var data = {'blocks': [
+            {
                 'title': data_1['title'],
-                'part1': data_1['label']
+                'info':[
+                    data_1['label']
+                ]
             },
-            y:{
+            {
                 'title': data_2['title'],
-                'part2': data_2['label']
+                'info':[
+                    data_2['label']
+                ]
             }
-        }
+        ]};
 
         expect(template.calledOnce).to.equal(true);
         expect(template.getCall(0).args[0]).to.deep.equal(data);
