@@ -277,17 +277,12 @@ describe('ScenarioChartViewParameters', function() {
 
     it('should fetch data using init filters dimensions', function() {
         var server = this.sandbox.server;
-        var labels = {
-            'http://data.lod2.eu/scoreboard/country/Denmark': "Denmark",
-            'http://data.lod2.eu/scoreboard/country/Spain': "Spain"
-        };
         var chart = new App.ScenarioChartView({
             model: this.model,
             datasource: {
                 data_preparation: {
                     group: {
-                        filter_name: 'country',
-                        labels: labels
+                        filter_name: 'country'
                     }
                 },
                 rel_url: '/source_view',
