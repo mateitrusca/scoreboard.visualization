@@ -69,13 +69,10 @@ App.scenario2_initialize = function() {
 
     App.scenario2_chart_view = new App.ScenarioChartView({
         model: App.filters,
+        loadstate: App.filter_loadstate,
         schema: App.scenario2_filters_schema,
         datasource: {
-            data_preparation: {
-                group: {
-                    filter_name: 'countries',
-                }
-            },
+            groupby: 'countries',
             rel_url: '/datapoints',
             extra_args: [
                 ['fields', 'time-period,value'],

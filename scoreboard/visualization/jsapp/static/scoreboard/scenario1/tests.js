@@ -211,9 +211,9 @@ describe('ScenarioChartViewParameters', function() {
             {'label': 'normal_label', 'short_label': 'short_label'});
         App.respond_json(server.requests[2],
             {'label': 'normal_label', 'short_label': 'short_label'});
-        expect(chart.meta_data.label1).to.equal('normal_label');
-        expect(chart.meta_data.label2).to.equal('short_label');
-        expect(chart.meta_data.label3).to.equal(chart.meta_data.label2);
+        expect(chart.data.meta_data.label1).to.equal('normal_label');
+        expect(chart.data.meta_data.label2).to.equal('short_label');
+        expect(chart.data.meta_data.label3).to.equal(chart.data.meta_data.label2);
     });
 
 
@@ -277,19 +277,10 @@ describe('ScenarioChartViewParameters', function() {
 
     it('should fetch data using init filters dimensions', function() {
         var server = this.sandbox.server;
-        var labels = {
-            'http://data.lod2.eu/scoreboard/country/Denmark': "Denmark",
-            'http://data.lod2.eu/scoreboard/country/Spain': "Spain"
-        };
         var chart = new App.ScenarioChartView({
             model: this.model,
             datasource: {
-                data_preparation: {
-                    group: {
-                        filter_name: 'country',
-                        labels: labels
-                    }
-                },
+                groupby: 'country',
                 rel_url: '/source_view',
                 extra_args: [
                     ['fields', 'dimension1,value1'],
@@ -388,15 +379,12 @@ describe('ScenarioChartView', function() {
 
     it('should update year text according to selection', function(){
         var server = this.sandbox.server;
-        this.chart.meta_data = {};
         this.model.set({'time-period': '2003'});
-        App.respond_json(server.requests[0], {'datapoints': []});
-        App.respond_json(server.requests[1],
-            {'label': 'request 2', 'short_label': 'lbl 2'});
+        App.respond_json(server.requests[2], {'datapoints': []});
         App.respond_json(server.requests[3],
             {'label': 'Year 2003', 'short_label': 'lbl 2'});
         expect(this.scenario_chart.calledOnce).to.equal(true);
-        expect(this.chart.meta_data['extra_label']).to.equal('Year 2003');
+        expect(this.chart.data.meta_data['extra_label']).to.equal('Year 2003');
     });
 
     it('should fetch data from server', function() {
@@ -414,14 +402,13 @@ describe('ScenarioChartView', function() {
         var ajax_data = [{'ref-area': "Austria", 'value': 0.18},
                          {'ref-area': "Belgium", 'value': 0.14}];
 
-        this.chart.meta_data = {};
         App.respond_json(server.requests[0], {'datapoints': ajax_data});
         App.respond_json(server.requests[1],
             {'label': 'request 2', 'short_label': 'lbl 2'});
         expect(this.scenario_chart.calledOnce).to.equal(true);
         var call_args = this.scenario_chart.getCall(0).args;
         expect(call_args[0]).to.equal(this.chart.el);
-        expect(call_args[1]['series']).to.deep.equal(ajax_data);
+        expect(call_args[1]['series'][0]['data']).to.deep.equal(ajax_data);
     });
 
 

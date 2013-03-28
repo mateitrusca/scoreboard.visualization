@@ -127,7 +127,7 @@ App.scenario1_filters_schema = {
              'time-period': 'time-period',
              'indicator-group': 'indicator-group',
              'indicator': 'indicator'
-         }},
+         }}
     ]
 };
 
@@ -150,15 +150,10 @@ App.scenario1_initialize = function() {
     App.scenario1_chart_view = new App.ScenarioChartView({
         model: App.filters,
         loadstate: App.filter_loadstate,
-        meta_data: {},
         schema: App.scenario1_filters_schema,
         scenario_chart: App.scenario1_chart,
         datasource: {
-            data_preparation: {
-                group: {
-                    filter_name: 'countries'
-                }
-            },
+            groupby: 'countries',
             rel_url: '/datapoints',
             extra_args: [
                 ['fields', 'ref-area,value'],
@@ -168,7 +163,7 @@ App.scenario1_initialize = function() {
         meta_labels: [
             { targets: ['x_title'], filter_name: 'indicator', type: 'label' },
             { targets: ['y_title', 'tooltip_label'], filter_name: 'unit-measure', type: 'short_label' },
-            { targets: ['year_text'], filter_name: 'time-period', type: 'label' },
+            { targets: ['year_text'], filter_name: 'time-period', type: 'label' }
         ]
     });
     $('#the-chart').append(App.scenario1_chart_view.el);
