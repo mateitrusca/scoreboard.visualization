@@ -239,6 +239,23 @@ App.IndicatorMetadataView = Backbone.View.extend({
 
 });
 
+App.ShareOptionsView = Backbone.View.extend({
+
+    template: App.get_template('scoreboard/share.html'),
+
+    tagName: 'div',
+    className: 'section share',
+
+    initialize: function(options) {
+        this.render();
+    },
+
+    render: function() {
+        this.$el.html(this.template());
+        return this;
+    }
+});
+
 
 App.get_indicators = function(filters_data) {
     var indicators = filters_data['indicators'];

@@ -111,7 +111,11 @@ App.scenario2_initialize = function() {
             }
           }
     });
-    $('#the-metadata').prepend(App.metadata.el);
+
+    App.share = new App.ShareOptionsView();
+
+    $('#the-metadata').append(App.metadata.el);
+    $('#the-metadata').append(App.share.el);
 
 
     Backbone.history.start();
