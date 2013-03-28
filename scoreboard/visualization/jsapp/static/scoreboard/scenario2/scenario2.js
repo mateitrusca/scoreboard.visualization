@@ -93,15 +93,25 @@ App.scenario2_initialize = function() {
         scenario_chart: App.scenario2_chart
     });
     $('#the-chart').append(App.scenario2_chart_view.el);
-    //App.scenario2_chart_view.filters_changed();
-    /*
+
     App.metadata = new App.IndicatorMetadataView({
         model: App.filters,
         field: 'indicator',
-        indicators: App.get_indicators(data)
+        footer_meta_sources:
+          { 'description': {
+              source: '/dimension_value_metadata',
+              filters: [
+                { target: 'indicator',
+                  name: 'indicator',
+                  part: 'label' },
+                { target: 'breakdown',
+                  name: 'breakdown',
+                  part: 'label' }
+              ]
+            }
+          }
     });
     $('#the-metadata').append(App.metadata.el);
-    */
 
 
     Backbone.history.start();

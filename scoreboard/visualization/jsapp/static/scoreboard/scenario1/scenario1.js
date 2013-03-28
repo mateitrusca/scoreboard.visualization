@@ -117,7 +117,7 @@ App.scenario1_filters_schema = {
          }},
         {type: 'multiple_select',
          name: 'countries',
-         label: 'Select the countries',
+         label: 'Country / Countries',
          dimension: 'ref-area',
          default_all: true,
          constraints: {

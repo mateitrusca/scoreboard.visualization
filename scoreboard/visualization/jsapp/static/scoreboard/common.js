@@ -194,21 +194,43 @@ App.IndicatorMetadataView = Backbone.View.extend({
     template: App.get_template('scoreboard/metadata.html'),
 
     initialize: function(options) {
-        this.indicators = options['indicators'];
         this.field = options['field'];
+        this.footer_meta_sources = options['footer_meta_sources'];
         this.model.on('change:' + this.field, this.render, this);
         this.render();
     },
 
     render: function() {
-        var indicator = this.model.get(this.field);
-        if(indicator) {
-            var data = this.indicators[indicator];
-            this.$el.html(this.template(data));
-        }
-        else {
-            this.$el.empty();
-        }
+        var data = {};
+        var requests = [];
+        _(this.footer_meta_sources).map(_.bind(function(item, key){
+            var source = item['source'];
+            var filters = item['filters'];
+            _(filters).map(_.bind(function(filter){
+                var args = {};
+                args['dimension'] = filter.name;
+                args['value'] = this.model.get(filter.name);
+                if(! args['value']){
+                    return;
+                }
+                args['rev'] = App.DATA_REVISION;
+                requests.push(
+                    $.get(App.URL + this.source, args, _.bind(function(resp){
+                        data[this.key] = data[this.key] || {};
+                        data[this.key][filter.target] = resp[filter.part];
+                    }, {'data': this.data, 'key': this.key, 'filter': filter}))
+                )
+            }, {'source': source, 'model': this.model, 'data': data, 'key': key}));
+        }, this));
+        var ajax_calls = $.when.apply($, requests);
+        ajax_calls.done(_.bind(function(){
+            if(data){
+                this.$el.html(this.template(data));
+            }
+            else {
+                this.$el.empty();
+            }
+        }, this))
     }
 
 });

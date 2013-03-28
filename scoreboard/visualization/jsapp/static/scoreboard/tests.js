@@ -1,30 +1,71 @@
 /*global App, Backbone, describe, beforeEach, afterEach, it, expect, sinon */
 
-describe('IndicatorMetadataView', function() {
+describe('IndicatorMetaDataView', function() {
     "use strict";
 
-    it('should display data from indicators', function() {
-        var view = new App.IndicatorMetadataView({
-            model: new Backbone.Model({
-                'indicator': 'asdf'
-            }),
-            field: 'indicator',
-            indicators: {
-                'asdf': {
-                    'label': "The Label!",
-                    'comment': "The Definition!",
-                    'publisher': "The Source!"
-                }
-            }
-        });
-
-        expect(view.$el.find('h3').text()).to.equal("The Label!");
-        expect(view.$el.find('li:first').text()).to.contain.string(
-            "The Definition!");
-        expect(view.$el.find('li:last').text()).to.contain.string(
-            "The Source!");
+    beforeEach(function() {
+        this.sandbox = sinon.sandbox.create();
+        this.sandbox.useFakeServer();
+        this.model = new Backbone.Model();
     });
 
+    afterEach(function () {
+        this.sandbox.restore();
+    });
+
+    it('should request meta data according to init params', function(){
+        this.model.set({
+            'indicator': 'ind1',
+            'unit-measure': 'unit1'
+        });
+        var server = this.sandbox.server;
+        var view = new App.IndicatorMetadataView({
+            model: this.model,
+            field: 'indicator',
+            footer_meta_sources:
+              { 'description': {
+                  source: '/test_view',
+                  filters: [
+                    { target: 'part1',
+                      name: 'indicator',
+                      part: 'label' },
+                    { target: 'part2',
+                      name: 'unit-measure',
+                      part: 'label' }
+                  ]
+                }
+              }
+        });
+
+        var data_indicator = {
+          "definition": "definition",
+          "label": "label",
+          "note": "note",
+          "short_label": "short_label"
+        }
+        expect(server.requests[0].url).to.equal(
+                '/test_view?dimension=indicator&value=ind1&rev='
+        );
+        App.respond_json(server.requests[0], data_indicator);
+
+        var data_unit = {
+          "definition": "definition",
+          "label": "label",
+          "note": "note",
+          "short_label": "short_label"
+        }
+        App.respond_json(server.requests[1], data_unit);
+        /*
+        var data = {
+            description:{
+                'part1': data_indicator['label']
+            }
+        }
+        var template = this.sandbox.spy(view, 'template');
+        expect(template.calledOnce).to.equal(true);
+        expect(template.calledWith(data)).to.equal(true);
+        */
+    });
 });
 
 
