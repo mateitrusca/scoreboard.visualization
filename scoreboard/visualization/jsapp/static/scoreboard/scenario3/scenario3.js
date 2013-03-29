@@ -143,7 +143,6 @@ App.scenario3_filters_schema = {
              'indicator':       'y-indicator',
              'breakdown':       'y-breakdown'
          }},
-
         {type: 'select',
          xy: true,
          name: 'time-period',
@@ -156,6 +155,21 @@ App.scenario3_filters_schema = {
              'y-indicator':    'y-indicator',
              'y-breakdown':    'y-breakdown',
              'y-unit-measure': 'y-unit-measure'
+         }},
+        {type: 'multiple_select',
+         xy: true,
+         name: 'countries',
+         label: 'Country / Countries',
+         dimension: 'ref-area',
+         default_all: true,
+         constraints: {
+             'x-indicator':    'x-indicator',
+             'x-breakdown':    'x-breakdown',
+             'x-unit-measure': 'x-unit-measure',
+             'y-indicator':    'y-indicator',
+             'y-breakdown':    'y-breakdown',
+             'y-unit-measure': 'y-unit-measure',
+             'time-period': 'time-period'
          }}
     ]
 };
@@ -184,6 +198,7 @@ App.scenario3_initialize = function() {
         schema: App.scenario3_filters_schema,
         scenario_chart: App.scenario3_chart,
         datasource: {
+            client_filter: 'countries',
             rel_url: '/datapoints_xy',
             extra_args: [
                 ['columns', 'ref-area'],
