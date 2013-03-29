@@ -329,6 +329,13 @@ describe('ScenarioChartView', function() {
     beforeEach(function() {
         this.sandbox = sinon.sandbox.create();
         this.sandbox.useFakeServer();
+    });
+
+    afterEach(function () {
+        this.sandbox.restore();
+    });
+
+    function setup_scenario() {
         this.scenario_chart = this.sandbox.stub(App, 'scenario1_chart');
 
         this.model = new Backbone.Model();
@@ -371,13 +378,10 @@ describe('ScenarioChartView', function() {
             'breakdown': 'ind_total',
             'unit-measure': 'pc_ind'
         });
-    });
-
-    afterEach(function () {
-        this.sandbox.restore();
-    });
+    }
 
     it('should update year text according to selection', function(){
+        setup_scenario.apply(this);
         var server = this.sandbox.server;
         this.model.set({'time-period': '2003'});
         App.respond_json(server.requests[2], {'datapoints': []});
@@ -388,6 +392,7 @@ describe('ScenarioChartView', function() {
     });
 
     it('should fetch data from server', function() {
+        setup_scenario.apply(this);
         var server = this.sandbox.server;
         var url = server.requests[0].url;
         expect(url).to.have.string(App.URL + '/datapoints?');
@@ -398,6 +403,7 @@ describe('ScenarioChartView', function() {
     });
 
     it('should render chart with the data received', function() {
+        setup_scenario.apply(this);
         var server = this.sandbox.server;
         var ajax_data = [{'ref-area': "Austria", 'value': 0.18},
                          {'ref-area': "Belgium", 'value': 0.14}];
