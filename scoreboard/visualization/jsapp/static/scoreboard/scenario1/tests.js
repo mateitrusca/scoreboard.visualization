@@ -329,6 +329,13 @@ describe('ScenarioChartView', function() {
     beforeEach(function() {
         this.sandbox = sinon.sandbox.create();
         this.sandbox.useFakeServer();
+    });
+
+    afterEach(function () {
+        this.sandbox.restore();
+    });
+
+    function setup_scenario() {
         this.scenario_chart = this.sandbox.stub(App, 'scenario1_chart');
 
         this.model = new Backbone.Model();
@@ -371,13 +378,10 @@ describe('ScenarioChartView', function() {
             'breakdown': 'ind_total',
             'unit-measure': 'pc_ind'
         });
-    });
-
-    afterEach(function () {
-        this.sandbox.restore();
-    });
+    }
 
     it('should update year text according to selection', function(){
+        setup_scenario.apply(this);
         var server = this.sandbox.server;
         this.model.set({'time-period': '2003'});
         App.respond_json(server.requests[2], {'datapoints': []});
@@ -388,6 +392,7 @@ describe('ScenarioChartView', function() {
     });
 
     it('should fetch data from server', function() {
+        setup_scenario.apply(this);
         var server = this.sandbox.server;
         var url = server.requests[0].url;
         expect(url).to.have.string(App.URL + '/datapoints?');
@@ -398,6 +403,7 @@ describe('ScenarioChartView', function() {
     });
 
     it('should render chart with the data received', function() {
+        setup_scenario.apply(this);
         var server = this.sandbox.server;
         var ajax_data = [{'ref-area': "Austria", 'value': 0.18},
                          {'ref-area': "Belgium", 'value': 0.14}];
@@ -411,5 +417,41 @@ describe('ScenarioChartView', function() {
         expect(call_args[1]['series'][0]['data']).to.deep.equal(ajax_data);
     });
 
+    it('should make a single data query and then filter in JS', function() {
+        var scenario_chart = sinon.spy();
+        var model = new Backbone.Model();
+        var filters = [{name: 'filter1', dimension: 'dim1'},
+                       {name: 'filter2', dimension: 'dim2'},
+                       {name: 'filter3', dimension: 'dim3'}];
+        var chart = new App.ScenarioChartView({
+            model: model,
+            schema: {filters: filters},
+            datasource: {
+                rel_url: '/datapoints',
+                client_filter: 'filter3'
+            },
+            scenario_chart: scenario_chart
+        });
+        model.set({'filter1': 'f1v',
+                   'filter2': 'f2v',
+                   'filter3': ['f3a', 'f3c']});
+
+        var server = this.sandbox.server;
+        expect(server.requests.length).to.equal(1);
+        expect(server.requests[0].url).to.have.string('/datapoints?');
+        expect(server.requests[0].url).to.not.have.string('dim3');
+
+        App.respond_json(server.requests[0], {datapoints: [
+            {dim3: 'f3a', value: 13},
+            {dim3: 'f3b', value: 22},
+            {dim3: 'f3c', value: 10}
+        ]});
+
+        var series = scenario_chart.getCall(0).args[1]['series'];
+        expect(series.length).to.equal(1);
+        expect(series[0]['data'][0]['value']).to.equal(13);
+        expect(series[0]['data'][1]['value']).to.equal(10);
+        expect(series[0]['data'].length).to.equal(2);
+    });
 
 });

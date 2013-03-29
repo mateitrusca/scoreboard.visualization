@@ -6,9 +6,7 @@
 
 
 App.scenario1_chart = function(container, options, meta_data) {
-    var series = _(options['series']).map(function(item){
-            return item['data'][0];
-    });
+    var series = options['series'][0]['data'];
     series = _(series).sortBy('value').reverse();
     var country_names = _(series).pluck('ref-area-label');
     var values = _(series).map(
