@@ -233,6 +233,7 @@ App.IndicatorMetadataView = Backbone.View.extend({
 
 });
 
+
 App.ShareOptionsView = Backbone.View.extend({
 
     template: App.get_template('scoreboard/share.html'),
@@ -243,6 +244,23 @@ App.ShareOptionsView = Backbone.View.extend({
 
     render: function() {
         this.$el.html(this.template());
+        return this;
+    }
+});
+
+
+App.NavigationView = Backbone.View.extend({
+
+    id: 'scenarios',
+
+    template: App.get_template('scoreboard/navigation.html'),
+
+    initialize: function(options) {
+        this.render();
+    },
+
+    render: function() {
+        this.$el.html(this.template({}));
         return this;
     }
 });
