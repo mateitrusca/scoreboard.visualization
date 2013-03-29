@@ -271,12 +271,35 @@ App.get_country_labels = function(filters_data) {
 App.ChartRouter = Backbone.Router.extend({
 
     encode: function(value) {
-        return encodeURIComponent(JSON.stringify(value));
+        return _(value).map(function(v, k) {
+            if(_.isArray(v)) {
+                v = '[' + _(v).map(encodeURIComponent).join(',') + ']';
+            }
+            else {
+                v = encodeURIComponent(v);
+            }
+            return k + '=' + v;
+        }).join('&');
     },
 
     decode: function(serialized) {
         try {
-            return JSON.parse(decodeURIComponent(serialized));
+            if(! serialized) { return {}; }
+            return _(_(serialized.split('&')).map(function(pair) {
+                if(! _(pair).contains('=')) { throw new Error(); }
+                var bits = pair.split('=');
+                var k = bits.shift();
+                var v = bits.join('=');
+                if(_(v).first() == '[' && _(v).last() == ']') {
+                    v = v.slice(1, -1);
+                    v = v ? v.split(',') : [];
+                    v = _(v).map(decodeURIComponent);
+                }
+                else {
+                    v = decodeURIComponent(v);
+                }
+                return [k, v];
+            })).object();
         }
         catch(e) {
             return {};
