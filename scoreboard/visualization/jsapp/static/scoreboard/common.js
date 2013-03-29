@@ -137,6 +137,12 @@ App.ScenarioChartView = Backbone.View.extend({
             requests.push($.get(App.URL + this.datasource['rel_url'], args));
         }
 
+        var client_filter = this.datasource.client_filter;
+        var client_filter_options = [];
+        if(client_filter) {
+            client_filter_options = this.model.get(client_filter);
+        }
+
         requests.push(this.get_meta_data(chart_data));
 
         var ajax_calls = $.when.apply($, requests);
@@ -144,11 +150,18 @@ App.ScenarioChartView = Backbone.View.extend({
             var responses = _(arguments).toArray();
             chart_data['series'] = _(group_values).map(function(value, n) {
                 var resp = responses[n];
+                var datapoints = resp[0]['datapoints'];
+                if(this.datasource.client_filter) {
+                    var dimension = this.dimensions_mapping[client_filter];
+                    datapoints = _(datapoints).filter(function(item) {
+                        return _(client_filter_options).contains(item[dimension]);
+                    }, this);
+                }
                 return {
                     'label': chart_data['group_labels'][value],
-                    'data': resp[0]['datapoints']
+                    'data': datapoints
                 };
-            });
+            }, this);
             this.data = chart_data;
             this.render();
         }, this));

@@ -428,7 +428,7 @@ describe('ScenarioChartView', function() {
             schema: {filters: filters},
             datasource: {
                 rel_url: '/datapoints',
-                groupby: 'filter3'
+                client_filter: 'filter3'
             },
             scenario_chart: scenario_chart
         });
@@ -437,19 +437,20 @@ describe('ScenarioChartView', function() {
                    'filter3': ['f3a', 'f3c']});
 
         var server = this.sandbox.server;
-        expect(server.requests.length).to.equal(3);
+        expect(server.requests.length).to.equal(1);
         expect(server.requests[0].url).to.have.string('/datapoints?');
-        expect(server.requests[1].url).to.have.string('/datapoints?');
-        expect(server.requests[2].url).to.have.string('/dimension_values?');
 
-        App.respond_json(server.requests[0], {datapoints: [{value: 13}]});
-        App.respond_json(server.requests[1], {datapoints: [{value: 10}]});
-        App.respond_json(server.requests[2], {options: []});
+        App.respond_json(server.requests[0], {datapoints: [
+            {dim3: 'f3a', value: 13},
+            {dim3: 'f3b', value: 22},
+            {dim3: 'f3c', value: 10}
+        ]});
 
         var series = scenario_chart.getCall(0).args[1]['series'];
-        expect(series.length).to.equal(2);
+        expect(series.length).to.equal(1);
         expect(series[0]['data'][0]['value']).to.equal(13);
-        expect(series[1]['data'][0]['value']).to.equal(10);
+        expect(series[0]['data'][1]['value']).to.equal(10);
+        expect(series[0]['data'].length).to.equal(2);
     });
 
 });
