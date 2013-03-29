@@ -72,7 +72,7 @@ describe('IndicatorMetaDataView', function() {
             }
         ]}
         expect(template.calledOnce).to.equal(true);
-        expect(template.getCall(0).args[0]).to.deep.equal(data);
+        expect(template.getCall(0).args[0]['blocks']).to.deep.equal(data['blocks']);
     });
 
     it('should render the template with the right metadata', function(){
@@ -148,7 +148,7 @@ describe('IndicatorMetaDataView', function() {
         ]};
 
         expect(template.calledOnce).to.equal(true);
-        expect(template.getCall(0).args[0]).to.deep.equal(data);
+        expect(template.getCall(0).args[0]['blocks']).to.deep.equal(data['blocks']);
     });
 });
 
