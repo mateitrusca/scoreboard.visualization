@@ -270,18 +270,26 @@ App.get_country_labels = function(filters_data) {
 
 App.ChartRouter = Backbone.Router.extend({
 
+    encode: function(value) {
+        return encodeURIComponent(JSON.stringify(value));
+    },
+
+    decode: function(serialized) {
+        return JSON.parse(decodeURIComponent(serialized));
+    },
+
     initialize: function(model) {
         this.model = model;
         this.route(/^chart\?(.*)$/, 'chart');
         var router = this;
         this.model.on('change', function(filters) {
-            var state = encodeURIComponent(JSON.stringify(filters.toJSON()));
+            var state = this.encode(filters.toJSON());
             router.navigate('chart?' + state);
-        });
+        }, this);
     },
 
     chart: function(state) {
-        var value = JSON.parse(decodeURIComponent(state));
+        var value = this.decode(state);
         this.model.set(value);
     }
 
