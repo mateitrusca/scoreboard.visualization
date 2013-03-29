@@ -149,7 +149,7 @@ App.ScenarioChartView = Backbone.View.extend({
         requests.push(this.get_meta_data(chart_data));
 
         var ajax_calls = $.when.apply($, requests);
-        var series_ajax_result = ajax_calls.done(function() {
+        ajax_calls.done(function() {
             var responses = _(arguments).toArray();
             var series = _(group_values).map(function(value, n) {
                 var resp = responses[n];
@@ -162,15 +162,8 @@ App.ScenarioChartView = Backbone.View.extend({
                 'series': series
             });
             view.data = chart_data;
+            view.render();
         });
-
-        //TODO gets meta data everytime filters changed
-        //if needed, it could be optimized to fetch labels
-        //only when relevant filters change
-        series_ajax_result.done(_.bind(function(){
-            this.render();
-        }, this));
-
     }
 
 });
