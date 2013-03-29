@@ -30,13 +30,11 @@ App.SelectFilter = Backbone.View.extend({
         this.update();
     },
 
-    received_new_options: function(new_options) {
-        this.dimension_options = new_options;
-        var range = _(new_options).pluck('notation');
+    adjust_value: function() {
+        var range = _(this.dimension_options).pluck('notation');
         if(! _(range).contains(this.model.get(this.name))) {
             this.model.set(this.name, range[0]);
         }
-        this.render();
     },
 
     update: function() {
@@ -63,7 +61,9 @@ App.SelectFilter = Backbone.View.extend({
         this.ajax = this.fetch_options(args);
         this.ajax.done(_.bind(function(data) {
             this.ajax = null;
-            this.received_new_options(data['options']);
+            this.dimension_options = data['options'];
+            this.adjust_value();
+            this.render();
             this.loadstate.set(this.name, false);
         }, this));
     },
@@ -104,23 +104,17 @@ App.MultipleSelectFilter = App.SelectFilter.extend({
         'click input[type="button"][id$="-clear"]': 'clear'
     }).extend(App.SelectFilter.prototype.events),
 
-    received_new_options: function(new_options) {
-        this.dimension_options = new_options;
+    adjust_value: function() {
         var current_value = this.model.get(this.name);
-
-        var range = _(new_options).pluck('notation');
-        if(_.intersection(range, current_value) != current_value){
+        var range = _(this.dimension_options).pluck('notation');
+        if(_.intersection(range, current_value).length == 0){
             if(this.default_all){
                 this.model.set(this.name, range);
             }
             else{
-                if(! current_value){
-                    this.model.set(this.name, [range[0]]);
-                }
+                this.model.set(this.name, [range[0]]);
             }
         }
-
-        this.render();
     },
 
     render: function() {
