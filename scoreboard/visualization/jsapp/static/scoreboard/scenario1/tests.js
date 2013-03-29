@@ -417,5 +417,39 @@ describe('ScenarioChartView', function() {
         expect(call_args[1]['series'][0]['data']).to.deep.equal(ajax_data);
     });
 
+    it('should make a single data query and then filter in JS', function() {
+        var scenario_chart = sinon.spy();
+        var model = new Backbone.Model();
+        var filters = [{name: 'filter1', dimension: 'dim1'},
+                       {name: 'filter2', dimension: 'dim2'},
+                       {name: 'filter3', dimension: 'dim3'}];
+        var chart = new App.ScenarioChartView({
+            model: model,
+            schema: {filters: filters},
+            datasource: {
+                rel_url: '/datapoints',
+                groupby: 'filter3'
+            },
+            scenario_chart: scenario_chart
+        });
+        model.set({'filter1': 'f1v',
+                   'filter2': 'f2v',
+                   'filter3': ['f3a', 'f3c']});
+
+        var server = this.sandbox.server;
+        expect(server.requests.length).to.equal(3);
+        expect(server.requests[0].url).to.have.string('/datapoints?');
+        expect(server.requests[1].url).to.have.string('/datapoints?');
+        expect(server.requests[2].url).to.have.string('/dimension_values?');
+
+        App.respond_json(server.requests[0], {datapoints: [{value: 13}]});
+        App.respond_json(server.requests[1], {datapoints: [{value: 10}]});
+        App.respond_json(server.requests[2], {options: []});
+
+        var series = scenario_chart.getCall(0).args[1]['series'];
+        expect(series.length).to.equal(2);
+        expect(series[0]['data'][0]['value']).to.equal(13);
+        expect(series[1]['data'][0]['value']).to.equal(10);
+    });
 
 });
