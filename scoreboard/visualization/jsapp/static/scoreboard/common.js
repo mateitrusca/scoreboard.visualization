@@ -128,19 +128,18 @@ App.ScenarioChartView = Backbone.View.extend({
                 return data_ajax;
             }, this);
 
-            requests.push( $.get(App.URL + '/dimension_values',
-                {
-                    'dimension': this.dimensions_mapping[groupby],
-                    'rev': App.DATA_REVISION
-                },
-                function(data){
-                    var results = data['options'];
-                    chart_data['group_labels'] = _.object(
-                             _(results).pluck('notation'),
-                             _(results).pluck('label')
-                           );
-                }
-            ));
+            var labels_args = {
+                'dimension': this.dimensions_mapping[groupby],
+                'rev': App.DATA_REVISION
+            };
+            var labels_request = $.get(App.URL + '/dimension_values', labels_args);
+            labels_request.done(function(data) {
+                var results = data['options'];
+                chart_data['group_labels'] = _.object(
+                    _(results).pluck('notation'),
+                    _(results).pluck('label'));
+            });
+            requests.push(labels_request);
         }
         else {
             group_values = [null];
