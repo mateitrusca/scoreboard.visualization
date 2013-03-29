@@ -71,9 +71,10 @@ App.ScenarioChartView = Backbone.View.extend({
         var incomplete = false;
         var args = {};
         var groupby = this.datasource['groupby'];
+        var client_filter = this.datasource.client_filter;
         var requests = [];
         _(this.dimensions_mapping).each(function(dimension, filter_name) {
-            if(filter_name != groupby){
+            if(filter_name != groupby && filter_name != client_filter) {
                 args[dimension] = this.model.get(filter_name);
                 if(! args[dimension]) { incomplete = true; }
             }
@@ -137,7 +138,6 @@ App.ScenarioChartView = Backbone.View.extend({
             requests.push($.get(App.URL + this.datasource['rel_url'], args));
         }
 
-        var client_filter = this.datasource.client_filter;
         var client_filter_options = [];
         if(client_filter) {
             client_filter_options = this.model.get(client_filter);

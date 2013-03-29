@@ -439,6 +439,7 @@ describe('ScenarioChartView', function() {
         var server = this.sandbox.server;
         expect(server.requests.length).to.equal(1);
         expect(server.requests[0].url).to.have.string('/datapoints?');
+        expect(server.requests[0].url).to.not.have.string('dim3');
 
         App.respond_json(server.requests[0], {datapoints: [
             {dim3: 'f3a', value: 13},
