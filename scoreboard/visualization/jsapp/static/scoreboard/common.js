@@ -308,15 +308,15 @@ App.ChartRouter = Backbone.Router.extend({
 
     initialize: function(model) {
         this.model = model;
-        this.route(/^chart\?(.*)$/, 'chart');
+        this.route(/^f\?(.*)$/, 'f');
         var router = this;
         this.model.on('change', function(filters) {
             var state = this.encode(filters.toJSON());
-            router.navigate('chart?' + state);
+            router.navigate('f?' + state);
         }, this);
     },
 
-    chart: function(state) {
+    f: function(state) {
         var value = this.decode(state);
         this.model.set(value);
     }
