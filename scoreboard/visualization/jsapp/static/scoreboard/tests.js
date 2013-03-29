@@ -208,4 +208,9 @@ describe('ChartRouter encoding and decoding', function() {
         expect(transmit(value)).to.deep.equal(value);
     });
 
+    it('should return a blank object in case there is an error', function() {
+        var router = new App.ChartRouter(new Backbone.Model());
+        expect(router.decode('---')).to.deep.equal({});
+    });
+
 });

@@ -275,7 +275,12 @@ App.ChartRouter = Backbone.Router.extend({
     },
 
     decode: function(serialized) {
-        return JSON.parse(decodeURIComponent(serialized));
+        try {
+            return JSON.parse(decodeURIComponent(serialized));
+        }
+        catch(e) {
+            return {};
+        }
     },
 
     initialize: function(model) {
