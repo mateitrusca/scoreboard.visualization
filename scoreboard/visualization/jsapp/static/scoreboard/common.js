@@ -175,6 +175,7 @@ App.IndicatorMetadataView = Backbone.View.extend({
         );
         this.footer_meta_sources = options['footer_meta_sources'];
         this.model.on('change', this.render, this);
+        this.description = $('#parent-fieldname-description').detach();
         this.render();
     },
 
@@ -213,7 +214,10 @@ App.IndicatorMetadataView = Backbone.View.extend({
         var ajax_calls = $.when.apply($, requests);
         ajax_calls.done(_.bind(function(){
             if(data != []){
-                this.$el.html(this.template({"blocks": data}));
+                this.$el.html(this.template(
+                    {"description": this.description.html(),
+                     "blocks": data}
+                ));
             }
             else {
                 this.$el.empty();
