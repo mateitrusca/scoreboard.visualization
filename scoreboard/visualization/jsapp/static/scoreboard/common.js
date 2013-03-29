@@ -10,9 +10,9 @@ App.ScenarioChartView = Backbone.View.extend({
     className: 'highcharts-chart',
 
     initialize: function(options) {
-        this.model.on('change', this.filters_changed, this);
+        this.model.on('change', this.load_chart, this);
         this.loadstate = options['loadstate'] || new Backbone.Model();
-        this.loadstate.on('change', this.filters_changed, this);
+        this.loadstate.on('change', this.load_chart, this);
         this.meta_labels = options['meta_labels'];
         this.schema = options['schema'];
         this.scenario_chart = options['scenario_chart'];
@@ -21,7 +21,7 @@ App.ScenarioChartView = Backbone.View.extend({
             _(options.schema.filters).pluck('dimension')
         );
         this.datasource = options['datasource']
-        this.filters_changed();
+        this.load_chart();
     },
 
     render: function() {
@@ -67,7 +67,7 @@ App.ScenarioChartView = Backbone.View.extend({
 
     },
 
-    filters_changed: function() {
+    load_chart: function() {
         var incomplete = false;
         var args = {};
         var groupby = this.datasource['groupby'];
