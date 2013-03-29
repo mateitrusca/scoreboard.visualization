@@ -129,11 +129,11 @@ App.MultipleSelectFilter = App.SelectFilter.extend({
             'filter_label': this.label,
             'filter_name': this.name
         }));
-        $(this.$el.find('select[name='+ this.name +']')).select2();
-        $(this.$el.find('select[name='+ this.name +']')).select2(
+        this.$el.find('select[name='+ this.name +']').select2();
+        this.$el.find('select[name='+ this.name +']').select2(
             "val", this.model.get(this.name));
 
-        $(this.$el.find('#' + this.name + "-add-all")).click(_.bind(function() {
+        this.$el.find('#' + this.name + "-add-all").click(_.bind(function() {
             var all = _(this.dimension_options).pluck('notation');
             this.model.set(this.name, []);
             $(this.$el.find('select[name=' + this.name + ']')).select2("val", "");
@@ -142,8 +142,8 @@ App.MultipleSelectFilter = App.SelectFilter.extend({
                 "val", all);
         }, this));
 
-        $(this.$el.find('#' + this.name + "-clear")).click(_.bind(function() {
-            $(this.$el.find('select[name=' + this.name + ']')).select2("val", "");
+        this.$el.find('#' + this.name + "-clear").click(_.bind(function() {
+            this.$el.find('select[name=' + this.name + ']').select2("val", "");
             this.model.set(this.name, []);
         }, this));
 
