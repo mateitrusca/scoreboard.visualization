@@ -264,6 +264,20 @@ describe('modular filters', function() {
             expect(model.get('fil1')).to.deep.equal(['one', 'two']);
         });
 
+        it('should preserve selection even if default_all', function() {
+            var model = new Backbone.Model({'fil1': ['one']});
+            var options = [{'notation': 'one'}, {'notation': 'two'}];
+            var view = new NoAjaxMultipleSelectFilter({
+                model: model,
+                name: 'fil1',
+                dimension: 'dim1',
+                default_all: true
+            });
+            view.ajax.resolve({options: options});
+            expect(view.$el.find('select').val()).to.deep.equal(['one']);
+            expect(model.get('fil1')).to.deep.equal(['one']);
+        });
+
     });
 
 });

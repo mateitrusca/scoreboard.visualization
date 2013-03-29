@@ -109,14 +109,12 @@ App.MultipleSelectFilter = App.SelectFilter.extend({
         var current_value = this.model.get(this.name);
 
         var range = _(new_options).pluck('notation');
-        if(_.intersection(range, current_value) != current_value){
+        if(_.intersection(range, current_value).length == 0){
             if(this.default_all){
                 this.model.set(this.name, range);
             }
             else{
-                if(! current_value){
-                    this.model.set(this.name, [range[0]]);
-                }
+                this.model.set(this.name, [range[0]]);
             }
         }
 
