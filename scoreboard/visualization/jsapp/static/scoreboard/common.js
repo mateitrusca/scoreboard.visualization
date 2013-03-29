@@ -144,10 +144,11 @@ App.ScenarioChartView = Backbone.View.extend({
 
             var ajax_calls = $.when.apply($, requests);
             var series_ajax_result = ajax_calls.done(function() {
-                var responses = _(arguments).toArray().slice(0,-2);
-                var series = _(responses).map(function(resp, n) {
+                var responses = _(arguments).toArray();
+                var series = _(group_values).map(function(value, n) {
+                    var resp = responses[n];
                     return {
-                        'label': chart_data['group_labels'][group_values[n]],
+                        'label': chart_data['group_labels'][value],
                         'data': resp[0]['datapoints']
                     };
                 });
