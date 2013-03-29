@@ -37,12 +37,6 @@ App.SelectFilter = Backbone.View.extend({
         }
     },
 
-    received_new_options: function(new_options) {
-        this.dimension_options = new_options;
-        this.adjust_value();
-        this.render();
-    },
-
     update: function() {
         if(this.ajax) {
             this.ajax.abort();
@@ -67,7 +61,9 @@ App.SelectFilter = Backbone.View.extend({
         this.ajax = this.fetch_options(args);
         this.ajax.done(_.bind(function(data) {
             this.ajax = null;
-            this.received_new_options(data['options']);
+            this.dimension_options = data['options'];
+            this.adjust_value();
+            this.render();
             this.loadstate.set(this.name, false);
         }, this));
     },
