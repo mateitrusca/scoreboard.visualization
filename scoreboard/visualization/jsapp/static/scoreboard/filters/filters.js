@@ -134,21 +134,20 @@ App.MultipleSelectFilter = App.SelectFilter.extend({
             'filter_label': this.label,
             'filter_name': this.name
         }));
-        this.$el.find('select[name='+ this.name +']').select2();
-        this.$el.find('select[name='+ this.name +']').select2(
-            "val", this.model.get(this.name));
+        this.$el.find('select').select2();
+        this.$el.find('select').select2("val", this.model.get(this.name));
     },
 
     add_all: function() {
         var all = _(this.dimension_options).pluck('notation');
         this.model.set(this.name, []);
-        $(this.$el.find('select[name=' + this.name + ']')).select2("val", "");
+        $(this.$el.find('select')).select2("val", "");
         this.model.set(this.name, all);
-        $(this.$el.find('select[name=' + this.name + ']')).select2("val", all);
+        $(this.$el.find('select')).select2("val", all);
     },
 
     clear: function() {
-        this.$el.find('select[name=' + this.name + ']').select2("val", "");
+        this.$el.find('select').select2("val", "");
         this.model.set(this.name, []);
     }
 
