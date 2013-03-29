@@ -73,12 +73,12 @@ App.ScenarioChartView = Backbone.View.extend({
         var groupby = this.datasource['groupby'];
         var requests = [];
         var view = this;
-        _(this.dimensions_mapping).each(_.bind(function(dimension, filter_name){
+        _(this.dimensions_mapping).each(function(dimension, filter_name) {
             if(filter_name != groupby){
                 args[dimension] = this.model.get(filter_name);
             }
-        }, this));
-        var required_filters = _(this.schema['filters']).reject(function(item){
+        }, this);
+        var required_filters = _(this.schema['filters']).reject(function(item) {
             return item['name'] === groupby;
         })
         var required = _(required_filters).pluck('dimension');
@@ -92,7 +92,7 @@ App.ScenarioChartView = Backbone.View.extend({
             return;
         }
         this.$el.html('-- loading --');
-        _(this.datasource['extra_args']).each(function(item){
+        _(this.datasource['extra_args']).each(function(item) {
             args[item[0]] = item[1];
         });
 
@@ -113,19 +113,17 @@ App.ScenarioChartView = Backbone.View.extend({
                 }
                 return this.value
             },
-            'group_labels': {
-            }
+            'group_labels': {}
         };
 
         var group_values = null;
 
-        if (groupby){
+        if (groupby) {
             group_values = this.model.get(groupby);
             requests = _(group_values).map(function(value) {
                 var dimension = this.dimensions_mapping[groupby];
                 args[dimension] = value;
-                var data_ajax = $.get(App.URL + this.datasource['rel_url'], args);
-                return data_ajax;
+                return $.get(App.URL + this.datasource['rel_url'], args);
             }, this);
 
             var labels_args = {
@@ -151,15 +149,12 @@ App.ScenarioChartView = Backbone.View.extend({
         var ajax_calls = $.when.apply($, requests);
         ajax_calls.done(function() {
             var responses = _(arguments).toArray();
-            var series = _(group_values).map(function(value, n) {
+            chart_data['series'] = _(group_values).map(function(value, n) {
                 var resp = responses[n];
                 return {
                     'label': chart_data['group_labels'][value],
                     'data': resp[0]['datapoints']
                 };
-            });
-            _(chart_data).extend({
-                'series': series
             });
             view.data = chart_data;
             view.render();
