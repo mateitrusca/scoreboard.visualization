@@ -76,15 +76,9 @@ App.ScenarioChartView = Backbone.View.extend({
         _(this.dimensions_mapping).each(function(dimension, filter_name) {
             if(filter_name != groupby){
                 args[dimension] = this.model.get(filter_name);
+                if(! args[dimension]) { incomplete = true; }
             }
-        }, this);
-        var required_filters = _(this.schema['filters']).reject(function(item) {
-            return item['name'] === groupby;
-        });
-        var required = _(required_filters).pluck('dimension');
-        _(required).forEach(function(field) {
-            if(! args[field]) { incomplete = true; }
-            if(this.loadstate.get(field)) { incomplete = true; }
+            if(this.loadstate.get(filter_name)) { incomplete = true; }
         }, this);
         if(incomplete) {
             // not all filters have values
