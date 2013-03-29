@@ -115,8 +115,10 @@ App.ScenarioChartView = Backbone.View.extend({
             }
         };
 
+        var group_values = null;
+
         if (groupby){
-            var group_values = this.model.get(groupby);
+            group_values = this.model.get(groupby);
             requests = _(group_values).map(_.bind(function(value) {
                 var dimension = this.dimensions_mapping[groupby];
                 args[dimension] = value;
