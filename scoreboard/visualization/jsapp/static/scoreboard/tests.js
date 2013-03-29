@@ -178,3 +178,40 @@ describe('Float rounder', function() {
     });
 
 });
+
+
+describe('ChartRouter encoding and decoding', function() {
+    "use strict";
+
+    function transmit(value) {
+        var router = new App.ChartRouter(new Backbone.Model());
+        return router.decode(router.encode(value));
+    }
+
+    it('should transmit an empty dict', function() {
+        var value = {};
+        expect(transmit(value)).to.deep.equal(value);
+    });
+
+    it('should transimt some string values', function() {
+        var value = {a: 'b', c: 'd'};
+        expect(transmit(value)).to.deep.equal(value);
+    });
+
+    it('should transmit lists', function() {
+        var value = {a: [], b: ['1'], c: ['1', '2', '3']};
+        expect(transmit(value)).to.deep.equal(value);
+    });
+
+    it('should transmit weird characters in the value', function() {
+        var weird = '!@#$%^&*()-=<>,.:"?~`[]{}/|\\\'asdf';
+        var value = {a: weird, b: [weird], c: [weird, weird]};
+        expect(transmit(value)).to.deep.equal(value);
+    });
+
+    it('should return a blank object in case there is an error', function() {
+        var router = new App.ChartRouter(new Backbone.Model());
+        expect(router.decode('---')).to.deep.equal({});
+    });
+
+});
