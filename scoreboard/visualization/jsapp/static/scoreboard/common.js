@@ -1,4 +1,4 @@
-/*global App, Backbone */
+/*global App, Backbone, _ */
 /*jshint sub:true */
 
 (function($) {
@@ -20,7 +20,7 @@ App.ScenarioChartView = Backbone.View.extend({
             _(options.schema.filters).pluck('name'),
             _(options.schema.filters).pluck('dimension')
         );
-        this.datasource = options['datasource']
+        this.datasource = options['datasource'];
         this.load_chart();
     },
 
@@ -72,19 +72,12 @@ App.ScenarioChartView = Backbone.View.extend({
         var args = {};
         var groupby = this.datasource['groupby'];
         var requests = [];
-        var view = this;
         _(this.dimensions_mapping).each(function(dimension, filter_name) {
             if(filter_name != groupby){
                 args[dimension] = this.model.get(filter_name);
+                if(! args[dimension]) { incomplete = true; }
             }
-        }, this);
-        var required_filters = _(this.schema['filters']).reject(function(item) {
-            return item['name'] === groupby;
-        })
-        var required = _(required_filters).pluck('dimension');
-        _(required).forEach(function(field) {
-            if(! args[field]) { incomplete = true; }
-            if(this.loadstate.get(field)) { incomplete = true; }
+            if(this.loadstate.get(filter_name)) { incomplete = true; }
         }, this);
         if(incomplete) {
             // not all filters have values
@@ -111,7 +104,7 @@ App.ScenarioChartView = Backbone.View.extend({
                 if (this.value.length > max_length){
                     return this.value.substr(0, max_length) + ' ...';
                 }
-                return this.value
+                return this.value;
             },
             'group_labels': {}
         };
@@ -147,7 +140,7 @@ App.ScenarioChartView = Backbone.View.extend({
         requests.push(this.get_meta_data(chart_data));
 
         var ajax_calls = $.when.apply($, requests);
-        ajax_calls.done(function() {
+        ajax_calls.done(_.bind(function() {
             var responses = _(arguments).toArray();
             chart_data['series'] = _(group_values).map(function(value, n) {
                 var resp = responses[n];
@@ -156,9 +149,9 @@ App.ScenarioChartView = Backbone.View.extend({
                     'data': resp[0]['datapoints']
                 };
             });
-            view.data = chart_data;
-            view.render();
-        });
+            this.data = chart_data;
+            this.render();
+        }, this));
     }
 
 });
@@ -201,7 +194,7 @@ App.IndicatorMetadataView = Backbone.View.extend({
                         this.info_block['info'].push(resp[filter.part]);
                     },
                     {'filter': filter, 'info_block': this.info_block}))
-                )
+                );
             },
             {'source': source,
              'model': this.model,
@@ -222,7 +215,7 @@ App.IndicatorMetadataView = Backbone.View.extend({
             else {
                 this.$el.empty();
             }
-        }, this))
+        }, this));
     }
 
 });
