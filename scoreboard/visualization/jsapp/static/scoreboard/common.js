@@ -260,7 +260,12 @@ App.NavigationView = Backbone.View.extend({
     },
 
     render: function() {
-        this.$el.html(this.template({}));
+        var ajax = $.get(App.URL + '/@@relations',
+            _.bind(function(data){
+                this.$el.html(this.template({
+                    "scenarios": data
+                }));
+            }, this));
         return this;
     }
 });
