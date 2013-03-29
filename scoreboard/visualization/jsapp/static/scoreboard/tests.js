@@ -204,7 +204,8 @@ describe('ChartRouter encoding and decoding', function() {
     });
 
     it('should transmit weird characters in the value', function() {
-        var value = {a: '!@#$%^&*()-=<>,.:"?~`[]{}/|\\\'asdf'};
+        var weird = '!@#$%^&*()-=<>,.:"?~`[]{}/|\\\'asdf';
+        var value = {a: weird, b: [weird], c: [weird, weird]};
         expect(transmit(value)).to.deep.equal(value);
     });
 
