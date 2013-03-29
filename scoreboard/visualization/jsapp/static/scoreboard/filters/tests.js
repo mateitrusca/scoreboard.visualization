@@ -238,4 +238,32 @@ describe('modular filters', function() {
     });
 
 
+    describe('MultipleSelectFilter', function() {
+
+        var NoAjaxMultipleSelectFilter = App.MultipleSelectFilter.extend({
+            fetch_options: function(args) {
+                var mock_ajax = App.jQuery.Deferred();
+                mock_ajax.abort = function() {
+                    mock_ajax.reject();
+                };
+                return mock_ajax;
+            }
+        });
+
+        it('should select all values if default_all', function() {
+            var model = new Backbone.Model();
+            var options = [{'notation': 'one'}, {'notation': 'two'}];
+            var view = new NoAjaxMultipleSelectFilter({
+                model: model,
+                name: 'fil1',
+                dimension: 'dim1',
+                default_all: true
+            });
+            view.ajax.resolve({options: options});
+            expect(view.$el.find('select').val()).to.deep.equal(['one', 'two']);
+            expect(model.get('fil1')).to.deep.equal(['one', 'two']);
+        });
+
+    });
+
 });
