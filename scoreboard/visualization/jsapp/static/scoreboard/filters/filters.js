@@ -99,6 +99,11 @@ App.MultipleSelectFilter = App.SelectFilter.extend({
 
     template: App.get_template('scoreboard/filters/multiple_select.html'),
 
+    events: _({
+        'click input[type="button"][id$="-add-all"]': 'add_all',
+        'click input[type="button"][id$="-clear"]': 'clear'
+    }).extend(App.SelectFilter.prototype.events),
+
     received_new_options: function(new_options) {
         this.dimension_options = new_options;
         var current_value = this.model.get(this.name);
@@ -132,12 +137,6 @@ App.MultipleSelectFilter = App.SelectFilter.extend({
         this.$el.find('select[name='+ this.name +']').select2();
         this.$el.find('select[name='+ this.name +']').select2(
             "val", this.model.get(this.name));
-
-        this.$el.find('#' + this.name + "-add-all").click(
-            _.bind(this.add_all, this));
-
-        this.$el.find('#' + this.name + "-clear").click(
-            _.bind(this.clear, this));
     },
 
     add_all: function() {
