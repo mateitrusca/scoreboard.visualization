@@ -116,10 +116,10 @@ App.ScenarioChartView = Backbone.View.extend({
         };
 
         if (groupby){
-            var countries = this.model.get(groupby);
-            requests = _(countries).map(_.bind(function(country) {
+            var group_values = this.model.get(groupby);
+            requests = _(group_values).map(_.bind(function(value) {
                 var dimension = this.dimensions_mapping[groupby];
-                args[dimension] = country;
+                args[dimension] = value;
                 var data_ajax = $.get(App.URL + this.datasource['rel_url'], args);
                 return data_ajax;
             }, this));
@@ -145,7 +145,7 @@ App.ScenarioChartView = Backbone.View.extend({
                 var responses = _(arguments).toArray().slice(0,-2);
                 var series = _(responses).map(function(resp, n) {
                     return {
-                        'label': chart_data['group_labels'][countries[n]],
+                        'label': chart_data['group_labels'][group_values[n]],
                         'data': resp[0]['datapoints']
                     };
                 });
