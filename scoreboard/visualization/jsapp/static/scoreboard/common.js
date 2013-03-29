@@ -10,9 +10,9 @@ App.ScenarioChartView = Backbone.View.extend({
     className: 'highcharts-chart',
 
     initialize: function(options) {
-        this.model.on('change', this.filters_changed, this);
+        this.model.on('change', this.load_chart, this);
         this.loadstate = options['loadstate'] || new Backbone.Model();
-        this.loadstate.on('change', this.filters_changed, this);
+        this.loadstate.on('change', this.load_chart, this);
         this.meta_labels = options['meta_labels'];
         this.schema = options['schema'];
         this.scenario_chart = options['scenario_chart'];
@@ -21,7 +21,7 @@ App.ScenarioChartView = Backbone.View.extend({
             _(options.schema.filters).pluck('dimension')
         );
         this.datasource = options['datasource']
-        this.filters_changed();
+        this.load_chart();
     },
 
     render: function() {
@@ -67,18 +67,18 @@ App.ScenarioChartView = Backbone.View.extend({
 
     },
 
-    filters_changed: function() {
+    load_chart: function() {
         var incomplete = false;
         var args = {};
         var groupby = this.datasource['groupby'];
         var requests = [];
         var view = this;
-        _(this.dimensions_mapping).each(_.bind(function(dimension, filter_name){
+        _(this.dimensions_mapping).each(function(dimension, filter_name) {
             if(filter_name != groupby){
                 args[dimension] = this.model.get(filter_name);
             }
-        }, this));
-        var required_filters = _(this.schema['filters']).reject(function(item){
+        }, this);
+        var required_filters = _(this.schema['filters']).reject(function(item) {
             return item['name'] === groupby;
         })
         var required = _(required_filters).pluck('dimension');
@@ -92,7 +92,7 @@ App.ScenarioChartView = Backbone.View.extend({
             return;
         }
         this.$el.html('-- loading --');
-        _(this.datasource['extra_args']).each(function(item){
+        _(this.datasource['extra_args']).each(function(item) {
             args[item[0]] = item[1];
         });
 
@@ -112,73 +112,53 @@ App.ScenarioChartView = Backbone.View.extend({
                     return this.value.substr(0, max_length) + ' ...';
                 }
                 return this.value
-            }
+            },
+            'group_labels': {}
         };
 
-        if (groupby){
-            var countries = this.model.get(groupby);
-            requests = _(countries).map(_.bind(function(country) {
+        var group_values = null;
+
+        if (groupby) {
+            group_values = this.model.get(groupby);
+            requests = _(group_values).map(function(value) {
                 var dimension = this.dimensions_mapping[groupby];
-                args[dimension] = country;
-                var data_ajax = $.get(App.URL + this.datasource['rel_url'], args);
-                return data_ajax;
-            }, this));
+                args[dimension] = value;
+                return $.get(App.URL + this.datasource['rel_url'], args);
+            }, this);
 
-            requests.push( $.get(App.URL + '/dimension_values',
-                {
-                    'dimension': this.dimensions_mapping[groupby],
-                    'rev': App.DATA_REVISION
-                },
-                function(data){
-                    var results = data['options'];
-                    chart_data['group_labels'] = _.object(
-                             _(results).pluck('notation'),
-                             _(results).pluck('label')
-                           );
-                }
-            ));
-
-            requests.push(this.get_meta_data(chart_data));
-
-            var ajax_calls = $.when.apply($, requests);
-            var series_ajax_result = ajax_calls.done(function() {
-                var responses = _(arguments).toArray().slice(0,-2);
-                var series = _(responses).map(function(resp, n) {
-                    return {
-                        'label': chart_data['group_labels'][countries[n]],
-                        'data': resp[0]['datapoints']
-                    };
-                });
-                _(chart_data).extend({
-                    'series': series
-                });
-                view.data = chart_data;
+            var labels_args = {
+                'dimension': this.dimensions_mapping[groupby],
+                'rev': App.DATA_REVISION
+            };
+            var labels_request = $.get(App.URL + '/dimension_values', labels_args);
+            labels_request.done(function(data) {
+                var results = data['options'];
+                chart_data['group_labels'] = _.object(
+                    _(results).pluck('notation'),
+                    _(results).pluck('label'));
             });
+            requests.push(labels_request);
         }
-        else{
+        else {
+            group_values = [null];
             requests.push($.get(App.URL + this.datasource['rel_url'], args));
-            requests.push(this.get_meta_data(chart_data));
-            var ajax_calls = $.when.apply($, requests);
-            var series_ajax_result = ajax_calls.done(function() {
-                var data = arguments[0][0];
-                var series0 = {
-                    'label': '',
-                    'data': data['datapoints']
-                };
-                _(chart_data).extend({
-                    'series': [series0]
-                });
-                view.data = chart_data;
-            });
         }
 
-        //TODO gets meta data everytime filters changed
-        //if needed, it could be optimized to fetch labels
-        //only when relevant filters change
-        series_ajax_result.done(_.bind(function(){
-            this.render();
-        }, this));
+        requests.push(this.get_meta_data(chart_data));
 
+        var ajax_calls = $.when.apply($, requests);
+        ajax_calls.done(function() {
+            var responses = _(arguments).toArray();
+            chart_data['series'] = _(group_values).map(function(value, n) {
+                var resp = responses[n];
+                return {
+                    'label': chart_data['group_labels'][value],
+                    'data': resp[0]['datapoints']
+                };
+            });
+            view.data = chart_data;
+            view.render();
+        });
     }
 
 });
