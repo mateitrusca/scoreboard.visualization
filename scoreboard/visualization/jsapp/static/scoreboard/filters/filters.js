@@ -133,20 +133,24 @@ App.MultipleSelectFilter = App.SelectFilter.extend({
         this.$el.find('select[name='+ this.name +']').select2(
             "val", this.model.get(this.name));
 
-        this.$el.find('#' + this.name + "-add-all").click(_.bind(function() {
-            var all = _(this.dimension_options).pluck('notation');
-            this.model.set(this.name, []);
-            $(this.$el.find('select[name=' + this.name + ']')).select2("val", "");
-            this.model.set(this.name, all);
-            $(this.$el.find('select[name=' + this.name + ']')).select2(
-                "val", all);
-        }, this));
+        this.$el.find('#' + this.name + "-add-all").click(
+            _.bind(this.add_all, this));
 
-        this.$el.find('#' + this.name + "-clear").click(_.bind(function() {
-            this.$el.find('select[name=' + this.name + ']').select2("val", "");
-            this.model.set(this.name, []);
-        }, this));
+        this.$el.find('#' + this.name + "-clear").click(
+            _.bind(this.clear, this));
+    },
 
+    add_all: function() {
+        var all = _(this.dimension_options).pluck('notation');
+        this.model.set(this.name, []);
+        $(this.$el.find('select[name=' + this.name + ']')).select2("val", "");
+        this.model.set(this.name, all);
+        $(this.$el.find('select[name=' + this.name + ']')).select2("val", all);
+    },
+
+    clear: function() {
+        this.$el.find('select[name=' + this.name + ']').select2("val", "");
+        this.model.set(this.name, []);
     }
 
 });
