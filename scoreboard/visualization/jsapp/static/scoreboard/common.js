@@ -1,4 +1,4 @@
-/*global App, Backbone */
+/*global App, Backbone, _ */
 /*jshint sub:true */
 
 (function($) {
@@ -20,7 +20,7 @@ App.ScenarioChartView = Backbone.View.extend({
             _(options.schema.filters).pluck('name'),
             _(options.schema.filters).pluck('dimension')
         );
-        this.datasource = options['datasource']
+        this.datasource = options['datasource'];
         this.load_chart();
     },
 
@@ -80,7 +80,7 @@ App.ScenarioChartView = Backbone.View.extend({
         }, this);
         var required_filters = _(this.schema['filters']).reject(function(item) {
             return item['name'] === groupby;
-        })
+        });
         var required = _(required_filters).pluck('dimension');
         _(required).forEach(function(field) {
             if(! args[field]) { incomplete = true; }
@@ -111,7 +111,7 @@ App.ScenarioChartView = Backbone.View.extend({
                 if (this.value.length > max_length){
                     return this.value.substr(0, max_length) + ' ...';
                 }
-                return this.value
+                return this.value;
             },
             'group_labels': {}
         };
@@ -200,7 +200,7 @@ App.IndicatorMetadataView = Backbone.View.extend({
                         this.info_block['info'].push(resp[filter.part]);
                     },
                     {'filter': filter, 'info_block': this.info_block}))
-                )
+                );
             },
             {'source': source,
              'model': this.model,
@@ -218,7 +218,7 @@ App.IndicatorMetadataView = Backbone.View.extend({
             else {
                 this.$el.empty();
             }
-        }, this))
+        }, this));
     }
 
 });
