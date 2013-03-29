@@ -119,12 +119,12 @@ App.ScenarioChartView = Backbone.View.extend({
 
         if (groupby){
             group_values = this.model.get(groupby);
-            requests = _(group_values).map(_.bind(function(value) {
+            requests = _(group_values).map(function(value) {
                 var dimension = this.dimensions_mapping[groupby];
                 args[dimension] = value;
                 var data_ajax = $.get(App.URL + this.datasource['rel_url'], args);
                 return data_ajax;
-            }, this));
+            }, this);
 
             requests.push( $.get(App.URL + '/dimension_values',
                 {
