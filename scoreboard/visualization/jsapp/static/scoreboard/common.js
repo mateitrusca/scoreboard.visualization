@@ -112,6 +112,8 @@ App.ScenarioChartView = Backbone.View.extend({
                     return this.value.substr(0, max_length) + ' ...';
                 }
                 return this.value
+            },
+            'group_labels': {
             }
         };
 
@@ -139,41 +141,29 @@ App.ScenarioChartView = Backbone.View.extend({
                            );
                 }
             ));
-
-            requests.push(this.get_meta_data(chart_data));
-
-            var ajax_calls = $.when.apply($, requests);
-            var series_ajax_result = ajax_calls.done(function() {
-                var responses = _(arguments).toArray();
-                var series = _(group_values).map(function(value, n) {
-                    var resp = responses[n];
-                    return {
-                        'label': chart_data['group_labels'][value],
-                        'data': resp[0]['datapoints']
-                    };
-                });
-                _(chart_data).extend({
-                    'series': series
-                });
-                view.data = chart_data;
-            });
         }
-        else{
+        else {
+            group_values = [null];
             requests.push($.get(App.URL + this.datasource['rel_url'], args));
-            requests.push(this.get_meta_data(chart_data));
-            var ajax_calls = $.when.apply($, requests);
-            var series_ajax_result = ajax_calls.done(function() {
-                var data = arguments[0][0];
-                var series0 = {
-                    'label': '',
-                    'data': data['datapoints']
-                };
-                _(chart_data).extend({
-                    'series': [series0]
-                });
-                view.data = chart_data;
-            });
         }
+
+        requests.push(this.get_meta_data(chart_data));
+
+        var ajax_calls = $.when.apply($, requests);
+        var series_ajax_result = ajax_calls.done(function() {
+            var responses = _(arguments).toArray();
+            var series = _(group_values).map(function(value, n) {
+                var resp = responses[n];
+                return {
+                    'label': chart_data['group_labels'][value],
+                    'data': resp[0]['datapoints']
+                };
+            });
+            _(chart_data).extend({
+                'series': series
+            });
+            view.data = chart_data;
+        });
 
         //TODO gets meta data everytime filters changed
         //if needed, it could be optimized to fetch labels
