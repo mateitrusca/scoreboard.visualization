@@ -153,7 +153,7 @@ App.scenario1_initialize = function() {
         schema: App.scenario1_filters_schema,
         scenario_chart: App.scenario1_chart,
         datasource: {
-            groupby: 'countries',
+            client_filter: 'countries',
             rel_url: '/datapoints',
             extra_args: [
                 ['fields', 'ref-area,value'],
