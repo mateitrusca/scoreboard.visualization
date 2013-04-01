@@ -69,6 +69,12 @@ App.scenario5_initialize = function() {
         });
         $('#the-metadata').append(App.metadata.el);
 
+        App.navigation = new App.NavigationView({
+            model: App.filters
+        });
+
+        $('#the-navigation').append(App.navigation.el);
+
     });
 
     Backbone.history.start();
