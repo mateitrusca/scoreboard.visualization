@@ -253,6 +253,12 @@ App.scenario3_initialize = function() {
     $('#the-metadata').append(App.metadata.el);
     $('#the-share').append(App.share.el);
 
+    App.navigation = new App.NavigationView({
+        model: App.filters
+    });
+
+    $('#the-navigation').append(App.navigation.el);
+
     Backbone.history.start();
 
 };

@@ -233,6 +233,7 @@ App.IndicatorMetadataView = Backbone.View.extend({
 
 });
 
+
 App.ShareOptionsView = Backbone.View.extend({
 
     template: App.get_template('scoreboard/share.html'),
@@ -243,6 +244,49 @@ App.ShareOptionsView = Backbone.View.extend({
 
     render: function() {
         this.$el.html(this.template());
+        return this;
+    }
+});
+
+
+App.NavigationView = Backbone.View.extend({
+
+    id: 'scenarios',
+
+    template: App.get_template('scoreboard/navigation.html'),
+
+    events: {
+        'click img': 'on_selection_change'
+    },
+
+    initialize: function(options) {
+        this.model.on('change:scenario', this.render, this);
+        this.render();
+    },
+
+    fetch_scenarios: function(){
+        return $.get(App.URL + '/@@relations');
+    },
+
+    on_selection_change: function(e){
+        var value = $(e.target).parent().parent().attr('id');
+        this.model.set('scenario', value);
+    },
+
+    render: function() {
+        this.ajax = this.fetch_scenarios();
+        this.ajax.done(
+            _.bind(function(resp){
+                var data = _(resp).map(_.bind(function(item){
+                    if(item['id'] == this.model.get('scenario')){
+                        item['selected'] = true;
+                    }
+                    return item;
+                }, this));
+                this.$el.html(this.template({
+                    "scenarios": data
+                }));
+            }, this));
         return this;
     }
 });

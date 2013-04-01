@@ -192,6 +192,12 @@ App.scenario1_initialize = function() {
     App.share = new App.ShareOptionsView();
     $('#the-share').append(App.share.el);
 
+    App.navigation = new App.NavigationView({
+        model: App.filters
+    });
+
+    $('#the-navigation').append(App.navigation.el);
+
     Backbone.history.start();
 };
 
