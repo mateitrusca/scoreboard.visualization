@@ -260,6 +260,7 @@ App.NavigationView = Backbone.View.extend({
     },
 
     initialize: function(options) {
+        this.model.on('change:scenario', this.render, this);
         this.render();
     },
 
@@ -270,7 +271,6 @@ App.NavigationView = Backbone.View.extend({
     on_selection_change: function(e){
         var value = $(e.target).parent().attr('title');
         this.model.set('scenario', value);
-        this.render();
     },
 
     render: function() {
