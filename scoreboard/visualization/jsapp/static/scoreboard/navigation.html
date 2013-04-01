@@ -1,6 +1,6 @@
 <h4>To swap scenarios, click one of the icons:</h4>
 {{#each scenarios}}
-<div class="{{ selected }}">
+<div {{#if selected }} class="selected" {{/if}} id="{{ title }}">
   <a href="{{ url }}" title="{{ title }}">
     <img src="{{ image }}" class="scenario_icon" alt="">
     <label>{{ title }}</label>

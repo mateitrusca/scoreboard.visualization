@@ -18,6 +18,13 @@ App.testing.choose_radio = function(inputs, value) {
 };
 
 
+App.testing.choose_scenario = function(inputs, value){
+    inputs.attr('selected', null);
+    var div = inputs.filter('#' + value + '').attr('class', 'selected')
+    div.find('img').click();
+};
+
+
 App.testing.url_param = function(url, name){
     var results = new RegExp('[\\?&]' + name + '=([^&#]*)').exec(url);
     if (!results) { return null; }

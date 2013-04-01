@@ -255,13 +255,34 @@ App.NavigationView = Backbone.View.extend({
 
     template: App.get_template('scoreboard/navigation.html'),
 
+    events: {
+        'click img': 'on_selection_change'
+    },
+
     initialize: function(options) {
         this.render();
     },
 
+    fetch_scenarios: function(){
+        return $.get(App.URL + '/@@relations');
+    },
+
+    on_selection_change: function(e){
+        var value = $(e.target).parent().attr('title');
+        this.model.set('scenario', value);
+        this.render();
+    },
+
     render: function() {
-        var ajax = $.get(App.URL + '/@@relations',
-            _.bind(function(data){
+        this.ajax = this.fetch_scenarios();
+        this.ajax.done(
+            _.bind(function(resp){
+                var data = _(resp).map(_.bind(function(item){
+                    if(item['title'] == this.model.get('scenario')){
+                        item['selected'] = true;
+                    }
+                    return item;
+                }, this));
                 this.$el.html(this.template({
                     "scenarios": data
                 }));
