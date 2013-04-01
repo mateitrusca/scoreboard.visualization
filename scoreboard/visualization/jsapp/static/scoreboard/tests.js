@@ -44,6 +44,7 @@ describe('NavigationView', function() {
             "image": "img/url",
             "portal_type": "ScoreboardVisualization",
             "title": "scenario1",
+            "id": "scenario1",
             "url": "scenario1/url"
         },
         {
@@ -51,6 +52,7 @@ describe('NavigationView', function() {
             "image": "img/url",
             "portal_type": "ScoreboardVisualization",
             "title": "scenario2",
+            "id": "scenario2",
             "url": "scenario2/url"
         }
         ];

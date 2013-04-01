@@ -269,7 +269,7 @@ App.NavigationView = Backbone.View.extend({
     },
 
     on_selection_change: function(e){
-        var value = $(e.target).parent().attr('title');
+        var value = $(e.target).parent().parent().attr('id');
         this.model.set('scenario', value);
     },
 
@@ -278,7 +278,7 @@ App.NavigationView = Backbone.View.extend({
         this.ajax.done(
             _.bind(function(resp){
                 var data = _(resp).map(_.bind(function(item){
-                    if(item['title'] == this.model.get('scenario')){
+                    if(item['id'] == this.model.get('scenario')){
                         item['selected'] = true;
                     }
                     return item;
