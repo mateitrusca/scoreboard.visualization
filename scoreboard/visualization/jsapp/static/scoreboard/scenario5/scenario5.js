@@ -38,6 +38,8 @@ App.Scenario5MapView = Backbone.View.extend({
     }
 });
 
+App.scenario5_filters_schema = App.scenario1_filters_schema;
+
 
 App.scenario5_initialize = function() {
     var qtip_css = App.STATIC + '/lib/qtip-2.0.1/jquery.qtip.css';
@@ -47,35 +49,43 @@ App.scenario5_initialize = function() {
     box.addClass('scenario5');
 
     App.filters = new Backbone.Model();
+    App.filter_loadstate = new Backbone.Model();
     App.router = new App.ChartRouter(App.filters);
 
-    $.getJSON(App.URL + '/filters_data', function(data) {
-        new App.Scenario1FiltersView({
-            model: App.filters,
-            el: $('#the-filters'),
-            filters_data: data
-        });
-
-        App.scenario5_map_view = new App.Scenario5MapView({
-            el: $('#the-map')[0],
-            model: App.filters,
-            indicator_labels: App.get_indicator_labels(data)
-        });
-
-        App.metadata = new App.IndicatorMetadataView({
-            model: App.filters,
-            field: 'indicator',
-            indicators: App.get_indicators(data)
-        });
-        $('#the-metadata').append(App.metadata.el);
-
-        App.navigation = new App.NavigationView({
-            model: App.filters
-        });
-
-        $('#the-navigation').append(App.navigation.el);
-
+    App.filters_box = new App.FiltersBox({
+        el: $('#the-filters')[0],
+        model: App.filters,
+        loadstate: App.filter_loadstate,
+        schema: App.scenario5_filters_schema
     });
+
+    App.scenario5_map_view = new App.ScenarioChartView({
+        model: App.filters,
+        loadstate: App.filter_loadstate,
+        schema: App.scenario5_filters_schema,
+        scenario_chart: App.scenario5_map,
+        datasource: {
+            client_filter: 'countries',
+            rel_url: '/datapoints',
+            extra_args: [
+                ['fields', 'ref-area,value'],
+                ['rev', App.DATA_REVISION]
+            ]
+        },
+        meta_labels: [
+            { targets: ['x_title'], filter_name: 'indicator', type: 'label' },
+            { targets: ['y_title', 'tooltip_label'], filter_name: 'unit-measure', type: 'short_label' },
+            { targets: ['year_text'], filter_name: 'time-period', type: 'label' }
+        ]
+    });
+
+    $('#the-chart').append(App.scenario5_map_view.el);
+
+    App.navigation = new App.NavigationView({
+        model: App.filters
+    });
+
+    $('#the-navigation').append(App.navigation.el);
 
     Backbone.history.start();
 };
