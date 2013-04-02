@@ -120,6 +120,7 @@ App.scenario1_filters_schema = {
          label: 'Country / Countries',
          dimension: 'ref-area',
          default_all: true,
+         position: '.right_column',
          constraints: {
              'unit-measure': 'unit-measure',
              'breakdown-group': 'breakdown-group',

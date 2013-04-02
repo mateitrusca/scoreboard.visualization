@@ -41,6 +41,7 @@ App.scenario2_filters_schema = {
          name: 'countries',
          label: 'Countries',
          dimension: 'ref-area',
+         position: '.right_column',
          constraints: {
              'indicator-group': 'indicator-group',
              'indicator': 'indicator',
