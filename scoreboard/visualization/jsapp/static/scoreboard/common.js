@@ -315,35 +315,12 @@ App.get_country_labels = function(filters_data) {
 App.ChartRouter = Backbone.Router.extend({
 
     encode: function(value) {
-        return _(value).map(function(v, k) {
-            if(_.isArray(v)) {
-                v = '[' + _(v).map(encodeURIComponent).join(',') + ']';
-            }
-            else {
-                v = encodeURIComponent(v);
-            }
-            return k + '=' + v;
-        }).join('&');
+        return encodeURIComponent(JSON.stringify(value));
     },
 
     decode: function(serialized) {
         try {
-            if(! serialized) { return {}; }
-            return _(_(serialized.split('&')).map(function(pair) {
-                if(! _(pair).contains('=')) { throw new Error(); }
-                var bits = pair.split('=');
-                var k = bits.shift();
-                var v = bits.join('=');
-                if(_(v).first() == '[' && _(v).last() == ']') {
-                    v = v.slice(1, -1);
-                    v = v ? v.split(',') : [];
-                    v = _(v).map(decodeURIComponent);
-                }
-                else {
-                    v = decodeURIComponent(v);
-                }
-                return [k, v];
-            })).object();
+            return JSON.parse(decodeURIComponent(serialized));
         }
         catch(e) {
             return {};
@@ -352,15 +329,15 @@ App.ChartRouter = Backbone.Router.extend({
 
     initialize: function(model) {
         this.model = model;
-        this.route(/^f\?(.*)$/, 'f');
+        this.route(/^chart\?(.*)$/, 'chart');
         var router = this;
         this.model.on('change', function(filters) {
             var state = this.encode(filters.toJSON());
-            router.navigate('f?' + state);
+            router.navigate('chart?' + state);
         }, this);
     },
 
-    f: function(state) {
+    chart: function(state) {
         var value = this.decode(state);
         this.model.set(value);
     }
