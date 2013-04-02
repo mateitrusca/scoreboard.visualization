@@ -56,6 +56,8 @@ describe('NavigationView', function() {
             "url": "scenario2/url"
         }
         ];
+
+        App.SCENARIO_URL = 'scenario2/url';
         view.ajax.resolve(response);
         App.testing.choose_scenario(view.$el.find('div'), 'scenario2')
         view.ajax.resolve(response);
