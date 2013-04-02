@@ -6,10 +6,10 @@
 
 
 App.scenario5_map = function(container, options) {
-    var series = options['series'];
+    var series = options['series'][0]['data'];
     var value_by_country = _.object(
         _(series).map(function(v) {
-            return App.COUNTRY_CODE[v['country_name']];
+            return v['ref-area']
         }),
         _(series).pluck('value'));
 
