@@ -6,6 +6,9 @@
 
 
 App.scenario3_chart = function(container, options, meta_data) {
+
+    $(container).addClass('normal-chart');
+
     var countrycolor = function(code) {
         if (_.isNull(App.COUNTRY_COLOR[code])) {
             return '#1C3FFD';
