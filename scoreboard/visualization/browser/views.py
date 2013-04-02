@@ -10,4 +10,7 @@ class TestsView(BrowserView):
         return '/++resource++scoreboard'
 
     def jsapp_html(self):
-        return jsapp_html(DATASOURCE_URL='', DATA_REVISION='')
+        return jsapp_html(
+                DATASOURCE_URL='',
+                SCENARIO_URL='',
+                DATA_REVISION='')
