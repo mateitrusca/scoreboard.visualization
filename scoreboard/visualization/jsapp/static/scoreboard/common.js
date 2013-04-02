@@ -244,11 +244,12 @@ App.ShareOptionsView = Backbone.View.extend({
     template: App.get_template('scoreboard/share.html'),
 
     initialize: function(options) {
+        this.related = $('#viewlet-below-content-body').detach();
         this.render();
     },
 
     render: function() {
-        this.$el.html(this.template());
+        this.$el.html(this.template({'related': this.related.html()}));
         return this;
     }
 });
