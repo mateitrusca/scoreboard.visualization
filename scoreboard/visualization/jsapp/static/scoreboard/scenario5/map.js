@@ -19,6 +19,7 @@ App.scenario5_map = function(container, options) {
     });
 
     var n = 0;
+    $(container).addClass('map-chart');
     var map = Kartograph.map(container);
     map.loadMap(App.STATIC + '/europe.svg', function() {
         map.addLayer('countries', {
