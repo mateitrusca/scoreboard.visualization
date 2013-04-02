@@ -278,7 +278,7 @@ App.NavigationView = Backbone.View.extend({
         this.ajax.done(
             _.bind(function(resp){
                 var data = _(resp).map(_.bind(function(item){
-                    if(item['id'] == this.model.get('scenario')){
+                    if(item['url'] == App.SCENARIO_URL){
                         item['selected'] = true;
                     }
                     return item;

@@ -24,6 +24,8 @@
 
     DATA_REVISION: {{ DATA_REVISION|json|safe }},
 
+    SCENARIO_URL: {{ SCENARIO_URL|json|safe }},
+
     get_template: function(name) {
         return Handlebars.compile(App.templates[name]);
     }

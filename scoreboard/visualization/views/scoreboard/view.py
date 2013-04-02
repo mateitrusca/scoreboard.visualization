@@ -37,4 +37,5 @@ class View(ViewForm):
             return "No data source available"
         cube = source.get_cube()
         return jsapp_html(DATASOURCE_URL=source.absolute_url(),
+                          SCENARIO_URL = self.context.absolute_url(),
                           DATA_REVISION=cube.get_revision())
