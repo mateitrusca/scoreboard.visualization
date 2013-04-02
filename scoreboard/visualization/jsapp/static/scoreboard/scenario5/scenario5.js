@@ -38,6 +38,8 @@ App.Scenario5MapView = Backbone.View.extend({
     }
 });
 
+App.scenario5_filters_schema = App.scenario1_filters_schema;
+
 
 App.scenario5_initialize = function() {
     var qtip_css = App.STATIC + '/lib/qtip-2.0.1/jquery.qtip.css';
@@ -54,13 +56,13 @@ App.scenario5_initialize = function() {
         el: $('#the-filters')[0],
         model: App.filters,
         loadstate: App.filter_loadstate,
-        schema: App.scenario1_filters_schema
+        schema: App.scenario5_filters_schema
     });
 
     App.scenario5_map_view = new App.ScenarioChartView({
         model: App.filters,
         loadstate: App.filter_loadstate,
-        schema: App.scenario1_filters_schema,
+        schema: App.scenario5_filters_schema,
         scenario_chart: App.scenario5_map,
         datasource: {
             client_filter: 'countries',
