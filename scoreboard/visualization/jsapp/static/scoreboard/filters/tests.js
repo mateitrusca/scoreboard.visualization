@@ -280,4 +280,80 @@ describe('modular filters', function() {
 
     });
 
+    describe('FilterPositioning', function() {
+        "use strict";
+
+        beforeEach(function() {
+            this.sandbox = sinon.sandbox.create();
+            this.sandbox.useFakeServer();
+            this.model = new Backbone.Model();
+
+            this.schema = {
+                filters: [
+                    {type: 'select',
+                     position: '.left_column',
+                     name: 'indicator-group',
+                     label: 'Indicator group',
+                     dimension: 'indicator-group',
+                     constraints: {}},
+                    {type: 'select',
+                     position: '.right_column',
+                     name: 'indicator',
+                     label: 'Indicator',
+                     dimension: 'indicator',
+                     constraints: {
+                         'indicator-group': 'indicator-group'
+                     }}
+                ]
+            };
+        });
+
+        afterEach(function () {
+            this.sandbox.restore();
+        });
+
+        it('should append filters on the left if pos param is missing', function(){
+            var schema = {
+                filters: [
+                    {type: 'select',
+                     name: 'indicator-group',
+                     label: 'Indicator group',
+                     dimension: 'indicator-group',
+                     constraints: {}}
+                ]
+            };
+
+            var box = $('<div></div>');
+            box.html(App.get_template('scoreboard/scenario.html')());
+
+            var filter_loadstate = new Backbone.Model();
+
+            var filters_box = new App.FiltersBox({
+                el: $('#the-filters', box)[0],
+                model: this.model,
+                loadstate: App.filter_loadstate,
+                schema: schema
+            });
+            expect($('.left_column', filters_box.$el).children().length).to.equal(1);
+        });
+
+        it('should position filters according to configuration', function(){
+
+            var box = $('<div></div>');
+            box.html(App.get_template('scoreboard/scenario.html')());
+
+            var filter_loadstate = new Backbone.Model();
+
+            var filters_box = new App.FiltersBox({
+                el: $('#the-filters', box)[0],
+                model: this.model,
+                loadstate: App.filter_loadstate,
+                schema: this.schema
+            });
+            expect($('.left_column', filters_box.$el).children().length).to.equal(1);
+            expect($('.right_column', filters_box.$el).children().length).to.equal(1);
+        });
+
+    });
+
 });
