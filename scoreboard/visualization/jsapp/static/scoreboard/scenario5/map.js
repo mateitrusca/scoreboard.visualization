@@ -48,6 +48,7 @@ App.scenario5_map = function(container, options) {
         });
     });
 
+    $(container).empty();
 };
 
 
