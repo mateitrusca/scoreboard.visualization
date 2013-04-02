@@ -62,7 +62,9 @@ App.SelectFilter = Backbone.View.extend({
         this.ajax = this.fetch_options(args);
         this.ajax.done(_.bind(function(data) {
             this.ajax = null;
-            this.dimension_options = data['options'];
+            this.dimension_options = _(data['options']).sortBy(function(item){
+                return item['notation']
+            });
             this.adjust_value();
             this.render();
             this.loadstate.set(this.name, false);
