@@ -21,6 +21,7 @@ App.ScenarioChartView = Backbone.View.extend({
             _(options.schema.filters).pluck('dimension')
         );
         this.datasource = options['datasource'];
+        this.requests_in_flight = [];
         this.load_chart();
     },
 
@@ -61,13 +62,12 @@ App.ScenarioChartView = Backbone.View.extend({
             return result;
         });
 
-        var ajax_queue = _(ajax_args).map(process_ajax);
-        var ajax_calls = $.when.apply($, ajax_queue);
-        return ajax_calls;
-
+        return _(ajax_args).map(process_ajax);
     },
 
     load_chart: function() {
+        _(this.requests_in_flight).forEach(function(req) { req.abort(); });
+        this.requests_in_flight = [];
         var incomplete = false;
         var args = {};
         var groupby = this.datasource['groupby'];
@@ -143,11 +143,16 @@ App.ScenarioChartView = Backbone.View.extend({
             client_filter_options = this.model.get(client_filter);
         }
 
-        requests.push(this.get_meta_data(chart_data));
+        _(this.get_meta_data(chart_data)).forEach(function(req) {
+            requests.push(req);
+        });
+
+        this.requests_in_flight = requests;
 
         var ajax_calls = $.when.apply($, requests);
         ajax_calls.done(_.bind(function() {
             var responses = _(arguments).toArray();
+            if(requests.length < 2) { responses = [responses]; }
             chart_data['series'] = _(group_values).map(function(value, n) {
                 var resp = responses[n];
                 var datapoints = resp[0]['datapoints'];
