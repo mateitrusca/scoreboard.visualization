@@ -26,8 +26,8 @@
    />
 
   <browser:page
-    name="tests"
-    for="..interfaces.IScoreboardVisualization"
+    name="scoreboard_jsapp_unit_tests"
+    for="Products.CMFPlone.interfaces.siteroot.IPloneSiteRoot"
     class=".views.TestsView"
     permission="zope2.View"
     template="tests.pt"
