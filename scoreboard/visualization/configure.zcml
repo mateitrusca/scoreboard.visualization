@@ -15,8 +15,8 @@
   <include package=".views" />
 
   <browser:resourceDirectory
-    name="scoreboard"
-    directory="./jsapp/static"
+    name="scoreboard-jsapp"
+    directory="./jsapp"
     />
 
   <!-- Register the installation GenericSetup extension profile -->

@@ -7,7 +7,7 @@ class TestsView(BrowserView):
 
     @property
     def static_prefix(self):
-        return '/++resource++scoreboard'
+        return '/++resource++scoreboard-jsapp'
 
     def jsapp_html(self):
         return jsapp_html(
