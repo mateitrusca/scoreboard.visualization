@@ -168,7 +168,7 @@ App.ScenarioChartView = Backbone.View.extend({
 
 App.IndicatorMetadataView = Backbone.View.extend({
 
-    template: App.get_template('scoreboard/metadata.html'),
+    template: App.get_template('scenario/metadata.html'),
 
     initialize: function(options) {
         this.data_revision = options['data_revision'] || '';
@@ -227,7 +227,7 @@ App.IndicatorMetadataView = Backbone.View.extend({
 
 App.ShareOptionsView = Backbone.View.extend({
 
-    template: App.get_template('scoreboard/share.html'),
+    template: App.get_template('scenario/share.html'),
 
     initialize: function(options) {
         this.related = $('#viewlet-below-content-body').detach();
@@ -245,7 +245,7 @@ App.NavigationView = Backbone.View.extend({
 
     id: 'scenarios',
 
-    template: App.get_template('scoreboard/navigation.html'),
+    template: App.get_template('scenario/navigation.html'),
 
     initialize: function(options) {
         this.cube_url = options['cube_url'];
