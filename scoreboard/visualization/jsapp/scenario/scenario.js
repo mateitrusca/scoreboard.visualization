@@ -36,22 +36,16 @@ App.ScenarioChartView = Backbone.View.extend({
         chart_data['meta_data'] = meta_data;
 
         return _(this.meta_labels).map(function(item) {
-            var args = {
-                filter_name: item.filter_name,
-                dimension: this.dimensions_mapping[item.filter_name],
-                targets: item.targets,
-                label_type: item.type
-            };
             var ajax = $.get(App.URL + '/dimension_labels',
                 {
-                    'dimension': args['dimension'],
-                    'value': this.model.get(args['filter_name']),
+                    'dimension': this.dimensions_mapping[item.filter_name],
+                    'value': this.model.get(item['filter_name']),
                     'rev': App.DATA_REVISION
                 }
             );
             ajax.done(function(data) {
-                _(args['targets']).each(function(target){
-                    meta_data[target] = data[args['label_type']];
+                _(item['targets']).each(function(target){
+                    meta_data[target] = data[item['type']];
                 });
             });
             return ajax;
