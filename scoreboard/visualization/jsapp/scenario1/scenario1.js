@@ -7,7 +7,7 @@
 
 App.Scenario1FiltersView = Backbone.View.extend({
 
-    template: App.get_template('scoreboard/scenario1/filters.html'),
+    template: App.get_template('scenario1/filters.html'),
 
     events: {
         'change select': 'update_filters',
@@ -135,7 +135,7 @@ App.scenario1_filters_schema = {
 
 App.scenario1_initialize = function() {
     var box = $('#scenario-box');
-    box.html(App.get_template('scoreboard/scenario.html')());
+    box.html(App.get_template('scenario.html')());
 
     App.filters = new Backbone.Model();
     App.filter_loadstate = new Backbone.Model();
