@@ -247,42 +247,29 @@ App.NavigationView = Backbone.View.extend({
 
     template: App.get_template('scoreboard/navigation.html'),
 
-    events: {
-        'click img': 'on_selection_change'
-    },
-
     initialize: function(options) {
         this.cube_url = options['cube_url'];
         this.scenario_url = options['scenario_url'];
-        this.model.on('change:scenario', this.render, this);
-        this.render();
+        this.scenarios = [];
+        this.update();
     },
 
-    fetch_scenarios: function(){
-        return $.get(this.cube_url + '/@@relations');
-    },
-
-    on_selection_change: function(e){
-        var value = $(e.target).parent().parent().attr('id');
-        this.model.set('scenario', value);
+    update: function() {
+        $.get(this.cube_url + '/@@relations').done(_.bind(function(resp) {
+            this.scenarios = _(resp).map(function(item) {
+                if(item['url'] == this.scenario_url) {
+                    item['selected'] = true;
+                }
+                return item;
+            }, this);
+            this.render();
+        }, this));
     },
 
     render: function() {
-        this.ajax = this.fetch_scenarios();
-        this.ajax.done(
-            _.bind(function(resp){
-                var data = _(resp).map(_.bind(function(item){
-                    if(item['url'] == this.scenario_url){
-                        item['selected'] = true;
-                    }
-                    return item;
-                }, this));
-                this.$el.html(this.template({
-                    "scenarios": data
-                }));
-            }, this));
-        return this;
+        this.$el.html(this.template({"scenarios": this.scenarios}));
     }
+
 });
 
 
