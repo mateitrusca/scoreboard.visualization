@@ -75,8 +75,8 @@ App.ScenarioChartView = Backbone.View.extend({
         var requests = [];
         _(this.dimensions_mapping).each(function(dimension, filter_name) {
             if(filter_name != groupby && filter_name != client_filter) {
-                args[dimension] = this.model.get(filter_name);
-                if(! args[dimension]) { incomplete = true; }
+                args[filter_name] = this.model.get(filter_name);
+                if(! args[filter_name]) { incomplete = true; }
             }
             if(this.loadstate.get(filter_name)) { incomplete = true; }
         }, this);

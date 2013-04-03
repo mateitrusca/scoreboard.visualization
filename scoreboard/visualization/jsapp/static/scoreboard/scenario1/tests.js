@@ -398,8 +398,8 @@ describe('ScenarioChartView', function() {
         expect(url).to.have.string(App.URL + '/datapoints?');
         var url_param = App.testing.url_param;
         expect(url_param(url, 'fields')).to.equal('ref-area,value');
-        expect(url_param(url, 'dim1')).to.equal('asdf');
-        expect(url_param(url, 'dim3')).to.equal('2002');
+        expect(url_param(url, 'indicator')).to.equal('asdf');
+        expect(url_param(url, 'time-period')).to.equal('2002');
     });
 
     it('should render chart with the data received', function() {
