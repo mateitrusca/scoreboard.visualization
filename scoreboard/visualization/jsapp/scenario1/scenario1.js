@@ -87,6 +87,8 @@ App.scenario1_initialize = function() {
         el: $('#the-filters')[0],
         model: App.filters,
         loadstate: App.filter_loadstate,
+        cube_url: App.URL,
+        data_revision: App.DATA_REVISION,
         schema: App.scenario1_filters_schema
     });
 
