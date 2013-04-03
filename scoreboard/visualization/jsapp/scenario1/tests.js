@@ -9,7 +9,7 @@ describe('ScenarioChartViewParameters', function() {
         this.sandbox = sinon.sandbox.create();
         this.sandbox.useFakeServer();
         this.model = new Backbone.Model();
-        this.scenario_chart = this.sandbox.stub(App, 'scenario1_chart');
+        this.scenario_chart = new sinon.spy();
     });
 
     afterEach(function () {
