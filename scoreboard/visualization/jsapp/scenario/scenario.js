@@ -40,12 +40,7 @@ App.ScenarioChartView = Backbone.View.extend({
                 filter_name: item.filter_name,
                 dimension: this.dimensions_mapping[item.filter_name],
                 targets: item.targets,
-                label_type: item.type,
-                callback: function(args, data){
-                    _(args['targets']).each(function(target){
-                        meta_data[target] = data[args['label_type']];
-                    });
-                }
+                label_type: item.type
             };
             var ajax = $.get(App.URL + '/dimension_labels',
                 {
@@ -54,7 +49,12 @@ App.ScenarioChartView = Backbone.View.extend({
                     'rev': App.DATA_REVISION
                 }
             );
-            return ajax.done( function(data) { args.callback(args, data); });
+            ajax.done(function(data) {
+                _(args['targets']).each(function(target){
+                    meta_data[target] = data[args['label_type']];
+                });
+            });
+            return ajax;
         }, this);
     },
 
