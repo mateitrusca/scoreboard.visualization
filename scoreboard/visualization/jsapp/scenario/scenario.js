@@ -32,37 +32,26 @@ App.ScenarioChartView = Backbone.View.extend({
     },
 
     get_meta_data: function(chart_data){
-        var view = this;
         var meta_data = {};
         chart_data['meta_data'] = meta_data;
+        var requests = [];
 
-        function process_ajax(args){
-            var ajax = $.get(App.URL + '/dimension_labels',
-                {
-                    'dimension': args['dimension'],
-                    'value': view.model.get(args['filter_name']),
-                    'rev': App.DATA_REVISION
-                }
-            );
-            return ajax.done( function(data) { args.callback(args, data); });
-        }
-
-        var ajax_args = _(this.meta_labels).map(function(item){
-            var result = {
-                filter_name: item.filter_name,
-                dimension: view.dimensions_mapping[item.filter_name],
-                targets: item.targets,
-                label_type: item.type,
-                callback: function(args, data){
-                    _(args['targets']).each(function(target){
-                        meta_data[target] = data[args['label_type']];
-                    });
-                }
+        _(this.meta_labels).forEach(function(item) {
+            var args = {
+                'dimension': this.dimensions_mapping[item.filter_name],
+                'value': this.model.get(item['filter_name']),
+                'rev': App.DATA_REVISION
             };
-            return result;
-        });
+            var ajax = $.get(App.URL + '/dimension_labels', args);
+            ajax.done(function(data) {
+                _(item['targets']).each(function(target){
+                    meta_data[target] = data[item['type']];
+                });
+            });
+            requests.push(ajax);
+        }, this);
 
-        return _(ajax_args).map(process_ajax);
+        return requests;
     },
 
     load_chart: function() {
