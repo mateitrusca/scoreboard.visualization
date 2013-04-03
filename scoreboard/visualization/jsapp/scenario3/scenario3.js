@@ -133,13 +133,14 @@ App.scenario3_initialize = function() {
         loadstate: App.filter_loadstate,
         schema: App.scenario3_filters_schema,
         scenario_chart: App.scenario3_chart,
+        cube_url: App.URL,
+        data_revision: App.DATA_REVISION,
         datasource: {
             client_filter: 'countries',
             rel_url: '/datapoints_xy',
             extra_args: [
                 ['columns', 'ref-area'],
-                ['xy_columns', 'value'],
-                ['rev', App.DATA_REVISION]
+                ['xy_columns', 'value']
             ]
         },
         meta_labels: [
@@ -153,6 +154,8 @@ App.scenario3_initialize = function() {
     $('#the-chart').append(App.scenario3_chart_view.el);
 
     App.metadata = new App.IndicatorMetadataView({
+        cube_url: App.URL,
+        data_revision: App.DATA_REVISION,
         model: App.filters,
         field: 'indicator',
         schema: App.scenario3_filters_schema,
@@ -188,6 +191,7 @@ App.scenario3_initialize = function() {
     $('#the-share').append(App.share.el);
 
     App.navigation = new App.NavigationView({
+        cube_url: App.URL,
         model: App.filters
     });
 

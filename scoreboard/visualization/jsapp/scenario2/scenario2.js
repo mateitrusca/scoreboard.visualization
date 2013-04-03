@@ -76,8 +76,7 @@ App.scenario2_initialize = function() {
             groupby: 'countries',
             rel_url: '/datapoints',
             extra_args: [
-                ['fields', 'time-period,value'],
-                ['rev', App.DATA_REVISION]
+                ['fields', 'time-period,value']
             ]
         },
         meta_labels: [
@@ -88,11 +87,15 @@ App.scenario2_initialize = function() {
               filter_name: 'unit-measure',
               type: 'short_label' }
         ],
-        scenario_chart: App.scenario2_chart
+        scenario_chart: App.scenario2_chart,
+        cube_url: App.URL,
+        data_revision: App.DATA_REVISION
     });
     $('#the-chart').prepend(App.scenario2_chart_view.el);
 
     App.metadata = new App.IndicatorMetadataView({
+        cube_url: App.URL,
+        data_revision: App.DATA_REVISION,
         model: App.filters,
         field: 'indicator',
         schema: App.scenario2_filters_schema,
@@ -116,6 +119,7 @@ App.scenario2_initialize = function() {
     $('#the-share').append(App.share.el);
 
     App.navigation = new App.NavigationView({
+        cube_url: App.URL,
         model: App.filters
     });
 

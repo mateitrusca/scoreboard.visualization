@@ -90,6 +90,8 @@ describe('IndicatorMetaDataView', function() {
         });
         var server = this.sandbox.server;
         var view = new App.IndicatorMetadataView({
+            cube_url: App.URL,
+            data_revision: 'one',
             model: this.model,
             field: 'indicator',
             schema: {filters: [
@@ -119,7 +121,7 @@ describe('IndicatorMetaDataView', function() {
           "short_label": "short_label"
         }
         expect(server.requests[0].url).to.equal(
-                '/test_view?dimension=dim1&value=ind1&rev='
+                '/test_view?dimension=dim1&value=ind1&rev=one'
         );
         App.respond_json(server.requests[0], data_indicator);
 
@@ -150,6 +152,7 @@ describe('IndicatorMetaDataView', function() {
         });
         var server = this.sandbox.server;
         var view = new App.IndicatorMetadataView({
+            cube_url: App.URL,
             model: this.model,
             schema: {filters: [
                 { name: 'indicator',

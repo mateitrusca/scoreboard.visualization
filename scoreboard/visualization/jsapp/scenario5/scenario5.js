@@ -64,12 +64,13 @@ App.scenario5_initialize = function() {
         loadstate: App.filter_loadstate,
         schema: App.scenario5_filters_schema,
         scenario_chart: App.scenario5_map,
+        cube_url: App.URL,
+        data_revision: App.DATA_REVISION,
         datasource: {
             client_filter: 'countries',
             rel_url: '/datapoints',
             extra_args: [
-                ['fields', 'ref-area,value'],
-                ['rev', App.DATA_REVISION]
+                ['fields', 'ref-area,value']
             ]
         },
         meta_labels: [
@@ -82,6 +83,8 @@ App.scenario5_initialize = function() {
     $('#the-chart').append(App.scenario5_map_view.el);
 
     App.metadata = new App.IndicatorMetadataView({
+        cube_url: App.URL,
+        data_revision: App.DATA_REVISION,
         model: App.filters,
         field: 'indicator',
         schema: App.scenario1_filters_schema,
@@ -104,6 +107,7 @@ App.scenario5_initialize = function() {
     $('#the-share').append(App.share.el);
 
     App.navigation = new App.NavigationView({
+        cube_url: App.URL,
         model: App.filters
     });
 

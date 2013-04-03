@@ -10,6 +10,8 @@ App.ScenarioChartView = Backbone.View.extend({
     className: 'highcharts-chart',
 
     initialize: function(options) {
+        this.data_revision = options['data_revision'] || '';
+        this.cube_url = options['cube_url'];
         this.model.on('change', this.load_chart, this);
         this.loadstate = options['loadstate'] || new Backbone.Model();
         this.loadstate.on('change', this.load_chart, this);
@@ -40,9 +42,9 @@ App.ScenarioChartView = Backbone.View.extend({
             var args = {
                 'dimension': this.dimensions_mapping[item.filter_name],
                 'value': this.model.get(item['filter_name']),
-                'rev': App.DATA_REVISION
+                'rev': this.data_revision
             };
-            var ajax = $.get(App.URL + '/dimension_labels', args);
+            var ajax = $.get(this.cube_url + '/dimension_labels', args);
             ajax.done(function(data) {
                 _(item['targets']).each(function(target){
                     meta_data[target] = data[item['type']];
@@ -106,14 +108,14 @@ App.ScenarioChartView = Backbone.View.extend({
             requests = _(group_values).map(function(value) {
                 var dimension = this.dimensions_mapping[groupby];
                 args[dimension] = value;
-                return $.get(App.URL + this.datasource['rel_url'], args);
+                return $.get(this.cube_url + this.datasource['rel_url'], args);
             }, this);
 
             var labels_args = {
                 'dimension': this.dimensions_mapping[groupby],
-                'rev': App.DATA_REVISION
+                'rev': this.data_revision
             };
-            var labels_request = $.get(App.URL + '/dimension_values', labels_args);
+            var labels_request = $.get(this.cube_url + '/dimension_values', labels_args);
             labels_request.done(function(data) {
                 var results = data['options'];
                 chart_data['group_labels'] = _.object(
@@ -124,7 +126,7 @@ App.ScenarioChartView = Backbone.View.extend({
         }
         else {
             group_values = [null];
-            requests.push($.get(App.URL + this.datasource['rel_url'], args));
+            requests.push($.get(this.cube_url + this.datasource['rel_url'], args));
         }
 
         var client_filter_options = [];
@@ -169,6 +171,8 @@ App.IndicatorMetadataView = Backbone.View.extend({
     template: App.get_template('scoreboard/metadata.html'),
 
     initialize: function(options) {
+        this.data_revision = options['data_revision'] || '';
+        this.cube_url = options['cube_url'];
         this.dimensions_mapping = _.object(
             _(options.schema.filters).pluck('name'),
             _(options.schema.filters).pluck('dimension')
@@ -193,10 +197,10 @@ App.IndicatorMetadataView = Backbone.View.extend({
                 if(! args['value']) {
                     return;
                 }
-                args['rev'] = App.DATA_REVISION;
+                args['rev'] = this.data_revision;
                 info_block['title'] = item['title'];
                 requests.push(
-                    $.get(App.URL + source, args, function(resp) {
+                    $.get(this.cube_url + source, args, function(resp) {
                         info_block['info'] = info_block['info'] || [];
                         info_block['info'].push(resp[filter.part]);
                     })
@@ -248,12 +252,13 @@ App.NavigationView = Backbone.View.extend({
     },
 
     initialize: function(options) {
+        this.cube_url = options['cube_url'];
         this.model.on('change:scenario', this.render, this);
         this.render();
     },
 
     fetch_scenarios: function(){
-        return $.get(App.URL + '/@@relations');
+        return $.get(this.cube_url + '/@@relations');
     },
 
     on_selection_change: function(e){
