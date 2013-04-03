@@ -101,11 +101,9 @@ App.scenario2_initialize = function() {
               title: "Label x-axis",
               source: '/dimension_value_metadata',
               filters: [
-                { target: 'indicator',
-                  name: 'indicator',
+                { name: 'indicator',
                   part: 'label' },
-                { target: 'breakdown',
-                  name: 'breakdown',
+                { name: 'breakdown',
                   part: 'label' }
               ]
             }
