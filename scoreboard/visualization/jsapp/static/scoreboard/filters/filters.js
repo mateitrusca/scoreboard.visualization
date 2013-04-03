@@ -151,35 +151,6 @@ App.MultipleSelectFilter = App.SelectFilter.extend({
 });
 
 
-App.RadioFilter = App.SelectFilter.extend({
-    template: App.get_template('scoreboard/filters/radio_buttons.html'),
-
-    events: {
-        'change input:radio': 'on_selection_change'
-    },
-
-    render: function() {
-        var selected_value = this.model.get(this.name);
-        var options = _(this.dimension_options).map(function(item) {
-            var selected = (item['notation'] == selected_value);
-            return _({'selected': selected}).extend(item);
-        });
-        this.$el.html(this.template({
-            'dimension_options': options,
-            'name': this.name,
-            'filter_label': this.label
-        }));
-        App.plone_jQuery(this.$el.find('.radio-filter-container')).buttonset();
-    },
-
-    on_selection_change: function() {
-        var value = this.$el.find("input:radio[checked='checked']").val();
-        var key = this.name;
-        this.model.set(key, value);
-    }
-});
-
-
 App.FiltersBox = Backbone.View.extend({
 
     filter_types: {
