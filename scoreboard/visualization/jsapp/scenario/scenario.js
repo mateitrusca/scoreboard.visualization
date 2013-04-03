@@ -182,38 +182,31 @@ App.IndicatorMetadataView = Backbone.View.extend({
     render: function() {
         var data = [];
         var requests = [];
-        _(this.footer_meta_sources).map(_.bind(function(item, key){
+        _(this.footer_meta_sources).map(function(item, key) {
             var source = item['source'];
             var filters = item['filters'];
             var info_block = {};
-            _(filters).map(_.bind(function(filter){
+            _(filters).map(function(filter) {
                 var args = {};
                 args['dimension'] = this.dimensions_mapping[filter.name];
                 args['value'] = this.model.get(filter.name);
-                if(! args['value']){
+                if(! args['value']) {
                     return;
                 }
                 args['rev'] = App.DATA_REVISION;
-                info_block['title'] = this.title;
+                info_block['title'] = item['title'];
                 requests.push(
-                    $.get(App.URL + this.source, args, _.bind(function(resp){
-                        this.info_block['info'] = info_block['info'] || [];
-                        this.info_block['info'].push(resp[filter.part]);
-                    },
-                    {'filter': filter, 'info_block': this.info_block}))
+                    $.get(App.URL + source, args, function(resp) {
+                        info_block['info'] = info_block['info'] || [];
+                        info_block['info'].push(resp[filter.part]);
+                    })
                 );
-            },
-            {'source': source,
-             'model': this.model,
-             'title': item['title'],
-             'info_block': info_block,
-             'dimensions_mapping': this.dimensions_mapping}
-           ));
-           data.push(info_block);
-        }, this));
+            }, this);
+            data.push(info_block);
+        }, this);
         var ajax_calls = $.when.apply($, requests);
-        ajax_calls.done(_.bind(function(){
-            if(data != []){
+        ajax_calls.done(_.bind(function() {
+            if(data != []) {
                 this.$el.html(this.template(
                     {"description": this.description.html(),
                      "blocks": data}
