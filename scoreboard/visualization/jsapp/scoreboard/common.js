@@ -5,26 +5,6 @@
 "use strict";
 
 
-App.get_indicators = function(filters_data) {
-    var indicators = filters_data['indicators'];
-    return _.object(_(indicators).pluck('uri'), indicators);
-};
-
-
-App.get_indicator_labels = function(filters_data) {
-    var indicators = filters_data['indicators'];
-    return _.object(_(indicators).pluck('uri'),
-                    _(indicators).pluck('label'));
-};
-
-
-App.get_country_labels = function(filters_data) {
-    var countries = filters_data['countries'];
-    return _.object(_(countries).pluck('notation'),
-                    _(countries).pluck('label'));
-};
-
-
 var country_data = [
     {code: 'AT',   color: '#AABC66', label: "Austria"},
     {code: 'BE',   color: '#FD8245', label: "Belgium"},
@@ -63,10 +43,6 @@ var country_data = [
 
 App.COUNTRY_COLOR = _.object(_(country_data).pluck('code'),
                              _(country_data).pluck('color'));
-
-
-App.COUNTRY_CODE = _.object(_(country_data).pluck('label'),
-                            _(country_data).pluck('code'));
 
 
 App.COUNTRY_NAME = _.object(_(country_data).pluck('code'),
