@@ -1,4 +1,4 @@
-/*global App, Backbone, _ */
+/*global App, _ */
 /*jshint sub:true */
 
 (function($) {
