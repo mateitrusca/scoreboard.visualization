@@ -14,6 +14,8 @@ App.SelectFilter = Backbone.View.extend({
     },
 
     initialize: function(options) {
+        this.cube_url = options['cube_url'];
+        this.data_revision = options['data_revision'] || '';
         this.name = options['name'];
         this.label = options['label'];
         this.dimension = options['dimension'];
@@ -73,8 +75,8 @@ App.SelectFilter = Backbone.View.extend({
 
     fetch_options: function(args) {
         var view_name = this.xy ? 'dimension_values_xy' : 'dimension_values';
-        args = _({rev: App.DATA_REVISION}).extend(args);
-        return $.get(App.URL + '/' + view_name, args);
+        args = _({rev: this.data_revision}).extend(args);
+        return $.get(this.cube_url + '/' + view_name, args);
     },
 
     render: function() {
@@ -162,11 +164,15 @@ App.FiltersBox = Backbone.View.extend({
     initialize: function(options) {
         this.filters = [];
         this.loadstate = options['loadstate'] || new Backbone.Model();
+        this.cube_url = options['cube_url'];
+        this.data_revision = options['data_revision'] || '';
         _(options['schema']['filters']).forEach(function(item) {
             var cls = this.filter_types[item['type']];
             var filter = new cls({
                 model: this.model,
                 loadstate: this.loadstate,
+                cube_url: this.cube_url,
+                data_revision: this.data_revision,
                 xy: item['xy'],
                 name: item['name'],
                 label: item['label'],

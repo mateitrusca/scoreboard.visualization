@@ -117,8 +117,7 @@ describe('ScenarioChartViewParameters', function() {
             datasource: {
                 rel_url: '/test_view',
                 args: {
-                    fields: 'ref-area,value',
-                    rev: App.DATA_REVISION
+                    fields: 'ref-area,value'
                 }
             },
             meta_labels: [ ],
@@ -225,8 +224,7 @@ describe('ScenarioChartViewParameters', function() {
                 groupby: 'country',
                 rel_url: '/source_view',
                 extra_args: [
-                    ['fields', 'dimension1,value1'],
-                    ['rev', App.DATA_REVISION]
+                    ['fields', 'dimension1,value1']
                 ]
             },
             meta_labels: [
@@ -306,8 +304,7 @@ describe('ScenarioChartView', function() {
             datasource: {
                 rel_url: '/datapoints',
                 extra_args: [
-                    ['fields', 'ref-area,value'],
-                    ['rev', App.DATA_REVISION]
+                    ['fields', 'ref-area,value']
                 ]
             },
             scenario_chart: this.scenario_chart

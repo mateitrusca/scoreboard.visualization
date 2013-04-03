@@ -3,17 +3,6 @@
 describe('NavigationView', function() {
     "use strict";
 
-    var NoAjaxNavigation = App.NavigationView.extend({
-
-        fetch_scenarios: function(){
-            var mock_ajax = App.jQuery.Deferred();
-            mock_ajax.abort = function() {
-                mock_ajax.reject();
-            };
-            return mock_ajax;
-        }
-    });
-
     beforeEach(function() {
         this.sandbox = sinon.sandbox.create();
         this.sandbox.useFakeServer();
@@ -24,48 +13,13 @@ describe('NavigationView', function() {
         this.sandbox.restore();
     });
 
-    it('should update model when selection changes', function(){
-        var model = new Backbone.Model();
-        //model.set('scenario', 'scenario1');
-        var router = new App.ChartRouter(model);
-        var view = new NoAjaxNavigation({
-            model: model,
-            fetch_scenarios: function() {
-                var mock_ajax = App.jQuery.Deferred();
-                mock_ajax.abort = function() {
-                    mock_ajax.reject();
-                };
-                return mock_ajax;
-            }
-        });
-        var template = this.sandbox.spy(view, 'template');
-        var response = [{
-            "description": "",
-            "image": "img/url",
-            "portal_type": "ScoreboardVisualization",
-            "title": "scenario1",
-            "id": "scenario1",
-            "url": "scenario1/url"
-        },
-        {
-            "description": "",
-            "image": "img/url",
-            "portal_type": "ScoreboardVisualization",
-            "title": "scenario2",
-            "id": "scenario2",
-            "url": "scenario2/url"
-        }
-        ];
-
-        App.SCENARIO_URL = 'scenario2/url';
-        view.ajax.resolve(response);
-        App.testing.choose_scenario(view.$el.find('div'), 'scenario2')
-        view.ajax.resolve(response);
-        expect(model.get('scenario')).to.equal('scenario2');
-        expect(view.$el.find('div').filter('#scenario2').attr('class')).to.equal(
-            'selected')
-        var rendering_data = template.getCall(0).args[0]['scenarios'];
-        expect(rendering_data[1]['selected']).to.equal(true);
+    it('should highlight the selected scenario', function(){
+        var view = new App.NavigationView({scenario_url: 'scenario2/url'});
+        App.respond_json(this.sandbox.server.requests[0], [
+            {"id": "scenario1", "url": "scenario1/url"},
+            {"id": "scenario2", "url": "scenario2/url"}
+        ]);
+        expect(view.$el.find('#scenario2').attr('class')).to.equal('selected')
     });
 
 });
@@ -90,6 +44,8 @@ describe('IndicatorMetaDataView', function() {
         });
         var server = this.sandbox.server;
         var view = new App.IndicatorMetadataView({
+            cube_url: App.URL,
+            data_revision: 'one',
             model: this.model,
             field: 'indicator',
             schema: {filters: [
@@ -119,7 +75,7 @@ describe('IndicatorMetaDataView', function() {
           "short_label": "short_label"
         }
         expect(server.requests[0].url).to.equal(
-                '/test_view?dimension=dim1&value=ind1&rev='
+                '/test_view?dimension=dim1&value=ind1&rev=one'
         );
         App.respond_json(server.requests[0], data_indicator);
 
@@ -150,6 +106,7 @@ describe('IndicatorMetaDataView', function() {
         });
         var server = this.sandbox.server;
         var view = new App.IndicatorMetadataView({
+            cube_url: App.URL,
             model: this.model,
             schema: {filters: [
                 { name: 'indicator',
