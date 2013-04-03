@@ -192,51 +192,6 @@ describe('modular filters', function() {
 
     });
 
-    describe('RadioFilter', function() {
-        beforeEach(function() {
-            this.sandbox = sinon.sandbox.create();
-        });
-
-        var NoAjaxSelectFilter = App.RadioFilter.extend({
-            fetch_options: function(args) {
-                var mock_ajax = App.jQuery.Deferred();
-                mock_ajax.abort = function() {
-                    mock_ajax.reject();
-                };
-                return mock_ajax;
-            }
-        });
-
-        it('should update model when selection changes', function() {
-            var model = new Backbone.Model();
-            var options = [{'label': "Option One", 'notation': 'one'},
-                           {'label': "Option Two", 'notation': 'two'}];
-            var view = new NoAjaxSelectFilter({
-                model: model,
-                name: 'this-breakdown',
-                dimension: 'breakdown'
-            });
-            view.ajax.resolve({options: options});
-            App.testing.choose_radio(view.$el.find('input:radio'), 'two');
-            expect(model.get('this-breakdown')).to.equal('two');
-        });
-
-        it('should render with current value selected', function() {
-            var model = new Backbone.Model({'this-time-period': 'two'});
-            var options = [{'label': "Option One", 'notation': 'one'},
-                           {'label': "Option Two", 'notation': 'two'}];
-            var view = new NoAjaxSelectFilter({
-                model: model,
-                name: 'this-time-period',
-                dimension: 'time-period'
-            });
-            view.ajax.resolve({options: options});
-            expect(view.$el.find('[checked=checked]').val()).to.equal('two');
-            expect(model.get('this-time-period')).to.equal('two');
-        });
-
-    });
-
 
     describe('MultipleSelectFilter', function() {
 
