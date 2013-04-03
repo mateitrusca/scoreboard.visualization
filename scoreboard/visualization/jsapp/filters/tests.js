@@ -279,7 +279,7 @@ describe('modular filters', function() {
             };
 
             var box = $('<div></div>');
-            box.html(App.get_template('scoreboard/scenario.html')());
+            box.html(App.get_template('scenario.html')());
 
             var filter_loadstate = new Backbone.Model();
 
@@ -295,7 +295,7 @@ describe('modular filters', function() {
         it('should position filters according to configuration', function(){
 
             var box = $('<div></div>');
-            box.html(App.get_template('scoreboard/scenario.html')());
+            box.html(App.get_template('scenario.html')());
 
             var filter_loadstate = new Backbone.Model();
 

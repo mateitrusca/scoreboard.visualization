@@ -3,7 +3,10 @@ import jinja2
 from path import path
 
 
-def get_js_templates(parent=path(__file__).abspath().parent / 'static'):
+MODULE_PATH = path(__file__).abspath().parent
+
+
+def get_js_templates(parent=MODULE_PATH / 'jsapp'):
     out = {tmpl.name: tmpl.text('utf-8') for tmpl in parent.files('*.html')}
 
     for folder in parent.dirs():
@@ -13,19 +16,15 @@ def get_js_templates(parent=path(__file__).abspath().parent / 'static'):
     return out
 
 
-jinja_env = jinja2.Environment(
-    loader=jinja2.PackageLoader(__name__, 'templates'))
-jinja_env.globals['STATIC'] = '/++resource++scoreboard'
+jinja_env = jinja2.Environment()
+jinja_env.globals['JSAPP'] = '/++resource++scoreboard-jsapp'
 jinja_env.globals['get_js_templates'] = get_js_templates
 jinja_env.filters['json'] = lambda v: jinja2.Markup(json.dumps(v))
 
 
-def render_template(name, **kwargs):
-    return jinja_env.get_template(name).render(**kwargs)
-
-
 def jsapp_html(DATASOURCE_URL, SCENARIO_URL, DATA_REVISION):
-    return render_template('jsapp.html', **{
+    tmpl = jinja_env.from_string((MODULE_PATH / 'jsapp.html').text('utf-8'))
+    return tmpl.render(**{
         'URL': DATASOURCE_URL,
         'SCENARIO_URL': SCENARIO_URL,
         'DATA_REVISION': DATA_REVISION,

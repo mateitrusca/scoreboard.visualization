@@ -7,7 +7,7 @@
 
 App.SelectFilter = Backbone.View.extend({
 
-    template: App.get_template('scoreboard/filters/dropdown.html'),
+    template: App.get_template('filters/dropdown.html'),
 
     events: {
         'change select': 'on_selection_change'
@@ -100,7 +100,7 @@ App.SelectFilter = Backbone.View.extend({
 
 App.MultipleSelectFilter = App.SelectFilter.extend({
 
-    template: App.get_template('scoreboard/filters/multiple_select.html'),
+    template: App.get_template('filters/multiple_select.html'),
 
     events: _({
         'click input[type="button"][id$="-add-all"]': 'add_all',

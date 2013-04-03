@@ -6,8 +6,8 @@ from scoreboard.visualization.jsapp import jsapp_html
 class TestsView(BrowserView):
 
     @property
-    def static_prefix(self):
-        return '/++resource++scoreboard'
+    def jsapp_prefix(self):
+        return '/++resource++scoreboard-jsapp'
 
     def jsapp_html(self):
         return jsapp_html(
