@@ -1,7 +1,7 @@
 /*global App, _, chroma, Kartograph */
 /*jshint sub:true */
 
-(function() {
+(function($) {
 "use strict";
 
 
@@ -9,7 +9,7 @@ App.scenario5_map = function(container, options) {
     var series = options['series'][0]['data'];
     var value_by_country = _.object(
         _(series).map(function(v) {
-            return v['ref-area']
+            return v['ref-area'];
         }),
         _(series).pluck('value'));
 
@@ -53,4 +53,4 @@ App.scenario5_map = function(container, options) {
 };
 
 
-})();
+})(App.jQuery);

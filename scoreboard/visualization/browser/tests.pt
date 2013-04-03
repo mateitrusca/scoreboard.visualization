@@ -32,10 +32,7 @@
   <script tal:attributes="src string:${JSAPP}/testing.js"></script>
   <script tal:attributes="src string:${JSAPP}/scoreboard/tests.js"></script>
   <script tal:attributes="src string:${JSAPP}/filters/tests.js"></script>
-  <script tal:attributes="src string:${JSAPP}/scenario1/tests.js"></script>
-  <script tal:attributes="src string:${JSAPP}/scenario2/tests.js"></script>
-  <script tal:attributes="src string:${JSAPP}/scenario3/tests.js"></script>
-  <script tal:attributes="src string:${JSAPP}/scenario5/tests.js"></script>
+  <script tal:attributes="src string:${JSAPP}/scenario/tests.js"></script>
 
   <script>
     (function() {
