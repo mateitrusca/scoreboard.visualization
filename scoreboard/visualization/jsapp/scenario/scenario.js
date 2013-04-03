@@ -253,6 +253,7 @@ App.NavigationView = Backbone.View.extend({
 
     initialize: function(options) {
         this.cube_url = options['cube_url'];
+        this.scenario_url = options['scenario_url'];
         this.model.on('change:scenario', this.render, this);
         this.render();
     },
@@ -271,7 +272,7 @@ App.NavigationView = Backbone.View.extend({
         this.ajax.done(
             _.bind(function(resp){
                 var data = _(resp).map(_.bind(function(item){
-                    if(item['url'] == App.SCENARIO_URL){
+                    if(item['url'] == this.scenario_url){
                         item['selected'] = true;
                     }
                     return item;

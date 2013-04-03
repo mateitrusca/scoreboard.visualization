@@ -138,6 +138,7 @@ App.scenario1_initialize = function() {
 
     App.navigation = new App.NavigationView({
         cube_url: App.URL,
+        scenario_url: App.SCENARIO_URL,
         model: App.filters
     });
 
