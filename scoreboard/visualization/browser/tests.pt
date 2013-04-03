@@ -30,7 +30,7 @@
   <tal:block content="structure python:view.jsapp_html()"/>
 
   <script tal:attributes="src string:${JSAPP}/testing.js"></script>
-  <script tal:attributes="src string:${JSAPP}/scoreboard/tests.js"></script>
+  <script tal:attributes="src string:${JSAPP}/common/tests.js"></script>
   <script tal:attributes="src string:${JSAPP}/filters/tests.js"></script>
   <script tal:attributes="src string:${JSAPP}/scenario/tests.js"></script>
 
