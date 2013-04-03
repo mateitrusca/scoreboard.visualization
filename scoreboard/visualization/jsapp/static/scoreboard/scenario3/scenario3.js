@@ -238,11 +238,9 @@ App.scenario3_initialize = function() {
                 title: "Label y-axis",
                 source: '/dimension_value_metadata',
                 filters: [
-                  { target: 'indicator',
-                    name: 'y-indicator',
+                  { name: 'y-indicator',
                     part: 'label' },
-                  { target: 'breakdown',
-                    name: 'y-breakdown',
+                  { name: 'y-breakdown',
                     part: 'label' }
                 ]
               }

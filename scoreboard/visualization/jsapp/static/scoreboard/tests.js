@@ -101,11 +101,9 @@ describe('IndicatorMetaDataView', function() {
                   title: 'meta_title',
                   source: '/test_view',
                   filters: [
-                    { target: 'part1',
-                      name: 'indicator',
+                    { name: 'indicator',
                       part: 'label' },
-                    { target: 'part2',
-                      name: 'unit-measure',
+                    { name: 'unit-measure',
                       part: 'note' }
                   ]
                 }
@@ -164,8 +162,7 @@ describe('IndicatorMetaDataView', function() {
                   title: 'Label of x-axis',
                   source: '/test_view',
                   filters: [
-                    { target: 'part1',
-                      name: 'indicator',
+                    { name: 'indicator',
                       part: 'label' },
                   ]
                 },
@@ -173,8 +170,7 @@ describe('IndicatorMetaDataView', function() {
                   title: 'Label of y-axis',
                   source: '/test_view',
                   filters: [
-                    { target: 'part2',
-                      name: 'indicator',
+                    { name: 'indicator',
                       part: 'label' },
                   ]
                 }
