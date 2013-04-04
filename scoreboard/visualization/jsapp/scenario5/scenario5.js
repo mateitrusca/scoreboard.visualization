@@ -80,6 +80,7 @@ App.scenario5_filters_schema = {
                       {name: 'breakdown', part: 'label'}]
         }
     },
+    chart_type: 'map',
     chart_datasource: {
         client_filter: 'countries',
         rel_url: '/datapoints',
@@ -112,17 +113,6 @@ App.scenario5_initialize = function() {
     App.filters = App.visualization.filters;
     App.filter_loadstate = App.visualization.filter_loadstate;
     App.router = App.visualization.router;
-
-    App.scenario5_map_view = new App.ScenarioChartView({
-        model: App.filters,
-        loadstate: App.filter_loadstate,
-        schema: App.scenario5_filters_schema,
-        scenario_chart: App.map_chart,
-        cube_url: App.URL,
-        data_revision: App.DATA_REVISION
-    });
-
-    $('#the-chart').append(App.scenario5_map_view.el);
 
     Backbone.history.start();
 };

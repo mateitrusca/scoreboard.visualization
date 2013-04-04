@@ -5,7 +5,7 @@
 "use strict";
 
 
-App.scatter_chart = function(container, options, meta_data) {
+App.chart_library['scatter'] = function(container, options, meta_data) {
 
     $(container).addClass('normal-chart');
 

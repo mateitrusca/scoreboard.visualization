@@ -122,6 +122,7 @@ App.scenario3_filters_schema = {
                       {name: 'y-breakdown', part: 'label'}]
         }
     },
+    chart_type: 'scatter',
     chart_datasource: {
         client_filter: 'countries',
         rel_url: '/datapoints_xy',
@@ -165,16 +166,6 @@ App.scenario3_initialize = function() {
     App.filters = App.visualization.filters;
     App.filter_loadstate = App.visualization.filter_loadstate;
     App.router = App.visualization.router;
-
-    App.scenario3_chart_view = new App.ScenarioChartView({
-        model: App.filters,
-        loadstate: App.filter_loadstate,
-        schema: App.scenario3_filters_schema,
-        scenario_chart: App.scatter_chart,
-        cube_url: App.URL,
-        data_revision: App.DATA_REVISION
-    });
-    $('#the-chart').append(App.scenario3_chart_view.el);
 
     Backbone.history.start();
 

@@ -57,6 +57,7 @@ App.scenario2_filters_schema = {
                       {name: 'breakdown', part: 'label'}]
         }
     },
+    chart_type: 'lines',
     chart_datasource: {
         groupby: 'countries',
         rel_url: '/datapoints',
@@ -89,16 +90,6 @@ App.scenario2_initialize = function() {
     App.filters = App.visualization.filters;
     App.filter_loadstate = App.visualization.filter_loadstate;
     App.router = App.visualization.router;
-
-    App.scenario2_chart_view = new App.ScenarioChartView({
-        model: App.filters,
-        loadstate: App.filter_loadstate,
-        schema: App.scenario2_filters_schema,
-        scenario_chart: App.lines_chart,
-        cube_url: App.URL,
-        data_revision: App.DATA_REVISION
-    });
-    $('#the-chart').prepend(App.scenario2_chart_view.el);
 
     Backbone.history.start();
 

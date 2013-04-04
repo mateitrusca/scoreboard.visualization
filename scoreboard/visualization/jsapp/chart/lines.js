@@ -5,7 +5,7 @@
 "use strict";
 
 
-App.lines_chart = function(container, options, meta_data) {
+App.chart_library['lines'] = function(container, options, meta_data) {
     var year_min = 2004;
     var year_max = 2012;
     var all_years = _.range(year_min, year_max);

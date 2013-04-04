@@ -42,6 +42,17 @@ App.Visualization = Backbone.View.extend({
             cube_url: options['cube_url'],
             scenario_url: App.SCENARIO_URL
         });
+
+        this.chart_view = new App.ScenarioChartView({
+            el: this.$el.find('#the-chart'),
+            model: this.filters,
+            loadstate: this.filter_loadstate,
+            cube_url: options['cube_url'],
+            data_revision: options['data_revision'],
+            schema: options['schema'],
+            scenario_chart: App.chart_library[options['schema']['chart_type']]
+        });
+
     }
 
 });
