@@ -5,39 +5,6 @@
 "use strict";
 
 
-App.Scenario5MapView = Backbone.View.extend({
-
-    initialize: function(options) {
-        this.model.on('change', this.filters_changed, this);
-        this.filters_changed();
-    },
-
-    render: function() {
-        this.$el.empty();
-        if(this.data) {
-            App.scenario5_map(this.el, this.data);
-        }
-    },
-
-    filters_changed: function() {
-        var view = this;
-        var args = this.model.toJSON();
-        if(!(args['indicator'] && args['year'])) {
-            return;
-        }
-        var series_ajax = $.get(App.URL + '/data', {
-            'method': 'series_indicator_year',
-            'indicator': args['indicator'],
-            'year': 'http://data.lod2.eu/scoreboard/year/' + args['year']
-        });
-
-        series_ajax.done(function(data) {
-            view.data = {'series': data};
-            view.render();
-        });
-    }
-});
-
 App.scenario5_filters_schema = App.scenario1_filters_schema;
 
 
