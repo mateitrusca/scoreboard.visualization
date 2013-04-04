@@ -165,9 +165,6 @@ App.scenario3_initialize = function() {
     });
     $('#the-chart').append(App.scenario3_chart_view.el);
 
-    App.share = new App.ShareOptionsView();
-
-    $('#the-share').append(App.share.el);
 
     App.navigation = new App.NavigationView({
         cube_url: App.URL,

@@ -32,6 +32,10 @@ App.Visualization = Backbone.View.extend({
             field: 'indicator',
             schema: options['schema']
         });
+
+        this.share = new App.ShareOptionsView({
+            el: this.$el.find('#the-share')
+        });
     }
 
 });
