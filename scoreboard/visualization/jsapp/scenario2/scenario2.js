@@ -76,20 +76,11 @@ App.scenario2_filters_schema = {
     ]
 };
 
+
 App.scenario2_initialize = function() {
-
-    var box = $('#scenario-box');
-    App.visualization = new App.Visualization({
-        el: box,
-        schema: App.scenario2_filters_schema,
-        cube_url: App.URL,
-        data_revision: App.DATA_REVISION,
-        scenario_url: App.SCENARIO_URL
-    });
-
-    App.filters = App.visualization.filters;
-    App.filter_loadstate = App.visualization.filter_loadstate;
-    App.router = App.visualization.router;
+    App.create_visualization($('#scenario-box')[0],
+                             App.scenario2_filters_schema);
 };
+
 
 })(App.jQuery);

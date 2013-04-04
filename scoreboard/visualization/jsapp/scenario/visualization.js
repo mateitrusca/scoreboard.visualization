@@ -60,4 +60,15 @@ App.Visualization = Backbone.View.extend({
 });
 
 
+App.create_visualization = function(container, schema) {
+    App.visualization = new App.Visualization({
+        el: container,
+        schema: schema,
+        cube_url: App.URL,
+        data_revision: App.DATA_REVISION,
+        scenario_url: App.SCENARIO_URL
+    });
+};
+
+
 })(App.jQuery);
