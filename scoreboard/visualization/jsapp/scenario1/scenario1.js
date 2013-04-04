@@ -88,9 +88,9 @@ App.scenario1_initialize = function() {
     var box = $('#scenario-box');
     App.visualization = new App.Visualization({el: box});
 
-    App.filters = new Backbone.Model();
-    App.filter_loadstate = new Backbone.Model();
-    App.router = new App.ChartRouter(App.filters);
+    App.filters = App.visualization.filters;
+    App.filter_loadstate = App.visualization.filter_loadstate;
+    App.router = App.visualization.router;
 
     App.filters_box = new App.FiltersBox({
         el: $('#the-filters')[0],

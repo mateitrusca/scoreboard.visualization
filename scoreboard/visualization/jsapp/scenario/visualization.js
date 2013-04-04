@@ -11,6 +11,9 @@ App.Visualization = Backbone.View.extend({
 
     initialize: function(options) {
         this.$el.html(this.template());
+        this.filters = new Backbone.Model();
+        this.filter_loadstate = new Backbone.Model();
+        this.router = new App.ChartRouter(this.filters);
     }
 
 });
