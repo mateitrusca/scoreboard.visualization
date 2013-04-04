@@ -12,7 +12,7 @@ App.scenario5_initialize = function() {
     var qtip_css = App.JSAPP + '/lib/qtip-2.0.1/jquery.qtip.css';
     $('<link rel="stylesheet">').attr('href', qtip_css).appendTo($('head'));
     var box = $('#scenario-box');
-    box.html(App.get_template('scenario.html')());
+    App.visualization = new App.Visualization({el: box});
     box.addClass('scenario5');
 
     App.filters = new Backbone.Model();

@@ -128,7 +128,7 @@ App.scenario3_filters_schema = {
 App.scenario3_initialize = function() {
 
     var box = $('#scenario-box');
-    box.html(App.get_template('scenario.html')());
+    App.visualization = new App.Visualization({el: box});
     box.addClass('scenario3');
 
     App.filters = new Backbone.Model();

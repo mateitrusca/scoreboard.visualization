@@ -84,8 +84,9 @@ App.scenario1_filters_schema = {
 
 
 App.scenario1_initialize = function() {
+
     var box = $('#scenario-box');
-    box.html(App.get_template('scenario.html')());
+    App.visualization = new App.Visualization({el: box});
 
     App.filters = new Backbone.Model();
     App.filter_loadstate = new Backbone.Model();
