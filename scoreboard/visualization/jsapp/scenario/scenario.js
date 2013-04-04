@@ -166,7 +166,7 @@ App.ScenarioChartView = Backbone.View.extend({
 });
 
 
-App.IndicatorMetadataView = Backbone.View.extend({
+App.AnnotationsView = Backbone.View.extend({
 
     template: App.get_template('scenario/metadata.html'),
 

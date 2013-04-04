@@ -15,7 +15,7 @@ App.Visualization = Backbone.View.extend({
         this.filter_loadstate = new Backbone.Model();
         this.router = new App.ChartRouter(this.filters);
 
-        this.metadata = new App.IndicatorMetadataView({
+        this.metadata = new App.AnnotationsView({
             el: this.$el.find('#the-metadata'),
             cube_url: options['cube_url'],
             data_revision: options['data_revision'],

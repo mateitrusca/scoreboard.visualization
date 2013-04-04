@@ -420,7 +420,7 @@ describe('NavigationView', function() {
 
 });
 
-describe('IndicatorMetaDataView', function() {
+describe('AnnotationsView', function() {
     "use strict";
 
     beforeEach(function() {
@@ -439,7 +439,7 @@ describe('IndicatorMetaDataView', function() {
             'unit-measure': 'unit1'
         });
         var server = this.sandbox.server;
-        var view = new App.IndicatorMetadataView({
+        var view = new App.AnnotationsView({
             cube_url: App.URL,
             data_revision: 'one',
             model: this.model,
@@ -496,7 +496,7 @@ describe('IndicatorMetaDataView', function() {
             'unit-measure': 'unit1'
         });
         var server = this.sandbox.server;
-        var view = new App.IndicatorMetadataView({
+        var view = new App.AnnotationsView({
             cube_url: App.URL,
             model: this.model,
             schema: {
