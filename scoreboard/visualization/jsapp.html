@@ -1,5 +1,6 @@
 <link href="{{ JSAPP }}/lib/select2-3.2/select2.css" rel="stylesheet"/>
 <link href="{{ JSAPP }}/lib/jquery-ui-1.9.2.custom/css/scenario-box-smoothness/jquery-ui-1.9.2.custom.min.css" rel="stylesheet"/>
+<link href="{{ JSAPP }}/lib/qtip-2.0.1/jquery.qtip.css" rel="stylesheet"/>
 
 <script src="{{ JSAPP }}/lib/script.js-20120424/script.min.js"></script>
 <script src="{{ JSAPP }}/lib/jquery-1.8.3/jquery-1.8.3.min.js"></script>
@@ -28,7 +29,9 @@
 
     get_template: function(name) {
         return Handlebars.compile(App.templates[name]);
-    }
+    },
+
+    chart_library: {}
 
   };
   App.jQuery = window.jQuery;
@@ -39,12 +42,13 @@
 
 <script src="{{ JSAPP }}/common/common.js"></script>
 <script src="{{ JSAPP }}/filters/filters.js"></script>
+<script src="{{ JSAPP }}/chart/columns.js"></script>
+<script src="{{ JSAPP }}/chart/lines.js"></script>
+<script src="{{ JSAPP }}/chart/scatter.js"></script>
+<script src="{{ JSAPP }}/chart/map.js"></script>
 <script src="{{ JSAPP }}/scenario/scenario.js"></script>
 <script src="{{ JSAPP }}/scenario1/scenario1.js"></script>
-<script src="{{ JSAPP }}/scenario1/chart.js"></script>
 <script src="{{ JSAPP }}/scenario2/scenario2.js"></script>
-<script src="{{ JSAPP }}/scenario2/chart.js"></script>
 <script src="{{ JSAPP }}/scenario3/scenario3.js"></script>
-<script src="{{ JSAPP }}/scenario3/chart.js"></script>
 <script src="{{ JSAPP }}/scenario5/scenario5.js"></script>
-<script src="{{ JSAPP }}/scenario5/map.js"></script>
+<script src="{{ JSAPP }}/scenario/visualization.js"></script>

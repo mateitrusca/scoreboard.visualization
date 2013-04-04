@@ -5,7 +5,7 @@
 "use strict";
 
 
-App.scenario1_chart = function(container, options, meta_data) {
+App.chart_library['columns'] = function(container, options, meta_data) {
     var series = options['series'][0]['data'];
     series = _(series).sortBy('value').reverse();
     var country_names = _(series).pluck('ref-area-label');

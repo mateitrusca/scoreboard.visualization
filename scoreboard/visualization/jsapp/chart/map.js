@@ -5,7 +5,9 @@
 "use strict";
 
 
-App.scenario5_map = function(container, options) {
+App.chart_library['map'] = function(container, options) {
+    var map_div = $('<div class="map-chart">');
+    $(container).empty().append(map_div);
     var series = options['series'][0]['data'];
     var value_by_country = _.object(
         _(series).map(function(v) {
@@ -19,8 +21,7 @@ App.scenario5_map = function(container, options) {
     });
 
     var n = 0;
-    $(container).addClass('map-chart');
-    var map = Kartograph.map(container);
+    var map = Kartograph.map(map_div[0]);
     map.loadMap(App.JSAPP + '/europe.svg', function() {
         map.addLayer('countries', {
             titles: function(feature) {
@@ -48,8 +49,6 @@ App.scenario5_map = function(container, options) {
             }
         });
     });
-
-    $(container).empty();
 };
 
 

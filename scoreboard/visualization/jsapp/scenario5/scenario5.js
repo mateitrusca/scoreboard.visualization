@@ -5,117 +5,101 @@
 "use strict";
 
 
-App.Scenario5MapView = Backbone.View.extend({
-
-    initialize: function(options) {
-        this.model.on('change', this.filters_changed, this);
-        this.filters_changed();
-    },
-
-    render: function() {
-        this.$el.empty();
-        if(this.data) {
-            App.scenario5_map(this.el, this.data);
+App.scenario5_filters_schema = {
+    filters: [
+        {type: 'select',
+         name: 'indicator-group',
+         label: 'Indicator group',
+         dimension: 'indicator-group',
+         constraints: {}},
+        {type: 'select',
+         name: 'indicator',
+         label: 'Indicator',
+         dimension: 'indicator',
+         constraints: {
+             'indicator-group': 'indicator-group'
+         }},
+        {type: 'select',
+         name: 'time-period',
+         label: 'Period',
+         dimension: 'time-period',
+         constraints: {
+             'indicator-group': 'indicator-group',
+             'indicator': 'indicator'
+         }},
+        {type: 'select',
+         name: 'breakdown-group',
+         label: 'Breakdown group',
+         dimension: 'breakdown-group',
+         constraints: {
+             'time-period': 'time-period',
+             'indicator-group': 'indicator-group',
+             'indicator': 'indicator'
+         }},
+        {type: 'select',
+         name: 'breakdown',
+         label: 'Breakdown',
+         dimension: 'breakdown',
+         constraints: {
+             'breakdown-group': 'breakdown-group',
+             'time-period': 'time-period',
+             'indicator-group': 'indicator-group',
+             'indicator': 'indicator'
+         }},
+        {type: 'select',
+         name: 'unit-measure',
+         label: 'Unit of measure',
+         dimension: 'unit-measure',
+         constraints: {
+             'breakdown-group': 'breakdown-group',
+             'breakdown': 'breakdown',
+             'time-period': 'time-period',
+             'indicator-group': 'indicator-group',
+             'indicator': 'indicator'
+         }},
+        {type: 'multiple_select',
+         name: 'countries',
+         label: 'Country / Countries',
+         dimension: 'ref-area',
+         default_all: true,
+         position: '.right_column',
+         constraints: {
+             'unit-measure': 'unit-measure',
+             'breakdown-group': 'breakdown-group',
+             'breakdown': 'breakdown',
+             'time-period': 'time-period',
+             'indicator-group': 'indicator-group',
+             'indicator': 'indicator'
+         }}
+    ],
+    annotations: {
+        'description': {
+            source: '/dimension_value_metadata',
+            title: 'Label x-axis',
+            filters: [{name: 'indicator', part: 'label'},
+                      {name: 'breakdown', part: 'label'}]
         }
     },
-
-    filters_changed: function() {
-        var view = this;
-        var args = this.model.toJSON();
-        if(!(args['indicator'] && args['year'])) {
-            return;
-        }
-        var series_ajax = $.get(App.URL + '/data', {
-            'method': 'series_indicator_year',
-            'indicator': args['indicator'],
-            'year': 'http://data.lod2.eu/scoreboard/year/' + args['year']
-        });
-
-        series_ajax.done(function(data) {
-            view.data = {'series': data};
-            view.render();
-        });
-    }
-});
-
-App.scenario5_filters_schema = App.scenario1_filters_schema;
+    chart_type: 'map',
+    chart_datasource: {
+        client_filter: 'countries',
+        rel_url: '/datapoints',
+        extra_args: [
+            ['fields', 'ref-area,value']
+        ]
+    },
+    chart_meta_labels: [
+        {targets: ['x_title'], filter_name: 'indicator', type: 'label'},
+        {targets: ['y_title', 'tooltip_label'],
+         filter_name: 'unit-measure', type: 'short_label'},
+        {targets: ['year_text'], filter_name: 'time-period', type: 'label'}
+    ]
+};
 
 
 App.scenario5_initialize = function() {
-    var qtip_css = App.JSAPP + '/lib/qtip-2.0.1/jquery.qtip.css';
-    $('<link rel="stylesheet">').attr('href', qtip_css).appendTo($('head'));
-    var box = $('#scenario-box');
-    box.html(App.get_template('scenario.html')());
-    box.addClass('scenario5');
-
-    App.filters = new Backbone.Model();
-    App.filter_loadstate = new Backbone.Model();
-    App.router = new App.ChartRouter(App.filters);
-
-    App.filters_box = new App.FiltersBox({
-        el: $('#the-filters')[0],
-        model: App.filters,
-        loadstate: App.filter_loadstate,
-        cube_url: App.URL,
-        data_revision: App.DATA_REVISION,
-        schema: App.scenario5_filters_schema
-    });
-
-    App.scenario5_map_view = new App.ScenarioChartView({
-        model: App.filters,
-        loadstate: App.filter_loadstate,
-        schema: App.scenario5_filters_schema,
-        scenario_chart: App.scenario5_map,
-        cube_url: App.URL,
-        data_revision: App.DATA_REVISION,
-        datasource: {
-            client_filter: 'countries',
-            rel_url: '/datapoints',
-            extra_args: [
-                ['fields', 'ref-area,value']
-            ]
-        },
-        meta_labels: [
-            { targets: ['x_title'], filter_name: 'indicator', type: 'label' },
-            { targets: ['y_title', 'tooltip_label'], filter_name: 'unit-measure', type: 'short_label' },
-            { targets: ['year_text'], filter_name: 'time-period', type: 'label' }
-        ]
-    });
-
-    $('#the-chart').append(App.scenario5_map_view.el);
-
-    App.metadata = new App.IndicatorMetadataView({
-        cube_url: App.URL,
-        data_revision: App.DATA_REVISION,
-        model: App.filters,
-        field: 'indicator',
-        schema: App.scenario1_filters_schema,
-        footer_meta_sources:
-          { 'description': {
-              source: '/dimension_value_metadata',
-              title: 'Label x-axis',
-              filters: [
-                { name: 'indicator',
-                  part: 'label' },
-                { name: 'breakdown',
-                  part: 'label' }
-              ]
-            }
-          }
-    });
-    $('#the-metadata').append(App.metadata.el);
-
-    App.share = new App.ShareOptionsView();
-    $('#the-share').append(App.share.el);
-
-    App.navigation = new App.NavigationView({
-        cube_url: App.URL,
-        scenario_url: App.SCENARIO_URL
-    });
-
-    $('#the-navigation').append(App.navigation.el);
-
-    Backbone.history.start();
+    App.create_visualization($('#scenario-box')[0],
+                             App.scenario5_filters_schema);
 };
 
 

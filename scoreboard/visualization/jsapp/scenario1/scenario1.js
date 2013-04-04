@@ -71,81 +71,41 @@ App.scenario1_filters_schema = {
              'indicator-group': 'indicator-group',
              'indicator': 'indicator'
          }}
+    ],
+    annotations: {
+        'description': {
+            source: '/dimension_value_metadata',
+            title: 'Label x-axis',
+            filters: [{name: 'indicator', part: 'label'},
+                      {name: 'breakdown', part: 'label'}]
+        }
+    },
+    chart_type: 'columns',
+    chart_datasource: {
+        client_filter: 'countries',
+        rel_url: '/datapoints',
+        extra_args: [
+            ['fields', 'ref-area,value']
+        ]
+    },
+    chart_meta_labels: [
+        {targets: ['x_title'],
+         filter_name: 'indicator',
+         type: 'label'},
+        {targets: ['y_title', 'tooltip_label'],
+         filter_name: 'unit-measure',
+         type: 'short_label'},
+        {targets: ['year_text'],
+         filter_name: 'time-period',
+         type: 'label'}
     ]
 };
 
 
 App.scenario1_initialize = function() {
-    var box = $('#scenario-box');
-    box.html(App.get_template('scenario.html')());
-
-    App.filters = new Backbone.Model();
-    App.filter_loadstate = new Backbone.Model();
-    App.router = new App.ChartRouter(App.filters);
-
-    App.filters_box = new App.FiltersBox({
-        el: $('#the-filters')[0],
-        model: App.filters,
-        loadstate: App.filter_loadstate,
-        cube_url: App.URL,
-        data_revision: App.DATA_REVISION,
-        schema: App.scenario1_filters_schema
-    });
-
-    App.scenario1_chart_view = new App.ScenarioChartView({
-        model: App.filters,
-        loadstate: App.filter_loadstate,
-        schema: App.scenario1_filters_schema,
-        scenario_chart: App.scenario1_chart,
-        cube_url: App.URL,
-        data_revision: App.DATA_REVISION,
-        datasource: {
-            client_filter: 'countries',
-            rel_url: '/datapoints',
-            extra_args: [
-                ['fields', 'ref-area,value']
-            ]
-        },
-        meta_labels: [
-            { targets: ['x_title'], filter_name: 'indicator', type: 'label' },
-            { targets: ['y_title', 'tooltip_label'], filter_name: 'unit-measure', type: 'short_label' },
-            { targets: ['year_text'], filter_name: 'time-period', type: 'label' }
-        ]
-    });
-    $('#the-chart').append(App.scenario1_chart_view.el);
-
-    App.metadata = new App.IndicatorMetadataView({
-        cube_url: App.URL,
-        data_revision: App.DATA_REVISION,
-        model: App.filters,
-        field: 'indicator',
-        schema: App.scenario1_filters_schema,
-        footer_meta_sources:
-          { 'description': {
-              source: '/dimension_value_metadata',
-              title: 'Label x-axis',
-              filters: [
-                { name: 'indicator',
-                  part: 'label' },
-                { name: 'breakdown',
-                  part: 'label' }
-              ]
-            }
-          }
-    });
-    $('#the-metadata').append(App.metadata.el);
-
-    App.share = new App.ShareOptionsView();
-    $('#the-share').append(App.share.el);
-
-    App.navigation = new App.NavigationView({
-        cube_url: App.URL,
-        scenario_url: App.SCENARIO_URL
-    });
-
-    $('#the-navigation').append(App.navigation.el);
-
-    Backbone.history.start();
+    App.create_visualization($('#scenario-box')[0],
+                             App.scenario1_filters_schema);
 };
+
 
 })(App.jQuery);
