@@ -41,6 +41,7 @@ App.scenario2_filters_schema = {
          name: 'countries',
          label: 'Countries',
          dimension: 'ref-area',
+         default_value: ['EU27'],
          position: '.right_column',
          constraints: {
              'indicator-group': 'indicator-group',
@@ -89,12 +90,6 @@ App.scenario2_initialize = function() {
     App.filters = App.visualization.filters;
     App.filter_loadstate = App.visualization.filter_loadstate;
     App.router = App.visualization.router;
-
-    if(! App.filters.get('countries')) {
-        var EU27 = ("http://data.lod2.eu/scoreboard/country/" +
-                    "European+Union+-+27+countries");
-        App.filters.set('countries', ['EU27']);
-    }
 };
 
 })(App.jQuery);

@@ -179,6 +179,7 @@ App.FiltersBox = Backbone.View.extend({
                 xy: item['xy'],
                 name: item['name'],
                 label: item['label'],
+                default_value: item['default_value'],
                 default_all: item['default_all'],
                 dimension: item['dimension'],
                 position: item['position'],
