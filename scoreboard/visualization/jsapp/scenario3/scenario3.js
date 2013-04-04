@@ -121,7 +121,32 @@ App.scenario3_filters_schema = {
             filters: [{name: 'y-indicator', part: 'label'},
                       {name: 'y-breakdown', part: 'label'}]
         }
-    }
+    },
+    chart_datasource: {
+        client_filter: 'countries',
+        rel_url: '/datapoints_xy',
+        extra_args: [
+            ['columns', 'ref-area'],
+            ['xy_columns', 'value']
+        ]
+    },
+    chart_meta_labels: [
+        {targets: ['indicator_x_label'],
+         filter_name: 'x-indicator',
+         type: 'short_label'},
+        {targets: ['indicator_y_label'],
+         filter_name: 'y-indicator',
+         type: 'short_label'},
+        {targets: ['period_label'],
+         filter_name: 'time-period',
+         type: 'label'},
+        {targets: ['x_unit_label'],
+         filter_name: 'x-unit-measure',
+         type: 'short_label'},
+        {targets: ['y_unit_label'],
+         filter_name: 'y-unit-measure',
+         type: 'short_label'}
+    ]
 };
 
 
@@ -147,22 +172,7 @@ App.scenario3_initialize = function() {
         schema: App.scenario3_filters_schema,
         scenario_chart: App.scatter_chart,
         cube_url: App.URL,
-        data_revision: App.DATA_REVISION,
-        datasource: {
-            client_filter: 'countries',
-            rel_url: '/datapoints_xy',
-            extra_args: [
-                ['columns', 'ref-area'],
-                ['xy_columns', 'value']
-            ]
-        },
-        meta_labels: [
-            { targets: ['indicator_x_label'], filter_name: 'x-indicator', type: 'short_label' },
-            { targets: ['indicator_y_label'], filter_name: 'y-indicator', type: 'short_label' },
-            { targets: ['period_label'], filter_name: 'time-period', type: 'label' },
-            { targets: ['x_unit_label'], filter_name: 'x-unit-measure', type: 'short_label' },
-            { targets: ['y_unit_label'], filter_name: 'y-unit-measure', type: 'short_label' },
-        ]
+        data_revision: App.DATA_REVISION
     });
     $('#the-chart').append(App.scenario3_chart_view.el);
 

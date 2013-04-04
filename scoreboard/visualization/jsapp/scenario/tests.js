@@ -18,28 +18,20 @@ describe('ScenarioChartViewParameters', function() {
 
     it('should be initialized with meta labels', function() {
         var server = this.sandbox.server;
-        var schema = {
-            filters: [
-                {type: 'select',
-                 name: 'filter_name',
-                 label: 'Select indicator group',
-                 dimension: 'indicator-group',
-                 constraints: {}}
-            ]
-        };
         var chart = new App.ScenarioChartView({
             model: this.model,
-            datasource: {
-                rel_url: '/test_view',
-                extra_args: [
+            schema: {
+                filters: [],
+                chart_datasource: {
+                    rel_url: '/test_view',
+                    extra_args: []
+                },
+                chart_meta_labels: [
+                    {targets: ['dyn_lbl'],
+                     filter_name: 'indicator',
+                     type: 'label'},
                 ]
             },
-            meta_labels: [
-                {targets: ['dyn_lbl'],
-                 filter_name: 'indicator',
-                 type: 'label'},
-            ],
-            schema: {filters: [ ]},
             scenario_chart: this.scenario_chart
         });
         var url = server.requests[0].url;
@@ -52,17 +44,14 @@ describe('ScenarioChartViewParameters', function() {
        function() {
         var chart = new App.ScenarioChartView({
             model: this.model,
-            datasource: {
-                rel_url: '/test_view',
-                extra_args: [
-                ]
+            schema: {
+                filters: [{name: 'indicator', dimension: 'dim1'}],
+                chart_datasource: {
+                    rel_url: '/test_view',
+                    extra_args: []
+                },
+                chart_meta_labels: []
             },
-            meta_labels: [
-            ],
-            schema: {filters: [
-                {name: 'indicator',
-                 dimension: 'dim1'}
-            ]},
             scenario_chart: this.scenario_chart
         });
         expect(chart.dimensions_mapping).to.deep.equal(
@@ -76,20 +65,19 @@ describe('ScenarioChartViewParameters', function() {
         var server = this.sandbox.server;
         var chart = new App.ScenarioChartView({
             model: this.model,
-            datasource: {
-                rel_url: '/datapoints_view',
-                extra_args: [
+            schema: {
+                filters: [{name: 'filter1', dimension: 'dim1'}],
+                chart_datasource: {
+                    rel_url: '/datapoints_view',
+                    extra_args: [
+                    ]
+                },
+                chart_meta_labels: [
+                    {targets: ['x_title'],
+                     filter_name: 'filter1',
+                     type: 'short_label'}
                 ]
             },
-            meta_labels: [
-                {targets: ['x_title'],
-                 filter_name: 'filter1',
-                 type: 'short_label'}
-            ],
-            schema: {filters: [
-                {name: 'filter1',
-                 dimension: 'dim1'}
-            ]},
             scenario_chart: this.scenario_chart
         });
         chart.model.set({'filter1': 'dim1'});
@@ -114,14 +102,16 @@ describe('ScenarioChartViewParameters', function() {
         };
         var chart = new App.ScenarioChartView({
             model: this.model,
-            datasource: {
-                rel_url: '/test_view',
-                args: {
-                    fields: 'ref-area,value'
-                }
+            schema: {
+                filters: [],
+                chart_datasource: {
+                    rel_url: '/test_view',
+                    args: {
+                        fields: 'ref-area,value'
+                    }
+                },
+                chart_meta_labels: []
             },
-            meta_labels: [ ],
-            schema: {filters: [ ]},
             scenario_chart: this.scenario_chart
         });
         var url = server.requests[0].url;
@@ -141,15 +131,17 @@ describe('ScenarioChartViewParameters', function() {
         };
         var chart = new App.ScenarioChartView({
             model: this.model,
-            datasource: {
-                rel_url: '/test_view',
-                extra_args: [
-                    ['param1', 'value1'],
-                    ['param2', 'value2']
-                ]
+            schema: {
+                filters: [],
+                chart_datasource: {
+                    rel_url: '/test_view',
+                    extra_args: [
+                        ['param1', 'value1'],
+                        ['param2', 'value2']
+                    ]
+                },
+                chart_meta_labels: []
             },
-            meta_labels: [ ],
-            schema: {filters: [ ]},
             scenario_chart: this.scenario_chart
         });
         var url = server.requests[0].url;
@@ -170,15 +162,17 @@ describe('ScenarioChartViewParameters', function() {
         };
         var chart = new App.ScenarioChartView({
             model: this.model,
-            datasource: {
-                rel_url: '/test_view',
-                extra_args: [
-                    ['param1', 'value1'],
-                    ['param2', 'value2']
-                ]
+            schema: {
+                filters: [],
+                chart_datasource: {
+                    rel_url: '/test_view',
+                    extra_args: [
+                        ['param1', 'value1'],
+                        ['param2', 'value2']
+                    ]
+                },
+                chart_meta_labels: []
             },
-            meta_labels: [ ],
-            schema: {filters: [ ]},
             scenario_chart: scenario_chart
         });
         App.respond_json(server.requests[0], {'datapoints': []});
@@ -189,20 +183,21 @@ describe('ScenarioChartViewParameters', function() {
         var server = this.sandbox.server;
         var chart = new App.ScenarioChartView({
             model: this.model,
-            datasource: {
-                rel_url: '/test_view',
-                extra_args: [
+            schema: {
+                filters: [],
+                chart_datasource: {
+                    rel_url: '/test_view',
+                    extra_args: []
+                },
+                chart_meta_labels: [
+                    {targets: ['label1'],
+                     filter_name: 'indicator',
+                     type: 'label'},
+                    {targets: ['label2', 'label3'],
+                     filter_name: 'indicator',
+                     type: 'short_label'}
                 ]
             },
-            meta_labels: [
-                {targets: ['label1'],
-                 filter_name: 'indicator',
-                 type: 'label'},
-                {targets: ['label2', 'label3'],
-                 filter_name: 'indicator',
-                 type: 'short_label'}
-            ],
-            schema: {filters: [ ]},
             scenario_chart: this.scenario_chart
         });
         App.respond_json(server.requests[0], {'datapoints': []});
@@ -220,16 +215,6 @@ describe('ScenarioChartViewParameters', function() {
         var server = this.sandbox.server;
         var chart = new App.ScenarioChartView({
             model: this.model,
-            datasource: {
-                groupby: 'country',
-                rel_url: '/source_view',
-                extra_args: [
-                    ['fields', 'dimension1,value1']
-                ]
-            },
-            meta_labels: [
-                {targets: ['label1'], filter_name: 'indicator', type: 'label'}
-            ],
             schema: {
                 filters: [
                     {type: 'select',
@@ -245,6 +230,16 @@ describe('ScenarioChartViewParameters', function() {
                      constraints: {
                          'indicator': 'indicator'
                      }},
+                ],
+                chart_datasource: {
+                    groupby: 'country',
+                    rel_url: '/source_view',
+                    extra_args: [
+                        ['fields', 'dimension1,value1']
+                    ]
+                },
+                chart_meta_labels: [
+                    {targets: ['label1'], filter_name: 'indicator', type: 'label'}
                 ]
             },
             scenario_chart: this.scenario_chart
@@ -281,31 +276,32 @@ describe('ScenarioChartView', function() {
         this.model = new Backbone.Model();
         this.chart = new App.ScenarioChartView({
             model: this.model,
-            meta_labels: [
-                {targets: ['extra_label'],
-                 filter_name: 'time-period',
-                 type: 'label'}
-            ],
-            schema: {filters: [
-                {name: 'indicator',
-                 label: 'Select indicator',
-                 dimension: 'dim1',
-                },
-                {name: 'unit-measure',
-                 label: 'Select unit of measure',
-                 dimension: 'dim2',
-                },
-                {name: 'time-period',
-                 label: 'Select period',
-                 dimension: 'dim3',
+            schema: {
+                filters: [
+                    {name: 'indicator',
+                     label: 'Select indicator',
+                     dimension: 'dim1',
+                    },
+                    {name: 'unit-measure',
+                     label: 'Select unit of measure',
+                     dimension: 'dim2',
+                    },
+                    {name: 'time-period',
+                     label: 'Select period',
+                     dimension: 'dim3',
+                    }
+                ],
+                chart_meta_labels: [
+                    {targets: ['extra_label'],
+                     filter_name: 'time-period',
+                     type: 'label'}
+                ],
+                chart_datasource: {
+                    rel_url: '/datapoints',
+                    extra_args: [
+                        ['fields', 'ref-area,value']
+                    ]
                 }
-
-            ]},
-            datasource: {
-                rel_url: '/datapoints',
-                extra_args: [
-                    ['fields', 'ref-area,value']
-                ]
             },
             scenario_chart: this.scenario_chart
         });
@@ -364,10 +360,12 @@ describe('ScenarioChartView', function() {
                        {name: 'filter3', dimension: 'dim3'}];
         var chart = new App.ScenarioChartView({
             model: model,
-            schema: {filters: filters},
-            datasource: {
-                rel_url: '/datapoints',
-                client_filter: 'filter3'
+            schema: {
+                filters: filters,
+                chart_datasource: {
+                    rel_url: '/datapoints',
+                    client_filter: 'filter3'
+                }
             },
             scenario_chart: scenario_chart
         });

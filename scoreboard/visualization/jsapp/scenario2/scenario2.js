@@ -56,7 +56,22 @@ App.scenario2_filters_schema = {
             filters: [{name: 'indicator', part: 'label'},
                       {name: 'breakdown', part: 'label'}]
         }
-    }
+    },
+    chart_datasource: {
+        groupby: 'countries',
+        rel_url: '/datapoints',
+        extra_args: [
+            ['fields', 'time-period,value']
+        ]
+    },
+    chart_meta_labels: [
+        {targets: ['x_title'],
+         filter_name: 'indicator',
+         type: 'short_label'},
+        {targets: ['y_title', 'unit'],
+         filter_name: 'unit-measure',
+         type: 'short_label'}
+    ]
 };
 
 App.scenario2_initialize = function() {
@@ -79,21 +94,6 @@ App.scenario2_initialize = function() {
         model: App.filters,
         loadstate: App.filter_loadstate,
         schema: App.scenario2_filters_schema,
-        datasource: {
-            groupby: 'countries',
-            rel_url: '/datapoints',
-            extra_args: [
-                ['fields', 'time-period,value']
-            ]
-        },
-        meta_labels: [
-            { targets: ['x_title'],
-              filter_name: 'indicator',
-              type: 'short_label' },
-            { targets: ['y_title', 'unit'],
-              filter_name: 'unit-measure',
-              type: 'short_label' }
-        ],
         scenario_chart: App.lines_chart,
         cube_url: App.URL,
         data_revision: App.DATA_REVISION

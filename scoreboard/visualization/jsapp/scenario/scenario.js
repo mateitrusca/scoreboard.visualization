@@ -15,14 +15,14 @@ App.ScenarioChartView = Backbone.View.extend({
         this.model.on('change', this.load_chart, this);
         this.loadstate = options['loadstate'] || new Backbone.Model();
         this.loadstate.on('change', this.load_chart, this);
-        this.meta_labels = options['meta_labels'];
         this.schema = options['schema'];
+        this.meta_labels = this.schema['chart_meta_labels'];
         this.scenario_chart = options['scenario_chart'];
         this.dimensions_mapping = _.object(
             _(options.schema.filters).pluck('name'),
             _(options.schema.filters).pluck('dimension')
         );
-        this.datasource = options['datasource'];
+        this.datasource = this.schema['chart_datasource'];
         this.requests_in_flight = [];
         this.load_chart();
     },

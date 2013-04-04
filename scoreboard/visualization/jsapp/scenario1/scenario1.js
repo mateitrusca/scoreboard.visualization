@@ -79,7 +79,25 @@ App.scenario1_filters_schema = {
             filters: [{name: 'indicator', part: 'label'},
                       {name: 'breakdown', part: 'label'}]
         }
-    }
+    },
+    chart_datasource: {
+        client_filter: 'countries',
+        rel_url: '/datapoints',
+        extra_args: [
+            ['fields', 'ref-area,value']
+        ]
+    },
+    chart_meta_labels: [
+        {targets: ['x_title'],
+         filter_name: 'indicator',
+         type: 'label'},
+        {targets: ['y_title', 'tooltip_label'],
+         filter_name: 'unit-measure',
+         type: 'short_label'},
+        {targets: ['year_text'],
+         filter_name: 'time-period',
+         type: 'label'}
+    ]
 };
 
 
@@ -104,19 +122,7 @@ App.scenario1_initialize = function() {
         schema: App.scenario1_filters_schema,
         scenario_chart: App.columns_chart,
         cube_url: App.URL,
-        data_revision: App.DATA_REVISION,
-        datasource: {
-            client_filter: 'countries',
-            rel_url: '/datapoints',
-            extra_args: [
-                ['fields', 'ref-area,value']
-            ]
-        },
-        meta_labels: [
-            { targets: ['x_title'], filter_name: 'indicator', type: 'label' },
-            { targets: ['y_title', 'tooltip_label'], filter_name: 'unit-measure', type: 'short_label' },
-            { targets: ['year_text'], filter_name: 'time-period', type: 'label' }
-        ]
+        data_revision: App.DATA_REVISION
     });
     $('#the-chart').append(App.scenario1_chart_view.el);
 
