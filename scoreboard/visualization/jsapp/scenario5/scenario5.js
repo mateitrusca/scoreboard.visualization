@@ -108,7 +108,6 @@ App.scenario5_initialize = function() {
         data_revision: App.DATA_REVISION,
         scenario_url: App.SCENARIO_URL
     });
-    box.addClass('scenario5');
 
     App.filters = App.visualization.filters;
     App.filter_loadstate = App.visualization.filter_loadstate;
