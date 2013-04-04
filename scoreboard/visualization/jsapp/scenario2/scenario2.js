@@ -90,8 +90,6 @@ App.scenario2_initialize = function() {
     App.filter_loadstate = App.visualization.filter_loadstate;
     App.router = App.visualization.router;
 
-    Backbone.history.start();
-
     if(! App.filters.get('countries')) {
         var EU27 = ("http://data.lod2.eu/scoreboard/country/" +
                     "European+Union+-+27+countries");

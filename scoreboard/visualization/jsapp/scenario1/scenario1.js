@@ -117,8 +117,6 @@ App.scenario1_initialize = function() {
     App.filters = App.visualization.filters;
     App.filter_loadstate = App.visualization.filter_loadstate;
     App.router = App.visualization.router;
-
-    Backbone.history.start();
 };
 
 })(App.jQuery);

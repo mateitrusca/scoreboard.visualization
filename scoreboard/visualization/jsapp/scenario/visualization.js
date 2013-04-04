@@ -53,6 +53,8 @@ App.Visualization = Backbone.View.extend({
             scenario_chart: App.chart_library[options['schema']['chart_type']]
         });
 
+        Backbone.history.start();
+
     }
 
 });
