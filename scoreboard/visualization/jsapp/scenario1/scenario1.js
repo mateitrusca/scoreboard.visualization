@@ -97,15 +97,6 @@ App.scenario1_initialize = function() {
     App.filter_loadstate = App.visualization.filter_loadstate;
     App.router = App.visualization.router;
 
-    App.filters_box = new App.FiltersBox({
-        el: $('#the-filters')[0],
-        model: App.filters,
-        loadstate: App.filter_loadstate,
-        cube_url: App.URL,
-        data_revision: App.DATA_REVISION,
-        schema: App.scenario1_filters_schema
-    });
-
     App.scenario1_chart_view = new App.ScenarioChartView({
         model: App.filters,
         loadstate: App.filter_loadstate,
