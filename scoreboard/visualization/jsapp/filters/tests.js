@@ -234,6 +234,22 @@ describe('modular filters', function() {
             expect(model.get('fil1')).to.deep.equal(['one']);
         });
 
+        it('should pick default value if old value is invalid', function() {
+            var model = new Backbone.Model({'fil1': 'other'});
+            var options = [{'label': "Option One", 'notation': 'v1'},
+                           {'label': "Option Two", 'notation': 'v2'},
+                           {'label': "Option Three", 'notation': 'v3'}];
+            var view = new NoAjaxMultipleSelectFilter({
+                model: model,
+                name: 'fil1',
+                dimension: 'dim1',
+                default_value: ['v2', 'v3']
+            });
+            view.ajax.resolve({options: options});
+            expect(view.$el.find('select').val()).to.deep.equal(['v2', 'v3']);
+            expect(model.get('fil1')).to.deep.equal(['v2', 'v3']);
+        });
+
     });
 
     describe('FilterPositioning', function() {

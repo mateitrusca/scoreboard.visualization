@@ -119,7 +119,8 @@ App.MultipleSelectFilter = App.SelectFilter.extend({
                 this.model.set(this.name, range);
             }
             else{
-                this.model.set(this.name, [range[0]]);
+                var default_value = this.default_value || [range[0]];
+                this.model.set(this.name, default_value);
             }
         }
     },
