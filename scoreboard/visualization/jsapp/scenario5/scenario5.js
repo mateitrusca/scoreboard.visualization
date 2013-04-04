@@ -98,8 +98,6 @@ App.scenario5_filters_schema = {
 
 
 App.scenario5_initialize = function() {
-    var qtip_css = App.JSAPP + '/lib/qtip-2.0.1/jquery.qtip.css';
-    $('<link rel="stylesheet">').attr('href', qtip_css).appendTo($('head'));
     var box = $('#scenario-box');
     App.visualization = new App.Visualization({
         el: box,
