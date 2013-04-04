@@ -90,7 +90,8 @@ App.scenario1_initialize = function() {
         el: box,
         schema: App.scenario1_filters_schema,
         cube_url: App.URL,
-        data_revision: App.DATA_REVISION
+        data_revision: App.DATA_REVISION,
+        scenario_url: App.SCENARIO_URL
     });
 
     App.filters = App.visualization.filters;
@@ -118,14 +119,6 @@ App.scenario1_initialize = function() {
         ]
     });
     $('#the-chart').append(App.scenario1_chart_view.el);
-
-
-    App.navigation = new App.NavigationView({
-        cube_url: App.URL,
-        scenario_url: App.SCENARIO_URL
-    });
-
-    $('#the-navigation').append(App.navigation.el);
 
     Backbone.history.start();
 };

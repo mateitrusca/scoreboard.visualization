@@ -36,6 +36,12 @@ App.Visualization = Backbone.View.extend({
         this.share = new App.ShareOptionsView({
             el: this.$el.find('#the-share')
         });
+
+        this.navigation = new App.NavigationView({
+            el: this.$el.find('#the-navigation'),
+            cube_url: options['cube_url'],
+            scenario_url: App.SCENARIO_URL
+        });
     }
 
 });

@@ -16,7 +16,8 @@ App.scenario5_initialize = function() {
         el: box,
         schema: App.scenario5_filters_schema,
         cube_url: App.URL,
-        data_revision: App.DATA_REVISION
+        data_revision: App.DATA_REVISION,
+        scenario_url: App.SCENARIO_URL
     });
     box.addClass('scenario5');
 
@@ -46,15 +47,6 @@ App.scenario5_initialize = function() {
     });
 
     $('#the-chart').append(App.scenario5_map_view.el);
-
-
-
-    App.navigation = new App.NavigationView({
-        cube_url: App.URL,
-        scenario_url: App.SCENARIO_URL
-    });
-
-    $('#the-navigation').append(App.navigation.el);
 
     Backbone.history.start();
 };
