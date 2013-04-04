@@ -23,6 +23,7 @@ App.SelectFilter = Backbone.View.extend({
         this.constraints = options['constraints'] || [];
         this.dimension_options = [];
         this.ajax = null;
+        this.default_value = options['default_value'];
         this.default_all = options['default_all'] || false;
         this.loadstate = options['loadstate'] || new Backbone.Model();
         _(this.constraints).forEach(function(other_name, other_dimension) {
@@ -36,7 +37,8 @@ App.SelectFilter = Backbone.View.extend({
     adjust_value: function() {
         var range = _(this.dimension_options).pluck('notation');
         if(! _(range).contains(this.model.get(this.name))) {
-            this.model.set(this.name, range[0]);
+            var default_value = this.default_value || range[0];
+            this.model.set(this.name, default_value);
         }
     },
 
