@@ -128,7 +128,12 @@ App.scenario3_filters_schema = {
 App.scenario3_initialize = function() {
 
     var box = $('#scenario-box');
-    App.visualization = new App.Visualization({el: box});
+    App.visualization = new App.Visualization({
+        el: box,
+        schema: App.scenario3_filters_schema,
+        cube_url: App.URL,
+        data_revision: App.DATA_REVISION
+    });
     box.addClass('scenario3');
 
     App.filters = App.visualization.filters;
@@ -169,17 +174,8 @@ App.scenario3_initialize = function() {
     });
     $('#the-chart').append(App.scenario3_chart_view.el);
 
-    App.metadata = new App.IndicatorMetadataView({
-        cube_url: App.URL,
-        data_revision: App.DATA_REVISION,
-        model: App.filters,
-        field: 'indicator',
-        schema: App.scenario3_filters_schema
-    });
-
     App.share = new App.ShareOptionsView();
 
-    $('#the-metadata').append(App.metadata.el);
     $('#the-share').append(App.share.el);
 
     App.navigation = new App.NavigationView({

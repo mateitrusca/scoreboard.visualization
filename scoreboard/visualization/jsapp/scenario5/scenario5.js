@@ -12,7 +12,12 @@ App.scenario5_initialize = function() {
     var qtip_css = App.JSAPP + '/lib/qtip-2.0.1/jquery.qtip.css';
     $('<link rel="stylesheet">').attr('href', qtip_css).appendTo($('head'));
     var box = $('#scenario-box');
-    App.visualization = new App.Visualization({el: box});
+    App.visualization = new App.Visualization({
+        el: box,
+        schema: App.scenario5_filters_schema,
+        cube_url: App.URL,
+        data_revision: App.DATA_REVISION
+    });
     box.addClass('scenario5');
 
     App.filters = App.visualization.filters;
@@ -51,14 +56,6 @@ App.scenario5_initialize = function() {
 
     $('#the-chart').append(App.scenario5_map_view.el);
 
-    App.metadata = new App.IndicatorMetadataView({
-        cube_url: App.URL,
-        data_revision: App.DATA_REVISION,
-        model: App.filters,
-        field: 'indicator',
-        schema: App.scenario1_filters_schema
-    });
-    $('#the-metadata').append(App.metadata.el);
 
     App.share = new App.ShareOptionsView();
     $('#the-share').append(App.share.el);
