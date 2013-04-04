@@ -89,7 +89,7 @@ App.scenario2_initialize = function() {
               filter_name: 'unit-measure',
               type: 'short_label' }
         ],
-        scenario_chart: App.scenario2_chart,
+        scenario_chart: App.lines_chart,
         cube_url: App.URL,
         data_revision: App.DATA_REVISION
     });

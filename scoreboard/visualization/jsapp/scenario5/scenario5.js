@@ -32,7 +32,7 @@ App.scenario5_initialize = function() {
         model: App.filters,
         loadstate: App.filter_loadstate,
         schema: App.scenario5_filters_schema,
-        scenario_chart: App.scenario5_map,
+        scenario_chart: App.map_chart,
         cube_url: App.URL,
         data_revision: App.DATA_REVISION,
         datasource: {

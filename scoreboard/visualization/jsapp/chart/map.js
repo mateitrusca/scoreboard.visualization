@@ -5,7 +5,7 @@
 "use strict";
 
 
-App.scenario5_map = function(container, options) {
+App.map_chart = function(container, options) {
     var series = options['series'][0]['data'];
     var value_by_country = _.object(
         _(series).map(function(v) {

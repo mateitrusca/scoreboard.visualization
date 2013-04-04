@@ -96,7 +96,7 @@ App.scenario1_initialize = function() {
         model: App.filters,
         loadstate: App.filter_loadstate,
         schema: App.scenario1_filters_schema,
-        scenario_chart: App.scenario1_chart,
+        scenario_chart: App.columns_chart,
         cube_url: App.URL,
         data_revision: App.DATA_REVISION,
         datasource: {

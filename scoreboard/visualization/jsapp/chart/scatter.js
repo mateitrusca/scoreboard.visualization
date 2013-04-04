@@ -5,7 +5,7 @@
 "use strict";
 
 
-App.scenario3_chart = function(container, options, meta_data) {
+App.scatter_chart = function(container, options, meta_data) {
 
     $(container).addClass('normal-chart');
 

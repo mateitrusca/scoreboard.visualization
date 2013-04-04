@@ -134,7 +134,7 @@ App.scenario3_initialize = function() {
         model: App.filters,
         loadstate: App.filter_loadstate,
         schema: App.scenario3_filters_schema,
-        scenario_chart: App.scenario3_chart,
+        scenario_chart: App.scatter_chart,
         cube_url: App.URL,
         data_revision: App.DATA_REVISION,
         datasource: {

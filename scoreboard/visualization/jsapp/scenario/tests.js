@@ -276,7 +276,7 @@ describe('ScenarioChartView', function() {
     });
 
     function setup_scenario() {
-        this.scenario_chart = this.sandbox.stub(App, 'scenario1_chart');
+        this.scenario_chart = this.sandbox.spy();
 
         this.model = new Backbone.Model();
         this.chart = new App.ScenarioChartView({
