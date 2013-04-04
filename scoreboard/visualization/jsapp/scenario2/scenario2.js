@@ -48,7 +48,15 @@ App.scenario2_filters_schema = {
              'breakdown': 'breakdown',
              'unit-measure': 'unit-measure'
          }}
-    ]
+    ],
+    annotations: {
+        'description': {
+            title: "Label x-axis",
+            source: '/dimension_value_metadata',
+            filters: [{name: 'indicator', part: 'label'},
+                      {name: 'breakdown', part: 'label'}]
+        }
+    }
 };
 
 App.scenario2_initialize = function() {
@@ -100,19 +108,7 @@ App.scenario2_initialize = function() {
         data_revision: App.DATA_REVISION,
         model: App.filters,
         field: 'indicator',
-        schema: App.scenario2_filters_schema,
-        footer_meta_sources:
-          { 'description': {
-              title: "Label x-axis",
-              source: '/dimension_value_metadata',
-              filters: [
-                { name: 'indicator',
-                  part: 'label' },
-                { name: 'breakdown',
-                  part: 'label' }
-              ]
-            }
-          }
+        schema: App.scenario2_filters_schema
     });
 
     App.share = new App.ShareOptionsView();

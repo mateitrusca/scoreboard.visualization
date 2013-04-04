@@ -107,7 +107,21 @@ App.scenario3_filters_schema = {
              'y-unit-measure': 'y-unit-measure',
              'time-period': 'time-period'
          }}
-    ]
+    ],
+    annotations: {
+        'x': {
+            title: "Label x-axis",
+            source: '/dimension_value_metadata',
+            filters: [{target: 'indicator', name: 'x-indicator', part: 'label'},
+                      {target: 'breakdown', name: 'x-breakdown', part: 'label'}]
+        },
+        'y': {
+            title: "Label y-axis",
+            source: '/dimension_value_metadata',
+            filters: [{name: 'y-indicator', part: 'label'},
+                      {name: 'y-breakdown', part: 'label'}]
+        }
+    }
 };
 
 
@@ -160,31 +174,7 @@ App.scenario3_initialize = function() {
         data_revision: App.DATA_REVISION,
         model: App.filters,
         field: 'indicator',
-        schema: App.scenario3_filters_schema,
-        footer_meta_sources:
-          { 'x': {
-              title: "Label x-axis",
-              source: '/dimension_value_metadata',
-              filters: [
-                { target: 'indicator',
-                  name: 'x-indicator',
-                  part: 'label' },
-                { target: 'breakdown',
-                  name: 'x-breakdown',
-                  part: 'label' }
-              ]
-            },
-            'y': {
-                title: "Label y-axis",
-                source: '/dimension_value_metadata',
-                filters: [
-                  { name: 'y-indicator',
-                    part: 'label' },
-                  { name: 'y-breakdown',
-                    part: 'label' }
-                ]
-              }
-            }
+        schema: App.scenario3_filters_schema
     });
 
     App.share = new App.ShareOptionsView();

@@ -56,19 +56,7 @@ App.scenario5_initialize = function() {
         data_revision: App.DATA_REVISION,
         model: App.filters,
         field: 'indicator',
-        schema: App.scenario1_filters_schema,
-        footer_meta_sources:
-          { 'description': {
-              source: '/dimension_value_metadata',
-              title: 'Label x-axis',
-              filters: [
-                { name: 'indicator',
-                  part: 'label' },
-                { name: 'breakdown',
-                  part: 'label' }
-              ]
-            }
-          }
+        schema: App.scenario1_filters_schema
     });
     $('#the-metadata').append(App.metadata.el);
 

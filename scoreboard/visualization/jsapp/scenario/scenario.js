@@ -173,11 +173,11 @@ App.IndicatorMetadataView = Backbone.View.extend({
     initialize: function(options) {
         this.data_revision = options['data_revision'] || '';
         this.cube_url = options['cube_url'];
+        this.schema = options['schema'];
         this.dimensions_mapping = _.object(
-            _(options.schema.filters).pluck('name'),
-            _(options.schema.filters).pluck('dimension')
+            _(this.schema['filters']).pluck('name'),
+            _(this.schema['filters']).pluck('dimension')
         );
-        this.footer_meta_sources = options['footer_meta_sources'];
         this.model.on('change', this.render, this);
         this.description = $('#parent-fieldname-description').detach();
         this.render();
@@ -186,7 +186,7 @@ App.IndicatorMetadataView = Backbone.View.extend({
     render: function() {
         var data = [];
         var requests = [];
-        _(this.footer_meta_sources).map(function(item, key) {
+        _(this.schema['annotations']).map(function(item, key) {
             var source = item['source'];
             var filters = item['filters'];
             var info_block = {};

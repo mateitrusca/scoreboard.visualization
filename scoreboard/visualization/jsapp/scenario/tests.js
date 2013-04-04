@@ -444,22 +444,17 @@ describe('IndicatorMetaDataView', function() {
             data_revision: 'one',
             model: this.model,
             field: 'indicator',
-            schema: {filters: [
-                { name: 'indicator',
-                 dimension: 'dim1'}
-            ]},
-            footer_meta_sources:
-              { 'ind1': {
-                  title: 'meta_title',
-                  source: '/test_view',
-                  filters: [
-                    { name: 'indicator',
-                      part: 'label' },
-                    { name: 'unit-measure',
-                      part: 'note' }
-                  ]
+            schema: {
+                filters: [{name: 'indicator', dimension: 'dim1'}],
+                annotations: {
+                    'ind1': {
+                        title: 'meta_title',
+                        source: '/test_view',
+                        filters: [{name: 'indicator', part: 'label'},
+                                  {name: 'unit-measure', part: 'note'}]
+                    }
                 }
-              }
+            }
         });
 
         var template = this.sandbox.spy(view, 'template');
@@ -504,30 +499,22 @@ describe('IndicatorMetaDataView', function() {
         var view = new App.IndicatorMetadataView({
             cube_url: App.URL,
             model: this.model,
-            schema: {filters: [
-                { name: 'indicator',
-                 dimension: 'dim1'},
-                { name: 'abc',
-                 dimension: 'dim2'}
-            ]},
-            footer_meta_sources:
-              { 'x': {
-                  title: 'Label of x-axis',
-                  source: '/test_view',
-                  filters: [
-                    { name: 'indicator',
-                      part: 'label' },
-                  ]
-                },
-                'y': {
-                  title: 'Label of y-axis',
-                  source: '/test_view',
-                  filters: [
-                    { name: 'indicator',
-                      part: 'label' },
-                  ]
+            schema: {
+                filters: [{name: 'indicator', dimension: 'dim1'},
+                          {name: 'abc', dimension: 'dim2'}],
+                annotations: {
+                    'x': {
+                        title: 'Label of x-axis',
+                        source: '/test_view',
+                        filters: [{name: 'indicator', part: 'label'}]
+                    },
+                    'y': {
+                        title: 'Label of y-axis',
+                        source: '/test_view',
+                        filters: [{name: 'indicator', part: 'label'}]
+                    }
                 }
-              }
+            }
         });
 
         var template = this.sandbox.spy(view, 'template');
