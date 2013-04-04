@@ -5,7 +5,82 @@
 "use strict";
 
 
-App.scenario5_filters_schema = App.scenario1_filters_schema;
+App.scenario5_filters_schema = {
+    filters: [
+        {type: 'select',
+         name: 'indicator-group',
+         label: 'Indicator group',
+         dimension: 'indicator-group',
+         constraints: {}},
+        {type: 'select',
+         name: 'indicator',
+         label: 'Indicator',
+         dimension: 'indicator',
+         constraints: {
+             'indicator-group': 'indicator-group'
+         }},
+        {type: 'select',
+         name: 'time-period',
+         label: 'Period',
+         dimension: 'time-period',
+         constraints: {
+             'indicator-group': 'indicator-group',
+             'indicator': 'indicator'
+         }},
+        {type: 'select',
+         name: 'breakdown-group',
+         label: 'Breakdown group',
+         dimension: 'breakdown-group',
+         constraints: {
+             'time-period': 'time-period',
+             'indicator-group': 'indicator-group',
+             'indicator': 'indicator'
+         }},
+        {type: 'select',
+         name: 'breakdown',
+         label: 'Breakdown',
+         dimension: 'breakdown',
+         constraints: {
+             'breakdown-group': 'breakdown-group',
+             'time-period': 'time-period',
+             'indicator-group': 'indicator-group',
+             'indicator': 'indicator'
+         }},
+        {type: 'select',
+         name: 'unit-measure',
+         label: 'Unit of measure',
+         dimension: 'unit-measure',
+         constraints: {
+             'breakdown-group': 'breakdown-group',
+             'breakdown': 'breakdown',
+             'time-period': 'time-period',
+             'indicator-group': 'indicator-group',
+             'indicator': 'indicator'
+         }},
+        {type: 'multiple_select',
+         name: 'countries',
+         label: 'Country / Countries',
+         dimension: 'ref-area',
+         default_all: true,
+         position: '.right_column',
+         constraints: {
+             'unit-measure': 'unit-measure',
+             'breakdown-group': 'breakdown-group',
+             'breakdown': 'breakdown',
+             'time-period': 'time-period',
+             'indicator-group': 'indicator-group',
+             'indicator': 'indicator'
+         }}
+    ],
+    annotations: {
+        'description': {
+            source: '/dimension_value_metadata',
+            title: 'Label x-axis',
+            filters: [{name: 'indicator', part: 'label'},
+                      {name: 'breakdown', part: 'label'}]
+        }
+    }
+};
 
 
 App.scenario5_initialize = function() {
