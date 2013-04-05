@@ -1,0 +1,2 @@
+<input type="hidden" name="configuration"
+       tal:attributes="value python:view.configuration" />

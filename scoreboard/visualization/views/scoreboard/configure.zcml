@@ -15,6 +15,7 @@
   <daviz:edit
     for="eea.app.visualization.interfaces.IVisualizationEnabled"
     name="scoreboard.highchart"
+    template="edit.pt"
     class=".edit.Edit"
     permission="eea.app.visualization.configure"
     title="Scoreboad View"
