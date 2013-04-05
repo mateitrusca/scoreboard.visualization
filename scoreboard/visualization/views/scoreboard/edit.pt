@@ -1,2 +1,13 @@
+<div tal:replace="structure python:view.jsapp_html()" />
+
 <input type="hidden" name="configuration"
        tal:attributes="value python:view.configuration" />
+
+<script>
+  (function($) {
+    $(document).ready(function() {
+      var form = $('form.daviz-view-form')[0];
+      App.create_editor(form);
+    });
+  })(App.jQuery);
+</script>

@@ -4,6 +4,8 @@ import json
 from zope.formlib.form import Fields
 from scoreboard.visualization.views.scoreboard.interfaces import IScoreboardEdit
 from eea.app.visualization.views.edit import EditForm
+from .view import jsapp_html_for_visualization
+
 
 class Edit(EditForm):
     """ Edit tabular view
@@ -15,6 +17,9 @@ class Edit(EditForm):
     @property
     def configuration(self):
         return self._data.get('configuration', '{}')
+
+    def jsapp_html(self):
+        return jsapp_html_for_visualization(self.context)
 
     def __call__(self, **kwargs):
         return self.index()
