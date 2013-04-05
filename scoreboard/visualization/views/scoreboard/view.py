@@ -8,6 +8,19 @@ from .interfaces import IScoreboardView
 from scoreboard.visualization import jsapp
 
 
+def jsapp_html_for_visualization(visualization):
+    for source in visualization.getRelatedItems():
+        if IDataCube.providedBy(source):
+            break
+    else:
+        return "No data source available"
+
+    cube = source.get_cube()
+    return jsapp.jsapp_html(DATASOURCE_URL=source.absolute_url(),
+                            SCENARIO_URL=visualization.absolute_url(),
+                            DATA_REVISION=cube.get_revision())
+
+
 class View(ViewForm):
     """ Tile view
     """
@@ -26,16 +39,5 @@ class View(ViewForm):
         return configuration.get('chart_entry_point',
                                  'App.scenario1_initialize')
 
-    def get_source(self):
-        for source in self.context.getRelatedItems():
-            if IDataCube.providedBy(source):
-                return source
-
     def jsapp_html(self):
-        source = self.get_source()
-        if source is None:
-            return "No data source available"
-        cube = source.get_cube()
-        return jsapp.jsapp_html(DATASOURCE_URL=source.absolute_url(),
-                                SCENARIO_URL = self.context.absolute_url(),
-                                DATA_REVISION=cube.get_revision())
+        return jsapp_html_for_visualization(self.context)
