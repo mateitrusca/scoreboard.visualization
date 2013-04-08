@@ -62,6 +62,10 @@ App.ScenarioChartView = Backbone.View.extend({
         var incomplete = false;
         var args = {};
         var groupby = this.datasource['groupby'];
+        var groupby_dimension = this.datasource['groupby_dimension'];
+        if (groupby) {
+            groupby_dimension = this.dimensions_mapping[groupby];
+        }
         var client_filter = this.datasource.client_filter;
         var requests = [];
         _(this.dimensions_mapping).each(function(dimension, filter_name) {
@@ -103,16 +107,31 @@ App.ScenarioChartView = Backbone.View.extend({
 
         var group_values = null;
 
-        if (groupby) {
-            group_values = this.model.get(groupby);
+
+        if (groupby_dimension) {
+            if (groupby){
+                group_values = this.model.get(groupby);
+            }
+            else {
+                var group_values_args = {
+                    'dimension': groupby_dimension,
+                    'rev': this.data_revision
+                };
+                $.ajaxSetup({async: false});
+                $.get(this.cube_url + '/dimension_values', group_values_args).done(
+                    function(data){
+                        group_values = _(data['options']).pluck('notation');
+                    }
+                );
+                $.ajaxSetup({async: true});
+            }
             requests = _(group_values).map(function(value) {
-                var dimension = this.dimensions_mapping[groupby];
-                args[dimension] = value;
+                args[groupby_dimension] = value;
                 return $.get(this.cube_url + this.datasource['rel_url'], args);
             }, this);
 
             var labels_args = {
-                'dimension': this.dimensions_mapping[groupby],
+                'dimension': groupby_dimension,
                 'rev': this.data_revision
             };
             var labels_request = $.get(this.cube_url + '/dimension_values', labels_args);
