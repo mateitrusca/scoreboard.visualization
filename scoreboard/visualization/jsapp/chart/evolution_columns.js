@@ -20,13 +20,12 @@ function get_tick_data(input){
 
 App.get_snapshots = function(series){
     var mapping = {};
-    _(_(series).max(
+    _(series).each(
         function(item){
-            return item['data'].length;
-        }
-    )['data']).map(function(item){
-        mapping[item["ref-area"]] = item['ref-area-label']
-    });
+            _(item['data']).each(function(item){
+                mapping[item["ref-area"]] = item['ref-area-label']
+            });
+        });
     var out = _(series).map(
         function(item){
             var notations = [];

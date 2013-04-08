@@ -42,6 +42,44 @@ describe('TimeSnapshotsExtraction', function() {
         ]);
     })
 
+    it('should build a notation to label mapping', function(){
+        var series = [
+            {data: [
+                {
+                    "ref-area": "AT",
+                    "ref-area-label": "Austria",
+                    "value": 0.1
+                }],
+             label:'2000'},
+            {data: [
+                {
+                    "ref-area": "AT",
+                    "ref-area-label": "Austria",
+                    "value": 0.2
+                },
+                {
+                    "ref-area": "BE",
+                    "ref-area-label": "Belgium",
+                    "value": 0.3
+                }],
+             label:'2001'},
+            {data: [
+                {
+                    "ref-area": "AT",
+                    "ref-area-label": "Austria",
+                    "value": 0.3
+                }],
+             label:'2002'},
+        ];
+        var result = App.get_snapshots(series);
+        expect(result.mapping).to.deep.equal(
+            {
+                'AT': 'Austria',
+                'BE': 'Belgium'
+            }
+        );
+    });
+
 });
 
 describe('ScenarioChartViewParameters', function() {
