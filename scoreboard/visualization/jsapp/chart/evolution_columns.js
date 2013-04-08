@@ -10,7 +10,7 @@ var na_bar_color = "#DDDDDD";
 
 var t = -1;
 function get_tick_data(input){
-    input = _(input).sortBy('label').sort();
+    input = _(input).sortBy('label');
     t += 1;
     if (t >= input.length) { t = 0; }
     var data = _(input).pluck('data');
@@ -18,6 +18,28 @@ function get_tick_data(input){
     return out
 };
 
+function get_snapshots(series, x_series){
+    var out = _(series).map(
+            function(item){
+                var notations = [];
+                if(item['data'].length != 0){
+                    notations = _(item['data']).pluck('ref-area');
+                }
+                var diff = _.difference(_(x_series).keys(), notations);
+                var data = item['data'];
+                _(diff).each(function(notation){
+                    this['data'].push({
+                        'ref-area': notation,
+                        'ref-area-label': x_series[notation] + '(N/A)',
+                        'value': 'n/a'
+                    });
+                }, item);
+                return { 'label': item['label'],
+                         'data': _(data).sortBy('ref-area') }
+            }
+        );
+    return _(out).sortBy('label');
+}
 
 App.chart_library['evolution_columns'] = function(container, options, meta_data) {
     var x_series = {};
@@ -28,27 +50,9 @@ App.chart_library['evolution_columns'] = function(container, options, meta_data)
     )['data']).map(function(item){
         x_series[item["ref-area"]] = item['ref-area-label']
     });
-    var time_snapshots = _(options['series']).filter(
-        function(item){
-            if(item['data'].length != 0){
-                var notations = _(item['data']).pluck('ref-area');
-                var diff = _.difference(_(x_series).keys(), notations);
-                var data = item['data'];
-                _(diff).each(function(notation){
-                    this['data'].push({
-                        'ref-area': notation + ('N/A'),
-                        'ref-area-label': x_series[notation],
-                        'value': 'n/a'
-                    });
-                }, item);
-                return { 'label': item['label'],
-                         'data': _(data).sortBy('ref-area') }
-            }
-        }
-    );
-    time_snapshots = _(time_snapshots).sortBy('label');
+    var time_snapshots = get_snapshots(options['series'], x_series);
     var series = time_snapshots[0]['data'];
-    var country_names = _(series).pluck('ref-area-label');
+    var country_names = _(x_series).values().sort();
     var values = _(series).map(
         function(item){
             var result = item['value'] * 100;
@@ -80,7 +84,8 @@ App.chart_library['evolution_columns'] = function(container, options, meta_data)
                             }
                             else{
                                 var color = bar_color;
-                                if (x_series['EU27'] == this.series[0].data[n].category){
+                                var current_label = this.series[0].data[n].category;
+                                if (x_series['EU27'] == current_label){
                                     color = special_bar_color;
                                 };
                                 this.series[0].data[n].update(
