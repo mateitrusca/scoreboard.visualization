@@ -15,18 +15,32 @@ describe('TimeSnapshotsExtraction', function() {
                     }],
              label:'2001'},
         ];
-        this.x_series = {'AT': 'Austria'}
     });
 
     it('should return an array of snapshots', function(){
-        var result = App.get_snapshots(this.series, this.x_series);
-        expect(result.length).to.equal(2);
+        var result = App.get_snapshots(this.series);
+        expect(result['data'].length).to.equal(2);
+        expect(result['mapping']).to.deep.equal({
+            'AT': 'Austria'
+        });
     });
 
     it('should sort the output by label', function(){
-        var result = App.get_snapshots(this.series, this.x_series);
-        expect(_(result).pluck('label')).to.deep.equal(['2000', '2001']);
+        var result = App.get_snapshots(this.series);
+        expect(_(result.data).pluck('label')).to.deep.equal(['2000', '2001']);
     });
+
+    it('should return an array of data for each year', function(){
+        var result = App.get_snapshots(this.series);
+        expect(_(result.data).pluck('data')).to.deep.equal([
+            [{'ref-area': 'AT',
+             'ref-area-label': 'Austria',
+             'value': 'n/a'}],
+            [{'ref-area': 'AT',
+             'ref-area-label': 'Austria',
+             'value': 0.4808}]
+        ]);
+    })
 
 });
 

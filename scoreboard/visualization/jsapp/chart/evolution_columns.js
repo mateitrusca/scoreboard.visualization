@@ -18,41 +18,42 @@ function get_tick_data(input){
     return out
 };
 
-App.get_snapshots = function(series, x_series){
-    var out = _(series).map(
-            function(item){
-                var notations = [];
-                if(item['data'].length != 0){
-                    notations = _(item['data']).pluck('ref-area');
-                }
-                var diff = _.difference(_(x_series).keys(), notations);
-                var data = item['data'];
-                _(diff).each(function(notation){
-                    this['data'].push({
-                        'ref-area': notation,
-                        'ref-area-label': x_series[notation] + '(N/A)',
-                        'value': 'n/a'
-                    });
-                }, item);
-                return { 'label': item['label'],
-                         'data': _(data).sortBy('ref-area') }
-            }
-        );
-    return _(out).sortBy('label');
-}
-
-App.chart_library['evolution_columns'] = function(container, options, meta_data) {
-    var x_series = {};
-    _(_(options['series']).max(
+App.get_snapshots = function(series){
+    var mapping = {};
+    _(_(series).max(
         function(item){
             return item['data'].length;
         }
     )['data']).map(function(item){
-        x_series[item["ref-area"]] = item['ref-area-label']
+        mapping[item["ref-area"]] = item['ref-area-label']
     });
-    var time_snapshots = App.get_snapshots(options['series'], x_series);
-    var series = time_snapshots[0]['data'];
-    var country_names = _(x_series).values().sort();
+    var out = _(series).map(
+        function(item){
+            var notations = [];
+            if(item['data'].length != 0){
+                notations = _(item['data']).pluck('ref-area');
+            }
+            var diff = _.difference(_(mapping).keys(), notations);
+            var data = item['data'];
+            _(diff).each(function(notation){
+                this['data'].push({
+                    'ref-area': notation,
+                    'ref-area-label': mapping[notation],
+                    'value': 'n/a'
+                });
+            }, item);
+            return { 'label': item['label'],
+                     'data': _(data).sortBy('ref-area') }
+        }
+    );
+    return _.object(['data', 'mapping'],
+                    [_(out).sortBy('label'), mapping]);
+}
+
+App.chart_library['evolution_columns'] = function(container, options, meta_data) {
+    var time_snapshots = App.get_snapshots(options['series']);
+    var series = time_snapshots.data[0]['data'];
+    var country_names = _(time_snapshots.mapping).values().sort();
     var values = _(series).map(
         function(item){
             var result = item['value'] * 100;
@@ -74,7 +75,7 @@ App.chart_library['evolution_columns'] = function(container, options, meta_data)
             events: {
                 load: function() {
                     var morph = _.bind(function(){
-                        _(get_tick_data(time_snapshots)).each(function(value, n){
+                        _(get_tick_data(time_snapshots.data)).each(function(value, n){
                             if (isNaN(value)){
                                 this.series[0].data[n].update(
                                     { color: na_bar_color },
@@ -85,7 +86,7 @@ App.chart_library['evolution_columns'] = function(container, options, meta_data)
                             else{
                                 var color = bar_color;
                                 var current_label = this.series[0].data[n].category;
-                                if (x_series['EU27'] == current_label){
+                                if (time_snapshots.mapping['EU27'] == current_label){
                                     color = special_bar_color;
                                 };
                                 this.series[0].data[n].update(
@@ -96,7 +97,7 @@ App.chart_library['evolution_columns'] = function(container, options, meta_data)
                                 );
                             }
                         }, this);
-                        this.setTitle(null, {text: time_snapshots[t]['label']});
+                        this.setTitle(null, {text: time_snapshots.data[t]['label']});
                         this.redraw();
                     }, this);
                     setInterval(morph, 1000);
