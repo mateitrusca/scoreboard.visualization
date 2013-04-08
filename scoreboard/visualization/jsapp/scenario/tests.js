@@ -1,6 +1,34 @@
 /*global App, Backbone, describe, beforeEach, afterEach, it, expect, sinon */
 /*jshint sub:true */
 
+describe('TimeSnapshotsExtraction', function() {
+    "use strict";
+
+    beforeEach(function(){
+        this.series = [
+            {data: [],
+             label:'2000'},
+            {data: [{
+                        "ref-area": "AT",
+                        "ref-area-label": "Austria",
+                        "value": 0.4808
+                    }],
+             label:'2001'},
+        ];
+        this.x_series = {'AT': 'Austria'}
+    });
+
+    it('should return an array of snapshots', function(){
+        var result = App.get_snapshots(this.series, this.x_series);
+        expect(result.length).to.equal(2);
+    });
+
+    it('should sort the output by label', function(){
+        var result = App.get_snapshots(this.series, this.x_series);
+        expect(_(result).pluck('label')).to.deep.equal(['2000', '2001']);
+    });
+
+});
 
 describe('ScenarioChartViewParameters', function() {
     "use strict";

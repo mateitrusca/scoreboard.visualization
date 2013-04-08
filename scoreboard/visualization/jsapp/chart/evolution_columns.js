@@ -1,14 +1,14 @@
 /*global App, _, Highcharts */
 /*jshint sub:true */
 
-var bar_color = "#7FB2F0";
-var special_bar_color = "#35478C";
-var na_bar_color = "#DDDDDD";
-
 (function() {
 "use strict";
 
 var t = -1;
+var bar_color = "#7FB2F0";
+var special_bar_color = "#35478C";
+var na_bar_color = "#DDDDDD";
+
 function get_tick_data(input){
     input = _(input).sortBy('label');
     t += 1;
@@ -18,7 +18,7 @@ function get_tick_data(input){
     return out
 };
 
-function get_snapshots(series, x_series){
+App.get_snapshots = function(series, x_series){
     var out = _(series).map(
             function(item){
                 var notations = [];
@@ -50,7 +50,7 @@ App.chart_library['evolution_columns'] = function(container, options, meta_data)
     )['data']).map(function(item){
         x_series[item["ref-area"]] = item['ref-area-label']
     });
-    var time_snapshots = get_snapshots(options['series'], x_series);
+    var time_snapshots = App.get_snapshots(options['series'], x_series);
     var series = time_snapshots[0]['data'];
     var country_names = _(x_series).values().sort();
     var values = _(series).map(
