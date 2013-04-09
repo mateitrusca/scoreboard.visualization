@@ -99,7 +99,8 @@ App.chart_library['evolution_columns'] = function(container, options, meta_data)
                         this.setTitle(null, {text: time_snapshots.data[t]['label']});
                         this.redraw();
                     }, this);
-                    setInterval(morph, 1000);
+                    clearInterval(window.interval_set);
+                    window.interval_set = setInterval(morph, 1000);
                 }
             }
         },
