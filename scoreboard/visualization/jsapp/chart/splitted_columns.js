@@ -71,7 +71,8 @@ App.chart_library['splitted_columns'] = function(container, options, meta_data) 
             }
         },
         legend: {
-            enabled:false
+            enabled: true,
+            layout: "vertical"
         },
         tooltip: {
             formatter: options['tooltip_formatter']
