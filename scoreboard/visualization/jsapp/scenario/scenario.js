@@ -218,7 +218,6 @@ App.AnnotationsView = Backbone.View.extend({
                 args['rev'] = this.data_revision;
                 requests.push(
                     $.get(this.cube_url + source, args, function(resp) {
-                        console.log(resp);
                         data.push(resp);
                     })
                 );
