@@ -523,7 +523,8 @@ describe('AnnotationsView', function() {
             model: this.model,
             field: 'indicator',
             schema: {
-                filters: [{name: 'indicator', dimension: 'dim1'}],
+                filters: [{name: 'indicator', dimension: 'dim1'},
+                          {name: 'unit-measure', dimension: 'dim2'}],
                 annotations: {
                     'ind1': {
                         title: 'meta_title',
@@ -538,14 +539,15 @@ describe('AnnotationsView', function() {
         var template = this.sandbox.spy(view, 'template');
 
         var data_indicator = {
-          "definition": "definition",
-          "label": "label_indicator",
-          "note": "note",
-          "short_label": "short_label"
-        }
-        expect(server.requests[0].url).to.equal(
-                '/test_view?dimension=dim1&value=ind1&rev=one'
-        );
+            definition: "definition",
+            label: "label",
+            note: "note",
+            short_label: "short label",
+            source_definition: "source definition",
+            source_label: "source label",
+            source_notes: "source notes",
+            source_url: "http://source/url/"
+        };
         App.respond_json(server.requests[0], data_indicator);
 
         var data_unit = {
@@ -555,15 +557,7 @@ describe('AnnotationsView', function() {
           "short_label": "short_label"
         }
         App.respond_json(server.requests[1], data_unit);
-        var data = {'blocks': [
-            {
-                'title': 'meta_title',
-                'info': [
-                    data_indicator['label'],
-                    data_unit['note']
-                ]
-            }
-        ]}
+        var data = {'blocks': [data_indicator, data_unit]}
         expect(template.calledOnce).to.equal(true);
         expect(template.getCall(0).args[0]['blocks']).to.deep.equal(data['blocks']);
     });
@@ -616,20 +610,7 @@ describe('AnnotationsView', function() {
         App.respond_json(server.requests[0], data_1);
         App.respond_json(server.requests[1], data_2);
 
-        var data = {'blocks': [
-            {
-                'title': data_1['title'],
-                'info':[
-                    data_1['label']
-                ]
-            },
-            {
-                'title': data_2['title'],
-                'info':[
-                    data_2['label']
-                ]
-            }
-        ]};
+        var data = {'blocks': [data_1, data_2]};
 
         expect(template.calledOnce).to.equal(true);
         expect(template.getCall(0).args[0]['blocks']).to.deep.equal(data['blocks']);

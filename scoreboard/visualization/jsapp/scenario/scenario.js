@@ -208,7 +208,6 @@ App.AnnotationsView = Backbone.View.extend({
         _(this.schema['annotations']).map(function(item, key) {
             var source = item['source'];
             var filters = item['filters'];
-            var info_block = {};
             _(filters).map(function(filter) {
                 var args = {};
                 args['dimension'] = this.dimensions_mapping[filter.name];
@@ -217,15 +216,12 @@ App.AnnotationsView = Backbone.View.extend({
                     return;
                 }
                 args['rev'] = this.data_revision;
-                info_block['title'] = item['title'];
                 requests.push(
                     $.get(this.cube_url + source, args, function(resp) {
-                        info_block['info'] = info_block['info'] || [];
-                        info_block['info'].push(resp[filter.part]);
+                        data.push(resp);
                     })
                 );
             }, this);
-            data.push(info_block);
         }, this);
         var ajax_calls = $.when.apply($, requests);
         ajax_calls.done(_.bind(function() {
