@@ -228,6 +228,7 @@ App.AnnotationsView = Backbone.View.extend({
             if(data != []) {
                 this.$el.html(this.template(
                     {"description": this.description.html(),
+                     "indicators_details_url": this.cube_url + '/indicators',
                      "blocks": data}
                 ));
             }
