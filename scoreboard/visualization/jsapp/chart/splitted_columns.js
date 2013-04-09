@@ -80,6 +80,7 @@ App.chart_library['splitted_columns'] = function(container, options, meta_data) 
         series: series
     };
 
+    console.log(chartOptions);
     var chart = new Highcharts.Chart(chartOptions);
 };
 
