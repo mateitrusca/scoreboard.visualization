@@ -113,10 +113,10 @@ App.ScenarioChartView = Backbone.View.extend({
                 group_values = this.model.get(groupby);
             }
             else {
-                var group_values_args = {
+                var group_values_args = _(_(args).omit('fields')).extend({
                     'dimension': groupby_dimension,
                     'rev': this.data_revision
-                };
+                });
                 $.ajaxSetup({async: false});
                 $.get(this.cube_url + '/dimension_values', group_values_args).done(
                     function(data){
