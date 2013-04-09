@@ -25,6 +25,18 @@
     file="./js/edit.js"
    />
 
+  <browser:resource
+    name="scoreboard.visualization.datacube-indicators.js"
+    file="./js/datacube-indicators.js"
+   />
+
+  <browser:page
+    name="indicators"
+    for="edw.datacube.interfaces.IDataCube"
+    permission="zope2.View"
+    template="templates/indicators.pt"
+    />
+
   <browser:page
     name="scoreboard_jsapp_unit_tests"
     for="Products.CMFPlone.interfaces.siteroot.IPloneSiteRoot"
