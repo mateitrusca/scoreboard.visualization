@@ -189,6 +189,10 @@ App.GraphControlsView = Backbone.View.extend({
 
     template: App.get_template('scenario/graph_controls.html'),
 
+    events: {
+        'click #check': 'on_auto_change'
+    },
+
     initialize: function(options) {
         this.chart = options['chart']
         _(this.chart).extend(Backbone.Events);
@@ -197,11 +201,19 @@ App.GraphControlsView = Backbone.View.extend({
         this.chart.on('redraw', _.bind(function(t){
             this.model.set('value', this.range.min + t);
         }, this));
-        this.model.set('value', this.range.min);
+        this.model.set({'value': this.range.min,
+                        'auto': true});
+    },
+
+    on_auto_change: function() {
+        var prev = this.model.get('auto');
+        this.model.set('auto', !prev);
     },
 
     render: function() {
-        this.$el.html(this.template());
+        this.$el.html(this.template(
+            { 'auto': this.model.get('auto') }
+        ));
         App.plone_jQuery( "#slider" ).slider({
           orientation: "vertical",
           value: this.model.get('value'),
@@ -213,6 +225,7 @@ App.GraphControlsView = Backbone.View.extend({
           }
         });
         App.plone_jQuery( "#year" ).val( App.plone_jQuery( "#slider" ).slider( "value" ) );
+        //App.plone_jQuery( "#check" ).button();
     }
 });
 
