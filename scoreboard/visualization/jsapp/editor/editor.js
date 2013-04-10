@@ -50,7 +50,10 @@ App.Editor = Backbone.View.extend({
     },
 
     render: function() {
-        this.$el.html(this.template({steps: this.all_steps}));
+        this.$el.html(this.template({
+            step: this.step,
+            all_steps: this.all_steps
+        }));
         this.$el.append(this.step.el);
     },
 

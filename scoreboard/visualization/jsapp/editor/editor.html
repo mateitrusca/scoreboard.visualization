@@ -15,6 +15,9 @@
     text-decoration: none;
     font-size: 16px;
   }
+  .editor-box h4 {
+    margin-left: 200px;
+  }
   .editor-current-step {
     margin-left: 200px;
   }
@@ -22,8 +25,10 @@
 
 <div class="editor-steps">
   <ul>
-  {{# steps }}
+  {{# all_steps }}
     <li><a href="#" data-step-cid="{{ cid }}">{{ title }}</a></li>
-  {{/ steps }}
+  {{/ all_steps }}
   </ul>
 </div>
+
+<h4>{{ step.title }}</h4>
