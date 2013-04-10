@@ -1,6 +1,6 @@
 """ Edit
 """
-import json
+import simplejson as json
 from zope.formlib.form import Fields
 from scoreboard.visualization.views.scoreboard.interfaces import IScoreboardEdit
 from eea.app.visualization.views.edit import EditForm
@@ -22,4 +22,8 @@ class Edit(EditForm):
         return jsapp_html_for_visualization(self.context)
 
     def __call__(self, **kwargs):
+        if self.request.method == 'POST':
+            cfg = json.loads(self.request.form['configuration'])
+            cfg_json = json.dumps(cfg, indent=2, sort_keys=True)
+            self._data['configuration'] = cfg_json
         return self.index()

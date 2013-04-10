@@ -34,10 +34,8 @@ class View(ViewForm):
         return self.data.get('title', '') or self._label
 
     @property
-    def entry_point(self):
-        configuration = json.loads(self.data.get('configuration', '{}'))
-        return configuration.get('chart_entry_point',
-                                 'App.scenario1_initialize')
+    def config(self):
+        return self.data.get('configuration', '{}')
 
     def jsapp_html(self):
         return jsapp_html_for_visualization(self.context)

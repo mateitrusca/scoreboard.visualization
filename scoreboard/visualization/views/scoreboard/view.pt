@@ -5,7 +5,9 @@
 
     <div id="scenario-box"></div>
 
-    <script tal:content="structure string:$(document).ready(${view/entry_point});" />
+    <script tal:content="structure string:
+        App.chart_config = ${view/config};
+        $$(document).ready(App.main);" />
 
   </div>
 </div>

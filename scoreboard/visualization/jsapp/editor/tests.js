@@ -13,6 +13,12 @@ describe('ChartTypeEditor', function() {
         expect(model.get('chart_type')).to.equal('columns');
     });
 
+    it('should preselect current value', function() {
+        var model = new Backbone.Model({chart_type: 'columns'});
+        var editor = new App.ChartTypeEditor({model: model});
+        expect(editor.$el.find(':checked').val()).to.equal('columns');
+    });
+
 });
 
 
