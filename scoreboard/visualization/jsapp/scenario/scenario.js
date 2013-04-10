@@ -197,7 +197,10 @@ App.GraphControlsView = Backbone.View.extend({
     initialize: function(options) {
         this.chart = options['chart']
         _(this.chart).extend(Backbone.Events);
+        this.snapshots_data = options['snapshots_data'];
+        this.extract_snapshot = options['extract_snapshot'];
         this.range = options['range'];
+        this.update_chart = options['update_chart'];
         this.interval = options['interval'];
         this.model.on('change', this.render, this);
         this.chart.on('redraw', _.bind(function(t){
@@ -214,7 +217,13 @@ App.GraphControlsView = Backbone.View.extend({
     },
 
     on_value_change: function() {
-        this.model.set('value', App.plone_jQuery( "#slider" ).slider( "value" ));
+        if (!this.model.get('auto')){
+            this.model.set('value', App.plone_jQuery( "#slider" ).slider( "value" ));
+            var moment = this.model.get('value') - this.range.min - 1;
+            var data = this.extract_snapshot(this.snapshots_data, moment)
+            this.update_chart(this.chart, data, moment);
+            this.chart.redraw();
+        }
     },
 
     render: function() {
