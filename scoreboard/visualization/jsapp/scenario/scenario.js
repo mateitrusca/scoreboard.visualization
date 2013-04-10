@@ -185,6 +185,80 @@ App.ScenarioChartView = Backbone.View.extend({
 });
 
 
+App.GraphControlsView = Backbone.View.extend({
+
+    template: App.get_template('scenario/graph_controls.html'),
+
+    events: {
+        'click #check': 'on_auto_change',
+        'mouseup #slider': 'on_value_change'
+    },
+
+    initialize: function(options) {
+        this.chart = options['chart']
+        _(this.chart).extend(Backbone.Events);
+        this.snapshots_data = options['snapshots_data'];
+        this.extract_snapshot = options['extract_snapshot'];
+        this.range = options['range'];
+        this.update_chart = options['update_chart'];
+        this.interval = options['interval'];
+        this.model.on('change', this.render, this);
+        this.chart.on('redraw', _.bind(function(t){
+            this.model.set('value', this.range.min + t);
+        }, this));
+        this.model.set({'value': this.range.min,
+                        'auto': true});
+    },
+
+    on_auto_change: function() {
+        var prev = this.model.get('auto');
+        if (prev){
+            clearInterval(this.interval);
+        }
+        else{
+            this.interval = setInterval(
+                    _.bind(function() {
+                        var data = this.extract_snapshot(this.snapshots_data);
+                        this.update_chart(this.chart, data);
+                     }, this), 1000);
+            window.interval_set = this.interval;
+        }
+        this.model.set('auto', !prev);
+    },
+
+    on_value_change: function() {
+        if (!this.model.get('auto')){
+            this.model.set('value', App.plone_jQuery( "#slider" ).slider( "value" ));
+            var moment = this.model.get('value') - this.range.min - 1;
+            var data = this.extract_snapshot(this.snapshots_data, moment)
+            this.update_chart(this.chart, data, moment);
+            this.chart.redraw();
+        }
+    },
+
+    render: function() {
+        this.$el.html(this.template(
+            { 'auto': this.model.get('auto') }
+        ));
+        App.plone_jQuery( "#slider" ).slider({
+          orientation: "vertical",
+          value: this.model.get('value'),
+          min: this.range.min,
+          max: this.range.max,
+          step: 1,
+          slide: function( event, ui ) {
+            App.plone_jQuery( "#year" ).val( ui.value );
+          }
+        });
+        App.plone_jQuery( "#year" ).val( App.plone_jQuery( "#slider" ).slider( "value" ) );
+        if (this.model.get('auto')){
+            App.plone_jQuery( "#slider" ).slider('disable');
+        }
+        //App.plone_jQuery( "#check" ).button();
+    }
+});
+
+
 App.AnnotationsView = Backbone.View.extend({
 
     template: App.get_template('scenario/metadata.html'),

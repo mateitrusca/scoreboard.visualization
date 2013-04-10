@@ -9,10 +9,15 @@ var bar_color = "#7FB2F0";
 var special_bar_color = "#35478C";
 var na_bar_color = "#DDDDDD";
 
-function get_tick_data(input){
-    input = _(input).sortBy('label');
-    t += 1;
+function get_tick_data(input, moment){
+    if (!moment) {
+        t += 1;
+    }
+    else{
+        t = moment;
+    }
     if (t >= input.length) { t = 0; }
+    input = _(input).sortBy('label');
     var data = _(input).pluck('data');
     var out = _(data[t]).pluck('value');
     return out
@@ -65,42 +70,56 @@ App.chart_library['evolution_columns'] = function(container, options, meta_data)
             }
     });
 
+    var morph = function(chart, data, moment){
+        if (moment){
+            t = moment;
+        }
+        _(data).each(function(value, n){
+            if (isNaN(value)){
+                chart.series[0].data[n].update(
+                    { color: na_bar_color },
+                    false,
+                    {duration: 950, easing: 'linear'}
+                )
+            }
+            else{
+                var color = bar_color;
+                var current_label = chart.series[0].data[n].category;
+                if (time_snapshots.mapping['EU27'] == current_label){
+                    color = special_bar_color;
+                };
+                chart.series[0].data[n].update(
+                    { "color": color,
+                      "y": value * 100 },
+                    false,
+                    {duration: 950, easing: 'linear'}
+                );
+            }
+        });
+        chart.setTitle(null, {text: time_snapshots.data[t]['label']});
+        if (!moment){
+            chart.redraw();
+        }
+    };
+
     var chartOptions = {
         chart: {
             zoomType: 'y',
             renderTo: container,
             defaultSeriesType: 'column',
             marginBottom: 150,
+            marginRight: 80,
             events: {
+                redraw: function(){
+                    chart.trigger('redraw', t+1);
+                },
                 load: function() {
-                    var morph = _.bind(function(){
-                        _(get_tick_data(time_snapshots.data)).each(function(value, n){
-                            if (isNaN(value)){
-                                this.series[0].data[n].update(
-                                    { color: na_bar_color },
-                                    false,
-                                    {duration: 950, easing: 'linear'}
-                                )
-                            }
-                            else{
-                                var color = bar_color;
-                                var current_label = this.series[0].data[n].category;
-                                if (time_snapshots.mapping['EU27'] == current_label){
-                                    color = special_bar_color;
-                                };
-                                this.series[0].data[n].update(
-                                    { "color": color,
-                                      "y": value * 100 },
-                                    false,
-                                    {duration: 950, easing: 'linear'}
-                                );
-                            }
-                        }, this);
-                        this.setTitle(null, {text: time_snapshots.data[t]['label']});
-                        this.redraw();
-                    }, this);
                     clearInterval(window.interval_set);
-                    window.interval_set = setInterval(morph, 1000);
+                    window.interval_set = setInterval(
+                            _.bind(function() {
+                                var data = get_tick_data(time_snapshots.data);
+                                morph(this, data);
+                             }, this), 1000);
                 }
             }
         },
@@ -171,7 +190,31 @@ App.chart_library['evolution_columns'] = function(container, options, meta_data)
         ]
     };
 
-    var chart = new Highcharts.Chart(chartOptions);
+    var chart = new Highcharts.Chart(chartOptions, function(chart){
+        $("<div id='the-chart-controls'>").css({
+             width: 20,
+             maxHeight: 400,
+             padding: 10,
+             position: 'absolute',
+             overflow: 'visible',
+             right: 10,
+             top: 40
+        }).appendTo(chart.container)
+
+    });
+
+    var slider_values = _(options['group_labels']).keys().sort();
+    var chart_controls = new App.GraphControlsView({
+        el: $('#the-chart-controls', chart.container),
+        model: new Backbone.Model(),
+        chart: chart,
+        update_chart: morph,
+        snapshots_data: time_snapshots.data,
+        extract_snapshot: get_tick_data,
+        interval: window.interval_set,
+        range: _.object( [['min', parseInt(slider_values[0])],
+                         ['max', parseInt(_(slider_values).last())]] )
+    });
 };
 
 })();
