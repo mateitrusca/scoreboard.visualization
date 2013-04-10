@@ -65,6 +65,33 @@ App.chart_library['evolution_columns'] = function(container, options, meta_data)
             }
     });
 
+    var morph = function(chart, data){
+        _(data).each(function(value, n){
+            if (isNaN(value)){
+                chart.series[0].data[n].update(
+                    { color: na_bar_color },
+                    false,
+                    {duration: 950, easing: 'linear'}
+                )
+            }
+            else{
+                var color = bar_color;
+                var current_label = chart.series[0].data[n].category;
+                if (time_snapshots.mapping['EU27'] == current_label){
+                    color = special_bar_color;
+                };
+                chart.series[0].data[n].update(
+                    { "color": color,
+                      "y": value * 100 },
+                    false,
+                    {duration: 950, easing: 'linear'}
+                );
+            }
+        });
+        chart.setTitle(null, {text: time_snapshots.data[t]['label']});
+        chart.redraw();
+    };
+
     var chartOptions = {
         chart: {
             zoomType: 'y',
@@ -77,34 +104,12 @@ App.chart_library['evolution_columns'] = function(container, options, meta_data)
                     chart.trigger('redraw', t+1);
                 },
                 load: function() {
-                    var morph = _.bind(function(){
-                        _(get_tick_data(time_snapshots.data)).each(function(value, n){
-                            if (isNaN(value)){
-                                this.series[0].data[n].update(
-                                    { color: na_bar_color },
-                                    false,
-                                    {duration: 950, easing: 'linear'}
-                                )
-                            }
-                            else{
-                                var color = bar_color;
-                                var current_label = this.series[0].data[n].category;
-                                if (time_snapshots.mapping['EU27'] == current_label){
-                                    color = special_bar_color;
-                                };
-                                this.series[0].data[n].update(
-                                    { "color": color,
-                                      "y": value * 100 },
-                                    false,
-                                    {duration: 950, easing: 'linear'}
-                                );
-                            }
-                        }, this);
-                        this.setTitle(null, {text: time_snapshots.data[t]['label']});
-                        this.redraw();
-                    }, this);
                     clearInterval(window.interval_set);
-                    window.interval_set = setInterval(morph, 1000);
+                    window.interval_set = setInterval(
+                            _.bind(function() {
+                                var data = get_tick_data(time_snapshots.data);
+                                morph(this, data);
+                             }, this), 1000);
                 }
             }
         },
