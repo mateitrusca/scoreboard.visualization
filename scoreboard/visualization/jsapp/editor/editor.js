@@ -48,8 +48,7 @@ App.Editor = Backbone.View.extend({
     },
 
     step_cls: [
-        'ChartTypeEditor',
-        'FiltersEditor'
+        'ChartTypeEditor'
     ],
 
     initialize: function(options) {
