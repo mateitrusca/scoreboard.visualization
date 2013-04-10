@@ -71,7 +71,7 @@ App.chart_library['evolution_columns'] = function(container, options, meta_data)
             renderTo: container,
             defaultSeriesType: 'column',
             marginBottom: 150,
-            marginRight: 150,
+            marginRight: 80,
             events: {
                 redraw: function(){
                     chart.trigger('redraw', t+1);
@@ -177,13 +177,13 @@ App.chart_library['evolution_columns'] = function(container, options, meta_data)
 
     var chart = new Highcharts.Chart(chartOptions, function(chart){
         $("<div id='the-chart-controls'>").css({
-             width: 110,
-             maxHeight: 210,
+             width: 20,
+             maxHeight: 400,
              padding: 10,
              position: 'absolute',
              overflow: 'visible',
              right: 10,
-             top: 100
+             top: 40
         }).appendTo(chart.container)
 
     });

@@ -203,6 +203,7 @@ App.GraphControlsView = Backbone.View.extend({
     render: function() {
         this.$el.html(this.template());
         App.plone_jQuery( "#slider" ).slider({
+          orientation: "vertical",
           value: this.model.get('value'),
           min: this.range.min,
           max: this.range.max,
