@@ -71,6 +71,7 @@ App.chart_library['evolution_columns'] = function(container, options, meta_data)
             renderTo: container,
             defaultSeriesType: 'column',
             marginBottom: 150,
+            marginRight: 150,
             events: {
                 load: function() {
                     var morph = _.bind(function(){
@@ -171,7 +172,20 @@ App.chart_library['evolution_columns'] = function(container, options, meta_data)
         ]
     };
 
-    var chart = new Highcharts.Chart(chartOptions);
+    var chart = new Highcharts.Chart(chartOptions, function(chart){
+        $("<div id='the-chart-controls'>").css({
+             width: 110,
+             maxHeight: 210,
+             padding: 10,
+             position: 'absolute',
+             overflow: 'visible',
+             right: 10,
+             top: 100
+        }).appendTo(chart.container)
+        var chart_controls = new App.GraphControlsView({
+            el: $('#the-chart-controls', chart.container)
+        });
+    });
 };
 
 })();

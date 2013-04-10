@@ -53,10 +53,6 @@ App.Visualization = Backbone.View.extend({
             scenario_chart: App.chart_library[options['schema']['chart_type']]
         });
 
-        this.chart_controls = new App.GraphControlsView({
-            el: this.$el.find('#the-chart-controls')
-        });
-
         Backbone.history.start();
 
     }

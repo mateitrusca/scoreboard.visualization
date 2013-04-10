@@ -205,7 +205,7 @@ App.GraphControlsView = Backbone.View.extend({
             App.plone_jQuery( "#year" ).val( ui.value );
           }
         });
-        App.plone_jQuery( "#year" ).val( $( "#slider" ).slider( "value" ) );
+        App.plone_jQuery( "#year" ).val( App.plone_jQuery( "#slider" ).slider( "value" ) );
     }
 });
 
