@@ -190,6 +190,7 @@ App.GraphControlsView = Backbone.View.extend({
     template: App.get_template('scenario/graph_controls.html'),
 
     initialize: function(options) {
+        this.range = options['range'];
         this.model.on('change', this.render, this);
         this.render();
     },
@@ -197,9 +198,9 @@ App.GraphControlsView = Backbone.View.extend({
     render: function() {
         this.$el.html(this.template());
         App.plone_jQuery( "#slider" ).slider({
-          value:2000,
-          min: 2000,
-          max: 2013,
+          value: this.range.min,
+          min: this.range.min,
+          max: this.range.max,
           step: 1,
           slide: function( event, ui ) {
             App.plone_jQuery( "#year" ).val( ui.value );
