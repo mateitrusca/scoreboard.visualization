@@ -190,7 +190,7 @@ App.GraphControlsView = Backbone.View.extend({
     template: App.get_template('scenario/graph_controls.html'),
 
     initialize: function(options) {
-        //this.model.on('change', this.render, this);
+        this.model.on('change', this.render, this);
         this.render();
     },
 
