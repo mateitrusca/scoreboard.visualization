@@ -193,6 +193,7 @@ App.chart_library['evolution_columns'] = function(container, options, meta_data)
         el: $('#the-chart-controls', chart.container),
         model: new Backbone.Model(),
         chart: chart,
+        interval: window.interval_set,
         range: _.object( [['min', parseInt(slider_values[0])],
                          ['max', parseInt(_(slider_values).last())]] )
     });

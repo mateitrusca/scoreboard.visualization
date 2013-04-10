@@ -197,6 +197,7 @@ App.GraphControlsView = Backbone.View.extend({
         this.chart = options['chart']
         _(this.chart).extend(Backbone.Events);
         this.range = options['range'];
+        this.interval = options['interval'];
         this.model.on('change', this.render, this);
         this.chart.on('redraw', _.bind(function(t){
             this.model.set('value', this.range.min + t);
@@ -206,6 +207,7 @@ App.GraphControlsView = Backbone.View.extend({
     },
 
     on_auto_change: function() {
+        clearInterval(this.interval);
         var prev = this.model.get('auto');
         this.model.set('auto', !prev);
     },
