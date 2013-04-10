@@ -396,4 +396,15 @@ App.ChartRouter = Backbone.Router.extend({
 });
 
 
+App.main = function() {
+    if(App.chart_config.chart_entry_point) {
+        // obsolete bootstrapping method
+        eval(App.chart_config.chart_entry_point)();
+    }
+    else {
+        App.create_visualization($('#scenario-box')[0], App.chart_config);
+    }
+};
+
+
 })(App.jQuery);
