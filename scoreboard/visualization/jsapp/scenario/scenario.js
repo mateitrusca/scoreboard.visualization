@@ -192,13 +192,13 @@ App.GraphControlsView = Backbone.View.extend({
     initialize: function(options) {
         this.range = options['range'];
         this.model.on('change', this.render, this);
-        this.render();
+        this.model.set('value', this.range.min);
     },
 
     render: function() {
         this.$el.html(this.template());
         App.plone_jQuery( "#slider" ).slider({
-          value: this.range.min,
+          value: this.model.get('value'),
           min: this.range.min,
           max: this.range.max,
           step: 1,
