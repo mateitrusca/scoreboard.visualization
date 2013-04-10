@@ -23,14 +23,3 @@
   {{/ steps }}
   </ul>
 </div>
-
-<div class="editor-current-step">
-  <h4>Chart Type</h4>
-  {{# chart_types }}
-    <label>
-      <input type="radio" name="chart-type" value="{{ value }}"
-             {{# if disabled }}disabled{{/ if }}>
-      {{ label }}
-    </label>
-  {{/ chart_types }}
-</div>

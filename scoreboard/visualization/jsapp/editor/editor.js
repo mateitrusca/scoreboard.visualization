@@ -26,10 +26,6 @@ App.Editor = Backbone.View.extend({
 
     template: App.get_template('editor/editor.html'),
 
-    events: {
-        'change': 'save'
-    },
-
     steps: [
         {label: "Chart Type"},
         {label: "Filters"},
@@ -39,26 +35,15 @@ App.Editor = Backbone.View.extend({
         {label: "Annotations"}
     ],
 
-    chart_types: [
-        {label: "Bar", disabled: true},
-        {label: "Line", value: 'lines'},
-        {label: "Column", value: 'columns'},
-        {label: "Scatterplot", value: 'scatter'},
-        {label: "Map", value: 'map'},
-        {label: "Country Profile", disabled: true}
-    ],
-
     initialize: function(options) {
-        this.$el.html(this.template({
-            steps: this.steps,
-            chart_types: this.chart_types
-        }));
+        this.step = new App.ChartTypeEditor({model: this.model});
+        this.step.$el.addClass('editor-current-step');
+        this.render();
     },
 
-    save: function() {
-        this.model.set({
-            chart_type: this.$el.find('[name=chart-type]:checked').val()
-        });
+    render: function() {
+        this.$el.html(this.template({steps: this.steps}));
+        this.$el.append(this.step.el);
     }
 
 });
