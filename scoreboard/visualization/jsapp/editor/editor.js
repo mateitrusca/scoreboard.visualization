@@ -1,4 +1,4 @@
-/*global App, Backbone */
+/*global App, Backbone, _ */
 /*jshint sub:true */
 
 (function($) {
@@ -26,23 +26,27 @@ App.Editor = Backbone.View.extend({
 
     template: App.get_template('editor/editor.html'),
 
-    steps: [
-        {label: "Chart Type"},
-        {label: "Filters"},
-        {label: "Axes"},
-        {label: "Series"},
-        {label: "Format"},
-        {label: "Annotations"}
+    step_cls: [
+        'ChartTypeEditor',
+        'FiltersEditor'
     ],
 
     initialize: function(options) {
-        this.step = new App.ChartTypeEditor({model: this.model});
-        this.step.$el.addClass('editor-current-step');
+        this.all_steps = _(this.step_cls).map(function(name) {
+            var Cls = App[name];
+            var step = new Cls({
+                model: this.model,
+                cube_url: options['cube_url']
+            });
+            step.$el.addClass('editor-current-step');
+            return step;
+        }, this);
+        this.step = this.all_steps[0];
         this.render();
     },
 
     render: function() {
-        this.$el.html(this.template({steps: this.steps}));
+        this.$el.html(this.template({steps: this.all_steps}));
         this.$el.append(this.step.el);
     }
 
@@ -55,7 +59,10 @@ App.create_editor = function(form) {
         model: configuration,
         el: form
     });
-    App.editor = new App.Editor({model: configuration});
+    App.editor = new App.Editor({
+        model: configuration,
+        cube_url: App.URL
+    });
     App.editor.$el.insertBefore(form);
 };
 

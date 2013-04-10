@@ -9,6 +9,8 @@ App.FiltersEditor = Backbone.View.extend({
 
     template: App.get_template('editor/filters.html'),
 
+    title: "Filters",
+
     initialize: function(options) {
         this.filters = new Backbone.Collection();
         this.$el.html('loading...');

@@ -9,6 +9,8 @@ App.ChartTypeEditor = Backbone.View.extend({
 
     template: App.get_template('editor/chart_type.html'),
 
+    title: "Chart Type",
+
     events: {
         'change': 'save'
     },
