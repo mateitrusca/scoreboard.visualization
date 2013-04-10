@@ -211,8 +211,18 @@ App.GraphControlsView = Backbone.View.extend({
     },
 
     on_auto_change: function() {
-        clearInterval(this.interval);
         var prev = this.model.get('auto');
+        if (prev){
+            clearInterval(this.interval);
+        }
+        else{
+            this.interval = setInterval(
+                    _.bind(function() {
+                        var data = this.extract_snapshot(this.snapshots_data);
+                        this.update_chart(this.chart, data);
+                     }, this), 1000);
+            window.interval_set = this.interval;
+        }
         this.model.set('auto', !prev);
     },
 
