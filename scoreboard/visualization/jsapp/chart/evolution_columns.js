@@ -182,9 +182,12 @@ App.chart_library['evolution_columns'] = function(container, options, meta_data)
              right: 10,
              top: 100
         }).appendTo(chart.container)
+
         var chart_controls = new App.GraphControlsView({
-            el: $('#the-chart-controls', chart.container)
+            el: $('#the-chart-controls', chart.container),
+            model: new Backbone.Model()
         });
+
     });
 };
 
