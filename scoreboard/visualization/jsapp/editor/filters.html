@@ -1,8 +1,14 @@
 <table>
+  <thead>
+    <td>name</td>
+    <td>enabled</td>
+  </thead>
+
   <tbody>
   {{# filters }}
     <tr>
       <td>{{ label }} (<tt>{{ dimension }}</tt>)</td>
+      <td><input type="checkbox" name="enable" value="{{ name }}" checked></td>
     </tr>
   {{/ filters }}
   </tbody>

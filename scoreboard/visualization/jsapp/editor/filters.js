@@ -9,6 +9,10 @@ App.FiltersEditor = Backbone.View.extend({
 
     template: App.get_template('editor/filters.html'),
 
+    events: {
+        'change [name="enable"]': 'on_click_enable'
+    },
+
     title: "Filters",
 
     initialize: function(options) {
@@ -20,16 +24,36 @@ App.FiltersEditor = Backbone.View.extend({
                 if(dimension['type_label'] == 'dimension' ||
                    dimension['type_label'] == 'group dimension') {
                     this.filters.add(new Backbone.Model({
+                        'name': dimension['notation'],
                         'dimension': dimension['notation'],
-                        'label': dimension['label']
+                        'label': dimension['label'],
+                        'enabled': true
                     }));
                 }
             }, this);
-            this.model.set('filters', this.filters.toJSON());
+            this.update();
             this.$el.html(this.template({
                 'filters': this.filters.toJSON()
             }));
         }, this));
+    },
+
+    update: function() {
+        var value = [];
+        this.filters.forEach(function(filter) {
+            if(! filter.get('enabled'))
+                return;
+            value.push(filter.toJSON());
+        })
+        this.model.set('filters', value);
+    },
+
+    on_click_enable: function(evt) {
+        var checkbox = $(evt.target);
+        var name = checkbox.val();
+        var enabled = checkbox.is(':checked');
+        this.filters.where({'name': name})[0].set('enabled', enabled);
+        this.update();
     }
 
 });
