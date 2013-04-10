@@ -183,11 +183,14 @@ App.chart_library['evolution_columns'] = function(container, options, meta_data)
              top: 100
         }).appendTo(chart.container)
 
-        var chart_controls = new App.GraphControlsView({
-            el: $('#the-chart-controls', chart.container),
-            model: new Backbone.Model()
-        });
+    });
 
+    var slider_values = _(options['group_labels']).keys().sort();
+    var chart_controls = new App.GraphControlsView({
+        el: $('#the-chart-controls', chart.container),
+        model: new Backbone.Model(),
+        range: _.object( [['min', parseInt(slider_values[0])],
+                         ['max', parseInt(_(slider_values).last())]] )
     });
 };
 
