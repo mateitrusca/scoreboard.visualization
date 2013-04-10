@@ -1,0 +1,28 @@
+<style>
+  .editor-box {
+    position: relative;
+  }
+  .editor-steps {
+    float: left;
+    width: 190px;
+    border-right: 1px solid black;
+  }
+  .editor-steps ul {
+    list-style-type: none;
+  }
+  .editor-current-step {
+    margin-left: 200px;
+  }
+</style>
+
+<div class="editor-steps">
+  <ul>
+  {{# steps }}
+    <li>{{ label }}</li>
+  {{/ steps }}
+  </ul>
+</div>
+
+<div class="editor-current-step">
+  <h4>Chart Type</h4>
+</div>
