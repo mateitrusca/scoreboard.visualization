@@ -232,6 +232,9 @@ App.GraphControlsView = Backbone.View.extend({
           }
         });
         App.plone_jQuery( "#year" ).val( App.plone_jQuery( "#slider" ).slider( "value" ) );
+        if (this.model.get('auto')){
+            App.plone_jQuery( "#slider" ).slider('disable');
+        }
         //App.plone_jQuery( "#check" ).button();
     }
 });
