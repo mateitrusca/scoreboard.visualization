@@ -51,7 +51,7 @@ App.create_editor = function(form) {
         el: form
     });
     App.editor = new App.Editor({model: configuration});
-    $(form).append(App.editor.el);
+    App.editor.$el.insertBefore(form);
 };
 
 
