@@ -26,6 +26,10 @@ App.Editor = Backbone.View.extend({
 
     template: App.get_template('editor/editor.html'),
 
+    events: {
+        'click .editor-steps a': 'on_click_step'
+    },
+
     step_cls: [
         'ChartTypeEditor',
         'FiltersEditor'
@@ -48,6 +52,13 @@ App.Editor = Backbone.View.extend({
     render: function() {
         this.$el.html(this.template({steps: this.all_steps}));
         this.$el.append(this.step.el);
+    },
+
+    on_click_step: function(evt) {
+        evt.preventDefault();
+        var step_cid = $(evt.target).data('step-cid');
+        this.step = _(this.all_steps).where({cid: step_cid})[0];
+        this.render();
     }
 
 });

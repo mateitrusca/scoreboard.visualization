@@ -11,6 +11,10 @@
   .editor-steps ul {
     list-style-type: none;
   }
+  .editor-steps a {
+    text-decoration: none;
+    font-size: 16px;
+  }
   .editor-current-step {
     margin-left: 200px;
   }
@@ -19,7 +23,7 @@
 <div class="editor-steps">
   <ul>
   {{# steps }}
-    <li>{{ title }}</li>
+    <li><a href="#" data-step-cid="{{ cid }}">{{ title }}</a></li>
   {{/ steps }}
   </ul>
 </div>
