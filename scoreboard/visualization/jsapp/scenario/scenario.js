@@ -185,6 +185,31 @@ App.ScenarioChartView = Backbone.View.extend({
 });
 
 
+App.GraphControlsView = Backbone.View.extend({
+
+    template: App.get_template('scenario/graph_controls.html'),
+
+    initialize: function(options) {
+        //this.model.on('change', this.render, this);
+        this.render();
+    },
+
+    render: function() {
+        this.$el.html(this.template());
+        App.plone_jQuery( "#slider" ).slider({
+          value:2000,
+          min: 2000,
+          max: 2013,
+          step: 1,
+          slide: function( event, ui ) {
+            App.plone_jQuery( "#year" ).val( ui.value );
+          }
+        });
+        App.plone_jQuery( "#year" ).val( $( "#slider" ).slider( "value" ) );
+    }
+});
+
+
 App.AnnotationsView = Backbone.View.extend({
 
     template: App.get_template('scenario/metadata.html'),
