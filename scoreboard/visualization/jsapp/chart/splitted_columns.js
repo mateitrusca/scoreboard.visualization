@@ -14,10 +14,12 @@ App.chart_library['splitted_columns'] = function(container, options, meta_data) 
         );
     });
 
-    var country_names = _(_(options['series']).pluck('data')).reduce(function(prev, next){
-        return _(_(prev).pluck('ref-area-label')).union(
-                 _(next).pluck('ref-area-label'));
-    });
+    var country_names = _(_(options['series']).pluck('data')).reduce(
+        function(memo, item){
+            return _(memo).union(
+                     _(item).pluck('ref-area-label'));
+        },
+        _(_(options['series']).pluck('data')[0]).pluck('ref-area-label'));
 
     var chartOptions = {
         chart: {
