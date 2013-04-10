@@ -33,6 +33,7 @@
   <script tal:attributes="src string:${JSAPP}/common/tests.js"></script>
   <script tal:attributes="src string:${JSAPP}/filters/tests.js"></script>
   <script tal:attributes="src string:${JSAPP}/scenario/tests.js"></script>
+  <script tal:attributes="src string:${JSAPP}/editor/tests.js"></script>
 
   <script>
     (function() {

@@ -11,6 +11,13 @@
   .editor-steps ul {
     list-style-type: none;
   }
+  .editor-steps a {
+    text-decoration: none;
+    font-size: 16px;
+  }
+  .editor-box h4 {
+    margin-left: 200px;
+  }
   .editor-current-step {
     margin-left: 200px;
   }
@@ -18,12 +25,10 @@
 
 <div class="editor-steps">
   <ul>
-  {{# steps }}
-    <li>{{ label }}</li>
-  {{/ steps }}
+  {{# all_steps }}
+    <li><a href="#" data-step-cid="{{ cid }}">{{ title }}</a></li>
+  {{/ all_steps }}
   </ul>
 </div>
 
-<div class="editor-current-step">
-  <h4>Chart Type</h4>
-</div>
+<h4>{{ step.title }}</h4>
