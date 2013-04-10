@@ -16,16 +16,21 @@ App.ChartTypeEditor = Backbone.View.extend({
     },
 
     chart_types: [
-        {label: "Bar", disabled: true},
+        {label: "Bar", value: 'bars', disabled: true},
         {label: "Line", value: 'lines'},
         {label: "Column", value: 'columns'},
         {label: "Scatterplot", value: 'scatter'},
         {label: "Map", value: 'map'},
-        {label: "Country Profile", disabled: true}
+        {label: "Country Profile", value: 'country-profile', disabled: true}
     ],
 
     initialize: function(options) {
-        this.$el.html(this.template({chart_types: this.chart_types}));
+        var value = this.model.get('chart_type');
+        var chart_types = _(this.chart_types).map(function(chart_type) {
+            var selected = chart_type['value'] == value;
+            return _({selected: selected}).extend(chart_type);
+        }, this);
+        this.$el.html(this.template({chart_types: chart_types}));
     },
 
     save: function() {

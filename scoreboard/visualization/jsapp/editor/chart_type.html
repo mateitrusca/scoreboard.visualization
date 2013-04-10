@@ -1,7 +1,8 @@
 {{# chart_types }}
   <label>
     <input type="radio" name="chart-type" value="{{ value }}"
-           {{# if disabled }}disabled{{/ if }}>
+           {{# if disabled }}disabled{{/ if }}
+           {{# if selected }}checked{{/ if }}>
     {{ label }}
   </label>
 {{/ chart_types }}
