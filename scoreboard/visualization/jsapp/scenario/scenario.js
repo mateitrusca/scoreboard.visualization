@@ -190,8 +190,13 @@ App.GraphControlsView = Backbone.View.extend({
     template: App.get_template('scenario/graph_controls.html'),
 
     initialize: function(options) {
+        this.chart = options['chart']
+        _(this.chart).extend(Backbone.Events);
         this.range = options['range'];
         this.model.on('change', this.render, this);
+        this.chart.on('redraw', _.bind(function(t){
+            this.model.set('value', this.range.min + t);
+        }, this));
         this.model.set('value', this.range.min);
     },
 

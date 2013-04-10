@@ -10,8 +10,8 @@ var special_bar_color = "#35478C";
 var na_bar_color = "#DDDDDD";
 
 function get_tick_data(input){
-    input = _(input).sortBy('label');
     t += 1;
+    input = _(input).sortBy('label');
     if (t >= input.length) { t = 0; }
     var data = _(input).pluck('data');
     var out = _(data[t]).pluck('value');
@@ -73,6 +73,9 @@ App.chart_library['evolution_columns'] = function(container, options, meta_data)
             marginBottom: 150,
             marginRight: 150,
             events: {
+                redraw: function(){
+                    chart.trigger('redraw', t+1);
+                },
                 load: function() {
                     var morph = _.bind(function(){
                         _(get_tick_data(time_snapshots.data)).each(function(value, n){
@@ -189,6 +192,7 @@ App.chart_library['evolution_columns'] = function(container, options, meta_data)
     var chart_controls = new App.GraphControlsView({
         el: $('#the-chart-controls', chart.container),
         model: new Backbone.Model(),
+        chart: chart,
         range: _.object( [['min', parseInt(slider_values[0])],
                          ['max', parseInt(_(slider_values).last())]] )
     });
