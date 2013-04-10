@@ -20,12 +20,15 @@ App.FiltersEditor = Backbone.View.extend({
                 if(dimension['type_label'] == 'dimension' ||
                    dimension['type_label'] == 'group dimension') {
                     this.filters.add(new Backbone.Model({
-                        'dimension': dimension['notation']
+                        'dimension': dimension['notation'],
+                        'label': dimension['label']
                     }));
                 }
             }, this);
             this.model.set('filters', this.filters.toJSON());
-            this.$el.html(this.template());
+            this.$el.html(this.template({
+                'filters': this.filters.toJSON()
+            }));
         }, this));
     }
 
