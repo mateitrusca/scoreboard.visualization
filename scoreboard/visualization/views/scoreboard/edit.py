@@ -22,4 +22,6 @@ class Edit(EditForm):
         return jsapp_html_for_visualization(self.context)
 
     def __call__(self, **kwargs):
+        if self.request.method == 'POST':
+            self._data['configuration'] = self.request.form['configuration']
         return self.index()

@@ -7,14 +7,31 @@
 
 App.EditForm = Backbone.View.extend({
 
+    template: App.get_template('editor/editor_form.html'),
+
+    events: {
+       'click button[type="submit"]': 'on_submit'
+    },
+
     initialize: function(options) {
         this.input = this.$el.find('input[name=configuration]');
         this.model.set(JSON.parse(this.input.val()));
         this.model.on('change', this.save, this);
+        this.$el.append(this.template());
     },
 
     save: function() {
         this.input.val(JSON.stringify(this.model, null, 2));  // indent 2 spaces
+    },
+
+    on_submit: function(evt) {
+        evt.preventDefault();
+        var form_status = this.$el.find('.editor-form-status');
+        form_status.text('saving...');
+        var data = {'configuration': this.input.val()};
+        $.post(this.$el.attr('action'), data, function() {
+            form_status.text('ok');
+        });
     }
 
 });
