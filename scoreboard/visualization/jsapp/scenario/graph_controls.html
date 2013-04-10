@@ -1,6 +1,6 @@
 <div>
   <input type="checkbox" id="check" {{# if auto }} checked="true" {{/ if }}/>
-  <label for="check">Auto</label>
+  <label for="check">{{# if auto }} Auto {{ else }} Manual {{/ if }}</label>
 </div>
 <p>
   <label for="year">Year:</label>
