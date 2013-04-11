@@ -101,11 +101,7 @@ describe('ScenarioChartViewParameters', function() {
         var chart = new App.ScenarioChartView({
             model: this.model,
             schema: {
-                filters: [],
-                chart_datasource: {
-                    rel_url: '/test_view',
-                    extra_args: []
-                },
+                facets: [],
                 chart_meta_labels: [
                     {targets: ['dyn_lbl'],
                      filter_name: 'indicator',
@@ -120,16 +116,12 @@ describe('ScenarioChartViewParameters', function() {
         );
     });
 
-    it('should build dimensions_mapping from received filters schema',
+    it('should build dimensions_mapping from received facets schema',
        function() {
         var chart = new App.ScenarioChartView({
             model: this.model,
             schema: {
-                filters: [{name: 'indicator', dimension: 'dim1'}],
-                chart_datasource: {
-                    rel_url: '/test_view',
-                    extra_args: []
-                },
+                facets: [{name: 'indicator', dimension: 'dim1'}],
                 chart_meta_labels: []
             },
             scenario_chart: this.scenario_chart
@@ -146,12 +138,7 @@ describe('ScenarioChartViewParameters', function() {
         var chart = new App.ScenarioChartView({
             model: this.model,
             schema: {
-                filters: [{name: 'filter1', dimension: 'dim1'}],
-                chart_datasource: {
-                    rel_url: '/datapoints_view',
-                    extra_args: [
-                    ]
-                },
+                facets: [{name: 'filter1', dimension: 'dim1'}],
                 chart_meta_labels: [
                     {targets: ['x_title'],
                      filter_name: 'filter1',
@@ -167,72 +154,28 @@ describe('ScenarioChartViewParameters', function() {
         expect(url).to.have.string('value=dim1');
     });
 
-
-
-    it('should use the datasource init param', function() {
+    it('should compute columns based on facets', function() {
         var server = this.sandbox.server;
-        var schema = {
-            filters: [
-                {type: 'select',
-                 name: 'indicator-group',
-                 label: 'Select indicator group',
-                 dimension: 'indicator-group',
-                 constraints: {}}
-            ]
-        };
         var chart = new App.ScenarioChartView({
             model: this.model,
             schema: {
-                filters: [],
-                chart_datasource: {
-                    rel_url: '/test_view',
-                    args: {
-                        fields: 'ref-area,value'
-                    }
-                },
+                facets: [
+                    {type: 'data-column', dimension: 'dim1'},
+                    {type: 'data-column', dimension: 'dim2'}
+                ],
                 chart_meta_labels: []
             },
             scenario_chart: this.scenario_chart
         });
         var url = server.requests[0].url;
-        expect(url).to.have.string('test_view');
-    });
-
-    it('should append extra_args to args', function() {
-        var server = this.sandbox.server;
-        var schema = {
-            filters: [
-                {type: 'select',
-                 name: 'indicator-group',
-                 label: 'Select indicator group',
-                 dimension: 'indicator-group',
-                 constraints: {}}
-            ]
-        };
-        var chart = new App.ScenarioChartView({
-            model: this.model,
-            schema: {
-                filters: [],
-                chart_datasource: {
-                    rel_url: '/test_view',
-                    extra_args: [
-                        ['param1', 'value1'],
-                        ['param2', 'value2']
-                    ]
-                },
-                chart_meta_labels: []
-            },
-            scenario_chart: this.scenario_chart
-        });
-        var url = server.requests[0].url;
-        expect(url).to.have.string('param1=value1');
+        expect(App.testing.url_param(url, 'columns')).to.equal('dim1,dim2');
     });
 
     it('should render the chart passed as parameter', function() {
         var server = this.sandbox.server;
         var scenario_chart = sinon.spy();
         var schema = {
-            filters: [
+            facets: [
                 {type: 'select',
                  name: 'indicator-group',
                  label: 'Select indicator group',
@@ -243,14 +186,7 @@ describe('ScenarioChartViewParameters', function() {
         var chart = new App.ScenarioChartView({
             model: this.model,
             schema: {
-                filters: [],
-                chart_datasource: {
-                    rel_url: '/test_view',
-                    extra_args: [
-                        ['param1', 'value1'],
-                        ['param2', 'value2']
-                    ]
-                },
+                facets: [],
                 chart_meta_labels: []
             },
             scenario_chart: scenario_chart
@@ -264,11 +200,7 @@ describe('ScenarioChartViewParameters', function() {
         var chart = new App.ScenarioChartView({
             model: this.model,
             schema: {
-                filters: [],
-                chart_datasource: {
-                    rel_url: '/test_view',
-                    extra_args: []
-                },
+                facets: [],
                 chart_meta_labels: [
                     {targets: ['label1'],
                      filter_name: 'indicator',
@@ -291,12 +223,12 @@ describe('ScenarioChartViewParameters', function() {
     });
 
 
-    it('should fetch data using init filters dimensions', function() {
+    it('should fetch data using init facet dimensions', function() {
         var server = this.sandbox.server;
         var chart = new App.ScenarioChartView({
             model: this.model,
             schema: {
-                filters: [
+                facets: [
                     {type: 'select',
                      name: 'indicator',
                      label: 'Select one indicator',
@@ -310,13 +242,11 @@ describe('ScenarioChartViewParameters', function() {
                      constraints: {
                          'indicator': 'indicator'
                      }},
+                     {type: 'data-column', dimension: 'dimension1'},
+                     {type: 'data-column', dimension: 'value1'}
                 ],
                 chart_datasource: {
-                    groupby: 'country',
-                    rel_url: '/source_view',
-                    extra_args: [
-                        ['fields', 'dimension1,value1']
-                    ]
+                    groupby: 'country'
                 },
                 chart_meta_labels: [
                     {targets: ['label1'], filter_name: 'indicator', type: 'label'}
@@ -331,7 +261,7 @@ describe('ScenarioChartViewParameters', function() {
         var url = server.requests[0].url;
         var url_param = App.testing.url_param;
         expect(url_param(url, 'indicator')).to.equal('ind1');
-        expect(url_param(url, 'fields')).to.equal('dimension1,value1');
+        expect(url_param(url, 'columns')).to.equal('dimension1,value1');
         expect(url_param(url, 'ref-area')).to.equal('BE');
     });
 
@@ -357,7 +287,7 @@ describe('ScenarioChartView', function() {
         this.chart = new App.ScenarioChartView({
             model: this.model,
             schema: {
-                filters: [
+                facets: [
                     {name: 'indicator',
                      label: 'Select indicator',
                      dimension: 'dim1',
@@ -369,19 +299,15 @@ describe('ScenarioChartView', function() {
                     {name: 'time-period',
                      label: 'Select period',
                      dimension: 'dim3',
-                    }
+                    },
+                    {type: 'data-column', dimension: 'ref-area'},
+                    {type: 'data-column', dimension: 'value'}
                 ],
                 chart_meta_labels: [
                     {targets: ['extra_label'],
                      filter_name: 'time-period',
                      type: 'label'}
-                ],
-                chart_datasource: {
-                    rel_url: '/datapoints',
-                    extra_args: [
-                        ['fields', 'ref-area,value']
-                    ]
-                }
+                ]
             },
             scenario_chart: this.scenario_chart
         });
@@ -412,7 +338,7 @@ describe('ScenarioChartView', function() {
         var url = server.requests[0].url;
         expect(url).to.have.string(App.URL + '/datapoints?');
         var url_param = App.testing.url_param;
-        expect(url_param(url, 'fields')).to.equal('ref-area,value');
+        expect(url_param(url, 'columns')).to.equal('ref-area,value');
         expect(url_param(url, 'indicator')).to.equal('asdf');
         expect(url_param(url, 'time-period')).to.equal('2002');
     });
@@ -435,15 +361,14 @@ describe('ScenarioChartView', function() {
     it('should make a single data query and then filter in JS', function() {
         var scenario_chart = sinon.spy();
         var model = new Backbone.Model();
-        var filters = [{name: 'filter1', dimension: 'dim1'},
-                       {name: 'filter2', dimension: 'dim2'},
-                       {name: 'filter3', dimension: 'dim3'}];
+        var facets = [{name: 'filter1', dimension: 'dim1'},
+                      {name: 'filter2', dimension: 'dim2'},
+                      {name: 'filter3', dimension: 'dim3'}];
         var chart = new App.ScenarioChartView({
             model: model,
             schema: {
-                filters: filters,
+                facets: facets,
                 chart_datasource: {
-                    rel_url: '/datapoints',
                     client_filter: 'filter3'
                 }
             },
@@ -523,8 +448,8 @@ describe('AnnotationsView', function() {
             model: this.model,
             field: 'indicator',
             schema: {
-                filters: [{name: 'indicator', dimension: 'dim1'},
-                          {name: 'unit-measure', dimension: 'dim2'}],
+                facets: [{name: 'indicator', dimension: 'dim1'},
+                         {name: 'unit-measure', dimension: 'dim2'}],
                 annotations: {
                     'ind1': {
                         title: 'meta_title',
@@ -572,8 +497,8 @@ describe('AnnotationsView', function() {
             cube_url: App.URL,
             model: this.model,
             schema: {
-                filters: [{name: 'indicator', dimension: 'dim1'},
-                          {name: 'abc', dimension: 'dim2'}],
+                facets: [{name: 'indicator', dimension: 'dim1'},
+                         {name: 'abc', dimension: 'dim2'}],
                 annotations: {
                     'x': {
                         title: 'Label of x-axis',

@@ -18,11 +18,23 @@ App.ScenarioChartView = Backbone.View.extend({
         this.schema = options['schema'];
         this.meta_labels = this.schema['chart_meta_labels'];
         this.scenario_chart = options['scenario_chart'];
-        this.dimensions_mapping = _.object(
-            _(options.schema.filters).pluck('name'),
-            _(options.schema.filters).pluck('dimension')
-        );
-        this.datasource = this.schema['chart_datasource'];
+        this.columns = [];
+        this.xy_columns = [];
+        this.dimensions_mapping = {};
+        _(options.schema['facets']).forEach(function(facet) {
+            if(facet['type'] == 'data-column') {
+                if(facet['xy']) {
+                    this.xy_columns.push(facet['dimension']);
+                }
+                else {
+                    this.columns.push(facet['dimension']);
+                }
+            }
+            else {
+                this.dimensions_mapping[facet['name']] = facet['dimension'];
+            }
+        }, this);
+        this.datasource = this.schema['chart_datasource'] || {};
         this.requests_in_flight = [];
         this.load_chart();
     },
@@ -81,9 +93,10 @@ App.ScenarioChartView = Backbone.View.extend({
             return;
         }
         this.$el.html('-- loading --');
-        _(this.datasource['extra_args']).each(function(item) {
-            args[item[0]] = item[1];
-        });
+        args['columns'] = this.columns.join(',');
+        if(this.schema['xy']) {
+            args['xy_columns'] = this.xy_columns.join(',');
+        }
 
         var chart_data = {
             'tooltip_formatter': function() {
@@ -106,14 +119,16 @@ App.ScenarioChartView = Backbone.View.extend({
         };
 
         var group_values = null;
-
+        var data_method = (this.schema['xy'] ? '/datapoints_xy'
+                                             : '/datapoints');
+        var datapoints_url = this.cube_url + data_method;
 
         if (groupby_dimension) {
             if (groupby){
                 group_values = this.model.get(groupby);
             }
             else {
-                var group_values_args = _(_(args).omit('fields')).extend({
+                var group_values_args = _(_(args).omit('columns')).extend({
                     'dimension': groupby_dimension,
                     'rev': this.data_revision
                 });
@@ -127,7 +142,7 @@ App.ScenarioChartView = Backbone.View.extend({
             }
             requests = _(group_values).map(function(value) {
                 args[groupby_dimension] = value;
-                return $.get(this.cube_url + this.datasource['rel_url'], args);
+                return $.get(datapoints_url, args);
             }, this);
 
             var labels_args = {
@@ -145,7 +160,7 @@ App.ScenarioChartView = Backbone.View.extend({
         }
         else {
             group_values = [null];
-            requests.push($.get(this.cube_url + this.datasource['rel_url'], args));
+            requests.push($.get(datapoints_url, args));
         }
 
         var client_filter_options = [];
@@ -267,8 +282,8 @@ App.AnnotationsView = Backbone.View.extend({
         this.cube_url = options['cube_url'];
         this.schema = options['schema'];
         this.dimensions_mapping = _.object(
-            _(this.schema['filters']).pluck('name'),
-            _(this.schema['filters']).pluck('dimension')
+            _(this.schema['facets']).pluck('name'),
+            _(this.schema['facets']).pluck('dimension')
         );
         this.model.on('change', this.render, this);
         this.description = $('#parent-fieldname-description').detach();

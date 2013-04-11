@@ -5,25 +5,25 @@
 "use strict";
 
 
-App.FiltersEditor = Backbone.View.extend({
+App.FacetsEditor = Backbone.View.extend({
 
-    template: App.get_template('editor/filters.html'),
+    template: App.get_template('editor/facets.html'),
 
     events: {
         'change [name="enable"]': 'on_click_enable'
     },
 
-    title: "Filters",
+    title: "Facets",
 
     initialize: function(options) {
-        this.filters = new Backbone.Collection();
+        this.facets = new Backbone.Collection();
         this.$el.html('loading...');
         var dimensions_ajax = $.get(options.cube_url + '/dimensions?flat=on');
         dimensions_ajax.done(_.bind(function(dimensions) {
             _(dimensions).forEach(function(dimension) {
                 if(dimension['type_label'] == 'dimension' ||
                    dimension['type_label'] == 'group dimension') {
-                    this.filters.add(new Backbone.Model({
+                    this.facets.add(new Backbone.Model({
                         'name': dimension['notation'],
                         'dimension': dimension['notation'],
                         'label': dimension['label'],
@@ -33,35 +33,35 @@ App.FiltersEditor = Backbone.View.extend({
             }, this);
             this.update();
             this.$el.html(this.template({
-                'filters': this.filters.toJSON()
+                'facets': this.facets.toJSON()
             }));
         }, this));
     },
 
     update: function() {
         var value = [];
-        this.filters.forEach(function(filter) {
-            if(! filter.get('enabled'))
+        this.facets.forEach(function(facet) {
+            if(! facet.get('enabled'))
                 return;
-            value.push(filter.toJSON());
+            value.push(facet.toJSON());
         })
-        this.model.set('filters', value);
+        this.model.set('facets', value);
     },
 
     on_click_enable: function(evt) {
         var checkbox = $(evt.target);
         var name = checkbox.val();
         var enabled = checkbox.is(':checked');
-        this.filters.where({'name': name})[0].set('enabled', enabled);
+        this.facets.where({'name': name})[0].set('enabled', enabled);
         this.update();
     }
 
 });
 
 
-App.FiltersEditorReadOnly = App.FiltersEditor.extend({
+App.FacetsEditorReadOnly = App.FacetsEditor.extend({
 
-    title: "Filters (disabled)",
+    title: "Facets (disabled)",
 
     update: function() {
         // do nothing
