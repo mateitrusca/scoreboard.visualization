@@ -59,4 +59,15 @@ App.FiltersEditor = Backbone.View.extend({
 });
 
 
+App.FiltersEditorReadOnly = App.FiltersEditor.extend({
+
+    title: "Filters (disabled)",
+
+    update: function() {
+        // do nothing
+    }
+
+});
+
+
 })(App.jQuery);
