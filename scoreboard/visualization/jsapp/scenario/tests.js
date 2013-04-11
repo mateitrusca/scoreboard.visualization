@@ -164,33 +164,21 @@ describe('ScenarioChartViewParameters', function() {
         expect(url).to.have.string('value=dim1');
     });
 
-    it('should append extra_args to args', function() {
+    it('should compute columns based on facets', function() {
         var server = this.sandbox.server;
-        var schema = {
-            facets: [
-                {type: 'select',
-                 name: 'indicator-group',
-                 label: 'Select indicator group',
-                 dimension: 'indicator-group',
-                 constraints: {}}
-            ]
-        };
         var chart = new App.ScenarioChartView({
             model: this.model,
             schema: {
-                facets: [],
-                chart_datasource: {
-                    extra_args: [
-                        ['param1', 'value1'],
-                        ['param2', 'value2']
-                    ]
-                },
+                facets: [
+                    {type: 'data-column', dimension: 'dim1'},
+                    {type: 'data-column', dimension: 'dim2'}
+                ],
                 chart_meta_labels: []
             },
             scenario_chart: this.scenario_chart
         });
         var url = server.requests[0].url;
-        expect(url).to.have.string('param1=value1');
+        expect(App.testing.url_param(url, 'columns')).to.equal('dim1,dim2');
     });
 
     it('should render the chart passed as parameter', function() {
@@ -273,12 +261,11 @@ describe('ScenarioChartViewParameters', function() {
                      constraints: {
                          'indicator': 'indicator'
                      }},
+                     {type: 'data-column', dimension: 'dimension1'},
+                     {type: 'data-column', dimension: 'value1'}
                 ],
                 chart_datasource: {
-                    groupby: 'country',
-                    extra_args: [
-                        ['fields', 'dimension1,value1']
-                    ]
+                    groupby: 'country'
                 },
                 chart_meta_labels: [
                     {targets: ['label1'], filter_name: 'indicator', type: 'label'}
@@ -293,7 +280,7 @@ describe('ScenarioChartViewParameters', function() {
         var url = server.requests[0].url;
         var url_param = App.testing.url_param;
         expect(url_param(url, 'indicator')).to.equal('ind1');
-        expect(url_param(url, 'fields')).to.equal('dimension1,value1');
+        expect(url_param(url, 'columns')).to.equal('dimension1,value1');
         expect(url_param(url, 'ref-area')).to.equal('BE');
     });
 
@@ -331,18 +318,15 @@ describe('ScenarioChartView', function() {
                     {name: 'time-period',
                      label: 'Select period',
                      dimension: 'dim3',
-                    }
+                    },
+                    {type: 'data-column', dimension: 'ref-area'},
+                    {type: 'data-column', dimension: 'value'}
                 ],
                 chart_meta_labels: [
                     {targets: ['extra_label'],
                      filter_name: 'time-period',
                      type: 'label'}
-                ],
-                chart_datasource: {
-                    extra_args: [
-                        ['fields', 'ref-area,value']
-                    ]
-                }
+                ]
             },
             scenario_chart: this.scenario_chart
         });
@@ -373,7 +357,7 @@ describe('ScenarioChartView', function() {
         var url = server.requests[0].url;
         expect(url).to.have.string(App.URL + '/datapoints?');
         var url_param = App.testing.url_param;
-        expect(url_param(url, 'fields')).to.equal('ref-area,value');
+        expect(url_param(url, 'columns')).to.equal('ref-area,value');
         expect(url_param(url, 'indicator')).to.equal('asdf');
         expect(url_param(url, 'time-period')).to.equal('2002');
     });

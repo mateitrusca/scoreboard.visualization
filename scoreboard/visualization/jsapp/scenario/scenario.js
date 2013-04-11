@@ -18,11 +18,17 @@ App.ScenarioChartView = Backbone.View.extend({
         this.schema = options['schema'];
         this.meta_labels = this.schema['chart_meta_labels'];
         this.scenario_chart = options['scenario_chart'];
-        this.dimensions_mapping = _.object(
-            _(options.schema['facets']).pluck('name'),
-            _(options.schema['facets']).pluck('dimension')
-        );
-        this.datasource = this.schema['chart_datasource'];
+        this.columns = [];
+        this.dimensions_mapping = {};
+        _(options.schema['facets']).forEach(function(facet) {
+            if(facet['type'] == 'data-column') {
+                this.columns.push(facet['dimension']);
+            }
+            else {
+                this.dimensions_mapping[facet['name']] = facet['dimension'];
+            }
+        }, this);
+        this.datasource = this.schema['chart_datasource'] || {};
         this.requests_in_flight = [];
         this.load_chart();
     },
@@ -81,9 +87,7 @@ App.ScenarioChartView = Backbone.View.extend({
             return;
         }
         this.$el.html('-- loading --');
-        _(this.datasource['extra_args']).each(function(item) {
-            args[item[0]] = item[1];
-        });
+        args['columns'] = this.columns.join(',');
 
         var chart_data = {
             'tooltip_formatter': function() {
