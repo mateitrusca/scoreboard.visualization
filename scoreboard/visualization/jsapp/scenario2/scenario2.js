@@ -61,7 +61,6 @@ App.scenario2_filters_schema = {
     chart_type: 'lines',
     chart_datasource: {
         groupby: 'countries',
-        rel_url: '/datapoints',
         extra_args: [
             ['fields', 'time-period,value']
         ]

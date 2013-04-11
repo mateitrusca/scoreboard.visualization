@@ -62,7 +62,6 @@ App.scenario6_filters_schema = {
     chart_datasource: {
         client_filter: 'countries',
         groupby_dimension: 'time-period',
-        rel_url: '/datapoints',
         extra_args: [
             ['fields', 'ref-area,value']
         ]

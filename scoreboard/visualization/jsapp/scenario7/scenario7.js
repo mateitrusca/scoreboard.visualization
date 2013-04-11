@@ -72,7 +72,6 @@ App.scenario7_filters_schema = {
     chart_datasource: {
         groupby_dimension: 'breakdown',
         client_filter: 'countries',
-        rel_url: '/datapoints',
         extra_args: [
             ['fields', 'ref-area,value']
         ]

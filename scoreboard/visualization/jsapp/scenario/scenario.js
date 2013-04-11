@@ -106,8 +106,9 @@ App.ScenarioChartView = Backbone.View.extend({
         };
 
         var group_values = null;
-        var datapoints_url = this.cube_url +
-            (this.datasource['rel_url'] || '/datapoints');
+        var data_method = (this.schema['xy'] ? '/datapoints_xy'
+                                             : '/datapoints');
+        var datapoints_url = this.cube_url + data_method;
 
         if (groupby_dimension) {
             if (groupby){

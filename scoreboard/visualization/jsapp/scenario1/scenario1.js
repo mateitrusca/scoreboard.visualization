@@ -83,7 +83,6 @@ App.scenario1_filters_schema = {
     chart_type: 'columns',
     chart_datasource: {
         client_filter: 'countries',
-        rel_url: '/datapoints',
         extra_args: [
             ['fields', 'ref-area,value']
         ]

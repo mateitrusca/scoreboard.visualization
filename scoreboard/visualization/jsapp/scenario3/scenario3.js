@@ -123,9 +123,9 @@ App.scenario3_filters_schema = {
         }
     },
     chart_type: 'scatter',
+    xy: true,
     chart_datasource: {
         client_filter: 'countries',
-        rel_url: '/datapoints_xy',
         extra_args: [
             ['columns', 'ref-area'],
             ['xy_columns', 'value']
