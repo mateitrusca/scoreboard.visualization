@@ -4,18 +4,20 @@
 (function() {
 "use strict";
 
-function sort_serie(serie){
+function sort_serie(serie, order){
     serie = _(serie).sortBy( function(item){
-        if (isNaN(item['y'])){
-            return 0
+        var value = item['y'];
+
+        if (isNaN(value)){
+            value = 0;
         }
-        return -item['y']
+        return order * value;
     })
     return serie
 };
 
 
-App.format_series = function (data, sort){
+App.format_series = function (data, order){
 
     var extract_data = function(series_item){
         return _.object([['name', series_item['ref-area-label']],
@@ -34,8 +36,8 @@ App.format_series = function (data, sort){
                 [item['label'], data]);
     }).map(function(item){
         var serie = item['data'];
-        if (sort){
-            serie = sort_serie(serie);
+        if (order){
+            serie = sort_serie(serie, order);
         }
         _.chain(labels_collection).
             difference(_(serie).pluck('name')).
