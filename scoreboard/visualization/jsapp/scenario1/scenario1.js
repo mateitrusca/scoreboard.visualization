@@ -84,7 +84,7 @@ App.scenario1_filters_schema = {
     chart_datasource: {
         client_filter: 'countries',
         extra_args: [
-            ['fields', 'ref-area,value']
+            ['columns', 'ref-area,value']
         ]
     },
     chart_meta_labels: [

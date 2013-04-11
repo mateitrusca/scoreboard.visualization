@@ -73,7 +73,7 @@ App.scenario7_filters_schema = {
         groupby_dimension: 'breakdown',
         client_filter: 'countries',
         extra_args: [
-            ['fields', 'ref-area,value']
+            ['columns', 'ref-area,value']
         ]
     },
     chart_meta_labels: [

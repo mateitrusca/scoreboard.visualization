@@ -62,7 +62,7 @@ App.scenario2_filters_schema = {
     chart_datasource: {
         groupby: 'countries',
         extra_args: [
-            ['fields', 'time-period,value']
+            ['columns', 'time-period,value']
         ]
     },
     chart_meta_labels: [

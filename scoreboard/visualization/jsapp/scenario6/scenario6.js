@@ -63,7 +63,7 @@ App.scenario6_filters_schema = {
         client_filter: 'countries',
         groupby_dimension: 'time-period',
         extra_args: [
-            ['fields', 'ref-area,value']
+            ['columns', 'ref-area,value']
         ]
     },
     chart_meta_labels: [
