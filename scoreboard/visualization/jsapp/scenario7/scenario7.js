@@ -67,8 +67,7 @@ App.scenario7_filters_schema = {
         'description': {
             source: '/dimension_value_metadata',
             title: 'Label x-axis',
-            filters: [{name: 'indicator', part: 'label'},
-                      {name: 'breakdown', part: 'label'}]
+            filters: [{name: 'indicator', part: 'label'}]
         }
     },
     chart_type: 'splitted_columns',
