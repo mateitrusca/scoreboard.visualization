@@ -7,19 +7,10 @@
 
 App.chart_library['lines'] = function(container, options) {
     var year_min = 2004;
-    var year_max = 2012;
+    var year_max = 2013;
     var all_years = _.range(year_min, year_max);
 
-    var series = _(options['series']).map(function(info) {
-        var pairs = _(info['data']).sortBy('year');
-        var chart_data = _.zip(_(pairs).pluck('time-period'),
-                               _(pairs).pluck('value'));
-        return {
-            'name': info['label'],
-            'data': chart_data,
-            'animation': false
-        };
-    });
+    var series = App.format_series(options['series']);
 
     var chartOptions = {
         chart: {
