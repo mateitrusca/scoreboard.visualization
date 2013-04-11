@@ -21,6 +21,7 @@ App.ScenarioChartView = Backbone.View.extend({
         this.columns = [];
         this.xy_columns = [];
         this.dimensions_mapping = {};
+        this.multiple_series_name = null;
         this.client_filter = null;
         _(options.schema['facets']).forEach(function(facet) {
             if(facet['type'] == 'data-column') {
@@ -37,9 +38,11 @@ App.ScenarioChartView = Backbone.View.extend({
                     this.client_filter = facet['name'];
                 }
             }
+            if(facet['multiple_series']) {
+                this.multiple_series_name = facet['name'];
+            }
         }, this);
         this.datasource = this.schema['chart_datasource'] || {};
-        this.multiple_series_name = this.datasource['groupby'];
         this.requests_in_flight = [];
         this.load_chart();
     },

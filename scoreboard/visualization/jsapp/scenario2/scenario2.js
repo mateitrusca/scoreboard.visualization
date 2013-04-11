@@ -41,6 +41,7 @@ App.scenario2_filters_schema = {
          name: 'countries',
          label: 'Countries',
          dimension: 'ref-area',
+         multiple_series: true,
          default_value: ['EU27'],
          position: '.right_column',
          constraints: {
@@ -61,9 +62,6 @@ App.scenario2_filters_schema = {
         }
     },
     chart_type: 'lines',
-    chart_datasource: {
-        groupby: 'countries'
-    },
     chart_meta_labels: [
         {targets: ['x_title'],
          filter_name: 'indicator',

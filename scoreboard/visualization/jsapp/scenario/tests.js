@@ -239,15 +239,13 @@ describe('ScenarioChartViewParameters', function() {
                      name: 'country',
                      label: 'Select one indicator',
                      dimension: 'ref-area',
+                     multiple_series: true,
                      constraints: {
                          'indicator': 'indicator'
                      }},
                      {type: 'data-column', dimension: 'dimension1'},
                      {type: 'data-column', dimension: 'value1'}
                 ],
-                chart_datasource: {
-                    groupby: 'country'
-                },
                 chart_meta_labels: [
                     {targets: ['label1'], filter_name: 'indicator', type: 'label'}
                 ]
