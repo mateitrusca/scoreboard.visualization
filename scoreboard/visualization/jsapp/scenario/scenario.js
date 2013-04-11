@@ -39,6 +39,7 @@ App.ScenarioChartView = Backbone.View.extend({
             }
         }, this);
         this.datasource = this.schema['chart_datasource'] || {};
+        this.multiple_series_name = this.datasource['groupby'];
         this.requests_in_flight = [];
         this.load_chart();
     },
@@ -77,14 +78,13 @@ App.ScenarioChartView = Backbone.View.extend({
         this.requests_in_flight = [];
         var incomplete = false;
         var args = {};
-        var groupby = this.datasource['groupby'];
         var groupby_dimension = this.datasource['groupby_dimension'];
-        if (groupby) {
-            groupby_dimension = this.dimensions_mapping[groupby];
+        if (this.multiple_series_name) {
+            groupby_dimension = this.dimensions_mapping[this.multiple_series_name];
         }
         var requests = [];
         _(this.dimensions_mapping).each(function(dimension, filter_name) {
-            if(filter_name != groupby && filter_name != this.client_filter) {
+            if(filter_name != this.multiple_series_name && filter_name != this.client_filter) {
                 args[filter_name] = this.model.get(filter_name);
                 if(! args[filter_name]) { incomplete = true; }
             }
@@ -127,8 +127,8 @@ App.ScenarioChartView = Backbone.View.extend({
         var datapoints_url = this.cube_url + data_method;
 
         if (groupby_dimension) {
-            if (groupby){
-                group_values = this.model.get(groupby);
+            if (this.multiple_series_name){
+                group_values = this.model.get(this.multiple_series_name);
             }
             else {
                 var group_values_args = _(_(args).omit('columns')).extend({
