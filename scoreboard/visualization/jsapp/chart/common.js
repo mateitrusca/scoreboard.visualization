@@ -5,7 +5,7 @@
 "use strict";
 
 
-App.format_series = function (data){
+App.format_series = function (data, sort){
 
     var extract_data = function(series_item){
         return _.object([['name', series_item['ref-area-label']],
@@ -24,6 +24,14 @@ App.format_series = function (data){
                 [item['label'], data]);
     }).map(function(item){
         var serie = item['data'];
+        if (sort){
+            serie = _(serie).sortBy(function(item){
+                                if (isNaN(item['y'])){
+                                    return 0
+                                }
+                                return -item['y']
+                            })
+        }
         _.chain(labels_collection).
             difference(_(serie).pluck('name')).
             each(function(diff_label){
@@ -35,12 +43,7 @@ App.format_series = function (data){
             });
         return _.object(
                 ['name', 'data'],
-                [item['name'], _(serie).sortBy(function(item){
-                    if (isNaN(item['y'])){
-                        return 0
-                    }
-                    return -item['y']
-                })]);
+                [item['name'], serie]);
     }).value();
     return series;
 
