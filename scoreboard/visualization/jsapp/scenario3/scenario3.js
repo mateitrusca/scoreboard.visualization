@@ -106,7 +106,9 @@ App.scenario3_filters_schema = {
              'y-breakdown':    'y-breakdown',
              'y-unit-measure': 'y-unit-measure',
              'time-period': 'time-period'
-         }}
+         }},
+         {type: 'data-column', dimension: 'ref-area'},
+         {type: 'data-column', dimension: 'value', xy: true}
     ],
     annotations: {
         'x': {
@@ -125,11 +127,7 @@ App.scenario3_filters_schema = {
     chart_type: 'scatter',
     xy: true,
     chart_datasource: {
-        client_filter: 'countries',
-        extra_args: [
-            ['columns', 'ref-area'],
-            ['xy_columns', 'value']
-        ]
+        client_filter: 'countries'
     },
     chart_meta_labels: [
         {targets: ['indicator_x_label'],
