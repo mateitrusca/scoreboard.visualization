@@ -4,8 +4,7 @@
 (function() {
 "use strict";
 
-
-App.chart_library['splitted_columns'] = function(container, options) {
+function format_series(options){
     var extract_data = function(series_item){
         return _.object([['name', series_item['ref-area-label']],
                          ['y', series_item['value']]]);
@@ -36,6 +35,12 @@ App.chart_library['splitted_columns'] = function(container, options) {
                 ['name', 'data'],
                 [item['name'], serie]);
     }).value();
+    return series;
+};
+
+App.chart_library['splitted_columns'] = function(container, options) {
+
+    var series = format_series(options);
 
     var chartOptions = {
         chart: {
