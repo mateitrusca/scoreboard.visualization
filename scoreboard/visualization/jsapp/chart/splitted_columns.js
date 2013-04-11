@@ -4,14 +4,14 @@
 (function() {
 "use strict";
 
-function format_series(options){
+function format_series(data){
     var extract_data = function(series_item){
         return _.object([['name', series_item['ref-area-label']],
                          ['y', series_item['value']]]);
     };
 
     var labels_collection = []
-    var series = _.chain(options['series']).map(function(item){
+    var series = _.chain(data).map(function(item){
         var data = _(item['data']).map(extract_data);
         labels_collection = _.chain(item['data']).
                                 pluck('ref-area-label').
@@ -40,7 +40,7 @@ function format_series(options){
 
 App.chart_library['splitted_columns'] = function(container, options) {
 
-    var series = format_series(options);
+    var series = format_series(options['series']);
 
     var chartOptions = {
         chart: {
