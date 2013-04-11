@@ -71,9 +71,16 @@ App.Editor = Backbone.View.extend({
     },
 
     render: function() {
+        var all_steps = _(this.all_steps).map(function(step) {
+            return {
+                'cid': step.cid,
+                'title': step.title,
+                'current': (this.step == step)
+            };
+        }, this);
         this.$el.html(this.template({
             step: this.step,
-            all_steps: this.all_steps
+            all_steps: all_steps
         }));
         this.$el.append(this.step.el);
     },

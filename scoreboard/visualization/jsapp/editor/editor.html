@@ -11,9 +11,19 @@
   .editor-steps ul {
     list-style-type: none;
   }
+  .editor-steps li {
+    width: 150px;
+  }
+  .editor-steps li.current {
+    background-color: #a3d1eb;
+  }
   .editor-steps a {
     text-decoration: none;
     font-size: 16px;
+    display: block;
+    width: 100%;
+    height: 100%;
+    padding: 3px 5px;
   }
   .editor-box h4 {
     margin-left: 200px;
@@ -26,7 +36,9 @@
 <div class="editor-steps">
   <ul>
   {{# all_steps }}
-    <li><a href="#" data-step-cid="{{ cid }}">{{ title }}</a></li>
+    <li {{# if current }}class="current"{{/ if }}>
+      <a href="#" data-step-cid="{{ cid }}">{{ title }}</a>
+    </li>
   {{/ all_steps }}
   </ul>
 </div>
