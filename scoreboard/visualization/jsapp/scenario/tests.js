@@ -103,7 +103,6 @@ describe('ScenarioChartViewParameters', function() {
             schema: {
                 filters: [],
                 chart_datasource: {
-                    rel_url: '/test_view',
                     extra_args: []
                 },
                 chart_meta_labels: [
@@ -127,7 +126,6 @@ describe('ScenarioChartViewParameters', function() {
             schema: {
                 filters: [{name: 'indicator', dimension: 'dim1'}],
                 chart_datasource: {
-                    rel_url: '/test_view',
                     extra_args: []
                 },
                 chart_meta_labels: []
@@ -148,7 +146,6 @@ describe('ScenarioChartViewParameters', function() {
             schema: {
                 filters: [{name: 'filter1', dimension: 'dim1'}],
                 chart_datasource: {
-                    rel_url: '/datapoints_view',
                     extra_args: [
                     ]
                 },
@@ -167,37 +164,6 @@ describe('ScenarioChartViewParameters', function() {
         expect(url).to.have.string('value=dim1');
     });
 
-
-
-    it('should use the datasource init param', function() {
-        var server = this.sandbox.server;
-        var schema = {
-            filters: [
-                {type: 'select',
-                 name: 'indicator-group',
-                 label: 'Select indicator group',
-                 dimension: 'indicator-group',
-                 constraints: {}}
-            ]
-        };
-        var chart = new App.ScenarioChartView({
-            model: this.model,
-            schema: {
-                filters: [],
-                chart_datasource: {
-                    rel_url: '/test_view',
-                    args: {
-                        fields: 'ref-area,value'
-                    }
-                },
-                chart_meta_labels: []
-            },
-            scenario_chart: this.scenario_chart
-        });
-        var url = server.requests[0].url;
-        expect(url).to.have.string('test_view');
-    });
-
     it('should append extra_args to args', function() {
         var server = this.sandbox.server;
         var schema = {
@@ -214,7 +180,6 @@ describe('ScenarioChartViewParameters', function() {
             schema: {
                 filters: [],
                 chart_datasource: {
-                    rel_url: '/test_view',
                     extra_args: [
                         ['param1', 'value1'],
                         ['param2', 'value2']
@@ -245,7 +210,6 @@ describe('ScenarioChartViewParameters', function() {
             schema: {
                 filters: [],
                 chart_datasource: {
-                    rel_url: '/test_view',
                     extra_args: [
                         ['param1', 'value1'],
                         ['param2', 'value2']
@@ -266,7 +230,6 @@ describe('ScenarioChartViewParameters', function() {
             schema: {
                 filters: [],
                 chart_datasource: {
-                    rel_url: '/test_view',
                     extra_args: []
                 },
                 chart_meta_labels: [
@@ -313,7 +276,6 @@ describe('ScenarioChartViewParameters', function() {
                 ],
                 chart_datasource: {
                     groupby: 'country',
-                    rel_url: '/source_view',
                     extra_args: [
                         ['fields', 'dimension1,value1']
                     ]
@@ -377,7 +339,6 @@ describe('ScenarioChartView', function() {
                      type: 'label'}
                 ],
                 chart_datasource: {
-                    rel_url: '/datapoints',
                     extra_args: [
                         ['fields', 'ref-area,value']
                     ]
@@ -443,7 +404,6 @@ describe('ScenarioChartView', function() {
             schema: {
                 filters: filters,
                 chart_datasource: {
-                    rel_url: '/datapoints',
                     client_filter: 'filter3'
                 }
             },

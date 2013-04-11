@@ -106,7 +106,8 @@ App.ScenarioChartView = Backbone.View.extend({
         };
 
         var group_values = null;
-
+        var datapoints_url = this.cube_url +
+            (this.datasource['rel_url'] || '/datapoints');
 
         if (groupby_dimension) {
             if (groupby){
@@ -127,7 +128,7 @@ App.ScenarioChartView = Backbone.View.extend({
             }
             requests = _(group_values).map(function(value) {
                 args[groupby_dimension] = value;
-                return $.get(this.cube_url + this.datasource['rel_url'], args);
+                return $.get(datapoints_url, args);
             }, this);
 
             var labels_args = {
@@ -145,7 +146,7 @@ App.ScenarioChartView = Backbone.View.extend({
         }
         else {
             group_values = [null];
-            requests.push($.get(this.cube_url + this.datasource['rel_url'], args));
+            requests.push($.get(datapoints_url, args));
         }
 
         var client_filter_options = [];
