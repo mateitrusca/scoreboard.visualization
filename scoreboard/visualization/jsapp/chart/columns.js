@@ -5,7 +5,7 @@
 "use strict";
 
 
-App.chart_library['columns'] = function(container, options, meta_data) {
+App.chart_library['columns'] = function(container, options) {
     var series = options['series'][0]['data'];
     series = _(series).sortBy('value').reverse();
     var country_names = _(series).pluck('ref-area-label');
@@ -38,7 +38,7 @@ App.chart_library['columns'] = function(container, options, meta_data) {
             }
         },
         title: {
-            text: meta_data['x_title'],
+            text: options.meta_data['x_title'],
             style: {
                 color: '#000000',
                 fontWeight: 'bold',
@@ -47,7 +47,7 @@ App.chart_library['columns'] = function(container, options, meta_data) {
             }
         },
         subtitle: {
-            text: meta_data['year_text'],
+            text: options.meta_data['year_text'],
             align: 'left'
 
         },
@@ -65,7 +65,7 @@ App.chart_library['columns'] = function(container, options, meta_data) {
         yAxis: {
             min: 0,
             title: {
-                text: meta_data['y_title'],
+                text: options.meta_data['y_title'],
                 style: {
                     color: '#000000',
                     fontWeight: 'bold'

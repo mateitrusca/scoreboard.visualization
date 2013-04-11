@@ -5,7 +5,7 @@
 "use strict";
 
 
-App.chart_library['splitted_columns'] = function(container, options, meta_data) {
+App.chart_library['splitted_columns'] = function(container, options) {
     var extract_data = function(series_item){
         return _.object([['name', series_item['ref-area-label']],
                          ['y', series_item['value']]]);
@@ -54,7 +54,7 @@ App.chart_library['splitted_columns'] = function(container, options, meta_data) 
             }
         },
         title: {
-            text: meta_data['x_title'],
+            text: options.meta_data['x_title'],
             style: {
                 color: '#000000',
                 fontWeight: 'bold',
@@ -63,7 +63,7 @@ App.chart_library['splitted_columns'] = function(container, options, meta_data) 
             }
         },
         subtitle: {
-            text: meta_data['year_text'],
+            text: options.meta_data['year_text'],
             align: 'left'
 
         },
@@ -81,7 +81,7 @@ App.chart_library['splitted_columns'] = function(container, options, meta_data) 
         yAxis: {
             min: 0,
             title: {
-                text: meta_data['y_title'],
+                text: options.meta_data['y_title'],
                 style: {
                     color: '#000000',
                     fontWeight: 'bold'

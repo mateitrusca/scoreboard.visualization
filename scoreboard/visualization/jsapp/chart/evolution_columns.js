@@ -54,7 +54,7 @@ App.get_snapshots = function(series){
                     [_(out).sortBy('label'), mapping]);
 }
 
-App.chart_library['evolution_columns'] = function(container, options, meta_data) {
+App.chart_library['evolution_columns'] = function(container, options) {
     var time_snapshots = App.get_snapshots(options['series']);
     var series = time_snapshots.data[0]['data'];
     var country_names = _(time_snapshots.mapping).values().sort();
@@ -134,7 +134,7 @@ App.chart_library['evolution_columns'] = function(container, options, meta_data)
             }
         },
         title: {
-            text: meta_data['x_title'],
+            text: options.meta_data['x_title'],
             style: {
                 color: '#000000',
                 fontWeight: 'bold',
@@ -143,7 +143,7 @@ App.chart_library['evolution_columns'] = function(container, options, meta_data)
             }
         },
         subtitle: {
-            text: meta_data['year_text'],
+            text: options.meta_data['year_text'],
             align: 'left'
 
         },
@@ -162,7 +162,7 @@ App.chart_library['evolution_columns'] = function(container, options, meta_data)
             min: 0,
             max: 100,
             title: {
-                text: meta_data['y_title'],
+                text: options.meta_data['y_title'],
                 style: {
                     color: '#000000',
                     fontWeight: 'bold'

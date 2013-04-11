@@ -5,7 +5,7 @@
 "use strict";
 
 
-App.chart_library['scatter'] = function(container, options, meta_data) {
+App.chart_library['scatter'] = function(container, options) {
 
     $(container).addClass('normal-chart');
 
@@ -69,8 +69,8 @@ App.chart_library['scatter'] = function(container, options, meta_data) {
             }
         },
         title: {
-            text: (meta_data['indicator_x_label'] + ' vs. ' +
-                   meta_data['indicator_y_label']),
+            text: (options.meta_data['indicator_x_label'] + ' vs. ' +
+                   options.meta_data['indicator_y_label']),
             style: {
                 color: '#000000',
                 fontWeight: 'bold',
@@ -81,7 +81,7 @@ App.chart_library['scatter'] = function(container, options, meta_data) {
         xAxis: [{
             title: {
                 enabled: true,
-                text: meta_data['indicator_x_label'],
+                text: options.meta_data['indicator_x_label'],
                 style: {
                     color: '#000000',
                     fontWeight: 'bold'
@@ -108,7 +108,7 @@ App.chart_library['scatter'] = function(container, options, meta_data) {
         }],
         yAxis: {
             title: {
-                text: meta_data['indicator_y_label'],
+                text: options.meta_data['indicator_y_label'],
                 style: {
                     color: '#000000',
                     fontWeight: 'bold'
@@ -123,8 +123,8 @@ App.chart_library['scatter'] = function(container, options, meta_data) {
         tooltip: {
             formatter: function() {
             return ('<b>'+ this.series.name +'</b><br/>x: '+
-                this.x + ' ' + meta_data['x_unit_label'] + '<br>y: '+
-                this.y + ' ' + meta_data['y_unit_label']
+                this.x + ' ' + options.meta_data['x_unit_label'] + '<br>y: '+
+                this.y + ' ' + options.meta_data['y_unit_label']
             )}
         },
         legend: {
