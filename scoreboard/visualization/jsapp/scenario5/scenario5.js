@@ -70,7 +70,9 @@ App.scenario5_filters_schema = {
              'time-period': 'time-period',
              'indicator-group': 'indicator-group',
              'indicator': 'indicator'
-         }}
+         }},
+         {type: 'data-column', dimension: 'ref-area'},
+         {type: 'data-column', dimension: 'value'}
     ],
     annotations: {
         'description': {
@@ -82,10 +84,7 @@ App.scenario5_filters_schema = {
     },
     chart_type: 'map',
     chart_datasource: {
-        client_filter: 'countries',
-        extra_args: [
-            ['columns', 'ref-area,value']
-        ]
+        client_filter: 'countries'
     },
     chart_meta_labels: [
         {targets: ['x_title'], filter_name: 'indicator', type: 'label'},

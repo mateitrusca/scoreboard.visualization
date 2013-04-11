@@ -102,9 +102,6 @@ describe('ScenarioChartViewParameters', function() {
             model: this.model,
             schema: {
                 facets: [],
-                chart_datasource: {
-                    extra_args: []
-                },
                 chart_meta_labels: [
                     {targets: ['dyn_lbl'],
                      filter_name: 'indicator',
@@ -125,9 +122,6 @@ describe('ScenarioChartViewParameters', function() {
             model: this.model,
             schema: {
                 facets: [{name: 'indicator', dimension: 'dim1'}],
-                chart_datasource: {
-                    extra_args: []
-                },
                 chart_meta_labels: []
             },
             scenario_chart: this.scenario_chart
@@ -145,10 +139,6 @@ describe('ScenarioChartViewParameters', function() {
             model: this.model,
             schema: {
                 facets: [{name: 'filter1', dimension: 'dim1'}],
-                chart_datasource: {
-                    extra_args: [
-                    ]
-                },
                 chart_meta_labels: [
                     {targets: ['x_title'],
                      filter_name: 'filter1',
@@ -197,12 +187,6 @@ describe('ScenarioChartViewParameters', function() {
             model: this.model,
             schema: {
                 facets: [],
-                chart_datasource: {
-                    extra_args: [
-                        ['param1', 'value1'],
-                        ['param2', 'value2']
-                    ]
-                },
                 chart_meta_labels: []
             },
             scenario_chart: scenario_chart
@@ -217,9 +201,6 @@ describe('ScenarioChartViewParameters', function() {
             model: this.model,
             schema: {
                 facets: [],
-                chart_datasource: {
-                    extra_args: []
-                },
                 chart_meta_labels: [
                     {targets: ['label1'],
                      filter_name: 'indicator',

@@ -48,7 +48,9 @@ App.scenario2_filters_schema = {
              'indicator': 'indicator',
              'breakdown': 'breakdown',
              'unit-measure': 'unit-measure'
-         }}
+         }},
+         {type: 'data-column', dimension: 'time-period'},
+         {type: 'data-column', dimension: 'value'}
     ],
     annotations: {
         'description': {
@@ -60,10 +62,7 @@ App.scenario2_filters_schema = {
     },
     chart_type: 'lines',
     chart_datasource: {
-        groupby: 'countries',
-        extra_args: [
-            ['columns', 'time-period,value']
-        ]
+        groupby: 'countries'
     },
     chart_meta_labels: [
         {targets: ['x_title'],

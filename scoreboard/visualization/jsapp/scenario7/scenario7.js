@@ -58,7 +58,9 @@ App.scenario7_filters_schema = {
              'time-period': 'time-period',
              'indicator-group': 'indicator-group',
              'indicator': 'indicator'
-         }}
+         }},
+         {type: 'data-column', dimension: 'ref-area'},
+         {type: 'data-column', dimension: 'value'}
     ],
     annotations: {
         'description': {
@@ -71,10 +73,7 @@ App.scenario7_filters_schema = {
     chart_type: 'splitted_columns',
     chart_datasource: {
         groupby_dimension: 'breakdown',
-        client_filter: 'countries',
-        extra_args: [
-            ['columns', 'ref-area,value']
-        ]
+        client_filter: 'countries'
     },
     chart_meta_labels: [
         {targets: ['x_title'],
