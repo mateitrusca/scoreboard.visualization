@@ -9,44 +9,7 @@ App.chart_library['scatter'] = function(container, options) {
 
     $(container).addClass('normal-chart');
 
-    var countrycolor = function(code) {
-        if (_.isNull(App.COUNTRY_COLOR[code])) {
-            return '#1C3FFD';
-        } else {
-            return App.COUNTRY_COLOR[code];
-        }
-    }
-
-
-    var label_formatter = function() {
-        return this.point.name;
-    };
-
-    var series = _(options['series'][0]['data']).map(function(datapoint) {
-        var code = datapoint['ref-area'];
-        return {
-            'name': code,
-            'color': countrycolor(code),
-            'data': [{
-                'name': code,
-                'x': datapoint['value']['x'],
-                'y': datapoint['value']['y']
-            }],
-            'marker': {
-                'radius': 5,
-                'symbol': 'circle',
-                'states': {
-                    hover: {'enabled': true, 'lineColor': 'rgb(100,100,100)'}
-                }
-            },
-            'dataLabels': {
-                'enabled': true,
-                'x': 16,
-                'y': 4,
-                'formatter': label_formatter
-            }
-        }
-    });
+    var series = App.format_series(options['series'], false, 'xy');
 
     var chartOptions = {
         chart: {
