@@ -19,57 +19,14 @@ function get_tick_data(input, moment){
     if (t >= input.length) { t = 0; }
     input = _(input).sortBy('label');
     var data = _(input).pluck('data');
-    var out = _(data[t]).pluck('value');
+    var out = _(data[t]).pluck('y');
     return out
 };
 
-App.get_snapshots = function(series){
-    var mapping = {};
-    _(series).each(
-        function(item){
-            _(item['data']).each(function(item){
-                mapping[item["ref-area"]] = item['ref-area-label']
-            });
-        });
-    var out = _(series).map(
-        function(item){
-            var notations = [];
-            if(item['data'].length != 0){
-                notations = _(item['data']).pluck('ref-area');
-            }
-            var diff = _.difference(_(mapping).keys(), notations);
-            var data = item['data'];
-            _(diff).each(function(notation){
-                this['data'].push({
-                    'ref-area': notation,
-                    'ref-area-label': mapping[notation],
-                    'value': 'n/a'
-                });
-            }, item);
-            return { 'label': item['label'],
-                     'data': _(data).sortBy('ref-area') }
-        }
-    );
-    return _.object(['data', 'mapping'],
-                    [_(out).sortBy('label'), mapping]);
-}
-
 App.chart_library['evolution_columns'] = function(container, options) {
-    var time_snapshots = App.get_snapshots(options['series']);
-    var series = time_snapshots.data[0]['data'];
-    var country_names = _(time_snapshots.mapping).values().sort();
-    var values = _(series).map(
-        function(item){
-            var result = item['value'] * 100;
-            if (item['ref-area'] === "EU27"){
-                return {'y': result,
-                        'color': special_bar_color}
-            }
-            else{
-                return result;
-            }
-    });
-
+    var time_snapshots = App.format_series(options['series']);
+    var series = time_snapshots[0]['data'];
+    var values = series;
     var morph = function(chart, data, moment){
         if (moment){
             t = moment;
@@ -85,9 +42,6 @@ App.chart_library['evolution_columns'] = function(container, options) {
             else{
                 var color = bar_color;
                 var current_label = chart.series[0].data[n].category;
-                if (time_snapshots.mapping['EU27'] == current_label){
-                    color = special_bar_color;
-                };
                 chart.series[0].data[n].update(
                     { "color": color,
                       "y": value * 100 },
@@ -96,7 +50,7 @@ App.chart_library['evolution_columns'] = function(container, options) {
                 );
             }
         });
-        chart.setTitle(null, {text: time_snapshots.data[t]['label']});
+        chart.setTitle(null, {text: time_snapshots[t]['label']});
         if (!moment){
             chart.redraw();
         }
@@ -117,7 +71,7 @@ App.chart_library['evolution_columns'] = function(container, options) {
                     clearInterval(window.interval_set);
                     window.interval_set = setInterval(
                             _.bind(function() {
-                                var data = get_tick_data(time_snapshots.data);
+                                var data = get_tick_data(time_snapshots);
                                 morph(this, data);
                              }, this), 1000);
                 }
@@ -148,7 +102,7 @@ App.chart_library['evolution_columns'] = function(container, options) {
 
         },
         xAxis: {
-            categories: country_names,
+            type: 'category',
             labels: {
                 rotation: -45,
                 align: 'right',
@@ -184,7 +138,7 @@ App.chart_library['evolution_columns'] = function(container, options) {
             {
                 name: options['indicator_label'],
                 color: bar_color,
-                data: values,
+                data: series,
                 animation: false
             }
         ]
@@ -197,7 +151,7 @@ App.chart_library['evolution_columns'] = function(container, options) {
         model: new Backbone.Model(),
         chart: chart,
         update_chart: morph,
-        snapshots_data: time_snapshots.data,
+        snapshots_data: time_snapshots,
         extract_snapshot: get_tick_data,
         interval: window.interval_set,
         range: _.object( [['min', parseInt(slider_values[0])],
