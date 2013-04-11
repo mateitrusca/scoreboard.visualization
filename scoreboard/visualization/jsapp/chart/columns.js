@@ -6,20 +6,8 @@
 
 
 App.chart_library['columns'] = function(container, options) {
-    var series = options['series'][0]['data'];
-    series = _(series).sortBy('value').reverse();
-    var country_names = _(series).pluck('ref-area-label');
-    var values = _(series).map(
-        function(item){
-            var result = item['value'] * 100;
-            if (item['ref-area'] === "EU27"){
-                return {'y': result,
-                        'color': '#35478C'}
-            }
-            else{
-                return result;
-            }
-    });
+
+    var series = App.format_series(options['series']);
 
     var chartOptions = {
         chart: {
@@ -52,7 +40,7 @@ App.chart_library['columns'] = function(container, options) {
 
         },
         xAxis: {
-            categories: country_names,
+            type: 'category',
             labels: {
                 rotation: -45,
                 align: 'right',
@@ -83,14 +71,7 @@ App.chart_library['columns'] = function(container, options) {
                 stacking: 'normal'
             }
         },
-        series: [
-            {
-                name: options['indicator_label'],
-                color: '#7FB2F0',
-                data: values,
-                animation: false
-            }
-        ]
+        series: series
     };
 
     var chart = new Highcharts.Chart(chartOptions);
