@@ -42,7 +42,6 @@ App.ScenarioChartView = Backbone.View.extend({
                 this.multiple_series_name = facet['name'];
             }
         }, this);
-        this.datasource = this.schema['chart_datasource'] || {};
         this.requests_in_flight = [];
         this.load_chart();
     },
@@ -81,10 +80,6 @@ App.ScenarioChartView = Backbone.View.extend({
         this.requests_in_flight = [];
         var incomplete = false;
         var args = {};
-        var groupby_dimension = this.datasource['groupby_dimension'];
-        if (this.multiple_series_name) {
-            groupby_dimension = this.dimensions_mapping[this.multiple_series_name];
-        }
         var requests = [];
         _(this.dimensions_mapping).each(function(dimension, filter_name) {
             if(filter_name != this.multiple_series_name && filter_name != this.client_filter) {
@@ -129,23 +124,10 @@ App.ScenarioChartView = Backbone.View.extend({
                                              : '/datapoints');
         var datapoints_url = this.cube_url + data_method;
 
-        if (groupby_dimension) {
-            if (this.multiple_series_name){
-                group_values = this.model.get(this.multiple_series_name);
-            }
-            else {
-                var group_values_args = _(_(args).omit('columns')).extend({
-                    'dimension': groupby_dimension,
-                    'rev': this.data_revision
-                });
-                $.ajaxSetup({async: false});
-                $.get(this.cube_url + '/dimension_values', group_values_args).done(
-                    function(data){
-                        group_values = _(data['options']).pluck('notation');
-                    }
-                );
-                $.ajaxSetup({async: true});
-            }
+        if (this.multiple_series_name) {
+            var groupby_dimension = this.dimensions_mapping[
+                this.multiple_series_name];
+            group_values = this.model.get(this.multiple_series_name);
             requests = _(group_values).map(function(value) {
                 args[groupby_dimension] = value;
                 return $.get(datapoints_url, args);

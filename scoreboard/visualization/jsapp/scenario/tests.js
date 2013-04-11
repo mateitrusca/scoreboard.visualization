@@ -263,6 +263,35 @@ describe('ScenarioChartViewParameters', function() {
         expect(url_param(url, 'ref-area')).to.equal('BE');
     });
 
+    it('should fetch all series from an AllValuesFilter', function() {
+        var loadstate = new Backbone.Model();
+        var facets = [
+            {type: 'all-values', multiple_series: true,
+             dimension: 'ref-area', name: 'ref-area'},
+            {type: 'data-column', dimension: 'value'}
+        ];
+        var filter = new App.AllValuesFilter(_({
+            model: this.model,
+            loadstate: loadstate
+        }).extend(facets[0]));
+        var chart = new App.ScenarioChartView({
+            model: this.model,
+            loadstate: loadstate,
+            schema: {facets: facets},
+            scenario_chart: this.scenario_chart
+        });
+        var country_options = [{'notation': 'area1'}, {'notation': 'area2'}];
+        var url_param = App.testing.url_param;
+        var requests = this.sandbox.server.requests;
+        expect(requests[0].url).to.have.string('/dimension_values?');
+        expect(url_param(requests[0].url, 'dimension')).to.equal('ref-area');
+        App.respond_json(requests[0], {'options': country_options});
+        expect(url_param(requests[1].url, 'ref-area')).to.equal('area1');
+        expect(url_param(requests[1].url, 'columns')).to.equal('value');
+        expect(url_param(requests[2].url, 'ref-area')).to.equal('area2');
+        expect(url_param(requests[2].url, 'columns')).to.equal('value');
+    });
+
 });
 
 

@@ -50,6 +50,10 @@ App.scenario6_filters_schema = {
              'breakdown': 'breakdown',
              'unit-measure': 'unit-measure'
          }},
+         {type: 'all-values',
+          dimension: 'time-period',
+          multiple_series: true,
+          name: 'time-period'},
          {type: 'data-column', dimension: 'ref-area'},
          {type: 'data-column', dimension: 'value'}
     ],
@@ -62,9 +66,6 @@ App.scenario6_filters_schema = {
         }
     },
     chart_type: 'evolution_columns',
-    chart_datasource: {
-        groupby_dimension: 'time-period'
-    },
     chart_meta_labels: [
         {targets: ['x_title'],
          filter_name: 'indicator',

@@ -60,6 +60,17 @@ App.scenario7_filters_schema = {
              'indicator-group': 'indicator-group',
              'indicator': 'indicator'
          }},
+         {type: 'all-values',
+          dimension: 'breakdown',
+          multiple_series: true,
+          name: 'breakdown',
+          constraints: {
+             'unit-measure': 'unit-measure',
+             'breakdown-group': 'breakdown-group',
+             'time-period': 'time-period',
+             'indicator-group': 'indicator-group',
+             'indicator': 'indicator'
+          }},
          {type: 'data-column', dimension: 'ref-area'},
          {type: 'data-column', dimension: 'value'}
     ],
@@ -71,9 +82,6 @@ App.scenario7_filters_schema = {
         }
     },
     chart_type: 'splitted_columns',
-    chart_datasource: {
-        groupby_dimension: 'breakdown'
-    },
     chart_meta_labels: [
         {targets: ['x_title'],
          filter_name: 'indicator',
