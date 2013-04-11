@@ -71,7 +71,7 @@ scoreboard.visualization.datacube.indicators = {
             a.attr('href', 'indicators#' + tr.attr('id'));
             a.text(tr.text());
             li.append(a);
-            toc.append(li);
+            toc_ul.append(li);
         });
     },
     addTableCaption: function(groupId, indicator, tbody){
