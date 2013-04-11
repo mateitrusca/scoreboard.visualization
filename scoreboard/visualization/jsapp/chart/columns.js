@@ -5,21 +5,9 @@
 "use strict";
 
 
-App.chart_library['columns'] = function(container, options, meta_data) {
-    var series = options['series'][0]['data'];
-    series = _(series).sortBy('value').reverse();
-    var country_names = _(series).pluck('ref-area-label');
-    var values = _(series).map(
-        function(item){
-            var result = item['value'] * 100;
-            if (item['ref-area'] === "EU27"){
-                return {'y': result,
-                        'color': '#35478C'}
-            }
-            else{
-                return result;
-            }
-    });
+App.chart_library['columns'] = function(container, options) {
+
+    var series = App.format_series(options['series'], -1);
 
     var chartOptions = {
         chart: {
@@ -38,7 +26,7 @@ App.chart_library['columns'] = function(container, options, meta_data) {
             }
         },
         title: {
-            text: meta_data['x_title'],
+            text: options.meta_data['x_title'],
             style: {
                 color: '#000000',
                 fontWeight: 'bold',
@@ -47,12 +35,12 @@ App.chart_library['columns'] = function(container, options, meta_data) {
             }
         },
         subtitle: {
-            text: meta_data['year_text'],
+            text: options.meta_data['year_text'],
             align: 'left'
 
         },
         xAxis: {
-            categories: country_names,
+            type: 'category',
             labels: {
                 rotation: -45,
                 align: 'right',
@@ -65,7 +53,7 @@ App.chart_library['columns'] = function(container, options, meta_data) {
         yAxis: {
             min: 0,
             title: {
-                text: meta_data['y_title'],
+                text: options.meta_data['y_title'],
                 style: {
                     color: '#000000',
                     fontWeight: 'bold'
@@ -83,14 +71,7 @@ App.chart_library['columns'] = function(container, options, meta_data) {
                 stacking: 'normal'
             }
         },
-        series: [
-            {
-                name: options['indicator_label'],
-                color: '#7FB2F0',
-                data: values,
-                animation: false
-            }
-        ]
+        series: series
     };
 
     var chart = new Highcharts.Chart(chartOptions);

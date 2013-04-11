@@ -5,21 +5,12 @@
 "use strict";
 
 
-App.chart_library['lines'] = function(container, options, meta_data) {
+App.chart_library['lines'] = function(container, options) {
     var year_min = 2004;
-    var year_max = 2012;
+    var year_max = 2013;
     var all_years = _.range(year_min, year_max);
 
-    var series = _(options['series']).map(function(info) {
-        var pairs = _(info['data']).sortBy('year');
-        var chart_data = _.zip(_(pairs).pluck('time-period'),
-                               _(pairs).pluck('value'));
-        return {
-            'name': info['label'],
-            'data': chart_data,
-            'animation': false
-        };
-    });
+    var series = App.format_series(options['series']);
 
     var chartOptions = {
         chart: {
@@ -39,7 +30,7 @@ App.chart_library['lines'] = function(container, options, meta_data) {
             }
         },
         title: {
-            text: meta_data['x_title'],
+            text: options.meta_data['x_title'],
             x: -20,
             margin: 30,
             style: {
@@ -59,7 +50,7 @@ App.chart_library['lines'] = function(container, options, meta_data) {
         },
         yAxis: {
             title: {
-                text: meta_data['y_title'],
+                text: options.meta_data['y_title'],
                 style: {
                     color: '#000000',
                     fontWeight: 'bold'
@@ -75,7 +66,7 @@ App.chart_library['lines'] = function(container, options, meta_data) {
         tooltip: {
             formatter: function() {
             return '<b>'+ this.series.name +'</b><br/>'+
-                            this.x +': '+ Math.round(this.y*10)/10 + meta_data['unit'];
+                            this.x +': '+ Math.round(this.y*10)/10 + options.meta_data['unit'];
             }
         },
         legend: {

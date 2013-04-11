@@ -4,38 +4,9 @@
 (function() {
 "use strict";
 
+App.chart_library['splitted_columns'] = function(container, options) {
 
-App.chart_library['splitted_columns'] = function(container, options, meta_data) {
-    var extract_data = function(series_item){
-        return _.object([['name', series_item['ref-area-label']],
-                         ['y', series_item['value']]]);
-    };
-
-    var labels_collection = []
-    var series = _.chain(options['series']).map(function(item){
-        var data = _(item['data']).map(extract_data);
-        labels_collection = _.chain(item['data']).
-                                pluck('ref-area-label').
-                                union(labels_collection).
-                                value();
-        return _.object(
-                ['name', 'data'],
-                [item['label'], data]);
-    }).map(function(item){
-        var serie = item['data'];
-        _.chain(labels_collection).
-            difference(_(serie).pluck('name')).
-            each(function(diff_label){
-                _(serie).push(
-                    _.object(
-                        [['name', diff_label],
-                         ['y', 'n/a']])
-                );
-            });
-        return _.object(
-                ['name', 'data'],
-                [item['name'], serie]);
-    }).value();
+    var series = App.format_series(options['series'], -1);
 
     var chartOptions = {
         chart: {
@@ -54,7 +25,7 @@ App.chart_library['splitted_columns'] = function(container, options, meta_data) 
             }
         },
         title: {
-            text: meta_data['x_title'],
+            text: options.meta_data['x_title'],
             style: {
                 color: '#000000',
                 fontWeight: 'bold',
@@ -63,7 +34,7 @@ App.chart_library['splitted_columns'] = function(container, options, meta_data) 
             }
         },
         subtitle: {
-            text: meta_data['year_text'],
+            text: options.meta_data['year_text'],
             align: 'left'
 
         },
@@ -81,7 +52,7 @@ App.chart_library['splitted_columns'] = function(container, options, meta_data) 
         yAxis: {
             min: 0,
             title: {
-                text: meta_data['y_title'],
+                text: options.meta_data['y_title'],
                 style: {
                     color: '#000000',
                     fontWeight: 'bold'
