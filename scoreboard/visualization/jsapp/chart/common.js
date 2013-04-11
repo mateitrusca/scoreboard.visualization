@@ -4,6 +4,16 @@
 (function() {
 "use strict";
 
+function sort_serie(serie){
+    serie = _(serie).sortBy( function(item){
+        if (isNaN(item['y'])){
+            return 0
+        }
+        return -item['y']
+    })
+    return serie
+};
+
 
 App.format_series = function (data, sort){
 
@@ -25,12 +35,7 @@ App.format_series = function (data, sort){
     }).map(function(item){
         var serie = item['data'];
         if (sort){
-            serie = _(serie).sortBy(function(item){
-                                if (isNaN(item['y'])){
-                                    return 0
-                                }
-                                return -item['y']
-                            })
+            serie = sort_serie(serie);
         }
         _.chain(labels_collection).
             difference(_(serie).pluck('name')).
