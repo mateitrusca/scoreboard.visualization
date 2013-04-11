@@ -33,7 +33,12 @@ function format_series(data){
             });
         return _.object(
                 ['name', 'data'],
-                [item['name'], serie]);
+                [item['name'], _(serie).sortBy(function(item){
+                    if (isNaN(item['y'])){
+                        return 0
+                    }
+                    return -item['y']
+                })]);
     }).value();
     return series;
 };
