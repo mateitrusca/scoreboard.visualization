@@ -45,7 +45,7 @@ App.FiltersEditor = Backbone.View.extend({
                 return;
             value.push(filter.toJSON());
         })
-        this.model.set('filters', value);
+        this.model.set('facets', value);
     },
 
     on_click_enable: function(evt) {

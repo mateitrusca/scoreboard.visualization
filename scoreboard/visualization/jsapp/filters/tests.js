@@ -261,7 +261,7 @@ describe('modular filters', function() {
             this.model = new Backbone.Model();
 
             this.schema = {
-                filters: [
+                facets: [
                     {type: 'select',
                      position: '.left_column',
                      name: 'indicator-group',
@@ -286,7 +286,7 @@ describe('modular filters', function() {
 
         it('should append filters on the left if pos param is missing', function(){
             var schema = {
-                filters: [
+                facets: [
                     {type: 'select',
                      name: 'indicator-group',
                      label: 'Indicator group',

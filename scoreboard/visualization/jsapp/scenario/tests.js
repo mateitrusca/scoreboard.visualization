@@ -101,7 +101,7 @@ describe('ScenarioChartViewParameters', function() {
         var chart = new App.ScenarioChartView({
             model: this.model,
             schema: {
-                filters: [],
+                facets: [],
                 chart_datasource: {
                     extra_args: []
                 },
@@ -119,12 +119,12 @@ describe('ScenarioChartViewParameters', function() {
         );
     });
 
-    it('should build dimensions_mapping from received filters schema',
+    it('should build dimensions_mapping from received facets schema',
        function() {
         var chart = new App.ScenarioChartView({
             model: this.model,
             schema: {
-                filters: [{name: 'indicator', dimension: 'dim1'}],
+                facets: [{name: 'indicator', dimension: 'dim1'}],
                 chart_datasource: {
                     extra_args: []
                 },
@@ -144,7 +144,7 @@ describe('ScenarioChartViewParameters', function() {
         var chart = new App.ScenarioChartView({
             model: this.model,
             schema: {
-                filters: [{name: 'filter1', dimension: 'dim1'}],
+                facets: [{name: 'filter1', dimension: 'dim1'}],
                 chart_datasource: {
                     extra_args: [
                     ]
@@ -167,7 +167,7 @@ describe('ScenarioChartViewParameters', function() {
     it('should append extra_args to args', function() {
         var server = this.sandbox.server;
         var schema = {
-            filters: [
+            facets: [
                 {type: 'select',
                  name: 'indicator-group',
                  label: 'Select indicator group',
@@ -178,7 +178,7 @@ describe('ScenarioChartViewParameters', function() {
         var chart = new App.ScenarioChartView({
             model: this.model,
             schema: {
-                filters: [],
+                facets: [],
                 chart_datasource: {
                     extra_args: [
                         ['param1', 'value1'],
@@ -197,7 +197,7 @@ describe('ScenarioChartViewParameters', function() {
         var server = this.sandbox.server;
         var scenario_chart = sinon.spy();
         var schema = {
-            filters: [
+            facets: [
                 {type: 'select',
                  name: 'indicator-group',
                  label: 'Select indicator group',
@@ -208,7 +208,7 @@ describe('ScenarioChartViewParameters', function() {
         var chart = new App.ScenarioChartView({
             model: this.model,
             schema: {
-                filters: [],
+                facets: [],
                 chart_datasource: {
                     extra_args: [
                         ['param1', 'value1'],
@@ -228,7 +228,7 @@ describe('ScenarioChartViewParameters', function() {
         var chart = new App.ScenarioChartView({
             model: this.model,
             schema: {
-                filters: [],
+                facets: [],
                 chart_datasource: {
                     extra_args: []
                 },
@@ -254,12 +254,12 @@ describe('ScenarioChartViewParameters', function() {
     });
 
 
-    it('should fetch data using init filters dimensions', function() {
+    it('should fetch data using init facet dimensions', function() {
         var server = this.sandbox.server;
         var chart = new App.ScenarioChartView({
             model: this.model,
             schema: {
-                filters: [
+                facets: [
                     {type: 'select',
                      name: 'indicator',
                      label: 'Select one indicator',
@@ -319,7 +319,7 @@ describe('ScenarioChartView', function() {
         this.chart = new App.ScenarioChartView({
             model: this.model,
             schema: {
-                filters: [
+                facets: [
                     {name: 'indicator',
                      label: 'Select indicator',
                      dimension: 'dim1',
@@ -396,13 +396,13 @@ describe('ScenarioChartView', function() {
     it('should make a single data query and then filter in JS', function() {
         var scenario_chart = sinon.spy();
         var model = new Backbone.Model();
-        var filters = [{name: 'filter1', dimension: 'dim1'},
-                       {name: 'filter2', dimension: 'dim2'},
-                       {name: 'filter3', dimension: 'dim3'}];
+        var facets = [{name: 'filter1', dimension: 'dim1'},
+                      {name: 'filter2', dimension: 'dim2'},
+                      {name: 'filter3', dimension: 'dim3'}];
         var chart = new App.ScenarioChartView({
             model: model,
             schema: {
-                filters: filters,
+                facets: facets,
                 chart_datasource: {
                     client_filter: 'filter3'
                 }
@@ -483,8 +483,8 @@ describe('AnnotationsView', function() {
             model: this.model,
             field: 'indicator',
             schema: {
-                filters: [{name: 'indicator', dimension: 'dim1'},
-                          {name: 'unit-measure', dimension: 'dim2'}],
+                facets: [{name: 'indicator', dimension: 'dim1'},
+                         {name: 'unit-measure', dimension: 'dim2'}],
                 annotations: {
                     'ind1': {
                         title: 'meta_title',
@@ -532,8 +532,8 @@ describe('AnnotationsView', function() {
             cube_url: App.URL,
             model: this.model,
             schema: {
-                filters: [{name: 'indicator', dimension: 'dim1'},
-                          {name: 'abc', dimension: 'dim2'}],
+                facets: [{name: 'indicator', dimension: 'dim1'},
+                         {name: 'abc', dimension: 'dim2'}],
                 annotations: {
                     'x': {
                         title: 'Label of x-axis',

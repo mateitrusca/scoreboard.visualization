@@ -19,8 +19,8 @@ App.ScenarioChartView = Backbone.View.extend({
         this.meta_labels = this.schema['chart_meta_labels'];
         this.scenario_chart = options['scenario_chart'];
         this.dimensions_mapping = _.object(
-            _(options.schema.filters).pluck('name'),
-            _(options.schema.filters).pluck('dimension')
+            _(options.schema['facets']).pluck('name'),
+            _(options.schema['facets']).pluck('dimension')
         );
         this.datasource = this.schema['chart_datasource'];
         this.requests_in_flight = [];
@@ -269,8 +269,8 @@ App.AnnotationsView = Backbone.View.extend({
         this.cube_url = options['cube_url'];
         this.schema = options['schema'];
         this.dimensions_mapping = _.object(
-            _(this.schema['filters']).pluck('name'),
-            _(this.schema['filters']).pluck('dimension')
+            _(this.schema['facets']).pluck('name'),
+            _(this.schema['facets']).pluck('dimension')
         );
         this.model.on('change', this.render, this);
         this.description = $('#parent-fieldname-description').detach();

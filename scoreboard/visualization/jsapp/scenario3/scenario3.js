@@ -6,7 +6,7 @@
 
 
 App.scenario3_filters_schema = {
-    filters: [
+    facets: [
         {type: 'select',
          name: 'x-indicator-group',
          label: "(X) indicator group",

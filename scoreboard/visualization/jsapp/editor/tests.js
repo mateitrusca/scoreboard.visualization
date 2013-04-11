@@ -52,7 +52,7 @@ describe('FiltersEditor', function() {
         var model = new Backbone.Model();
         var view = new App.FiltersEditor({model: model});
         App.respond_json(this.sandbox.server.requests[0], dimensions_data);
-        var filters = model.get('filters');
+        var filters = model.get('facets');
         expect(filters[0]['dimension']).to.equal('indicator-group');
         expect(filters[1]['dimension']).to.equal('indicator');
         expect(filters[2]['dimension']).to.equal('breakdown-group');
@@ -67,7 +67,7 @@ describe('FiltersEditor', function() {
         var view = new App.FiltersEditor({model: model, el: this.box});
         App.respond_json(this.sandbox.server.requests[0], dimensions_data);
         var get_filter_names = function() {
-            return _(model.get('filters')).pluck('dimension');
+            return _(model.get('facets')).pluck('dimension');
         }
         var enable = view.$el.find('[name="enable"][value="ref-area"]');
         expect(get_filter_names()).to.include('ref-area');
