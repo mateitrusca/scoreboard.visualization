@@ -4,8 +4,8 @@
 describe('TimeSnapshotsExtraction', function() {
     "use strict";
 
-    beforeEach(function(){
-        this.series = [
+    it('should return an array of snapshots', function(){
+        var series = [
             {data: [],
              label:'2000'},
             {data: [{
@@ -15,71 +15,48 @@ describe('TimeSnapshotsExtraction', function() {
                     }],
              label:'2001'},
         ];
-    });
-
-    it('should return an array of snapshots', function(){
-        var result = App.get_snapshots(this.series);
-        expect(result['data'].length).to.equal(2);
-        expect(result['mapping']).to.deep.equal({
-            'AT': 'Austria'
-        });
+        var result = App.format_series(series);
+        expect(result.length).to.equal(2);
+        expect(result[1]['data']).to.deep.equal([{
+            'name': 'Austria',
+            'y': 0.4808
+        }]);
     });
 
     it('should sort the output by label', function(){
-        var result = App.get_snapshots(this.series);
-        expect(_(result.data).pluck('label')).to.deep.equal(['2000', '2001']);
+        var series = [
+            {data: [],
+             label:'2000'},
+            {data: [{
+                        "ref-area": "AT",
+                        "ref-area-label": "Austria",
+                        "value": 0.4808
+                    }],
+             label:'2001'},
+        ];
+        var result = App.format_series(series);
+        expect(_(result).pluck('name')).to.deep.equal(['2000', '2001']);
     });
 
     it('should return an array of data for each year', function(){
-        var result = App.get_snapshots(this.series);
-        expect(_(result.data).pluck('data')).to.deep.equal([
-            [{'ref-area': 'AT',
-             'ref-area-label': 'Austria',
-             'value': 'n/a'}],
-            [{'ref-area': 'AT',
-             'ref-area-label': 'Austria',
-             'value': 0.4808}]
+        var series = [
+            {data: [],
+             label:'2000'},
+            {data: [{
+                        "ref-area": "AT",
+                        "ref-area-label": "Austria",
+                        "value": 0.4808
+                    }],
+             label:'2001'},
+        ];
+        var result = App.format_series(series);
+        expect(_(result).pluck('data')).to.deep.equal([
+            [{ 'name': 'Austria',
+               'y': 'n/a'}],
+            [{ 'name': 'Austria',
+               'y': 0.4808}]
         ]);
     })
-
-    it('should build a notation to label mapping', function(){
-        var series = [
-            {data: [
-                {
-                    "ref-area": "AT",
-                    "ref-area-label": "Austria",
-                    "value": 0.1
-                }],
-             label:'2000'},
-            {data: [
-                {
-                    "ref-area": "AT",
-                    "ref-area-label": "Austria",
-                    "value": 0.2
-                },
-                {
-                    "ref-area": "BE",
-                    "ref-area-label": "Belgium",
-                    "value": 0.3
-                }],
-             label:'2001'},
-            {data: [
-                {
-                    "ref-area": "AT",
-                    "ref-area-label": "Austria",
-                    "value": 0.3
-                }],
-             label:'2002'},
-        ];
-        var result = App.get_snapshots(series);
-        expect(result.mapping).to.deep.equal(
-            {
-                'AT': 'Austria',
-                'BE': 'Belgium'
-            }
-        );
-    });
-
 });
 
 describe('ScenarioChartViewParameters', function() {
