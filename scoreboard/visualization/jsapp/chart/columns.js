@@ -7,7 +7,7 @@
 
 App.chart_library['columns'] = function(container, options) {
 
-    var series = App.format_series(options['series']);
+    var series = App.format_series(options['series'], -1);
 
     var chartOptions = {
         chart: {
