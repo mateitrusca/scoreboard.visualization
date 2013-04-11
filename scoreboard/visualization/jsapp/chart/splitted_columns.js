@@ -6,18 +6,36 @@
 
 
 App.chart_library['splitted_columns'] = function(container, options, meta_data) {
-    var series = _(options['series']).map(function(item){
-        var data = _(item['data']).pluck('value');
-        return _.object(
-            ['name', 'data'],
-            [item['label'], data]
-        );
-    });
+    var extract_data = function(series_item){
+        return _.object([['name', series_item['ref-area-label']],
+                         ['y', series_item['value']]]);
+    };
 
-    var country_names = _(_(options['series']).pluck('data')).reduce(function(prev, next){
-        return _(_(prev).pluck('ref-area-label')).union(
-                 _(next).pluck('ref-area-label'));
-    });
+    var labels_collection = []
+    var series = _.chain(options['series']).map(function(item){
+        var data = _(item['data']).map(extract_data);
+        labels_collection = _.chain(item['data']).
+                                pluck('ref-area-label').
+                                union(labels_collection).
+                                value();
+        return _.object(
+                ['name', 'data'],
+                [item['label'], data]);
+    }).map(function(item){
+        var serie = item['data'];
+        _.chain(labels_collection).
+            difference(_(serie).pluck('name')).
+            each(function(diff_label){
+                _(serie).push(
+                    _.object(
+                        [['name', diff_label],
+                         ['y', 'n/a']])
+                );
+            });
+        return _.object(
+                ['name', 'data'],
+                [item['name'], serie]);
+    }).value();
 
     var chartOptions = {
         chart: {
@@ -50,7 +68,7 @@ App.chart_library['splitted_columns'] = function(container, options, meta_data) 
 
         },
         xAxis: {
-            categories: country_names,
+            type: 'category',
             labels: {
                 rotation: -45,
                 align: 'right',
