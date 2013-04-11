@@ -6,23 +6,18 @@
 
 
 App.chart_library['splitted_columns'] = function(container, options, meta_data) {
+    var extract_data = function(series_item){
+        return _.object([['name', series_item['ref-area-label']],
+                         ['y', series_item['value']]]);
+    };
+
     var series = _(options['series']).map(function(item){
-        var data = _(item['data']).pluck('value');
+        var data = _(item['data']).map(extract_data);
         return _.object(
             ['name', 'data'],
             [item['label'], data]
         );
     });
-
-    var extract_data = function(series_item){
-        return series_item['ref-area-label'];
-    };
-
-    var country_names = _(_(options['series']).pluck('data')).reduce(
-        function(memo, item){
-            return _(memo).union(_(item).map(extract_data));
-        },
-        _(_(options['series']).pluck('data')[0]).map(extract_data));
 
     var chartOptions = {
         chart: {
@@ -55,7 +50,7 @@ App.chart_library['splitted_columns'] = function(container, options, meta_data) 
 
         },
         xAxis: {
-            categories: country_names,
+            type: 'category',
             labels: {
                 rotation: -45,
                 align: 'right',
