@@ -41,34 +41,52 @@ scoreboard.visualization.datacube.indicators = {
     },
     renderDatasetDetails: function(data){
         var self = this;
+        var tbody = self.renderDatasetTable(data);
+        self.renderDatasetToC(tbody);
+    },
+    renderDatasetTable: function(data){
+        var self = this;
         var table = jQuery('table.list_indicators');
         var tbody = jQuery('tbody', table);
         jQuery.each(data, function(idx, indicator){
             var groupId = self.escapeString(indicator.groupName);
             var caption = jQuery('tr#' + groupId, table);
             if(!caption.length){
-                var tr = jQuery('<tr id="' + groupId + '" colspan="4">');
-                tr.text(indicator.groupName);
-                tbody.append(tr);
+                self.addTableCaption(groupId, indicator, tbody);
             }
-            var tr = jQuery('<tr>');
-            tr.append('<td>' + indicator.altlabel + '</td>');
-            tr.append('<td>' + indicator.longlabel + '</td>');
-            tr.append('<td>' + indicator.definition + '</td>');
-            tr.append('<td><a href="' + indicator.sourcelink + '">' + indicator.sourcelabel + '</a></td>');
-            jQuery('tr#' + groupId).after(tr);
+            self.addTableRow(indicator, groupId);
         });
+        return tbody;
+    },
+    renderDatasetToC: function(tbody){
+        var self = this;
         var captions = jQuery('tr[id]', tbody);
         var toc = jQuery('#indicators-toc');
-        console.log(toc);
+        var toc_ul = jQuery('<ul>');
+        toc.append(toc_ul);
         jQuery.each(captions, function(i, o){
             var tr = jQuery(o);
+            var li = jQuery('<li>');
             var a = jQuery('<a>');
             a.attr('href', 'indicators#' + tr.attr('id'));
             a.text(tr.text());
-            toc.append(a);
-            toc.append('<br />');
+            li.append(a);
+            toc.append(li);
         });
+    },
+    addTableCaption: function(groupId, indicator, tbody){
+        var tr = jQuery('<tr id="' + groupId + '" colspan="4">');
+        var td = jQuery('<td>').text(indicator.groupName);
+        tr.append(td);
+        tbody.append(tr);
+    },
+    addTableRow: function(indicator, groupId){
+        var tr = jQuery('<tr>');
+        tr.append('<td>' + indicator.altlabel + '</td>');
+        tr.append('<td>' + indicator.longlabel + '</td>');
+        tr.append('<td>' + indicator.definition + '</td>');
+        tr.append('<td><a href="' + indicator.sourcelink + '">' + indicator.sourcelabel + '</a></td>');
+        jQuery('tr#' + groupId).after(tr);
     }
 };
 
