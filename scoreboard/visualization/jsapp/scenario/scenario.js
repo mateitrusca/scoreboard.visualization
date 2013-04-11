@@ -21,6 +21,7 @@ App.ScenarioChartView = Backbone.View.extend({
         this.columns = [];
         this.xy_columns = [];
         this.dimensions_mapping = {};
+        this.client_filter = null;
         _(options.schema['facets']).forEach(function(facet) {
             if(facet['type'] == 'data-column') {
                 if(facet['xy']) {
@@ -32,6 +33,9 @@ App.ScenarioChartView = Backbone.View.extend({
             }
             else {
                 this.dimensions_mapping[facet['name']] = facet['dimension'];
+                if(facet['on_client']) {
+                    this.client_filter = facet['name'];
+                }
             }
         }, this);
         this.datasource = this.schema['chart_datasource'] || {};
@@ -78,10 +82,9 @@ App.ScenarioChartView = Backbone.View.extend({
         if (groupby) {
             groupby_dimension = this.dimensions_mapping[groupby];
         }
-        var client_filter = this.datasource.client_filter;
         var requests = [];
         _(this.dimensions_mapping).each(function(dimension, filter_name) {
-            if(filter_name != groupby && filter_name != client_filter) {
+            if(filter_name != groupby && filter_name != this.client_filter) {
                 args[filter_name] = this.model.get(filter_name);
                 if(! args[filter_name]) { incomplete = true; }
             }
@@ -164,8 +167,8 @@ App.ScenarioChartView = Backbone.View.extend({
         }
 
         var client_filter_options = [];
-        if(client_filter) {
-            client_filter_options = this.model.get(client_filter);
+        if(this.client_filter) {
+            client_filter_options = this.model.get(this.client_filter);
         }
 
         _(this.get_meta_data(chart_data)).forEach(function(req) {
@@ -181,8 +184,8 @@ App.ScenarioChartView = Backbone.View.extend({
             chart_data['series'] = _(group_values).map(function(value, n) {
                 var resp = responses[n];
                 var datapoints = resp[0]['datapoints'];
-                if(this.datasource.client_filter) {
-                    var dimension = this.dimensions_mapping[client_filter];
+                if(this.client_filter) {
+                    var dimension = this.dimensions_mapping[this.client_filter];
                     datapoints = _(datapoints).filter(function(item) {
                         return _(client_filter_options).contains(item[dimension]);
                     }, this);

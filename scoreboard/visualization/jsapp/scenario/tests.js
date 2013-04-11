@@ -363,15 +363,10 @@ describe('ScenarioChartView', function() {
         var model = new Backbone.Model();
         var facets = [{name: 'filter1', dimension: 'dim1'},
                       {name: 'filter2', dimension: 'dim2'},
-                      {name: 'filter3', dimension: 'dim3'}];
+                      {name: 'filter3', dimension: 'dim3', on_client: true}];
         var chart = new App.ScenarioChartView({
             model: model,
-            schema: {
-                facets: facets,
-                chart_datasource: {
-                    client_filter: 'filter3'
-                }
-            },
+            schema: {facets: facets},
             scenario_chart: scenario_chart
         });
         model.set({'filter1': 'f1v',

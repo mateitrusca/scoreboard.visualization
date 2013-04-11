@@ -59,6 +59,7 @@ App.scenario5_filters_schema = {
          }},
         {type: 'multiple_select',
          name: 'countries',
+         on_client: true,
          label: 'Country / Countries',
          dimension: 'ref-area',
          default_all: true,
@@ -83,9 +84,6 @@ App.scenario5_filters_schema = {
         }
     },
     chart_type: 'map',
-    chart_datasource: {
-        client_filter: 'countries'
-    },
     chart_meta_labels: [
         {targets: ['x_title'], filter_name: 'indicator', type: 'label'},
         {targets: ['y_title', 'tooltip_label'],
