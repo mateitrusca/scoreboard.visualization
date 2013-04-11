@@ -94,6 +94,7 @@ App.scenario3_filters_schema = {
         {type: 'multiple_select',
          xy: true,
          name: 'countries',
+         on_client: true,
          label: 'Country / Countries',
          dimension: 'ref-area',
          default_all: true,
@@ -126,9 +127,6 @@ App.scenario3_filters_schema = {
     },
     chart_type: 'scatter',
     xy: true,
-    chart_datasource: {
-        client_filter: 'countries'
-    },
     chart_meta_labels: [
         {targets: ['indicator_x_label'],
          filter_name: 'x-indicator',

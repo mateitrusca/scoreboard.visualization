@@ -21,6 +21,8 @@ App.ScenarioChartView = Backbone.View.extend({
         this.columns = [];
         this.xy_columns = [];
         this.dimensions_mapping = {};
+        this.multiseries_name = null;
+        this.client_filter = null;
         _(options.schema['facets']).forEach(function(facet) {
             if(facet['type'] == 'data-column') {
                 if(facet['xy']) {
@@ -32,9 +34,14 @@ App.ScenarioChartView = Backbone.View.extend({
             }
             else {
                 this.dimensions_mapping[facet['name']] = facet['dimension'];
+                if(facet['on_client']) {
+                    this.client_filter = facet['name'];
+                }
+            }
+            if(facet['multiple_series']) {
+                this.multiseries_name = facet['name'];
             }
         }, this);
-        this.datasource = this.schema['chart_datasource'] || {};
         this.requests_in_flight = [];
         this.load_chart();
     },
@@ -73,15 +80,10 @@ App.ScenarioChartView = Backbone.View.extend({
         this.requests_in_flight = [];
         var incomplete = false;
         var args = {};
-        var groupby = this.datasource['groupby'];
-        var groupby_dimension = this.datasource['groupby_dimension'];
-        if (groupby) {
-            groupby_dimension = this.dimensions_mapping[groupby];
-        }
-        var client_filter = this.datasource.client_filter;
         var requests = [];
         _(this.dimensions_mapping).each(function(dimension, filter_name) {
-            if(filter_name != groupby && filter_name != client_filter) {
+            if(filter_name != this.multiseries_name &&
+               filter_name != this.client_filter) {
                 args[filter_name] = this.model.get(filter_name);
                 if(! args[filter_name]) { incomplete = true; }
             }
@@ -118,29 +120,16 @@ App.ScenarioChartView = Backbone.View.extend({
             'group_labels': {}
         };
 
-        var group_values = null;
+        var multiseries_values = null;
         var data_method = (this.schema['xy'] ? '/datapoints_xy'
                                              : '/datapoints');
         var datapoints_url = this.cube_url + data_method;
 
-        if (groupby_dimension) {
-            if (groupby){
-                group_values = this.model.get(groupby);
-            }
-            else {
-                var group_values_args = _(_(args).omit('columns')).extend({
-                    'dimension': groupby_dimension,
-                    'rev': this.data_revision
-                });
-                $.ajaxSetup({async: false});
-                $.get(this.cube_url + '/dimension_values', group_values_args).done(
-                    function(data){
-                        group_values = _(data['options']).pluck('notation');
-                    }
-                );
-                $.ajaxSetup({async: true});
-            }
-            requests = _(group_values).map(function(value) {
+        if (this.multiseries_name) {
+            var groupby_dimension = this.dimensions_mapping[
+                this.multiseries_name];
+            multiseries_values = this.model.get(this.multiseries_name);
+            requests = _(multiseries_values).map(function(value) {
                 args[groupby_dimension] = value;
                 return $.get(datapoints_url, args);
             }, this);
@@ -149,7 +138,8 @@ App.ScenarioChartView = Backbone.View.extend({
                 'dimension': groupby_dimension,
                 'rev': this.data_revision
             };
-            var labels_request = $.get(this.cube_url + '/dimension_values', labels_args);
+            var labels_request = $.get(this.cube_url + '/dimension_values',
+                                       labels_args);
             labels_request.done(function(data) {
                 var results = data['options'];
                 chart_data['group_labels'] = _.object(
@@ -159,13 +149,13 @@ App.ScenarioChartView = Backbone.View.extend({
             requests.push(labels_request);
         }
         else {
-            group_values = [null];
+            multiseries_values = [null];
             requests.push($.get(datapoints_url, args));
         }
 
         var client_filter_options = [];
-        if(client_filter) {
-            client_filter_options = this.model.get(client_filter);
+        if(this.client_filter) {
+            client_filter_options = this.model.get(this.client_filter);
         }
 
         _(this.get_meta_data(chart_data)).forEach(function(req) {
@@ -178,11 +168,11 @@ App.ScenarioChartView = Backbone.View.extend({
         ajax_calls.done(_.bind(function() {
             var responses = _(arguments).toArray();
             if(requests.length < 2) { responses = [responses]; }
-            chart_data['series'] = _(group_values).map(function(value, n) {
+            chart_data['series'] = _(multiseries_values).map(function(value, n) {
                 var resp = responses[n];
                 var datapoints = resp[0]['datapoints'];
-                if(this.datasource.client_filter) {
-                    var dimension = this.dimensions_mapping[client_filter];
+                if(this.client_filter) {
+                    var dimension = this.dimensions_mapping[this.client_filter];
                     datapoints = _(datapoints).filter(function(item) {
                         return _(client_filter_options).contains(item[dimension]);
                     }, this);

@@ -39,6 +39,7 @@ App.scenario6_filters_schema = {
          }},
         {type: 'multiple_select',
          name: 'countries',
+         on_client: true,
          label: 'Countries',
          dimension: 'ref-area',
          default_all: true,
@@ -49,6 +50,10 @@ App.scenario6_filters_schema = {
              'breakdown': 'breakdown',
              'unit-measure': 'unit-measure'
          }},
+         {type: 'all-values',
+          dimension: 'time-period',
+          multiple_series: true,
+          name: 'time-period'},
          {type: 'data-column', dimension: 'ref-area'},
          {type: 'data-column', dimension: 'value'}
     ],
@@ -61,10 +66,6 @@ App.scenario6_filters_schema = {
         }
     },
     chart_type: 'evolution_columns',
-    chart_datasource: {
-        client_filter: 'countries',
-        groupby_dimension: 'time-period'
-    },
     chart_meta_labels: [
         {targets: ['x_title'],
          filter_name: 'indicator',

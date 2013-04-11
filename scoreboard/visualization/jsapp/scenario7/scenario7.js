@@ -48,6 +48,7 @@ App.scenario7_filters_schema = {
          }},
         {type: 'multiple_select',
          name: 'countries',
+         on_client: true,
          label: 'Country / Countries',
          dimension: 'ref-area',
          default_all: true,
@@ -59,6 +60,17 @@ App.scenario7_filters_schema = {
              'indicator-group': 'indicator-group',
              'indicator': 'indicator'
          }},
+         {type: 'all-values',
+          dimension: 'breakdown',
+          multiple_series: true,
+          name: 'breakdown',
+          constraints: {
+             'unit-measure': 'unit-measure',
+             'breakdown-group': 'breakdown-group',
+             'time-period': 'time-period',
+             'indicator-group': 'indicator-group',
+             'indicator': 'indicator'
+          }},
          {type: 'data-column', dimension: 'ref-area'},
          {type: 'data-column', dimension: 'value'}
     ],
@@ -66,15 +78,10 @@ App.scenario7_filters_schema = {
         'description': {
             source: '/dimension_value_metadata',
             title: 'Label x-axis',
-            filters: [{name: 'indicator', part: 'label'},
-                      {name: 'breakdown', part: 'label'}]
+            filters: [{name: 'indicator', part: 'label'}]
         }
     },
     chart_type: 'splitted_columns',
-    chart_datasource: {
-        groupby_dimension: 'breakdown',
-        client_filter: 'countries'
-    },
     chart_meta_labels: [
         {targets: ['x_title'],
          filter_name: 'indicator',

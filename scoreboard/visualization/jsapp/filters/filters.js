@@ -156,12 +156,25 @@ App.MultipleSelectFilter = App.SelectFilter.extend({
 });
 
 
+App.AllValuesFilter = App.SelectFilter.extend({
+
+    render: function() {
+        this.$el.html("");
+    },
+
+    adjust_value: function() {
+        this.model.set(this.name, _(this.dimension_options).pluck('notation'));
+    }
+
+});
+
+
 App.FiltersBox = Backbone.View.extend({
 
     filter_types: {
         'select': App.SelectFilter,
         'multiple_select': App.MultipleSelectFilter,
-        'radio': App.RadioFilter
+        'all-values': App.AllValuesFilter
     },
 
     initialize: function(options) {
