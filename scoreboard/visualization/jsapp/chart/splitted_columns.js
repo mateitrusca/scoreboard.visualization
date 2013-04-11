@@ -11,13 +11,31 @@ App.chart_library['splitted_columns'] = function(container, options, meta_data) 
                          ['y', series_item['value']]]);
     };
 
-    var series = _(options['series']).map(function(item){
+    var labels_collection = []
+    var series = _.chain(options['series']).map(function(item){
         var data = _(item['data']).map(extract_data);
+        labels_collection = _.chain(item['data']).
+                                pluck('ref-area-label').
+                                union(labels_collection).
+                                value();
         return _.object(
-            ['name', 'data'],
-            [item['label'], data]
-        );
-    });
+                ['name', 'data'],
+                [item['label'], data]);
+    }).map(function(item){
+        var serie = item['data'];
+        _.chain(labels_collection).
+            difference(_(serie).pluck('name')).
+            each(function(diff_label){
+                _(serie).push(
+                    _.object(
+                        [['name', diff_label],
+                         ['y', 'n/a']])
+                );
+            });
+        return _.object(
+                ['name', 'data'],
+                [item['name'], serie]);
+    }).value();
 
     var chartOptions = {
         chart: {
