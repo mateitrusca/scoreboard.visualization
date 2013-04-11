@@ -41,7 +41,7 @@ App.scenario6_filters_schema = {
          name: 'countries',
          label: 'Countries',
          dimension: 'ref-area',
-         default_value: ['EU27'],
+         default_all: true,
          position: '.right_column',
          constraints: {
              'indicator-group': 'indicator-group',
