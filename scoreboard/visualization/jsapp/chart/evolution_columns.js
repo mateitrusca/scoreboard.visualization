@@ -190,22 +190,10 @@ App.chart_library['evolution_columns'] = function(container, options, meta_data)
         ]
     };
 
-    var chart = new Highcharts.Chart(chartOptions, function(chart){
-        $("<div id='the-chart-controls'>").css({
-             width: 20,
-             maxHeight: 400,
-             padding: 10,
-             position: 'absolute',
-             overflow: 'visible',
-             right: 10,
-             top: 40
-        }).appendTo(chart.container)
-
-    });
+    var chart = new Highcharts.Chart(chartOptions);
 
     var slider_values = _(options['group_labels']).keys().sort();
-    var chart_controls = new App.GraphControlsView({
-        el: $('#the-chart-controls', chart.container),
+    App.chart_controls = new App.GraphControlsView({
         model: new Backbone.Model(),
         chart: chart,
         update_chart: morph,
@@ -215,6 +203,7 @@ App.chart_library['evolution_columns'] = function(container, options, meta_data)
         range: _.object( [['min', parseInt(slider_values[0])],
                          ['max', parseInt(_(slider_values).last())]] )
     });
+    App.chart_controls.$el.insertAfter(container);
 };
 
 })();
