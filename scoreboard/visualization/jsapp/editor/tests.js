@@ -77,4 +77,14 @@ describe('FacetsEditor', function() {
         expect(get_facet_names()).to.include('ref-area');
     });
 
+    it('should save filter name same as dimension', function() {
+        var model = new Backbone.Model();
+        var view = new App.FacetsEditor({model: model, el: this.box});
+        App.respond_json(this.sandbox.server.requests[0], [
+            {type_label: 'dimension', notation: 'time-period'}
+        ]);
+        expect(model.get('facets')[0]['name']).to.equal('time-period');
+        expect(model.get('facets')[0]['dimension']).to.equal('time-period');
+    });
+
 });
