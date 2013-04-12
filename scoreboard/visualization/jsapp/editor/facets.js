@@ -37,7 +37,7 @@ App.FacetsEditor = Backbone.View.extend({
     title: "Facets",
 
     initialize: function(options) {
-        this.facets = new Backbone.Collection();
+        this.facets = new Backbone.Collection(this.model.get('facets'));
         this.render();
         var dimensions_ajax = $.get(options.cube_url + '/dimensions?flat=on');
         dimensions_ajax.done(_.bind(this.got_dimensions, this));
@@ -59,11 +59,15 @@ App.FacetsEditor = Backbone.View.extend({
         _(this.dimensions).forEach(function(dimension) {
             if(dimension['type_label'] == 'dimension' ||
                dimension['type_label'] == 'group dimension') {
-                var facet_model = new Backbone.Model({
-                    'name': dimension['notation'],
-                    'dimension': dimension['notation'],
-                    'label': dimension['label']
-                })
+                var name = dimension['notation'];
+                var facet_model = this.facets.findWhere({name: name});
+                if(! facet_model) {
+                    facet_model = new Backbone.Model({
+                        'name': name,
+                        'dimension': name,
+                        'label': dimension['label']
+                    })
+                }
                 this.facets.add(facet_model);
                 var facet_view = new App.FacetEditorField({
                     model: facet_model

@@ -82,4 +82,17 @@ describe('FacetsEditor', function() {
         expect(model.get('facets')[0]['type']).to.equal('data-column');
     });
 
+    it('should create missing facets when loading config', function() {
+        var model = new Backbone.Model({
+            facets: [{name: 'time-period', type: 'data-column'}]
+        });
+        var view = new App.FacetsEditor({model: model, el: this.box});
+        App.respond_json(this.sandbox.server.requests[0], [
+            {type_label: 'dimension', notation: 'indicator'},
+            {type_label: 'dimension', notation: 'time-period'}
+        ]);
+        expect(_(model.get('facets')).pluck('name')).to.deep.equal(
+            ['time-period', 'indicator']);
+    });
+
 });
