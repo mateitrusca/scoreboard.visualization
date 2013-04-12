@@ -38,28 +38,39 @@ App.FacetsEditor = Backbone.View.extend({
 
     initialize: function(options) {
         this.facets = new Backbone.Collection();
-        this.$el.html('loading...');
+        this.render();
         var dimensions_ajax = $.get(options.cube_url + '/dimensions?flat=on');
-        dimensions_ajax.done(_.bind(function(dimensions) {
-            this.$el.html(this.template());
-            _(dimensions).forEach(function(dimension) {
-                if(dimension['type_label'] == 'dimension' ||
-                   dimension['type_label'] == 'group dimension') {
-                    var facet_model = new Backbone.Model({
-                        'name': dimension['notation'],
-                        'dimension': dimension['notation'],
-                        'label': dimension['label']
-                    })
-                    this.facets.add(facet_model);
-                    var facet_view = new App.FacetEditorField({
-                        model: facet_model
-                    });
-                    this.$el.find('tbody').append(facet_view.el);
-                }
-            }, this);
-            this.update();
-            this.facets.on('change', this.update, this);
-        }, this));
+        dimensions_ajax.done(_.bind(this.got_dimensions, this));
+    },
+
+    got_dimensions: function(dimensions) {
+        this.dimensions = dimensions;
+        this.render();
+        this.update();
+        this.facets.on('change', this.update, this);
+    },
+
+    render: function() {
+        if(! this.dimensions) {
+            this.$el.html('loading...');
+            return;
+        }
+        this.$el.html(this.template());
+        _(this.dimensions).forEach(function(dimension) {
+            if(dimension['type_label'] == 'dimension' ||
+               dimension['type_label'] == 'group dimension') {
+                var facet_model = new Backbone.Model({
+                    'name': dimension['notation'],
+                    'dimension': dimension['notation'],
+                    'label': dimension['label']
+                })
+                this.facets.add(facet_model);
+                var facet_view = new App.FacetEditorField({
+                    model: facet_model
+                });
+                this.$el.find('tbody').append(facet_view.el);
+            }
+        }, this);
     },
 
     update: function() {
