@@ -14,12 +14,22 @@ App.FacetEditorField = Backbone.View.extend({
         'change [name="type"]': 'on_change_type'
     },
 
+    type_options: [
+        {value: 'select', label: "select filter"},
+        {value: 'multiple_select', label: "multiple select filter"},
+        {value: 'all-values', label: "all values as series"},
+        {value: 'data-column', label: "datapoints"}
+    ],
+
     initialize: function(options) {
         this.render();
     },
 
     render: function() {
-        this.$el.html(this.template(this.model.toJSON()));
+        var context = _({
+            'type_options': this.type_options
+        }).extend(this.model.toJSON());
+        this.$el.html(this.template(context));
         this.$el.attr('data-name', this.model.get('name'));
     },
 
