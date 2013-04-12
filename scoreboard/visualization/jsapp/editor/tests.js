@@ -108,3 +108,19 @@ describe('FacetsEditor', function() {
     });
 
 });
+
+
+describe('AdvancedEditor', function() {
+    "use strict";
+
+    var testing = App.testing;
+
+    it('should display current value', function() {
+        var data = {a: 'b', c: ['d', 'e'], f: {g: true}};
+        var model = new Backbone.Model(data);
+        var view = new App.AdvancedEditor({model: model});
+        var textarea_data = JSON.parse(view.$el.find('textarea').val());
+        expect(textarea_data).to.deep.equal(data);
+    });
+
+});

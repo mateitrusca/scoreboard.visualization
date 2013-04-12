@@ -53,7 +53,8 @@ App.Editor = Backbone.View.extend({
         'AxesEditor',
         'SeriesEditor',
         'FormatEditor',
-        'AnnotationsEditor'
+        'AnnotationsEditor',
+        'AdvancedEditor'
     ],
 
     initialize: function(options) {
