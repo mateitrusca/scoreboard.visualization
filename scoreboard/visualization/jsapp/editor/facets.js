@@ -27,7 +27,12 @@ App.FacetEditorField = Backbone.View.extend({
 
     render: function() {
         var context = _({
-            'type_options': this.type_options
+            'type_options': _(this.type_options).map(function(opt) {
+                var selected = this.model.get('type') == opt['value'];
+                return _({
+                    selected: selected
+                }).extend(opt);
+            }, this)
         }).extend(this.model.toJSON());
         this.$el.html(this.template(context));
         this.$el.attr('data-name', this.model.get('name'));

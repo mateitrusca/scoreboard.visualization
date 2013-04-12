@@ -95,4 +95,16 @@ describe('FacetsEditor', function() {
             ['time-period', 'indicator']);
     });
 
+    it('should select existing filter type', function() {
+        var model = new Backbone.Model({
+            facets: [{name: 'time-period', type: 'data-column'}]
+        });
+        var view = new App.FacetsEditor({model: model, el: this.box});
+        App.respond_json(this.sandbox.server.requests[0], [
+            {type_label: 'dimension', notation: 'time-period'}
+        ]);
+        var select = view.$el.find('select[name="type"]');
+        expect(select.val()).to.equal('data-column');
+    });
+
 });
