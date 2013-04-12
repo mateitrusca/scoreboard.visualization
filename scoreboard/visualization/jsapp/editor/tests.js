@@ -72,4 +72,14 @@ describe('FacetsEditor', function() {
         expect(model.get('facets')[0]['dimension']).to.equal('time-period');
     });
 
+    it('should save filter type', function() {
+        var model = new Backbone.Model();
+        var view = new App.FacetsEditor({model: model, el: this.box});
+        App.respond_json(this.sandbox.server.requests[0], [
+            {type_label: 'dimension', notation: 'time-period'}
+        ]);
+        view.$el.find('select[name="type"]').val('data-column').change();
+        expect(model.get('facets')[0]['type']).to.equal('data-column');
+    });
+
 });

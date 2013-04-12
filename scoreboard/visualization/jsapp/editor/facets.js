@@ -10,6 +10,7 @@ App.FacetsEditor = Backbone.View.extend({
     template: App.get_template('editor/facets.html'),
 
     events: {
+        'change [name="type"]': 'on_change_type'
     },
 
     title: "Facets",
@@ -42,6 +43,14 @@ App.FacetsEditor = Backbone.View.extend({
             value.push(facet.toJSON());
         })
         this.model.set('facets', value);
+    },
+
+    on_change_type: function(evt) {
+        var select = $(evt.target);
+        var name = select.data('facet');
+        var type = select.val();
+        this.facets.where({'name': name})[0].set('type', type);
+        this.update();
     }
 
 });

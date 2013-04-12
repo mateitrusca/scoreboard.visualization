@@ -1,12 +1,21 @@
 <table>
   <thead>
     <td>name</td>
+    <td>type</td>
   </thead>
 
   <tbody>
   {{# facets }}
     <tr>
       <td>{{ label }} (<tt>{{ dimension }}</tt>)</td>
+      <td>
+        <select name="type" data-facet="{{ name }}">
+          <option value="select">select filter</option>
+          <option value="multiple_select">multiple select filter</option>
+          <option value="all-values">all values as series</option>
+          <option value="data-column">datapoints</option>
+        </select>
+      </td>
     </tr>
   {{/ facets }}
   </tbody>
