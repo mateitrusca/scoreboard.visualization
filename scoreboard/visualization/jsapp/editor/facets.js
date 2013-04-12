@@ -14,12 +14,27 @@ App.FacetEditorField = Backbone.View.extend({
         'change [name="type"]': 'on_change_type'
     },
 
+    type_options: [
+        {value: 'select', label: "select filter"},
+        {value: 'multiple_select', label: "multiple select filter"},
+        {value: 'all-values', label: "all values as series"},
+        {value: 'data-column', label: "datapoints"}
+    ],
+
     initialize: function(options) {
         this.render();
     },
 
     render: function() {
-        this.$el.html(this.template(this.model.toJSON()));
+        var context = _({
+            'type_options': _(this.type_options).map(function(opt) {
+                var selected = this.model.get('type') == opt['value'];
+                return _({
+                    selected: selected
+                }).extend(opt);
+            }, this)
+        }).extend(this.model.toJSON());
+        this.$el.html(this.template(context));
         this.$el.attr('data-name', this.model.get('name'));
     },
 
@@ -37,7 +52,7 @@ App.FacetsEditor = Backbone.View.extend({
     title: "Facets",
 
     initialize: function(options) {
-        this.facets = new Backbone.Collection();
+        this.facets = new Backbone.Collection(this.model.get('facets'));
         this.render();
         var dimensions_ajax = $.get(options.cube_url + '/dimensions?flat=on');
         dimensions_ajax.done(_.bind(this.got_dimensions, this));
@@ -59,11 +74,15 @@ App.FacetsEditor = Backbone.View.extend({
         _(this.dimensions).forEach(function(dimension) {
             if(dimension['type_label'] == 'dimension' ||
                dimension['type_label'] == 'group dimension') {
-                var facet_model = new Backbone.Model({
-                    'name': dimension['notation'],
-                    'dimension': dimension['notation'],
-                    'label': dimension['label']
-                })
+                var name = dimension['notation'];
+                var facet_model = this.facets.findWhere({name: name});
+                if(! facet_model) {
+                    facet_model = new Backbone.Model({
+                        'name': name,
+                        'dimension': name,
+                        'label': dimension['label']
+                    })
+                }
                 this.facets.add(facet_model);
                 var facet_view = new App.FacetEditorField({
                     model: facet_model
