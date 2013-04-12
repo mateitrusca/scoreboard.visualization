@@ -41,7 +41,16 @@ ScoreboardVisualizationSchema = folder.ATFolderSchema.copy() + atapi.Schema((
             description='',
             visible={'edit': 'visible', 'view': 'invisible'}
             )
+        ),
+    atapi.ImageField(
+        'thumbnail',
+        schemata="default",
+        required=False,
+        languageIndependent=True,
+        widget=atapi.ImageWidget(
+            label=_(u"Thumbnail"),
         )
+    ),
 ))
 
 # Set storage on fields copied from ATFolderSchema, making sure
@@ -49,6 +58,11 @@ ScoreboardVisualizationSchema = folder.ATFolderSchema.copy() + atapi.Schema((
 
 ScoreboardVisualizationSchema['title'].storage = atapi.AnnotationStorage()
 ScoreboardVisualizationSchema['description'].storage = atapi.AnnotationStorage()
+
+for field in ScoreboardVisualizationSchema.values():
+    if field.schemata != 'default':
+        field.schemata = 'default'
+        field.widget.visible = {'view': 'invisible', 'edit': 'invisible'}
 
 schemata.finalizeATCTSchema(
     ScoreboardVisualizationSchema,
