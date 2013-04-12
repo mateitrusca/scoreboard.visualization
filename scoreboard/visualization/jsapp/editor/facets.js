@@ -83,8 +83,8 @@ App.FacetsEditor = Backbone.View.extend({
             var facet_view = new App.FacetEditorField({model: facet_model});
             this.facet_views[facet_model.cid] = facet_view;
         }, this);
-        this.facets.on('change', this.update, this);
-        this.update();
+        this.facets.on('change', this.save_value, this);
+        this.save_value();
         this.render();
     },
 
@@ -100,7 +100,7 @@ App.FacetsEditor = Backbone.View.extend({
         }, this);
     },
 
-    update: function() {
+    save_value: function() {
         var value = [];
         this.facets.forEach(function(facet) {
             value.push(facet.toJSON());
@@ -115,7 +115,7 @@ App.FacetsEditorReadOnly = App.FacetsEditor.extend({
 
     title: "Facets (disabled)",
 
-    update: function() {
+    save_value: function() {
         // do nothing
     }
 
