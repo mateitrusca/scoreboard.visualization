@@ -84,10 +84,10 @@ scoreboard.visualization.datacube.indicators = {
     },
     addTableRow: function(indicator, groupId){
         var tr = jQuery('<tr>');
-        tr.append('<td>' + indicator.altlabel + '</td>');
-        tr.append('<td>' + indicator.longlabel + '</td>');
-        tr.append('<td>' + indicator.definition + '</td>');
-        tr.append('<td><a href="' + indicator.sourcelink + '">' + indicator.sourcelabel + '</a></td>');
+        tr.append('<td class="even">' + indicator.altlabel + '</td>');
+        tr.append('<td class="odd">' + indicator.longlabel + '</td>');
+        tr.append('<td class="even">' + indicator.definition + '</td>');
+        tr.append('<td class="odd"><a href="' + indicator.sourcelink + '">' + indicator.sourcelabel + '</a></td>');
         jQuery('tr#' + groupId).after(tr);
     }
 };
