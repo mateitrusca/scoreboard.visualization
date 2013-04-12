@@ -367,7 +367,8 @@ describe('ScenarioChartView', function() {
         var model = new Backbone.Model();
         var facets = [{name: 'filter1', dimension: 'dim1'},
                       {name: 'filter2', dimension: 'dim2'},
-                      {name: 'filter3', dimension: 'dim3', on_client: true}];
+                      {name: 'filter3', dimension: 'dim3', on_client: true},
+                      {type: 'data-column', dimension: 'dim4'}];
         var chart = new App.ScenarioChartView({
             model: model,
             schema: {facets: facets},
@@ -377,12 +378,14 @@ describe('ScenarioChartView', function() {
                    'filter2': 'f2v',
                    'filter3': ['f3a', 'f3c']});
 
-        var server = this.sandbox.server;
-        expect(server.requests.length).to.equal(1);
-        expect(server.requests[0].url).to.have.string('/datapoints?');
-        expect(server.requests[0].url).to.not.have.string('dim3');
+        var requests = this.sandbox.server.requests;
+        var url0 = requests[0].url;
+        expect(requests.length).to.equal(1);
+        expect(url0).to.have.string('/datapoints?');
+        expect(App.testing.url_param(url0, 'dim3')).to.equal(null);
+        expect(App.testing.url_param(url0, 'columns')).to.equal('dim3,dim4');
 
-        App.respond_json(server.requests[0], {datapoints: [
+        App.respond_json(requests[0], {datapoints: [
             {dim3: 'f3a', value: 13},
             {dim3: 'f3b', value: 22},
             {dim3: 'f3c', value: 10}

@@ -108,7 +108,6 @@ App.scenario3_filters_schema = {
              'y-unit-measure': 'y-unit-measure',
              'time-period': 'time-period'
          }},
-         {type: 'data-column', dimension: 'ref-area'},
          {type: 'data-column', dimension: 'value', xy: true}
     ],
     annotations: {
