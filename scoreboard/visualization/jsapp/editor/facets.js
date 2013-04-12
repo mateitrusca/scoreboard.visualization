@@ -66,23 +66,22 @@ App.FacetsEditor = Backbone.View.extend({
         this.facets = new Backbone.Collection(this.model.get('facets'));
         this.facet_views = {};
         _(this.dimensions).forEach(function(dimension) {
-            if(dimension['type_label'] == 'dimension' ||
-               dimension['type_label'] == 'group dimension') {
-                var name = dimension['notation'];
-                var facet_model = this.facets.findWhere({name: name});
-                if(! facet_model) {
-                    facet_model = new Backbone.Model({
-                        'name': name,
-                        'dimension': name,
-                        'label': dimension['label']
-                    })
-                }
-                this.facets.add(facet_model);
-                var facet_view = new App.FacetEditorField({
-                    model: facet_model
-                });
-                this.facet_views[facet_model.cid] = facet_view;
+            if(dimension['type_label'] != 'dimension' &&
+               dimension['type_label'] != 'group dimension') {
+                return;
             }
+            var name = dimension['notation'];
+            var facet_model = this.facets.findWhere({name: name});
+            if(! facet_model) {
+                facet_model = new Backbone.Model({
+                    'name': name,
+                    'dimension': name,
+                    'label': dimension['label']
+                });
+            }
+            this.facets.add(facet_model);
+            var facet_view = new App.FacetEditorField({model: facet_model});
+            this.facet_views[facet_model.cid] = facet_view;
         }, this);
         this.facets.on('change', this.update, this);
         this.update();
@@ -105,7 +104,7 @@ App.FacetsEditor = Backbone.View.extend({
         var value = [];
         this.facets.forEach(function(facet) {
             value.push(facet.toJSON());
-        })
+        });
         this.model.set('facets', value);
     }
 
