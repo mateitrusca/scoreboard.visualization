@@ -52,7 +52,6 @@ App.FacetsEditor = Backbone.View.extend({
     title: "Facets",
 
     initialize: function(options) {
-        this.facets = new Backbone.Collection(this.model.get('facets'));
         this.render();
         var dimensions_ajax = $.get(options.cube_url + '/dimensions?flat=on');
         dimensions_ajax.done(_.bind(this.got_dimensions, this));
@@ -60,17 +59,11 @@ App.FacetsEditor = Backbone.View.extend({
 
     got_dimensions: function(dimensions) {
         this.dimensions = dimensions;
-        this.render();
-        this.update();
-        this.facets.on('change', this.update, this);
+        this.load_value();
     },
 
-    render: function() {
-        if(! this.dimensions) {
-            this.$el.html('loading...');
-            return;
-        }
-        this.$el.html(this.template());
+    load_value: function() {
+        this.facets = new Backbone.Collection(this.model.get('facets'));
         this.facet_views = {};
         _(this.dimensions).forEach(function(dimension) {
             if(dimension['type_label'] == 'dimension' ||
@@ -89,8 +82,22 @@ App.FacetsEditor = Backbone.View.extend({
                     model: facet_model
                 });
                 this.facet_views[facet_model.cid] = facet_view;
-                this.$el.find('tbody').append(facet_view.el);
             }
+        }, this);
+        this.facets.on('change', this.update, this);
+        this.update();
+        this.render();
+    },
+
+    render: function() {
+        if(! this.dimensions) {
+            this.$el.html('loading...');
+            return;
+        }
+        this.$el.html(this.template());
+        this.facets.forEach(function(facet_model) {
+            var facet_view = this.facet_views[facet_model.cid];
+            this.$el.find('tbody').append(facet_view.el);
         }, this);
     },
 
