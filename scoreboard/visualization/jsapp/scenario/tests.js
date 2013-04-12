@@ -1,7 +1,7 @@
 /*global App, Backbone, describe, beforeEach, afterEach, it, expect, sinon */
 /*jshint sub:true */
 
-describe('TimeSnapshotsExtraction', function() {
+describe('ChartSeriesPreparation', function() {
     "use strict";
 
     it('should return an array of snapshots', function(){
@@ -26,22 +26,26 @@ describe('TimeSnapshotsExtraction', function() {
     it('should sort the output by label', function(){
         var series = [
             {data: [],
-             label:'2000'},
+             label:'2001'},
             {data: [{
                         "ref-area": "AT",
                         "ref-area-label": "Austria",
                         "value": 0.4808
                     }],
-             label:'2001'},
+             label:'2000'},
         ];
         var result = App.format_series(series);
         expect(_(result).pluck('name')).to.deep.equal(['2000', '2001']);
+        expect(result[0]['data']).to.deep.equal([{
+            "name": "Austria",
+            "y": 0.4808
+        }]);
     });
 
     it('should return an array of data for each year', function(){
         var series = [
             {data: [],
-             label:'2000'},
+             label:'2003'},
             {data: [{
                         "ref-area": "AT",
                         "ref-area-label": "Austria",
@@ -52,9 +56,8 @@ describe('TimeSnapshotsExtraction', function() {
         var result = App.format_series(series);
         expect(_(result).pluck('data')).to.deep.equal([
             [{ 'name': 'Austria',
-               'y': 'n/a'}],
-            [{ 'name': 'Austria',
-               'y': 0.4808}]
+               'y': 0.4808}],
+            [{ 'name': 'Austria'}]
         ]);
     })
 });
