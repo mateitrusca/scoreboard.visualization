@@ -204,16 +204,11 @@ App.GraphControlsView = Backbone.View.extend({
         this.chart = options['chart']
         _(this.chart).extend(Backbone.Events);
         this.snapshots_data = options['snapshots_data'];
-        this.extract_snapshot = options['extract_snapshot'];
         this.range = options['range'];
         this.update_chart = options['update_chart'];
         this.interval = options['interval'];
         this.model.on('change', this.render, this);
-        this.chart.on('redraw', _.bind(function(t){
-            this.model.set('value', this.range.min + t);
-        }, this));
-        this.model.set({'value': this.range.min,
-                        'auto': true});
+        this.model.set({'value': 0, 'auto': true});
     },
 
     on_auto_change: function() {
@@ -224,10 +219,9 @@ App.GraphControlsView = Backbone.View.extend({
         else{
             this.interval = setInterval(
                     _.bind(function() {
-                        var data = this.extract_snapshot(this.snapshots_data);
+                        var data = this.snapshots_data[0];
                         this.update_chart(this.chart, data);
                      }, this), 1000);
-            window.interval_set = this.interval;
         }
         this.model.set('auto', !prev);
     },
@@ -236,7 +230,7 @@ App.GraphControlsView = Backbone.View.extend({
         if (!this.model.get('auto')){
             this.model.set('value', App.plone_jQuery( "#slider" ).slider( "value" ));
             var moment = this.model.get('value') - this.range.min - 1;
-            var data = this.extract_snapshot(this.snapshots_data, moment)
+            var data = this.snapshots_data[0];
             this.update_chart(this.chart, data, moment);
             this.chart.redraw();
         }
@@ -246,7 +240,7 @@ App.GraphControlsView = Backbone.View.extend({
         this.$el.html(this.template(
             { 'auto': this.model.get('auto') }
         ));
-        App.plone_jQuery( "#slider" ).slider({
+        App.plone_jQuery( this.$el.find("#slider") ).slider({
           value: this.model.get('value'),
           min: this.range.min,
           max: this.range.max,

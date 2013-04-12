@@ -61,7 +61,7 @@ App.format_series = function (data, order, type){
     }else{
         var extract_data = function(series_item){
             return _.object([['name', series_item['ref-area-label']],
-                             ['y', series_item['value']]]);
+                             ['y', series_item['value'] * 100]]);
         };
 
         var labels_collection = []

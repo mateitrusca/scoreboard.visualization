@@ -4,56 +4,16 @@
 (function() {
 "use strict";
 
-var t = -1;
 var bar_color = "#7FB2F0";
 var special_bar_color = "#35478C";
 var na_bar_color = "#DDDDDD";
 
-function get_tick_data(input, moment){
-    if (!moment) {
-        t += 1;
-    }
-    else{
-        t = moment;
-    }
-    if (t >= input.length) { t = 0; }
-    input = _(input).sortBy('label');
-    var data = _(input).pluck('data');
-    var out = _(data[t]).pluck('y');
-    return out
-};
-
 App.chart_library['evolution_columns'] = function(container, options) {
     var time_snapshots = App.format_series(options['series']);
     var series = time_snapshots[0]['data'];
-    var values = series;
-    var morph = function(chart, data, moment){
-        if (moment){
-            t = moment;
-        }
-        _(data).each(function(value, n){
-            if (isNaN(value)){
-                chart.series[0].data[n].update(
-                    { color: na_bar_color },
-                    false,
-                    {duration: 950, easing: 'linear'}
-                )
-            }
-            else{
-                var color = bar_color;
-                var current_label = chart.series[0].data[n].category;
-                chart.series[0].data[n].update(
-                    { "color": color,
-                      "y": value * 100 },
-                    false,
-                    {duration: 950, easing: 'linear'}
-                );
-            }
-        });
-        chart.setTitle(null, {text: time_snapshots[t]['label']});
-        if (!moment){
-            chart.redraw();
-        }
+    var morph = function(chart, snapshot){
+        chart.series[0].update({ data: snapshot['data'] }, true);
+        chart.setTitle(null, {text: snapshot['name']});
     };
 
     var chartOptions = {
@@ -64,16 +24,20 @@ App.chart_library['evolution_columns'] = function(container, options) {
             marginBottom: 150,
             marginRight: 80,
             events: {
-                redraw: function(){
-                    chart.trigger('redraw', t+1);
-                },
                 load: function() {
-                    clearInterval(window.interval_set);
-                    window.interval_set = setInterval(
-                            _.bind(function() {
-                                var data = get_tick_data(time_snapshots);
-                                morph(this, data);
-                             }, this), 1000);
+                    window.clearInterval(window.interval);
+                    var idx = 0;
+                    window.setInterval(_.bind(function(){
+                        var chart = this;
+                        if (idx < time_snapshots.length){
+                            var data = time_snapshots[idx];
+                            window.interval = setInterval(morph(chart, data), 1000);
+                            idx+=1;
+                        }
+                        else{
+                            window.clearInterval(window.interval);
+                        }
+                    },this), 1000);
                 }
             }
         },
@@ -152,7 +116,6 @@ App.chart_library['evolution_columns'] = function(container, options) {
         chart: chart,
         update_chart: morph,
         snapshots_data: time_snapshots,
-        extract_snapshot: get_tick_data,
         interval: window.interval_set,
         range: _.object( [['min', parseInt(slider_values[0])],
                          ['max', parseInt(_(slider_values).last())]] )
