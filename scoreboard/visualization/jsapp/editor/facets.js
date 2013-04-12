@@ -10,7 +10,6 @@ App.FacetsEditor = Backbone.View.extend({
     template: App.get_template('editor/facets.html'),
 
     events: {
-        'change [name="enable"]': 'on_click_enable'
     },
 
     title: "Facets",
@@ -26,8 +25,7 @@ App.FacetsEditor = Backbone.View.extend({
                     this.facets.add(new Backbone.Model({
                         'name': dimension['notation'],
                         'dimension': dimension['notation'],
-                        'label': dimension['label'],
-                        'enabled': true
+                        'label': dimension['label']
                     }));
                 }
             }, this);
@@ -41,19 +39,9 @@ App.FacetsEditor = Backbone.View.extend({
     update: function() {
         var value = [];
         this.facets.forEach(function(facet) {
-            if(! facet.get('enabled'))
-                return;
             value.push(facet.toJSON());
         })
         this.model.set('facets', value);
-    },
-
-    on_click_enable: function(evt) {
-        var checkbox = $(evt.target);
-        var name = checkbox.val();
-        var enabled = checkbox.is(':checked');
-        this.facets.where({'name': name})[0].set('enabled', enabled);
-        this.update();
     }
 
 });

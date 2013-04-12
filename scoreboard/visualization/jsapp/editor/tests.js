@@ -62,21 +62,6 @@ describe('FacetsEditor', function() {
         expect(facets[6]['dimension']).to.equal('time-period');
     });
 
-    it('should remove facet if checkbox gets unchecked', function() {
-        var model = new Backbone.Model();
-        var view = new App.FacetsEditor({model: model, el: this.box});
-        App.respond_json(this.sandbox.server.requests[0], dimensions_data);
-        var get_facet_names = function() {
-            return _(model.get('facets')).pluck('dimension');
-        }
-        var enable = view.$el.find('[name="enable"][value="ref-area"]');
-        expect(get_facet_names()).to.include('ref-area');
-        enable.click();
-        expect(get_facet_names()).to.not.include('ref-area');
-        enable.click();
-        expect(get_facet_names()).to.include('ref-area');
-    });
-
     it('should save filter name same as dimension', function() {
         var model = new Backbone.Model();
         var view = new App.FacetsEditor({model: model, el: this.box});
