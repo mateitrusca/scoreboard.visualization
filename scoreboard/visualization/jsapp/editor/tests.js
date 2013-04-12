@@ -123,4 +123,13 @@ describe('AdvancedEditor', function() {
         expect(textarea_data).to.deep.equal(data);
     });
 
+    it('should save value to model', function() {
+        var data = {a: 'b', c: ['d', 'e'], f: {g: true}};
+        var model = new Backbone.Model({x: 'y'});
+        var view = new App.AdvancedEditor({model: model});
+        view.$el.find('textarea').val(JSON.stringify(data));
+        view.$el.find('button').click();
+        expect(model.toJSON()).to.deep.equal(data);
+    });
+
 });
