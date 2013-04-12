@@ -71,6 +71,7 @@ App.FacetsEditor = Backbone.View.extend({
             return;
         }
         this.$el.html(this.template());
+        this.facet_views = {};
         _(this.dimensions).forEach(function(dimension) {
             if(dimension['type_label'] == 'dimension' ||
                dimension['type_label'] == 'group dimension') {
@@ -87,6 +88,7 @@ App.FacetsEditor = Backbone.View.extend({
                 var facet_view = new App.FacetEditorField({
                     model: facet_model
                 });
+                this.facet_views[facet_model.cid] = facet_view;
                 this.$el.find('tbody').append(facet_view.el);
             }
         }, this);
