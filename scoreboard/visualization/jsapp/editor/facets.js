@@ -5,13 +5,34 @@
 "use strict";
 
 
-App.FacetsEditor = Backbone.View.extend({
+App.FacetEditorField = Backbone.View.extend({
 
-    template: App.get_template('editor/facets.html'),
+    tagName: 'tr',
+    template: App.get_template('editor/facet-field.html'),
 
     events: {
         'change [name="type"]': 'on_change_type'
     },
+
+    initialize: function(options) {
+        this.render();
+    },
+
+    render: function() {
+        this.$el.html(this.template(this.model.toJSON()));
+        this.$el.attr('data-name', this.model.get('name'));
+    },
+
+    on_change_type: function(evt) {
+        this.model.set('type', $(evt.target).val());
+    }
+
+});
+
+
+App.FacetsEditor = Backbone.View.extend({
+
+    template: App.get_template('editor/facets.html'),
 
     title: "Facets",
 
@@ -20,20 +41,24 @@ App.FacetsEditor = Backbone.View.extend({
         this.$el.html('loading...');
         var dimensions_ajax = $.get(options.cube_url + '/dimensions?flat=on');
         dimensions_ajax.done(_.bind(function(dimensions) {
+            this.$el.html(this.template());
             _(dimensions).forEach(function(dimension) {
                 if(dimension['type_label'] == 'dimension' ||
                    dimension['type_label'] == 'group dimension') {
-                    this.facets.add(new Backbone.Model({
+                    var facet_model = new Backbone.Model({
                         'name': dimension['notation'],
                         'dimension': dimension['notation'],
                         'label': dimension['label']
-                    }));
+                    })
+                    this.facets.add(facet_model);
+                    var facet_view = new App.FacetEditorField({
+                        model: facet_model
+                    });
+                    this.$el.find('tbody').append(facet_view.el);
                 }
             }, this);
             this.update();
-            this.$el.html(this.template({
-                'facets': this.facets.toJSON()
-            }));
+            this.facets.on('change', this.update, this);
         }, this));
     },
 
@@ -43,14 +68,6 @@ App.FacetsEditor = Backbone.View.extend({
             value.push(facet.toJSON());
         })
         this.model.set('facets', value);
-    },
-
-    on_change_type: function(evt) {
-        var select = $(evt.target);
-        var name = select.data('facet');
-        var type = select.val();
-        this.facets.where({'name': name})[0].set('type', type);
-        this.update();
     }
 
 });
