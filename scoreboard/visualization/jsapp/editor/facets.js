@@ -111,15 +111,4 @@ App.FacetsEditor = Backbone.View.extend({
 });
 
 
-App.FacetsEditorReadOnly = App.FacetsEditor.extend({
-
-    title: "Facets (disabled)",
-
-    save_value: function() {
-        // do nothing
-    }
-
-});
-
-
 })(App.jQuery);

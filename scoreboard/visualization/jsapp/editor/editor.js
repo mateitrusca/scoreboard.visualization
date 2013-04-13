@@ -49,7 +49,7 @@ App.Editor = Backbone.View.extend({
 
     step_cls: [
         'ChartTypeEditor',
-        'FacetsEditorReadOnly',
+        'FacetsEditor',
         'AxesEditor',
         'SeriesEditor',
         'FormatEditor',
