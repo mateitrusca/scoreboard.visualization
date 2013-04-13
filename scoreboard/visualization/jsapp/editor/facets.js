@@ -53,13 +53,15 @@ App.FacetsEditor = Backbone.View.extend({
 
     initialize: function(options) {
         this.render();
-        var dimensions_ajax = $.get(options.cube_url + '/dimensions?flat=on');
-        dimensions_ajax.done(_.bind(this.got_dimensions, this));
+        this.get_dimensions();
     },
 
-    got_dimensions: function(dimensions) {
-        this.dimensions = dimensions;
-        this.load_value();
+    get_dimensions: function() {
+        var dimensions_url = this.options.cube_url + '/dimensions?flat=on';
+        $.get(dimensions_url).done(_.bind(function(dimensions) {
+            this.dimensions = dimensions;
+            this.load_value();
+        }, this));
     },
 
     load_value: function() {
