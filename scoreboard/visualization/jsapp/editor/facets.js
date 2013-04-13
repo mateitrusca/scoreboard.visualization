@@ -73,7 +73,7 @@ App.FacetsEditor = Backbone.View.extend({
         this.facet_views = {};
         _(this.dimensions).forEach(function(dimension) {
             if(dimension['type_label'] != 'dimension' &&
-               dimension['type_label'] != 'group dimension') {
+               dimension['type_label'] != 'dimension group') {
                 return;
             }
             var name = dimension['notation'];

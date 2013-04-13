@@ -65,9 +65,9 @@ describe('FacetsEditor', function() {
                 dimensions: [
                     {type_label: 'measure', notation: 'ignore me'},
                     {type_label: 'attribute', notation: 'ignore me too'},
-                    {type_label: 'group dimension', notation: 'indicator-group'},
+                    {type_label: 'dimension group', notation: 'indicator-group'},
                     {type_label: 'dimension', notation: 'indicator'},
-                    {type_label: 'group dimension', notation: 'breakdown-group'},
+                    {type_label: 'dimension group', notation: 'breakdown-group'},
                     {type_label: 'dimension', notation: 'breakdown'},
                     {type_label: 'dimension', notation: 'unit-measure'},
                     {type_label: 'dimension', notation: 'ref-area'},
