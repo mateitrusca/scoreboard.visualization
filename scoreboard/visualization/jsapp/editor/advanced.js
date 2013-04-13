@@ -29,6 +29,7 @@ App.AdvancedEditor = Backbone.View.extend({
         var value = JSON.parse(this.$el.find('textarea').val());
         this.model.clear();
         this.model.set(value);
+        this.trigger('save');
     }
 
 });
