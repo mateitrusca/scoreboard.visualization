@@ -23,18 +23,20 @@ describe('ChartTypeEditor', function() {
 
 
 describe('FacetsEditor', function() {
-    "use strict";
+  "use strict";
 
-    beforeEach(function() {
-        this.sandbox = sinon.sandbox.create();
-        this.sandbox.useFakeServer();
-        this.box = $('<div>').css('display', 'none').appendTo($('body'));
-    });
+  beforeEach(function() {
+      this.sandbox = sinon.sandbox.create();
+      this.sandbox.useFakeServer();
+      this.box = $('<div>').css('display', 'none').appendTo($('body'));
+  });
 
-    afterEach(function () {
-        this.sandbox.restore();
-        this.box.remove();
-    });
+  afterEach(function () {
+      this.sandbox.restore();
+      this.box.remove();
+  });
+
+  describe('facet list', function() {
 
     it('should prefill dimensions', function() {
         var model = new Backbone.Model();
@@ -94,6 +96,10 @@ describe('FacetsEditor', function() {
             ['time-period', 'indicator']);
     });
 
+  });
+
+  describe('facet type', function() {
+
     it('should select existing filter type', function() {
         var model = new Backbone.Model({
             facets: [{name: 'time-period', type: 'data-column'}]
@@ -122,6 +128,8 @@ describe('FacetsEditor', function() {
         view.load_value();
         expect(read_current_selection()).to.equal('all-values');
     });
+
+  });
 
 });
 
