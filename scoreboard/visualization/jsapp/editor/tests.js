@@ -123,6 +123,18 @@ describe('FacetsEditor', function() {
                 ['time-period', 'indicator']);
         });
 
+        it('should remove facets with no corresponding dimension', function() {
+            var model = new Backbone.Model({
+                facets: [{name: 'time-period', type: 'data-column'}]
+            });
+            var view = new NoAjaxFacetsEditor({
+                model: model,
+                el: this.box,
+                dimensions: []
+            });
+            expect(model.get('facets').length).to.equal(0);
+        });
+
     });
 
     describe('facet type', function() {

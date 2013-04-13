@@ -89,6 +89,11 @@ App.FacetsEditor = Backbone.View.extend({
             var facet_view = new App.FacetEditorField({model: facet_model});
             this.facet_views[facet_model.cid] = facet_view;
         }, this);
+        this.facets.forEach(function(facet) {
+            if(! this.facet_views[facet.cid]) {
+                this.facets.remove(facet);
+            }
+        }, this);
         this.facets.on('change', this.save_value, this);
         this.save_value();
         this.render();
