@@ -83,15 +83,13 @@ App.format_series = function (data, order, type){
                 difference(_(serie).pluck('name')).
                 each(function(diff_label){
                     _(serie).push(
-                        _.object(
-                            [['name', diff_label],
-                             ['y', 'n/a']])
+                        _.object([['name', diff_label]])
                     );
                 });
             return _.object(
                     ['name', 'data'],
                     [item['name'], serie]);
-        }).value();
+        }).sortBy('name').value();
     }
     return series;
 

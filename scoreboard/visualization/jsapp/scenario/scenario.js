@@ -196,49 +196,74 @@ App.GraphControlsView = Backbone.View.extend({
     template: App.get_template('scenario/graph_controls.html'),
 
     events: {
-        'click #check': 'on_auto_change',
-        'mouseup #slider': 'on_value_change'
+        'click #toolbar #prev': 'on_prev',
+        'click #toolbar #play': 'on_auto_change',
+        'click #toolbar #next': 'on_next',
     },
 
     initialize: function(options) {
         this.chart = options['chart']
         _(this.chart).extend(Backbone.Events);
         this.snapshots_data = options['snapshots_data'];
-        this.extract_snapshot = options['extract_snapshot'];
         this.range = options['range'];
-        this.update_chart = options['update_chart'];
         this.interval = options['interval'];
         this.model.on('change', this.render, this);
-        this.chart.on('redraw', _.bind(function(t){
-            this.model.set('value', this.range.min + t);
-        }, this));
-        this.model.set({'value': this.range.min,
-                        'auto': true});
+        this.model.set({'value': 0, 'auto': false});
+    },
+
+    update_chart: function(){
+        var data = this.snapshots_data[this.model.get('value')];
+        this.chart.series[0].update({ data: data['data'] }, true);
+        this.chart.setTitle(null, {text: data['name']});
+    },
+
+    on_next: function(){
+        var current_value = this.model.get('value');
+        var max = this.snapshots_data.length - 1;
+        var next_value = current_value + 1;
+        if (next_value > max){
+            next_value = 0;
+        }
+        this.model.set('value', next_value);
+        this.update_chart();
+    },
+
+    on_prev: function(){
+        var current_value = this.model.get('value');
+        var max = this.snapshots_data.length - 1;
+        var next_value = current_value - 1;
+        if (next_value < 0){
+            next_value = max;
+        }
+        this.model.set('value', next_value);
+        this.update_chart();
     },
 
     on_auto_change: function() {
         var prev = this.model.get('auto');
+        var options = this.model.attributes;
+        this.model.set('auto', !prev);
         if (prev){
             clearInterval(this.interval);
         }
         else{
-            this.interval = setInterval(
-                    _.bind(function() {
-                        var data = this.extract_snapshot(this.snapshots_data);
-                        this.update_chart(this.chart, data);
-                     }, this), 1000);
-            window.interval_set = this.interval;
-        }
-        this.model.set('auto', !prev);
-    },
-
-    on_value_change: function() {
-        if (!this.model.get('auto')){
-            this.model.set('value', App.plone_jQuery( "#slider" ).slider( "value" ));
-            var moment = this.model.get('value') - this.range.min - 1;
-            var data = this.extract_snapshot(this.snapshots_data, moment)
-            this.update_chart(this.chart, data, moment);
-            this.chart.redraw();
+            this.interval = setInterval(_.bind(function(){
+                var idx = options['value']
+                var chart = this.chart;
+                if (idx < this.snapshots_data.length){
+                    var data = this.snapshots_data[idx];
+                    this.chart.series[0].update({ data: data['data'] }, true);
+                    this.chart.setTitle(null, {text: data['name']});
+                    options['value']+=1;
+                }
+                else{
+                    options['value'] = 0;
+                    options['auto'] = false;
+                    clearInterval(this.interval);
+                    this.model.set(options);
+                    this.render();
+                }
+            }, this), 1000);
         }
     },
 
@@ -246,20 +271,37 @@ App.GraphControlsView = Backbone.View.extend({
         this.$el.html(this.template(
             { 'auto': this.model.get('auto') }
         ));
-        App.plone_jQuery( "#slider" ).slider({
-          value: this.model.get('value'),
-          min: this.range.min,
-          max: this.range.max,
-          step: 1,
-          slide: function( event, ui ) {
-            App.plone_jQuery( "#year" ).val( ui.value );
-          }
-        });
         App.plone_jQuery( "#year" ).val( App.plone_jQuery( "#slider" ).slider( "value" ) );
         if (this.model.get('auto')){
             App.plone_jQuery( "#slider" ).slider('disable');
         }
-        //App.plone_jQuery( "#check" ).button();
+        var prev = this.$el.find('#prev');
+        var play = this.$el.find('#play');
+        var next = this.$el.find('#next');
+        App.plone_jQuery(prev).button({
+            text: false,
+            icons: {
+                primary: "ui-icon-seek-start"
+            }
+        });
+        var auto_icon = '';
+        if (this.model.get('auto')){
+            auto_icon = "ui-icon-pause";
+        }else{
+            auto_icon = "ui-icon-play";
+        }
+        App.plone_jQuery(play).button({
+            text: false,
+            icons: {
+                primary: auto_icon
+            }
+        });
+        App.plone_jQuery(next).button({
+            text: false,
+            icons: {
+                primary: "ui-icon-seek-end"
+            }
+        });
     }
 });
 
