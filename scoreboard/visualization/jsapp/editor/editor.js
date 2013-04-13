@@ -69,6 +69,10 @@ App.Editor = Backbone.View.extend({
         }, this);
         this.step = this.all_steps[0];
         this.render();
+        var advanced = _(this.all_steps).findWhere({title: 'Advanced'});
+        advanced.on('save', function() {
+            this.trigger('advanced_save');
+        }, this);
     },
 
     render: function() {
@@ -102,11 +106,20 @@ App.create_editor = function(form) {
         model: configuration,
         el: form
     });
-    App.editor = new App.Editor({
-        model: configuration,
-        cube_url: App.URL
+
+    var create_editor_view = function() {
+        App.editor = new App.Editor({
+            model: configuration,
+            cube_url: App.URL
+        });
+        App.editor.$el.insertBefore(form);
+    };
+    create_editor_view();
+
+    App.editor.on('advanced_save', function() {
+        App.editor.remove();
+        create_editor_view();
     });
-    App.editor.$el.insertBefore(form);
 };
 
 
