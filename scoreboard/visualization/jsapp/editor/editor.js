@@ -16,16 +16,20 @@ App.EditForm = Backbone.View.extend({
     initialize: function(options) {
         this.input = this.$el.find('input[name=configuration]');
         this.model.set(JSON.parse(this.input.val()));
-        this.model.on('change', this.save, this);
+        this.model.on('change', this.update_form, this);
         this.$el.append(this.template());
     },
 
-    save: function() {
+    update_form: function() {
         this.input.val(JSON.stringify(this.model, null, 2));  // indent 2 spaces
     },
 
     on_submit: function(evt) {
         evt.preventDefault();
+        this.save_form();
+    },
+
+    save_form: function() {
         var form_status = this.$el.find('.editor-form-status');
         form_status.text('saving...');
         var data = {'configuration': this.input.val()};
@@ -117,6 +121,7 @@ App.create_editor = function(form) {
     create_editor_view();
 
     App.editor.on('advanced_save', function() {
+        App.editor_form.save_form();
         App.editor.remove();
         create_editor_view();
     });
