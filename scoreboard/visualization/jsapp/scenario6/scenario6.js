@@ -38,7 +38,7 @@ App.scenario6_filters_schema = {
              'breakdown': 'breakdown'
          }},
         {type: 'multiple_select',
-         name: 'countries',
+         name: 'ref-area',
          on_client: true,
          label: 'Countries',
          dimension: 'ref-area',

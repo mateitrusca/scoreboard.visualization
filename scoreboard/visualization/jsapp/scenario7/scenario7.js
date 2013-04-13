@@ -47,7 +47,7 @@ App.scenario7_filters_schema = {
              'indicator': 'indicator'
          }},
         {type: 'multiple_select',
-         name: 'countries',
+         name: 'ref-area',
          on_client: true,
          label: 'Country / Countries',
          dimension: 'ref-area',
