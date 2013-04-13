@@ -26,6 +26,10 @@ App.EditForm = Backbone.View.extend({
 
     on_submit: function(evt) {
         evt.preventDefault();
+        this.save_form();
+    },
+
+    save_form: function() {
         var form_status = this.$el.find('.editor-form-status');
         form_status.text('saving...');
         var data = {'configuration': this.input.val()};
@@ -117,6 +121,7 @@ App.create_editor = function(form) {
     create_editor_view();
 
     App.editor.on('advanced_save', function() {
+        App.editor_form.save_form();
         App.editor.remove();
         create_editor_view();
     });
