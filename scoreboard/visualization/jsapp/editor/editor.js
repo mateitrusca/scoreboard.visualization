@@ -16,11 +16,11 @@ App.EditForm = Backbone.View.extend({
     initialize: function(options) {
         this.input = this.$el.find('input[name=configuration]');
         this.model.set(JSON.parse(this.input.val()));
-        this.model.on('change', this.save, this);
+        this.model.on('change', this.update_form, this);
         this.$el.append(this.template());
     },
 
-    save: function() {
+    update_form: function() {
         this.input.val(JSON.stringify(this.model, null, 2));  // indent 2 spaces
     },
 
