@@ -196,6 +196,7 @@ App.GraphControlsView = Backbone.View.extend({
     template: App.get_template('scenario/graph_controls.html'),
 
     events: {
+        'click #toolbar #prev': 'on_prev',
         'click #toolbar #play': 'on_auto_change',
         'click #toolbar #next': 'on_next',
     },
@@ -219,6 +220,12 @@ App.GraphControlsView = Backbone.View.extend({
     on_next: function(){
         var current_value = this.model.get('value');
         this.model.set('value', current_value+1);
+        this.update_chart();
+    },
+
+    on_prev: function(){
+        var current_value = this.model.get('value');
+        this.model.set('value', current_value-1);
         this.update_chart();
     },
 
