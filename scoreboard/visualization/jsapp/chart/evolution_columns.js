@@ -93,14 +93,11 @@ App.chart_library['evolution_columns'] = function(container, options) {
 
     var chart = new Highcharts.Chart(chartOptions);
 
-    var slider_values = _(options['group_labels']).keys().sort();
     App.chart_controls = new App.GraphControlsView({
         model: new Backbone.Model(),
         chart: chart,
         snapshots_data: time_snapshots,
         interval: window.interval_set,
-        range: _.object( [['min', parseInt(slider_values[0])],
-                         ['max', parseInt(_(slider_values).last())]] )
     });
     App.chart_controls.$el.insertAfter(container);
 };

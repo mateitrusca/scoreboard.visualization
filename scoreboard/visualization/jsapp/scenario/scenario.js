@@ -219,13 +219,23 @@ App.GraphControlsView = Backbone.View.extend({
 
     on_next: function(){
         var current_value = this.model.get('value');
-        this.model.set('value', current_value+1);
+        var max = this.snapshots_data.length - 1;
+        var next_value = current_value + 1;
+        if (next_value > max){
+            next_value = 0;
+        }
+        this.model.set('value', next_value);
         this.update_chart();
     },
 
     on_prev: function(){
         var current_value = this.model.get('value');
-        this.model.set('value', current_value-1);
+        var max = this.snapshots_data.length - 1;
+        var next_value = current_value - 1;
+        if (next_value < 0){
+            next_value = max;
+        }
+        this.model.set('value', next_value);
         this.update_chart();
     },
 
@@ -261,15 +271,6 @@ App.GraphControlsView = Backbone.View.extend({
         this.$el.html(this.template(
             { 'auto': this.model.get('auto') }
         ));
-        App.plone_jQuery( this.$el.find("#slider") ).slider({
-          value: this.model.get('value'),
-          min: this.range.min,
-          max: this.range.max,
-          step: 1,
-          slide: function( event, ui ) {
-            App.plone_jQuery( "#year" ).val( ui.value );
-          }
-        });
         App.plone_jQuery( "#year" ).val( App.plone_jQuery( "#slider" ).slider( "value" ) );
         if (this.model.get('auto')){
             App.plone_jQuery( "#slider" ).slider('disable');
