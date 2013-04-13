@@ -1,4 +1,4 @@
-/*global App, Backbone, describe, beforeEach, afterEach, it, expect, sinon */
+/*global App, Backbone, _, describe, beforeEach, afterEach, it, expect, sinon */
 /*jshint sub:true */
 
 describe('ChartTypeEditor', function() {
@@ -24,6 +24,8 @@ describe('ChartTypeEditor', function() {
 
 describe('FacetsEditor', function() {
     "use strict";
+
+    var $ = App.jQuery;
 
     beforeEach(function() {
         this.sandbox = sinon.sandbox.create();
