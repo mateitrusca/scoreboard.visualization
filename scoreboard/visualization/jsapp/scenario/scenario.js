@@ -196,7 +196,7 @@ App.GraphControlsView = Backbone.View.extend({
     template: App.get_template('scenario/graph_controls.html'),
 
     events: {
-        'click #check': 'on_auto_change',
+        'click #toolbar #play': 'on_auto_change',
         'mouseup #slider': 'on_value_change'
     },
 
@@ -214,6 +214,7 @@ App.GraphControlsView = Backbone.View.extend({
     on_auto_change: function() {
         var prev = this.model.get('auto');
         var options = this.model.attributes;
+        this.model.set('auto', !prev);
         if (prev){
             clearInterval(this.interval);
         }

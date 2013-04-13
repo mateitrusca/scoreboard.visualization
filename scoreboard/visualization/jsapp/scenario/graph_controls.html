@@ -1,9 +1,5 @@
-<p>
-  <input type="checkbox" id="check" {{# if auto }} checked="true" {{/ if }}/>
-  <label for="check">{{# if auto }} Auto {{ else }} Manual {{/ if }}</label>
-  <label for="year">Year:</label>
-  <input type="text" id="year"
-         style="border: 0; color: #f6931f; font-weight: bold;" />
-  <span id="slider" style="display: inline-block; width: 200px"></span>
-</p>
-
+<div id="toolbar" class="ui-widget-header ui-corner-all">
+  <button id="rewind">rewind</button>
+  <button id="play">{{# if auto }} pause {{ else }} play {{/ if}}</button>
+  <button id="forward">fast forward</button>
+</div>
