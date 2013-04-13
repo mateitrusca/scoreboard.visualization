@@ -61,7 +61,7 @@ App.chart_library['evolution_columns'] = function(container, options) {
         },
         yAxis: {
             min: 0,
-            max: 100,
+            max: 1,
             title: {
                 text: options.meta_data['y_title'],
                 style: {
