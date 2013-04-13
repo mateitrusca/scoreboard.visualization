@@ -197,7 +197,7 @@ App.GraphControlsView = Backbone.View.extend({
 
     events: {
         'click #toolbar #play': 'on_auto_change',
-        'mouseup #slider': 'on_value_change'
+        'click #toolbar #next': 'on_next',
     },
 
     initialize: function(options) {
@@ -205,10 +205,17 @@ App.GraphControlsView = Backbone.View.extend({
         _(this.chart).extend(Backbone.Events);
         this.snapshots_data = options['snapshots_data'];
         this.range = options['range'];
-        this.update_chart = options['update_chart'];
         this.interval = options['interval'];
         this.model.on('change', this.render, this);
         this.model.set({'value': 0, 'auto': false});
+    },
+
+    on_next: function(){
+        var current_value = this.model.get('value');
+        this.model.set('value', current_value+1);
+        var data = this.snapshots_data[this.model.get('value')];
+        this.chart.series[0].update({ data: data['data'] }, true);
+        this.chart.setTitle(null, {text: data['name']});
     },
 
     on_auto_change: function() {
@@ -236,15 +243,6 @@ App.GraphControlsView = Backbone.View.extend({
                     this.render();
                 }
             }, this), 1000);
-        }
-    },
-
-    on_value_change: function() {
-        if (!this.model.get('auto')){
-            this.model.set('value', App.plone_jQuery( "#slider" ).slider( "value" ));
-            var moment = this.model.get('value') - this.range.min - 1;
-            var data = this.snapshots_data[0];
-            this.update_chart(this.chart, data, moment);
         }
     },
 
