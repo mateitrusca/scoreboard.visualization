@@ -210,12 +210,16 @@ App.GraphControlsView = Backbone.View.extend({
         this.model.set({'value': 0, 'auto': false});
     },
 
-    on_next: function(){
-        var current_value = this.model.get('value');
-        this.model.set('value', current_value+1);
+    update_chart: function(){
         var data = this.snapshots_data[this.model.get('value')];
         this.chart.series[0].update({ data: data['data'] }, true);
         this.chart.setTitle(null, {text: data['name']});
+    },
+
+    on_next: function(){
+        var current_value = this.model.get('value');
+        this.model.set('value', current_value+1);
+        this.update_chart();
     },
 
     on_auto_change: function() {
