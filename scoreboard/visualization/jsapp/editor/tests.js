@@ -36,7 +36,6 @@ describe('FacetsEditor', function() {
 
     beforeEach(function() {
         this.sandbox = sinon.sandbox.create();
-        this.sandbox.useFakeServer();
         this.box = $('<div>').css('display', 'none').appendTo($('body'));
     });
 
@@ -48,6 +47,7 @@ describe('FacetsEditor', function() {
     describe('facet list', function() {
 
         it('should load dimensions via ajax', function() {
+            this.sandbox.useFakeServer();
             var model = new Backbone.Model();
             var view = new App.FacetsEditor({model: model});
             var dimensions = [
