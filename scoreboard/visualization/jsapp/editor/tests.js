@@ -75,14 +75,10 @@ describe('FacetsEditor', function() {
                 ]
             });
 
-            var facets = model.get('facets');
-            expect(facets[0]['dimension']).to.equal('indicator-group');
-            expect(facets[1]['dimension']).to.equal('indicator');
-            expect(facets[2]['dimension']).to.equal('breakdown-group');
-            expect(facets[3]['dimension']).to.equal('breakdown');
-            expect(facets[4]['dimension']).to.equal('unit-measure');
-            expect(facets[5]['dimension']).to.equal('ref-area');
-            expect(facets[6]['dimension']).to.equal('time-period');
+            expect(_(model.get('facets')).pluck('dimension')).to.deep.equal([
+                'indicator-group', 'indicator', 'breakdown-group',
+                'breakdown', 'unit-measure', 'ref-area', 'time-period',
+            ]);
         });
 
         it('should save filter name same as dimension', function() {
