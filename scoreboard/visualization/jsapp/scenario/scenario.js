@@ -265,7 +265,33 @@ App.GraphControlsView = Backbone.View.extend({
         if (this.model.get('auto')){
             App.plone_jQuery( "#slider" ).slider('disable');
         }
-        //App.plone_jQuery( "#check" ).button();
+        var prev = this.$el.find('#prev');
+        var play = this.$el.find('#play');
+        var next = this.$el.find('#next');
+        App.plone_jQuery(prev).button({
+            text: false,
+            icons: {
+                primary: "ui-icon-seek-start"
+            }
+        });
+        var auto_icon = '';
+        if (this.model.get('auto')){
+            auto_icon = "ui-icon-pause";
+        }else{
+            auto_icon = "ui-icon-play";
+        }
+        App.plone_jQuery(play).button({
+            text: false,
+            icons: {
+                primary: auto_icon
+            }
+        });
+        App.plone_jQuery(next).button({
+            text: false,
+            icons: {
+                primary: "ui-icon-seek-end"
+            }
+        });
     }
 });
 
