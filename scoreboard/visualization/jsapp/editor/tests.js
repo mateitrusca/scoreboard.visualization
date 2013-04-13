@@ -40,6 +40,17 @@ describe('FacetsEditor', function() {
 
     describe('facet list', function() {
 
+        it('should load dimensions via ajax', function() {
+            var model = new Backbone.Model();
+            var view = new App.FacetsEditor({model: model});
+            var dimensions = [
+                {type_label: 'dimension', notation: 'ref-area'},
+                {type_label: 'dimension', notation: 'time-period'}
+            ];
+            App.respond_json(this.sandbox.server.requests[0], dimensions);
+            expect(view.dimensions).to.deep.equal(dimensions);
+        });
+
         it('should prefill dimensions', function() {
             var model = new Backbone.Model();
             var view = new App.FacetsEditor({model: model});
