@@ -52,7 +52,6 @@ App.FacetsEditor = Backbone.View.extend({
     title: "Facets",
 
     initialize: function(options) {
-        this.facets = new Backbone.Collection(this.model.get('facets'));
         this.render();
         var dimensions_ajax = $.get(options.cube_url + '/dimensions?flat=on');
         dimensions_ajax.done(_.bind(this.got_dimensions, this));
@@ -60,9 +59,33 @@ App.FacetsEditor = Backbone.View.extend({
 
     got_dimensions: function(dimensions) {
         this.dimensions = dimensions;
+        this.load_value();
+    },
+
+    load_value: function() {
+        this.facets = new Backbone.Collection(this.model.get('facets'));
+        this.facet_views = {};
+        _(this.dimensions).forEach(function(dimension) {
+            if(dimension['type_label'] != 'dimension' &&
+               dimension['type_label'] != 'group dimension') {
+                return;
+            }
+            var name = dimension['notation'];
+            var facet_model = this.facets.findWhere({name: name});
+            if(! facet_model) {
+                facet_model = new Backbone.Model({
+                    'name': name,
+                    'dimension': name,
+                    'label': dimension['label']
+                });
+            }
+            this.facets.add(facet_model);
+            var facet_view = new App.FacetEditorField({model: facet_model});
+            this.facet_views[facet_model.cid] = facet_view;
+        }, this);
+        this.facets.on('change', this.save_value, this);
+        this.save_value();
         this.render();
-        this.update();
-        this.facets.on('change', this.update, this);
     },
 
     render: function() {
@@ -71,44 +94,18 @@ App.FacetsEditor = Backbone.View.extend({
             return;
         }
         this.$el.html(this.template());
-        _(this.dimensions).forEach(function(dimension) {
-            if(dimension['type_label'] == 'dimension' ||
-               dimension['type_label'] == 'group dimension') {
-                var name = dimension['notation'];
-                var facet_model = this.facets.findWhere({name: name});
-                if(! facet_model) {
-                    facet_model = new Backbone.Model({
-                        'name': name,
-                        'dimension': name,
-                        'label': dimension['label']
-                    })
-                }
-                this.facets.add(facet_model);
-                var facet_view = new App.FacetEditorField({
-                    model: facet_model
-                });
-                this.$el.find('tbody').append(facet_view.el);
-            }
+        this.facets.forEach(function(facet_model) {
+            var facet_view = this.facet_views[facet_model.cid];
+            this.$el.find('tbody').append(facet_view.el);
         }, this);
     },
 
-    update: function() {
+    save_value: function() {
         var value = [];
         this.facets.forEach(function(facet) {
             value.push(facet.toJSON());
-        })
+        });
         this.model.set('facets', value);
-    }
-
-});
-
-
-App.FacetsEditorReadOnly = App.FacetsEditor.extend({
-
-    title: "Facets (disabled)",
-
-    update: function() {
-        // do nothing
     }
 
 });
