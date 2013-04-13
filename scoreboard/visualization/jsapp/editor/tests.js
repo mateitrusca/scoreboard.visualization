@@ -36,22 +36,21 @@ describe('FacetsEditor', function() {
         this.box.remove();
     });
 
-    var dimensions_data = [
-        {type_label: 'measure', notation: 'ignore me'},
-        {type_label: 'attribute', notation: 'ignore me too'},
-        {type_label: 'group dimension', notation: 'indicator-group'},
-        {type_label: 'dimension', notation: 'indicator'},
-        {type_label: 'group dimension', notation: 'breakdown-group'},
-        {type_label: 'dimension', notation: 'breakdown'},
-        {type_label: 'dimension', notation: 'unit-measure'},
-        {type_label: 'dimension', notation: 'ref-area'},
-        {type_label: 'dimension', notation: 'time-period'}
-    ];
-
     it('should prefill dimensions', function() {
         var model = new Backbone.Model();
         var view = new App.FacetsEditor({model: model});
-        App.respond_json(this.sandbox.server.requests[0], dimensions_data);
+        App.respond_json(this.sandbox.server.requests[0], [
+            {type_label: 'measure', notation: 'ignore me'},
+            {type_label: 'attribute', notation: 'ignore me too'},
+            {type_label: 'group dimension', notation: 'indicator-group'},
+            {type_label: 'dimension', notation: 'indicator'},
+            {type_label: 'group dimension', notation: 'breakdown-group'},
+            {type_label: 'dimension', notation: 'breakdown'},
+            {type_label: 'dimension', notation: 'unit-measure'},
+            {type_label: 'dimension', notation: 'ref-area'},
+            {type_label: 'dimension', notation: 'time-period'}
+        ]);
+
         var facets = model.get('facets');
         expect(facets[0]['dimension']).to.equal('indicator-group');
         expect(facets[1]['dimension']).to.equal('indicator');
