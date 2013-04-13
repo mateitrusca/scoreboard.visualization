@@ -208,22 +208,34 @@ App.GraphControlsView = Backbone.View.extend({
         this.update_chart = options['update_chart'];
         this.interval = options['interval'];
         this.model.on('change', this.render, this);
-        this.model.set({'value': 0, 'auto': true});
+        this.model.set({'value': 0, 'auto': false});
     },
 
     on_auto_change: function() {
         var prev = this.model.get('auto');
+        var options = this.model.attributes;
         if (prev){
             clearInterval(this.interval);
         }
         else{
-            this.interval = setInterval(
-                    _.bind(function() {
-                        var data = this.snapshots_data[0];
-                        this.update_chart(this.chart, data);
-                     }, this), 1000);
+            this.interval = setInterval(_.bind(function(){
+                var idx = options['value']
+                var chart = this.chart;
+                if (idx < this.snapshots_data.length){
+                    var data = this.snapshots_data[idx];
+                    this.chart.series[0].update({ data: data['data'] }, true);
+                    this.chart.setTitle(null, {text: data['name']});
+                    options['value']+=1;
+                }
+                else{
+                    options['value'] = 0;
+                    options['auto'] = false;
+                    clearInterval(this.interval);
+                    this.model.set(options);
+                    this.render();
+                }
+            }, this), 1000);
         }
-        this.model.set('auto', !prev);
     },
 
     on_value_change: function() {
@@ -232,7 +244,6 @@ App.GraphControlsView = Backbone.View.extend({
             var moment = this.model.get('value') - this.range.min - 1;
             var data = this.snapshots_data[0];
             this.update_chart(this.chart, data, moment);
-            this.chart.redraw();
         }
     },
 

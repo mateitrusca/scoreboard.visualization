@@ -11,10 +11,6 @@ var na_bar_color = "#DDDDDD";
 App.chart_library['evolution_columns'] = function(container, options) {
     var time_snapshots = App.format_series(options['series']);
     var series = time_snapshots[0]['data'];
-    var morph = function(chart, snapshot){
-        chart.series[0].update({ data: snapshot['data'] }, true);
-        chart.setTitle(null, {text: snapshot['name']});
-    };
 
     var chartOptions = {
         chart: {
@@ -25,19 +21,6 @@ App.chart_library['evolution_columns'] = function(container, options) {
             marginRight: 80,
             events: {
                 load: function() {
-                    window.clearInterval(window.interval);
-                    var idx = 0;
-                    window.setInterval(_.bind(function(){
-                        var chart = this;
-                        if (idx < time_snapshots.length){
-                            var data = time_snapshots[idx];
-                            window.interval = setInterval(morph(chart, data), 1000);
-                            idx+=1;
-                        }
-                        else{
-                            window.clearInterval(window.interval);
-                        }
-                    },this), 1000);
                 }
             }
         },
@@ -114,7 +97,6 @@ App.chart_library['evolution_columns'] = function(container, options) {
     App.chart_controls = new App.GraphControlsView({
         model: new Backbone.Model(),
         chart: chart,
-        update_chart: morph,
         snapshots_data: time_snapshots,
         interval: window.interval_set,
         range: _.object( [['min', parseInt(slider_values[0])],
