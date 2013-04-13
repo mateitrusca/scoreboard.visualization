@@ -1,4 +1,8 @@
-<td>{{ label }} (<tt>{{ dimension }}</tt>)</td>
+<td>
+  {{ label }}
+  (<tt>{{ dimension }}</tt>)
+</td>
+
 <td>
   <select name="type">
   {{# type_options }}
@@ -7,4 +11,8 @@
       >{{ label }}</option>
   {{/ type_options }}
   </select>
+</td>
+
+<td>
+  <input type="checkbox" name="on_client" {{# if on_client }}checked{{/ if }}>
 </td>
