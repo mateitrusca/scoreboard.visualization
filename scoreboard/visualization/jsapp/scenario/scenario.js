@@ -103,8 +103,8 @@ App.ScenarioChartView = Backbone.View.extend({
 
         var chart_data = {
             'tooltip_formatter': function() {
-                var tooltip_label = chart_data.meta_data['tooltip_label'];
-                return '<b>'+ this.x +'</b><br>: ' +
+                var tooltip_label = chart_data.meta_data['unit'];
+                return '<b>'+ this.point.name +'</b><br>: ' +
                        Math.round(this.y*10)/10 + ' ' + tooltip_label;
             },
             'credits': {

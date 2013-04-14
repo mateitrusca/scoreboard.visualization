@@ -61,6 +61,7 @@ App.format_series = function (data, order, type){
     }else{
         var extract_data = function(series_item){
             return _.object([['name', series_item['ref-area-label']],
+                             ['code', series_item['ref-area']],
                              ['y', series_item['value']]]);
         };
 
