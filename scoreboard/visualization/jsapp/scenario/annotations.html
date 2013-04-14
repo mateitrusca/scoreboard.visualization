@@ -1,22 +1,28 @@
 <h2>Annotations:</h2>
 {{ description }}
+<p><strong>Definition and scopes:</strong><p>
 {{#each blocks}}
 <p>
-  <b>{{ this.label }}</b>
+  <b>{{ this.filter_label }}</b>
 </p>
-<p>{{ this.note }}</p>
 <ul>
-  <li>
-    <strong>Definition and scope:</strong>
-    <ul>
-        <li> {{ this.definition }} </li>
-    </ul>
-  </li>
+  <li>{{ this.label }} </li>
+  <li><strong>Definition:</strong> {{ this.definition }}</li>
 
   {{# if this.source_definition }}
   <li>
     <strong>Source:</strong>
-    {{ this.source_definition }}[<a href="{{ this.source_url }}"]>More&nbsp;information</a>]
+      <ul>
+        <li>
+          {{ this.source_label }}&nbsp;[<a href="{{ this.source_url }}">More&nbsp;information</a>]
+        </li>
+        <li>
+          <strong>Definition:</strong>{{ this.source_definition }}
+        </li>
+        <li>
+        <strong>Notes:</strong>{{ this.source_notes }}
+        </li>
+      </ul>
   </li>
   {{/ if }}
 </ul>
