@@ -57,12 +57,9 @@ App.scenario6_filters_schema = {
          {type: 'data-column', dimension: 'value'}
     ],
     annotations: {
-        'description': {
-            title: "Label x-axis",
-            source: '/dimension_value_metadata',
-            filters: [{name: 'indicator', part: 'label'},
-                      {name: 'breakdown', part: 'label'}]
-        }
+        source: '/dimension_value_metadata',
+        filters: [{name: 'indicator', part: 'label'},
+                  {name: 'breakdown', part: 'label'}]
     },
     chart_type: 'evolution_columns',
     chart_meta_labels: [
