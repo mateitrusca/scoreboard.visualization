@@ -19,6 +19,7 @@ App.chart_library['map'] = function(container, options) {
         colors: chroma.brewer['YlOrBr'],
         limits: [0, _(_(series).pluck('value')).max()]
     });
+    var unit = options['meta_data']['unit'];
 
     var n = 0;
     var map = Kartograph.map(map_div[0]);
@@ -34,7 +35,7 @@ App.chart_library['map'] = function(container, options) {
                 var code = feature['code'];
                 var value = value_by_country[code];
                 return [App.COUNTRY_NAME[code],
-                        (value ? App.round(value, 3) : 'n/a')];
+                        (value ? App.round(value, 3) + ' ' + unit : 'n/a')];
             }
         });
         map.getLayer('countries').style({

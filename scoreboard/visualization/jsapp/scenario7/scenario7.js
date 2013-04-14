@@ -85,7 +85,7 @@ App.scenario7_filters_schema = {
         {targets: ['x_title'],
          filter_name: 'indicator',
          type: 'label'},
-        {targets: ['y_title', 'tooltip_label'],
+        {targets: ['y_title', 'unit'],
          filter_name: 'unit-measure',
          type: 'short_label'},
         {targets: ['year_text'],
