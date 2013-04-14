@@ -1,7 +1,12 @@
 <label>{{ filter_label }}</label>
 <select>
 {{# dimension_options }}
-  <option {{# if selected }} selected="selected" {{/ if }}
-          value="{{ notation }}">{{ label }}</option>
+  <option {{# if selected }} selected="selected" {{/ if }} value="{{ notation }}">
+    {{# if short_label }}
+      {{ short_label }}
+    {{ else }}
+      {{ label }}
+    {{/ if }}
+  </option>
 {{/ dimension_options }}
 </select>
