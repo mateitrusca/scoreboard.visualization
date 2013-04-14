@@ -5,6 +5,9 @@
 "use strict";
 
 function get_value_for_code(code, series){
+    if (code == 'GB'){
+        code = 'UK';
+    }
     var data = _.chain(series).pluck('data').first().
                  find(function(item){
                      return item['code'] == code;
