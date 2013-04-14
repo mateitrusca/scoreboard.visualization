@@ -19,6 +19,7 @@ describe('ChartSeriesPreparation', function() {
         expect(result.length).to.equal(2);
         expect(result[1]['data']).to.deep.equal([{
             'name': 'Austria',
+            'code': 'AT',
             'y': 0.4808
         }]);
     });
@@ -38,6 +39,7 @@ describe('ChartSeriesPreparation', function() {
         expect(_(result).pluck('name')).to.deep.equal(['2000', '2001']);
         expect(result[0]['data']).to.deep.equal([{
             "name": "Austria",
+            'code': 'AT',
             "y": 0.4808
         }]);
     });
@@ -56,6 +58,7 @@ describe('ChartSeriesPreparation', function() {
         var result = App.format_series(series);
         expect(_(result).pluck('data')).to.deep.equal([
             [{ 'name': 'Austria',
+               'code': 'AT',
                'y': 0.4808}],
             [{ 'name': 'Austria'}]
         ]);
