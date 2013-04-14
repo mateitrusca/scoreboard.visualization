@@ -326,31 +326,41 @@ App.AnnotationsView = Backbone.View.extend({
     render: function() {
         var data = [];
         var requests = [];
-        _(this.schema['annotations']).map(function(item, key) {
-            var source = item['source'];
-            var filters = item['filters'];
-            _(filters).map(function(filter) {
-                var args = {};
-                args['dimension'] = this.dimensions_mapping[filter.name];
-                args['value'] = this.model.get(filter.name);
-                if(! args['value']) {
-                    return;
-                }
-                args['rev'] = this.data_revision;
-                requests.push(
-                    $.get(this.cube_url + source, args, function(resp) {
-                        data.push(resp);
-                    })
-                );
-            }, this);
+        _(this.schema['annotations']['filters']).each(function(filter, key) {
+            var source = this.schema.annotations.source;
+            var args = {};
+            args['dimension'] = this.dimensions_mapping[filter.name];
+            args['value'] = this.model.get(filter.name);
+            if(! args['value']) {
+                return;
+            }
+            args['rev'] = this.data_revision;
+            requests.push(
+                $.get(this.cube_url + source, args, function(resp) {
+                    data.push(resp);
+                    _(resp).extend({filter_name: filter.name});
+                })
+            );
         }, this);
         var ajax_calls = $.when.apply($, requests);
         ajax_calls.done(_.bind(function() {
             if(data != []) {
+                var blocks_order = _(this.schema.annotations.filters).pluck('name');
+                var blocks = _.chain(data).sortBy(function(item){
+                    return _(blocks_order).indexOf(item['filter_name']);
+                }).map(function(item){
+                    var facet_name = item['filter_name'];
+                    var facet = _(this.schema.facets).find(function(item){
+                        return item['name'] == facet_name
+                    });
+                    return _(item).extend({
+                        "filter_label": facet.label
+                    });
+                }, this).value();
                 this.$el.html(this.template(
                     {"description": this.description.html(),
                      "indicators_details_url": this.cube_url + '/indicators',
-                     "blocks": data}
+                     "blocks": blocks}
                 ));
             }
             else {
