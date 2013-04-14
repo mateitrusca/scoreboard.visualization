@@ -56,7 +56,9 @@ App.scenario2_filters_schema = {
     annotations: {
         source: '/dimension_value_metadata',
         filters: [{name: 'indicator', part: 'label'},
-                  {name: 'breakdown', part: 'label'}]
+                  {name: 'breakdown-group', part: 'label'},
+                  {name: 'breakdown', part: 'label'},
+                  {name: 'unit-measure', part: 'label'}]
     },
     chart_type: 'lines',
     chart_meta_labels: [

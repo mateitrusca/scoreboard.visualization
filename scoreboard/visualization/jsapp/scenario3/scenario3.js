@@ -112,10 +112,14 @@ App.scenario3_filters_schema = {
     ],
     annotations: {
         source: '/dimension_value_metadata',
-        filters: [{target: 'indicator', name: 'x-indicator', part: 'label'},
-                  {target: 'breakdown', name: 'x-breakdown', part: 'label'},
+        filters: [{target: 'indicator', part: 'label'},
+                  {target: 'breakdown-group', part: 'label'},
+                  {target: 'breakdown', part: 'label'},
+                  {target: 'x-unit-measure', part: 'label'},
                   {name: 'y-indicator', part: 'label'},
-                  {name: 'y-breakdown', part: 'label'}]
+                  {name: 'y-breakdown-group', part: 'label'},
+                  {name: 'y-breakdown', part: 'label'},
+                  {target: 'y-unit-measure', part: 'label'}]
     },
     chart_type: 'scatter',
     xy: true,
