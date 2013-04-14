@@ -308,7 +308,7 @@ App.GraphControlsView = Backbone.View.extend({
 
 App.AnnotationsView = Backbone.View.extend({
 
-    template: App.get_template('scenario/metadata.html'),
+    template: App.get_template('scenario/annotations.html'),
 
     initialize: function(options) {
         this.data_revision = options['data_revision'] || '';
