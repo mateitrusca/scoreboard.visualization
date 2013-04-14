@@ -456,32 +456,17 @@ describe('AnnotationsView', function() {
             model: this.model,
             field: 'indicator',
             schema: {
-                facets: [{name: 'indicator', dimension: 'dim1'},
-                         {name: 'unit-measure', dimension: 'dim2'}],
+                facets: [{name: 'indicator', dimension: 'dim1', label:'Indicator'},
+                         {name: 'unit-measure', dimension: 'dim2', label: 'Unit of measure'}],
                 annotations: {
-                    'ind1': {
-                        title: 'meta_title',
-                        source: '/test_view',
-                        filters: [{name: 'indicator', part: 'label'},
-                                  {name: 'unit-measure', part: 'note'}]
-                    }
+                    source: '/test_view',
+                    filters: [{name: 'unit-measure', part: 'note'},
+                              {name: 'indicator', part: 'label'} ]
                 }
             }
         });
 
         var template = this.sandbox.spy(view, 'template');
-
-        var data_indicator = {
-            definition: "definition",
-            label: "label",
-            note: "note",
-            short_label: "short label",
-            source_definition: "source definition",
-            source_label: "source label",
-            source_notes: "source notes",
-            source_url: "http://source/url/"
-        };
-        App.respond_json(server.requests[0], data_indicator);
 
         var data_unit = {
           "definition": "definition",
@@ -489,8 +474,30 @@ describe('AnnotationsView', function() {
           "note": "note",
           "short_label": "short_label"
         }
-        App.respond_json(server.requests[1], data_unit);
-        var data = {'blocks': [data_indicator, data_unit]}
+        App.respond_json(server.requests[0], data_unit);
+
+        var data_indicator = {
+            definition: "definition",
+            note: "note",
+            short_label: "short label",
+            source_definition: "source definition",
+            source_label: "source label",
+            source_notes: "source notes",
+            source_url: "http://source/url/"
+        };
+        App.respond_json(server.requests[1], data_indicator);
+
+        _(data_indicator).extend({
+            filter_name: "indicator",
+            filter_label: "Indicator",
+        });
+
+        _(data_unit).extend({
+            "filter_name": "unit-measure",
+            "filter_label": "Unit of measure",
+        });
+
+        var data = {'blocks': [data_unit, data_indicator]}
         expect(template.calledOnce).to.equal(true);
         expect(template.getCall(0).args[0]['blocks']).to.deep.equal(data['blocks']);
     });
@@ -498,26 +505,19 @@ describe('AnnotationsView', function() {
     it('should render the template with the right metadata', function(){
         this.model.set({
             'indicator': 'ind1',
-            'unit-measure': 'unit1'
+            'abc': 'unit1'
         });
         var server = this.sandbox.server;
         var view = new App.AnnotationsView({
             cube_url: App.URL,
             model: this.model,
             schema: {
-                facets: [{name: 'indicator', dimension: 'dim1'},
-                         {name: 'abc', dimension: 'dim2'}],
+                facets: [{name: 'indicator', dimension: 'dim1', label:"label1"},
+                         {name: 'abc', dimension: 'dim2', label:"label2"}],
                 annotations: {
-                    'x': {
-                        title: 'Label of x-axis',
                         source: '/test_view',
-                        filters: [{name: 'indicator', part: 'label'}]
-                    },
-                    'y': {
-                        title: 'Label of y-axis',
-                        source: '/test_view',
-                        filters: [{name: 'indicator', part: 'label'}]
-                    }
+                        filters: [{name: 'indicator', part: 'label'},
+                                  {name: 'abc', part: 'label'}]
                 }
             }
         });
@@ -542,6 +542,16 @@ describe('AnnotationsView', function() {
 
         App.respond_json(server.requests[0], data_1);
         App.respond_json(server.requests[1], data_2);
+
+        _(data_1).extend({
+          "filter_name": "indicator",
+          "filter_label": "label1"
+        })
+
+        _(data_2).extend({
+          "filter_name": "abc",
+          "filter_label": "label2"
+        })
 
         var data = {'blocks': [data_1, data_2]};
 
