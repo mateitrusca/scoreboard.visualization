@@ -93,13 +93,15 @@ App.chart_library['evolution_columns'] = function(container, options) {
 
     var chart = new Highcharts.Chart(chartOptions);
 
-    App.chart_controls = new App.GraphControlsView({
-        model: new Backbone.Model(),
-        chart: chart,
-        snapshots_data: time_snapshots,
-        interval: window.interval_set,
-    });
-    App.chart_controls.$el.insertAfter(container);
+    if(!App.chart_controls){
+        App.chart_controls = new App.GraphControlsView({
+            model: new Backbone.Model(),
+            chart: chart,
+            snapshots_data: time_snapshots,
+            interval: window.interval_set,
+        });
+        App.chart_controls.$el.insertAfter(container);
+    };
 };
 
 })();
