@@ -87,7 +87,7 @@ App.chart_library['evolution_columns'] = function(container, options) {
         ]
     };
 
-    if (percent){
+    if (percent[0]){
         chartOptions.yAxis['max'] = 100;
     }
 
