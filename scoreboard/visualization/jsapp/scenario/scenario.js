@@ -170,6 +170,7 @@ App.ScenarioChartView = Backbone.View.extend({
             var responses = _(arguments).toArray();
             if(requests.length < 2) { responses = [responses]; }
             chart_data['series'] = _(multiseries_values).map(function(value, n) {
+                //TODO resp should always have the same keys
                 var resp = responses[n];
                 var datapoints = resp[0]['datapoints'];
                 if(this.client_filter) {
@@ -180,7 +181,14 @@ App.ScenarioChartView = Backbone.View.extend({
                 }
                 return {
                     'label': chart_data['group_labels'][value],
-                    'data': datapoints
+                    'data': _(datapoints).map(function(item){
+                        var keys = _(item).keys().sort();
+                        var resp = _.object(
+                            ['code', 'label', 'value'],
+                            [item[keys[0]], item[keys[1]], item[keys[2]]]
+                        );
+                        return resp;
+                    })
                 };
             }, this);
             this.data = chart_data;

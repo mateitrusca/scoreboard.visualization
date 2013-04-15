@@ -29,7 +29,6 @@ App.bar_colors = {
 
 
 App.format_series = function (data, sort, type){
-
     if (type=='xy'){
         var countrycolor = function(code) {
             if (_.isNull(App.COUNTRY_COLOR[code])) {
@@ -45,7 +44,7 @@ App.format_series = function (data, sort, type){
         };
 
         var series = _(data[0]['data']).map(function(datapoint) {
-            var code = datapoint['ref-area'];
+            var code = datapoint['code'];
             return {
                 'name': code,
                 'color': countrycolor(code),
@@ -71,8 +70,8 @@ App.format_series = function (data, sort, type){
         });
     }else{
         var extract_data = function(series_item){
-            return _.object([['name', series_item['ref-area-label']],
-                             ['code', series_item['ref-area']],
+            return _.object([['name', series_item['label']],
+                             ['code', series_item['code']],
                              ['y', series_item['value']]]);
         };
 
@@ -80,7 +79,7 @@ App.format_series = function (data, sort, type){
         var series = _.chain(data).map(function(item){
             var data = _(item['data']).map(extract_data);
             labels_collection = _.chain(item['data']).
-                                    pluck('ref-area-label').
+                                    pluck('label').
                                     union(labels_collection).
                                     value();
             return _.object(
