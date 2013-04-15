@@ -106,7 +106,7 @@ App.ScenarioChartView = Backbone.View.extend({
                          this.model.get('y-unit-measure') || '']
             _(units).each(function(unit){
                 var evaluation = false
-                if (unit.substring(0,2) == 'pc'){
+                if (unit.substring(0,3) == 'pc_'){
                     evaluation = true;
                 }
                 unit_is_pc.push(evaluation);
@@ -114,7 +114,7 @@ App.ScenarioChartView = Backbone.View.extend({
         }
         else{
             var unit = this.model.get('unit-measure') || '';
-            if (unit.substring(0,2) == 'pc'){
+            if (unit.substring(0,3) == 'pc_'){
                 unit_is_pc.push(true);
             }
         }
