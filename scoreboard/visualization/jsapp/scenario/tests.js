@@ -9,8 +9,8 @@ describe('ChartSeriesPreparation', function() {
             {data: [],
              label:'2000'},
             {data: [{
-                        "ref-area": "AT",
-                        "ref-area-label": "Austria",
+                        "code": "AT",
+                        "label": "Austria",
                         "value": 0.4808
                     }],
              label:'2001'},
@@ -28,13 +28,13 @@ describe('ChartSeriesPreparation', function() {
         var series = [
             {data: [
                     {
-                        "ref-area": "BE",
-                        "ref-area-label": "Belgium",
+                        "code": "BE",
+                        "label": "Belgium",
                         "value": 0.3
                     },
                     {
-                        "ref-area": "BG",
-                        "ref-area-label": "Bulgaria",
+                        "code": "BG",
+                        "label": "Bulgaria",
                         "value": 0.4
                     },
 
@@ -42,13 +42,13 @@ describe('ChartSeriesPreparation', function() {
              label:'2000'},
             {data: [
                     {
-                        "ref-area": "BE",
-                        "ref-area-label": "Belgium",
+                        "code": "BE",
+                        "label": "Belgium",
                         "value": 0.4808
                     },
                     {
-                        "ref-area": "AT",
-                        "ref-area-label": "Austria",
+                        "code": "AT",
+                        "label": "Austria",
                         "value": 0.4808
                     },
 
@@ -66,8 +66,8 @@ describe('ChartSeriesPreparation', function() {
             {data: [],
              label:'2001'},
             {data: [{
-                        "ref-area": "AT",
-                        "ref-area-label": "Austria",
+                        "code": "AT",
+                        "label": "Austria",
                         "value": 0.4808
                     }],
              label:'2000'},
@@ -86,8 +86,8 @@ describe('ChartSeriesPreparation', function() {
             {data: [],
              label:'2003'},
             {data: [{
-                        "ref-area": "AT",
-                        "ref-area-label": "Austria",
+                        "code": "AT",
+                        "label": "Austria",
                         "value": 0.4808
                     }],
              label:'2001'},
@@ -393,8 +393,8 @@ describe('ScenarioChartView', function() {
     it('should render chart with the data received', function() {
         setup_scenario.apply(this);
         var server = this.sandbox.server;
-        var ajax_data = [{'ref-area': "Austria", 'value': 0.18},
-                         {'ref-area': "Belgium", 'value': 0.14}];
+        var ajax_data = [{'ref-area': 'AU','ref-area-label': "Austria", 'value': 0.18},
+                         {'ref-area': 'BE','ref-area-label': "Belgium", 'value': 0.14}];
 
         App.respond_json(server.requests[0], {'datapoints': ajax_data});
         App.respond_json(server.requests[1],
@@ -402,7 +402,9 @@ describe('ScenarioChartView', function() {
         expect(this.scenario_chart.calledOnce).to.equal(true);
         var call_args = this.scenario_chart.getCall(0).args;
         expect(call_args[0]).to.equal(this.chart.el);
-        expect(call_args[1]['series'][0]['data']).to.deep.equal(ajax_data);
+        var expected_data = [{'code': 'AU', 'label': "Austria", 'value': 0.18},
+                             {'code': 'BE', 'label': "Belgium", 'value': 0.14}];
+        expect(call_args[1]['series'][0]['data']).to.deep.equal(expected_data);
     });
 
     it('should make a single data query and then filter in JS', function() {
@@ -429,9 +431,9 @@ describe('ScenarioChartView', function() {
         expect(App.testing.url_param(url0, 'columns')).to.equal('dim3,dim4');
 
         App.respond_json(requests[0], {datapoints: [
-            {dim3: 'f3a', value: 13},
-            {dim3: 'f3b', value: 22},
-            {dim3: 'f3c', value: 10}
+            {dim3: 'f3a', lbl: 'a', value: 13},
+            {dim3: 'f3b', lbl: 'b', value: 22},
+            {dim3: 'f3c', lbl: 'c', value: 10}
         ]});
 
         var series = scenario_chart.getCall(0).args[1]['series'];
