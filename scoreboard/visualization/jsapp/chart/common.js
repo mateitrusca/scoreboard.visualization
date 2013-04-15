@@ -1,6 +1,7 @@
 /*global App, _ */
 /*jshint sub:true */
 
+
 (function() {
 "use strict";
 
@@ -18,6 +19,12 @@ function sort_serie(serie, sort){
         }
     });
     return serie;
+};
+
+App.bar_colors = {
+    bar_color: "#7FB2F0",
+    special_bar_color: "#35478C",
+    na_bar_color: "#DDDDDD"
 };
 
 
