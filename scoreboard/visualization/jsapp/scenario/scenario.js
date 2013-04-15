@@ -100,7 +100,11 @@ App.ScenarioChartView = Backbone.View.extend({
         if(this.schema['xy']) {
             args['xy_columns'] = this.xy_columns.join(',');
         }
-
+        var unit_is_pc = false;
+        var unit = this.model.get('unit-measure') || '';
+        if (unit.substring(0,2) == 'pc'){
+            unit_is_pc = true;
+        }
         var chart_data = {
             'tooltip_formatter': function() {
                 var tooltip_label = chart_data.meta_data['unit'];
@@ -118,7 +122,8 @@ App.ScenarioChartView = Backbone.View.extend({
                 }
                 return this.value;
             },
-            'group_labels': {}
+            'group_labels': {},
+            'unit_is_pc': unit_is_pc
         };
 
         var multiseries_values = null;
