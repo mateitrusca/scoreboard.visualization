@@ -7,7 +7,8 @@
 App.chart_library['splitted_columns'] = function(container, options) {
 
     var sort = _.object(["sort_by", "order"],['value', -1]);
-    var series = App.format_series(options['series'], sort);
+    var percent = options['unit_is_pc'];
+    var series = App.format_series(options['series'], sort, '', percent);
 
     var chartOptions = {
         chart: {

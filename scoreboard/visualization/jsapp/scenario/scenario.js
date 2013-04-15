@@ -100,7 +100,24 @@ App.ScenarioChartView = Backbone.View.extend({
         if(this.schema['xy']) {
             args['xy_columns'] = this.xy_columns.join(',');
         }
-
+        var unit_is_pc = [];
+        if(this.schema['xy']){
+            var units = [this.model.get('x-unit-measure') || '',
+                         this.model.get('y-unit-measure') || '']
+            _(units).each(function(unit){
+                var evaluation = false
+                if (unit.substring(0,3) == 'pc_'){
+                    evaluation = true;
+                }
+                unit_is_pc.push(evaluation);
+            });
+        }
+        else{
+            var unit = this.model.get('unit-measure') || '';
+            if (unit.substring(0,3) == 'pc_'){
+                unit_is_pc.push(true);
+            }
+        }
         var chart_data = {
             'tooltip_formatter': function() {
                 var tooltip_label = chart_data.meta_data['unit'];
@@ -118,7 +135,8 @@ App.ScenarioChartView = Backbone.View.extend({
                 }
                 return this.value;
             },
-            'group_labels': {}
+            'group_labels': {},
+            'unit_is_pc': unit_is_pc
         };
 
         var multiseries_values = null;
@@ -183,11 +201,20 @@ App.ScenarioChartView = Backbone.View.extend({
                     'label': chart_data['group_labels'][value],
                     'data': _(datapoints).map(function(item){
                         var keys = _(item).keys().sort();
-                        var resp = _.object(
-                            ['code', 'label', 'value'],
-                            [item[keys[0]], item[keys[1]], item[keys[2]]]
-                        );
-                        return resp;
+                        var mapping = {
+                            'ref-area': 'code',
+                            'time-period': 'code',
+                            'ref-area-label': 'label',
+                            'time-period-label': 'label',
+                            'value': 'value'
+                        };
+                        var item_out = _.object();
+                        _(keys).each(function(key){
+                            item_out = _(item_out).extend(
+                                _.object([[mapping[key], item[key]]])
+                            );
+                        });
+                        return item_out;
                     })
                 };
             }, this);

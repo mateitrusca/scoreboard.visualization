@@ -6,7 +6,8 @@
 
 App.chart_library['evolution_columns'] = function(container, options) {
     var sort = _.object(["sort_by", "order"],['label', 1]);
-    var time_snapshots = App.format_series(options['series'], sort);
+    var percent = options['unit_is_pc'];
+    var time_snapshots = App.format_series(options['series'], sort, '', percent);
     var series = time_snapshots[0]['data'];
 
     var chartOptions = {
@@ -57,8 +58,6 @@ App.chart_library['evolution_columns'] = function(container, options) {
              }
         },
         yAxis: {
-            min: 0,
-            max: 1,
             title: {
                 text: options.meta_data['y_title'],
                 style: {
@@ -88,6 +87,10 @@ App.chart_library['evolution_columns'] = function(container, options) {
         ]
     };
 
+    if (percent[0]){
+        chartOptions.yAxis['max'] = 100;
+    }
+
     var chart = new Highcharts.Chart(chartOptions);
 
     if(!App.chart_controls){
@@ -98,6 +101,8 @@ App.chart_library['evolution_columns'] = function(container, options) {
             interval: window.interval_set,
         });
         App.chart_controls.$el.insertAfter(container);
+    }else{
+        App.chart_controls.chart = chart;
     };
 };
 

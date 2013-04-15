@@ -28,7 +28,10 @@ App.bar_colors = {
 };
 
 
-App.format_series = function (data, sort, type){
+App.format_series = function (data, sort, type, percent){
+    var multiplicators = _(percent).map(function(pc){
+        return pc?100:1;
+    });
     if (type=='xy'){
         var countrycolor = function(code) {
             if (_.isNull(App.COUNTRY_COLOR[code])) {
@@ -50,8 +53,8 @@ App.format_series = function (data, sort, type){
                 'color': countrycolor(code),
                 'data': [{
                     'name': code,
-                    'x': datapoint['value']['x'],
-                    'y': datapoint['value']['y']
+                    'x': datapoint['value']['x'] * multiplicators[0],
+                    'y': datapoint['value']['y'] * multiplicators[1]
                 }],
                 'marker': {
                     'radius': 5,
@@ -70,9 +73,15 @@ App.format_series = function (data, sort, type){
         });
     }else{
         var extract_data = function(series_item){
+            var value = series_item['value'];
+            if(percent){
+                if (percent[0]){
+                    value*=100;
+                }
+            }
             return _.object([['name', series_item['label']],
                              ['code', series_item['code']],
-                             ['y', series_item['value']]]);
+                             ['y', value]]);
         };
 
         var labels_collection = []
