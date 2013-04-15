@@ -86,7 +86,11 @@ scoreboard.visualization.datacube.indicators = {
         var tr = jQuery('<tr>');
         tr.append('<td class="even">' + indicator.altlabel + '</td>');
         tr.append('<td class="odd">' + indicator.longlabel + '</td>');
-        tr.append('<td class="even">' + indicator.definition + '</td>');
+        tr.append('<td class="even">' +
+                    '<strong class="definition">Definition: </strong>' + indicator.definition +
+                    '<br />' +
+                    '<strong class="notes">Notes: </strong>' + indicator.notes +
+                '</td>');
         tr.append('<td class="odd"><a href="' + indicator.sourcelink + '">' + indicator.sourcelabel + '</a></td>');
         jQuery('tr#' + groupId).after(tr);
     }
