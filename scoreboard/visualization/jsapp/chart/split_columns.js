@@ -4,7 +4,7 @@
 (function() {
 "use strict";
 
-App.chart_library['splitted_columns'] = function(container, options) {
+App.chart_library['split_columns'] = function(container, options) {
 
     var sort = _.object(["sort_by", "order"],['value', -1]);
     var percent = options['unit_is_pc'];
