@@ -9,7 +9,8 @@ App.chart_library['scatter'] = function(container, options) {
 
     $(container).addClass('normal-chart');
 
-    var series = App.format_series(options['series'], false, 'xy');
+    var percent = options['unit_is_pc'];
+    var series = App.format_series(options['series'], false, 'xy', percent);
 
     var chartOptions = {
         chart: {
