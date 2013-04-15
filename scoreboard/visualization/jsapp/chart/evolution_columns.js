@@ -9,7 +9,8 @@ var special_bar_color = "#35478C";
 var na_bar_color = "#DDDDDD";
 
 App.chart_library['evolution_columns'] = function(container, options) {
-    var time_snapshots = App.format_series(options['series']);
+    var sort = _.object(["sort_by", "order"],['label', 1]);
+    var time_snapshots = App.format_series(options['series'], sort);
     var series = time_snapshots[0]['data'];
 
     var chartOptions = {

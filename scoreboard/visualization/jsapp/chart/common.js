@@ -4,20 +4,24 @@
 (function() {
 "use strict";
 
-function sort_serie(serie, order){
+function sort_serie(serie, sort){
     serie = _(serie).sortBy( function(item){
-        var value = item['y'];
-
-        if (isNaN(value)){
-            value = 0;
+        if (sort.sort_by == 'value'){
+            var value = item['y'];
+            if (isNaN(value)){
+                value = 0;
+            }
+            return sort.order * value;
         }
-        return order * value;
-    })
-    return serie
+        if (sort.sort_by == 'label'){
+            return item['name'];
+        }
+    });
+    return serie;
 };
 
 
-App.format_series = function (data, order, type){
+App.format_series = function (data, sort, type){
 
     if (type=='xy'){
         var countrycolor = function(code) {
@@ -77,9 +81,6 @@ App.format_series = function (data, order, type){
                     [item['label'], data]);
         }).map(function(item){
             var serie = item['data'];
-            if (order){
-                serie = sort_serie(serie, order);
-            }
             _.chain(labels_collection).
                 difference(_(serie).pluck('name')).
                 each(function(diff_label){
@@ -87,6 +88,9 @@ App.format_series = function (data, order, type){
                         _.object([['name', diff_label]])
                     );
                 });
+            if (sort){
+                serie = sort_serie(serie, sort);
+            }
             return _.object(
                     ['name', 'data'],
                     [item['name'], serie]);

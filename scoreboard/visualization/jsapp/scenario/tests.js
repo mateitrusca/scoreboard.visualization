@@ -24,7 +24,44 @@ describe('ChartSeriesPreparation', function() {
         }]);
     });
 
-    it('should sort the output by label', function(){
+    it('should sort the data in snapshots by label', function(){
+        var series = [
+            {data: [
+                    {
+                        "ref-area": "BE",
+                        "ref-area-label": "Belgium",
+                        "value": 0.3
+                    },
+                    {
+                        "ref-area": "BG",
+                        "ref-area-label": "Bulgaria",
+                        "value": 0.4
+                    },
+
+                   ],
+             label:'2000'},
+            {data: [
+                    {
+                        "ref-area": "BE",
+                        "ref-area-label": "Belgium",
+                        "value": 0.4808
+                    },
+                    {
+                        "ref-area": "AT",
+                        "ref-area-label": "Austria",
+                        "value": 0.4808
+                    },
+
+                   ],
+             label:'2001'},
+        ];
+        var sort = _.object(["sort_by", "order"],['label', 1]);
+        var result = App.format_series(series, sort);
+        expect(result.length).to.equal(2);
+        expect(result[0]['data'][0]['name']).equal('Austria');
+    });
+
+    it('should sort the snapshots by label', function(){
         var series = [
             {data: [],
              label:'2001'},
