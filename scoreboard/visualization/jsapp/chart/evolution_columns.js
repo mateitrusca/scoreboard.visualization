@@ -98,6 +98,8 @@ App.chart_library['evolution_columns'] = function(container, options) {
             interval: window.interval_set,
         });
         App.chart_controls.$el.insertAfter(container);
+    }else{
+        App.chart_controls.chart = chart;
     };
 };
 
