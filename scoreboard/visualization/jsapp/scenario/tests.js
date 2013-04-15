@@ -110,7 +110,7 @@ describe('ChartSeriesPreparation', function() {
                     }],
              label:'2001'},
         ];
-        var result = App.format_series(series, false, '', true);
+        var result = App.format_series(series, false, '', [true]);
         expect(result[0]['data'][0]['y']).to.deep.equal(48.08);
     });
 });

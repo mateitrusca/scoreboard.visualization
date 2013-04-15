@@ -100,10 +100,23 @@ App.ScenarioChartView = Backbone.View.extend({
         if(this.schema['xy']) {
             args['xy_columns'] = this.xy_columns.join(',');
         }
-        var unit_is_pc = false;
-        var unit = this.model.get('unit-measure') || '';
-        if (unit.substring(0,2) == 'pc'){
-            unit_is_pc = true;
+        var unit_is_pc = [];
+        if(this.schema['xy']){
+            var units = [this.model.get('x-unit-measure') || '',
+                         this.model.get('y-unit-measure') || '']
+            _(units).each(function(unit){
+                var evaluation = false
+                if (unit.substring(0,2) == 'pc'){
+                    evaluation = true;
+                }
+                unit_is_pc.push(evaluation);
+            });
+        }
+        else{
+            var unit = this.model.get('unit-measure') || '';
+            if (unit.substring(0,2) == 'pc'){
+                unit_is_pc.push(true);
+            }
         }
         var chart_data = {
             'tooltip_formatter': function() {
