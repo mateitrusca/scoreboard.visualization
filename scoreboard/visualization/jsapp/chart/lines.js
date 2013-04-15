@@ -6,12 +6,8 @@
 
 
 App.chart_library['lines'] = function(container, options) {
-    var year_min = 2004;
-    var year_max = 2013;
-    var all_years = _.range(year_min, year_max);
-
     var series = App.format_series(options['series']);
-
+    var all_years = _(series[0]['data']).pluck('code');
     var chartOptions = {
         chart: {
             renderTo: container,
