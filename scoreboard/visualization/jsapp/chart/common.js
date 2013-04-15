@@ -28,7 +28,7 @@ App.bar_colors = {
 };
 
 
-App.format_series = function (data, sort, type){
+App.format_series = function (data, sort, type, percent){
     if (type=='xy'){
         var countrycolor = function(code) {
             if (_.isNull(App.COUNTRY_COLOR[code])) {
@@ -70,9 +70,13 @@ App.format_series = function (data, sort, type){
         });
     }else{
         var extract_data = function(series_item){
+            var value = series_item['value'];
+            if(percent){
+                value*=100;
+            }
             return _.object([['name', series_item['label']],
                              ['code', series_item['code']],
-                             ['y', series_item['value']]]);
+                             ['y', value]]);
         };
 
         var labels_collection = []

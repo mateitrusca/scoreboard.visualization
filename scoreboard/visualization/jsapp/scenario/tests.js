@@ -99,7 +99,20 @@ describe('ChartSeriesPreparation', function() {
                'y': 0.4808}],
             [{ 'name': 'Austria'}]
         ]);
-    })
+    });
+
+    it('should multiply the values with 100 when unit is %', function(){
+        var series = [
+            {data: [{
+                        "code": "AT",
+                        "label": "Austria",
+                        "value": 0.4808
+                    }],
+             label:'2001'},
+        ];
+        var result = App.format_series(series, false, '', true);
+        expect(result[0]['data'][0]['y']).to.deep.equal(48.08);
+    });
 });
 
 describe('ScenarioChartViewParameters', function() {
