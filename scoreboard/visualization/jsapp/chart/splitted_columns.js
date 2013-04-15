@@ -6,7 +6,8 @@
 
 App.chart_library['splitted_columns'] = function(container, options) {
 
-    var series = App.format_series(options['series'], -1);
+    var sort = _.object(["sort_by", "order"],['value', -1]);
+    var series = App.format_series(options['series'], sort);
 
     var chartOptions = {
         chart: {
