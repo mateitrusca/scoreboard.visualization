@@ -7,7 +7,8 @@
 
 App.chart_library['lines'] = function(container, options) {
     var sort = _.object(["sort_by", "order"],['label', 1]);
-    var series = App.format_series(options['series'], sort);
+    var percent = options['unit_is_pc'];
+    var series = App.format_series(options['series'], sort, '', percent);
     var all_years = _(series[0]['data']).pluck('code');
     var chartOptions = {
         chart: {
