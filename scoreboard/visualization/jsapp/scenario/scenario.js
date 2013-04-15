@@ -213,7 +213,12 @@ App.GraphControlsView = Backbone.View.extend({
 
     update_chart: function(){
         var data = this.snapshots_data[this.model.get('value')];
-        this.chart.series[0].update({ data: data['data'] }, true);
+        _(this.chart.series[0]['data']).each(function(item, idx){
+            this.chart.series[0]['data'][idx].update(
+                data['data'][idx], false,
+                {duration: 950, easing: 'linear'});
+        }, this);
+        this.chart.redraw();
         this.chart.setTitle(null, {text: data['name']});
     },
 
@@ -252,8 +257,7 @@ App.GraphControlsView = Backbone.View.extend({
                 var chart = this.chart;
                 if (idx < this.snapshots_data.length){
                     var data = this.snapshots_data[idx];
-                    this.chart.series[0].update({ data: data['data'] }, true);
-                    this.chart.setTitle(null, {text: data['name']});
+                    this.update_chart();
                     options['value']+=1;
                 }
                 else{
