@@ -4,10 +4,6 @@
 (function() {
 "use strict";
 
-var bar_color = "#7FB2F0";
-var special_bar_color = "#35478C";
-var na_bar_color = "#DDDDDD";
-
 App.chart_library['evolution_columns'] = function(container, options) {
     var sort = _.object(["sort_by", "order"],['label', 1]);
     var time_snapshots = App.format_series(options['series'], sort);
@@ -85,7 +81,7 @@ App.chart_library['evolution_columns'] = function(container, options) {
         series: [
             {
                 name: options['indicator_label'],
-                color: bar_color,
+                color: App.bar_colors['bar_color'],
                 data: series,
                 animation: false
             }
