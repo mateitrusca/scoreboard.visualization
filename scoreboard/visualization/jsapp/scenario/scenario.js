@@ -188,11 +188,20 @@ App.ScenarioChartView = Backbone.View.extend({
                     'label': chart_data['group_labels'][value],
                     'data': _(datapoints).map(function(item){
                         var keys = _(item).keys().sort();
-                        var resp = _.object(
-                            ['code', 'label', 'value'],
-                            [item[keys[0]], item[keys[1]], item[keys[2]]]
-                        );
-                        return resp;
+                        var mapping = {
+                            'ref-area': 'code',
+                            'time-period': 'code',
+                            'ref-area-label': 'label',
+                            'time-period-label': 'label',
+                            'value': 'value'
+                        };
+                        var item_out = _.object();
+                        _(keys).each(function(key){
+                            item_out = _(item_out).extend(
+                                _.object([[mapping[key], item[key]]])
+                            );
+                        });
+                        return item_out;
                     })
                 };
             }, this);
