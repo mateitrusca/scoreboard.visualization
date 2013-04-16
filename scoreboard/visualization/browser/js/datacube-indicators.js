@@ -75,7 +75,7 @@ scoreboard.visualization.datacube.indicators = {
         });
     },
     addTableCaption: function(groupId, indicator, tbody){
-        var tr = jQuery('<tr>');
+        var tr = jQuery('<tr class="groupName">');
         tr.attr('id', groupId);
         var td = jQuery('<td>').text(indicator.groupName);
         td.attr('colspan', '4');
