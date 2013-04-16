@@ -168,46 +168,6 @@ describe('FacetsEditor', function() {
 
     });
 
-    describe('edit-on-client flag', function() {
-
-        it('should update model when changing flag', function() {
-            var model = new Backbone.Model();
-            var view = new NoAjaxFacetsEditor({
-                model: model,
-                el: this.box,
-                dimensions: [{type_label: 'dimension', notation: 'ref-area'}]
-            });
-            view.$el.find('[name="on_client"]').click();
-            expect(model.get('facets')[0]['on_client']).to.equal(true);
-            view.$el.find('[name="on_client"]').click();
-            expect(model.get('facets')[0]['on_client']).to.equal(false);
-        });
-
-        it('should render checkbox according to model value', function() {
-            var model = new Backbone.Model({
-                facets: [
-                    {name: 'time-period', on_client: true},
-                    {name: 'ref-area', on_client: false},
-                ]
-            });
-            var view = new NoAjaxFacetsEditor({
-                model: model,
-                el: this.box,
-                dimensions: [
-                    {type_label: 'dimension', notation: 'ref-area'},
-                    {type_label: 'dimension', notation: 'time-period'},
-                ]
-            });
-            var checkbox_state = function(name) {
-                var sel = 'tr[data-name="' + name + '"] [name="on_client"]';
-                return view.$el.find(sel).is(':checked');
-            }
-            expect(checkbox_state('time-period')).to.equal(true);
-            expect(checkbox_state('ref-area')).to.equal(false);
-        });
-
-    });
-
 });
 
 
