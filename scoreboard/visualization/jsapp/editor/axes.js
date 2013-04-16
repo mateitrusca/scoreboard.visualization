@@ -8,7 +8,7 @@
 App.AxesEditor = Backbone.View.extend({
 
     tagName: 'form',
-    className: 'form-inline',
+    className: 'editor-axes form-inline',
 
     template: App.get_template('editor/axes.html'),
 

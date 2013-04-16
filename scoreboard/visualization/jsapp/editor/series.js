@@ -8,7 +8,7 @@
 App.SeriesEditor = Backbone.View.extend({
 
     tagName: 'form',
-    className: 'form-inline',
+    className: 'editor-series form-inline',
 
     template: App.get_template('editor/series.html'),
 

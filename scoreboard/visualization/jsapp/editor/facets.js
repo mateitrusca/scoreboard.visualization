@@ -8,6 +8,7 @@
 App.FacetEditorField = Backbone.View.extend({
 
     tagName: 'tr',
+    className: 'editor-facets',
     template: App.get_template('editor/facet-field.html'),
 
     events: {

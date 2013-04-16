@@ -8,7 +8,7 @@
 App.FormatEditor = Backbone.View.extend({
 
     tagName: 'form',
-    className: 'form-inline',
+    className: 'editor-format form-inline',
 
     template: App.get_template('editor/format.html'),
 

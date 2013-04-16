@@ -8,7 +8,7 @@
 App.AnnotationsEditor = Backbone.View.extend({
 
     tagName: 'form',
-    className: 'form-inline',
+    className: 'editor-annotations form-inline',
 
     template: App.get_template('editor/annotations.html'),
 

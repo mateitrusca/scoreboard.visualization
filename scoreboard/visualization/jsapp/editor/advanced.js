@@ -7,6 +7,8 @@
 
 App.AdvancedEditor = Backbone.View.extend({
 
+    tagName: 'form',
+    className: 'editor-advanced form-inline',
     title: "Advanced",
 
     template: App.get_template('editor/advanced.html'),

@@ -7,6 +7,8 @@
 
 App.ChartTypeEditor = Backbone.View.extend({
 
+    tagName: 'form',
+    className: 'editor-charttype',
     template: App.get_template('editor/chart_type.html'),
 
     title: "Chart Type",
