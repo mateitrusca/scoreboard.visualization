@@ -165,15 +165,17 @@ App.ScenarioChartView = Backbone.View.extend({
                 'dimension': groupby_dimension,
                 'rev': this.data_revision
             };
-            _.chain(groupby_facet.constraints)
-             .values()
-             .each(function(facet){
-                _(labels_args).extend(
-                    _.object([
-                        [facet, this.model.get(facet)]
-                    ])
-                );
-            }, this);
+            if (groupby_facet){
+                _.chain(groupby_facet.constraints)
+                 .values()
+                 .each(function(facet){
+                    _(labels_args).extend(
+                        _.object([
+                            [facet, this.model.get(facet)]
+                        ])
+                    );
+                }, this);
+            }
             var labels_request = $.get(this.cube_url + '/dimension_values',
                                        labels_args);
             labels_request.done(function(data) {

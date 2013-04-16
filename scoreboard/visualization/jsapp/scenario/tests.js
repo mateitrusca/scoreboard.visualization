@@ -97,7 +97,8 @@ describe('ChartSeriesPreparation', function() {
             [{ 'name': 'Austria',
                'code': 'AT',
                'y': 0.4808}],
-            [{ 'name': 'Austria'}]
+            [{ 'name': 'Austria',
+               'y': 0}]
         ]);
     });
 
