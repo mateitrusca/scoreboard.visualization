@@ -19,6 +19,7 @@ App.AdvancedEditor = Backbone.View.extend({
 
     initialize: function(options) {
         this.render();
+        this.model.on('change', this.render, this);
     },
 
     render: function() {
