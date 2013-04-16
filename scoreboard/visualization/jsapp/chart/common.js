@@ -116,9 +116,9 @@ App.format_series = function (data, sort, type, percent){
                 serie = sort_serie(serie, sort);
                 first_serie = serie;
             }
-            else{
-                _(sort).extend({'first_serie': first_serie});
-                serie = sort_serie(serie, sort);
+            else if (sort){
+                    _(sort).extend({'first_serie': first_serie});
+                    serie = sort_serie(serie, sort);
             }
             return _.object(
                     ['name', 'data'],
