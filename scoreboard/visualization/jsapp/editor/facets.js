@@ -18,8 +18,7 @@ App.FacetEditorField = Backbone.View.extend({
     type_options: [
         {value: 'select', label: "select filter"},
         {value: 'multiple_select', label: "multiple select filter"},
-        {value: 'all-values', label: "all values as series"},
-        {value: 'data-column', label: "datapoints"}
+        {value: 'all-values', label: "all values as series"}
     ],
 
     initialize: function(options) {
