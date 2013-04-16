@@ -100,7 +100,8 @@ App.format_series = function (data, sort, type, percent){
                 difference(_(serie).pluck('name')).
                 each(function(diff_label){
                     _(serie).push(
-                        _.object([['name', diff_label]])
+                        _.object([['name', diff_label],
+                                  ['y', 0]])
                     );
                 });
             if (sort){
