@@ -63,6 +63,7 @@ App.scenario7_filters_schema = {
          {type: 'all-values',
           dimension: 'breakdown',
           multiple_series: true,
+          label: 'Breakdown',
           name: 'breakdown',
           constraints: {
              'unit-measure': 'unit-measure',
