@@ -56,7 +56,7 @@ App.format_series = function (data, sort, type, percent){
         var series = _(data[0]['data']).map(function(datapoint) {
             var code = datapoint['code'];
             return {
-                'name': code,
+                'name': App.COUNTRY_NAME[code],
                 'color': countrycolor(code),
                 'data': [{
                     'name': code,
