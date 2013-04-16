@@ -380,17 +380,24 @@ App.AnnotationsView = Backbone.View.extend({
             var source = this.schema.annotations.source;
             var args = {};
             args['dimension'] = this.dimensions_mapping[filter.name];
-            args['value'] = this.model.get(filter.name);
-            if(! args['value']) {
-                return;
+            var facet_values = this.model.get(filter.name);
+            if(!_(facet_values).isArray()){
+                facet_values = [facet_values];
             }
-            args['rev'] = this.data_revision;
-            requests.push(
-                $.get(this.cube_url + source, args, function(resp) {
-                    data.push(resp);
-                    _(resp).extend({filter_name: filter.name});
-                })
-            );
+            _(facet_values).each(function(value){
+                args['value'] = value;
+                if(! args['value']) {
+                    return;
+                }
+                args['rev'] = this.data_revision;
+                console.log(args);
+                requests.push(
+                    $.get(this.cube_url + source, args, function(resp) {
+                        data.push(resp);
+                        _(resp).extend({filter_name: filter.name});
+                    })
+                );
+            }, this);
         }, this);
         var ajax_calls = $.when.apply($, requests);
         ajax_calls.done(_.bind(function() {
