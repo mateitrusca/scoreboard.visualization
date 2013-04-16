@@ -118,11 +118,17 @@ App.ScenarioChartView = Backbone.View.extend({
                 unit_is_pc.push(true);
             }
         }
+        var tooltip_with_breakdown = (this.multiseries_name == 'breakdown');
+        var breakdowns = this.model.get(this.multiseries_name);
         var chart_data = {
             'tooltip_formatter': function() {
                 var tooltip_label = chart_data.meta_data['unit'];
-                return '<b>'+ this.point.name +'</b><br>: ' +
+                var out = '<b>'+ this.point.name +'</b><br>: ' +
                        Math.round(this.y*10)/10 + ' ' + tooltip_label;
+                if (tooltip_with_breakdown){
+                    out+='<br>breakdown: '+breakdowns[this.series.index];
+                }
+                return out;
             },
             'credits': {
                 'href': 'http://ec.europa.eu/digital-agenda/en/graphs/',
@@ -152,11 +158,22 @@ App.ScenarioChartView = Backbone.View.extend({
                 args[groupby_dimension] = value;
                 return $.get(datapoints_url, args);
             }, this);
-
+            var groupby_facet = _(this.schema.facets).find(function(facet, idx){
+                return facet['name'] == groupby_dimension;
+            });
             var labels_args = {
                 'dimension': groupby_dimension,
                 'rev': this.data_revision
             };
+            _.chain(groupby_facet.constraints)
+             .values()
+             .each(function(facet){
+                _(labels_args).extend(
+                    _.object([
+                        [facet, this.model.get(facet)]
+                    ])
+                );
+            }, this);
             var labels_request = $.get(this.cube_url + '/dimension_values',
                                        labels_args);
             labels_request.done(function(data) {
@@ -248,18 +265,7 @@ App.GraphControlsView = Backbone.View.extend({
 
     update_chart: function(){
         var data = this.snapshots_data[this.model.get('value')];
-        _(this.chart.series[0]['data']).each(function(item, idx){
-            var color = App.bar_colors['bar_color'];
-            var point_data = data['data'][idx];
-            if(!point_data['y']){
-                color = App.bar_colors['na_bar_color'];
-            }
-            this.chart.series[0]['data'][idx].update(
-                _(point_data).extend({color: color}),
-                false,
-                {duration: 950, easing: 'linear'});
-        }, this);
-        this.chart.redraw();
+        this.chart.series[0].update({'data': data['data']}, true);
         this.chart.setTitle(null, {text: data['name']});
     },
 

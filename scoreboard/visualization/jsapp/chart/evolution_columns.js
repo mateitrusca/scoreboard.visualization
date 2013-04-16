@@ -42,7 +42,7 @@ App.chart_library['evolution_columns'] = function(container, options) {
             }
         },
         subtitle: {
-            text: options.meta_data['year_text'],
+            text: time_snapshots[0]['name'],
             align: 'left'
 
         },

@@ -52,6 +52,12 @@ App.scenario6_filters_schema = {
          }},
          {type: 'all-values',
           dimension: 'time-period',
+          constraints: {
+              'indicator-group': 'indicator-group',
+              'indicator': 'indicator',
+              'breakdown': 'breakdown',
+              'unit-measure': 'unit-measure'
+          },
           multiple_series: true,
           name: 'time-period'},
          {type: 'data-column', dimension: 'value'}
