@@ -308,7 +308,6 @@ App.GraphControlsView = Backbone.View.extend({
                     options['value']+=1;
                 }
                 else{
-                    options['value'] = 0;
                     options['auto'] = false;
                     clearInterval(this.interval);
                     this.model.set(options);
