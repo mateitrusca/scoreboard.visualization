@@ -38,7 +38,7 @@ App.scenario2_filters_schema = {
              'breakdown': 'breakdown'
          }},
         {type: 'multiple_select',
-         name: 'countries',
+         name: 'ref-area',
          label: 'Countries',
          dimension: 'ref-area',
          multiple_series: true,

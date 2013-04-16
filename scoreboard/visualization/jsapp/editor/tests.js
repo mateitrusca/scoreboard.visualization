@@ -65,9 +65,9 @@ describe('FacetsEditor', function() {
                 dimensions: [
                     {type_label: 'measure', notation: 'ignore me'},
                     {type_label: 'attribute', notation: 'ignore me too'},
-                    {type_label: 'group dimension', notation: 'indicator-group'},
+                    {type_label: 'dimension group', notation: 'indicator-group'},
                     {type_label: 'dimension', notation: 'indicator'},
-                    {type_label: 'group dimension', notation: 'breakdown-group'},
+                    {type_label: 'dimension group', notation: 'breakdown-group'},
                     {type_label: 'dimension', notation: 'breakdown'},
                     {type_label: 'dimension', notation: 'unit-measure'},
                     {type_label: 'dimension', notation: 'ref-area'},
@@ -75,14 +75,10 @@ describe('FacetsEditor', function() {
                 ]
             });
 
-            var facets = model.get('facets');
-            expect(facets[0]['dimension']).to.equal('indicator-group');
-            expect(facets[1]['dimension']).to.equal('indicator');
-            expect(facets[2]['dimension']).to.equal('breakdown-group');
-            expect(facets[3]['dimension']).to.equal('breakdown');
-            expect(facets[4]['dimension']).to.equal('unit-measure');
-            expect(facets[5]['dimension']).to.equal('ref-area');
-            expect(facets[6]['dimension']).to.equal('time-period');
+            expect(_(model.get('facets')).pluck('dimension')).to.deep.equal([
+                'indicator-group', 'indicator', 'breakdown-group',
+                'breakdown', 'unit-measure', 'ref-area', 'time-period',
+            ]);
         });
 
         it('should save filter name same as dimension', function() {
@@ -121,6 +117,18 @@ describe('FacetsEditor', function() {
             });
             expect(_(model.get('facets')).pluck('name')).to.deep.equal(
                 ['time-period', 'indicator']);
+        });
+
+        it('should remove facets with no corresponding dimension', function() {
+            var model = new Backbone.Model({
+                facets: [{name: 'time-period', type: 'data-column'}]
+            });
+            var view = new NoAjaxFacetsEditor({
+                model: model,
+                el: this.box,
+                dimensions: []
+            });
+            expect(model.get('facets').length).to.equal(0);
         });
 
     });
