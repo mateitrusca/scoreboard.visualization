@@ -118,11 +118,17 @@ App.ScenarioChartView = Backbone.View.extend({
                 unit_is_pc.push(true);
             }
         }
+        var tooltip_with_breakdown = (this.multiseries_name == 'breakdown');
+        var breakdowns = this.model.get(this.multiseries_name);
         var chart_data = {
             'tooltip_formatter': function() {
                 var tooltip_label = chart_data.meta_data['unit'];
-                return '<b>'+ this.point.name +'</b><br>: ' +
+                var out = '<b>'+ this.point.name +'</b><br>: ' +
                        Math.round(this.y*10)/10 + ' ' + tooltip_label;
+                if (tooltip_with_breakdown){
+                    out+='<br>breakdown: '+breakdowns[this.series.index];
+                }
+                return out;
             },
             'credits': {
                 'href': 'http://ec.europa.eu/digital-agenda/en/graphs/',
