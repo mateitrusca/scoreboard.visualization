@@ -63,6 +63,7 @@ App.scenario7_filters_schema = {
          {type: 'all-values',
           dimension: 'breakdown',
           multiple_series: true,
+          label: 'Breakdown',
           name: 'breakdown',
           constraints: {
              'unit-measure': 'unit-measure',
@@ -77,6 +78,7 @@ App.scenario7_filters_schema = {
         source: '/dimension_value_metadata',
         filters: [{name: 'indicator', part: 'label'},
                   {name: 'breakdown-group', part: 'label'},
+                  {name: 'breakdown', part: 'label'},
                   {name: 'unit-measure', part: 'label'}]
     },
     chart_type: 'split_columns',

@@ -1,12 +1,12 @@
-<h2>Annotations:</h2>
+<h2>Definition and scopes:</h2>
 {{ description }}
-<p><strong>Definition and scopes:</strong><p>
 {{#each blocks}}
 <p>
   <b>{{ this.filter_label }}</b>
 </p>
 <ul>
   <li>{{ this.label }} </li>
+  <li>Caption: {{ this.short_label }}</li>
   <li><strong>Definition:</strong> {{ this.definition }}</li>
 
   {{# if this.source_definition }}
