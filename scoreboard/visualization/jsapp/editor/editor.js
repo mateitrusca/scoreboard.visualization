@@ -131,7 +131,7 @@ App.create_editor = function(form, object_url) {
     App.editor.on('advanced_save', function() {
         App.editor_form.save_form();
         App.editor.remove();
-        create_editor_view();
+        App.window.location.reload();
     });
 };
 
