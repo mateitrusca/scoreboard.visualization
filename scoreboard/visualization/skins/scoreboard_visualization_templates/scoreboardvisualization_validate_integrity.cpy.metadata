@@ -1,0 +1,9 @@
+[default]
+title = Validate Content Integrity
+
+[validators]
+validators =
+
+[actions]
+action.success = redirect_to:python:object.REQUEST.get('final_url', '')
+action.failure = traverse_to:string:scoreboardvisualization_edit_controller

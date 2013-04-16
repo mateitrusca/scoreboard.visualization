@@ -1,0 +1,6 @@
+<object name="portal_skins">
+  <object name="scoreboard_visualization_templates" meta_type="Filesystem Directory View" directory="scoreboard.visualization:skins/scoreboard_visualization_templates"/>
+  <skin-path name="*">
+    <layer name="scoreboard_visualization_templates" insert-after="custom"/>
+  </skin-path>
+</object>

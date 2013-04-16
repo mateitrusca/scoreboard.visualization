@@ -8,7 +8,7 @@
   <property name="content_icon">folder_icon.gif</property>
   <property name="product">scoreboard.visualization</property>
   <property name="factory">addScoreboardVisualization</property>
-  <property name="immediate_view">atct_edit</property>
+  <property name="immediate_view">scoreboardvisualization_editform</property>
   <property name="global_allow">True</property>
   <property name="filter_content_types">False</property>
   <property name="allow_discussion">False</property>
@@ -17,7 +17,7 @@
     <element value="daviz-view.html" />
   </property>
   <alias from="(Default)" to="(dynamic view)" />
-  <alias from="edit" to="atct_edit" />
+  <alias from="edit" to="scoreboardvisualization_editform" />
   <alias from="sharing" to="@@sharing" />
   <alias from="view" to="(selected layout)" />
   <action title="View" action_id="view" category="object" condition_expr=""
