@@ -126,14 +126,14 @@ App.create_editor = function(form, object_url) {
             cube_url: App.URL
         });
         App.editor.$el.insertBefore(form);
+
+        App.editor.on('advanced_save', function() {
+            App.editor_form.save_form();
+            App.editor.remove();
+            create_editor_view();
+        });
     };
     create_editor_view();
-
-    App.editor.on('advanced_save', function() {
-        App.editor_form.save_form();
-        App.editor.remove();
-        create_editor_view();
-    });
 };
 
 
