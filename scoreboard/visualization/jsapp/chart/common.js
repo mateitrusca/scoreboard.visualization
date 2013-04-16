@@ -7,15 +7,22 @@
 
 function sort_serie(serie, sort){
     serie = _(serie).sortBy( function(item){
-        if (sort.sort_by == 'value'){
-            var value = item['y'];
-            if (isNaN(value)){
-                value = 0;
-            }
-            return sort.order * value;
+        if (sort.first_serie){
+            return _.chain(sort.first_serie)
+                    .pluck('name').indexOf(item['name'])
+                    .value();
         }
-        if (sort.sort_by == 'label'){
-            return item['name'];
+        else{
+            if (sort.sort_by == 'value'){
+                var value = item['y'];
+                if (isNaN(value)){
+                    value = 0;
+                }
+                return sort.order * value;
+            }
+            if (sort.sort_by == 'label'){
+                return item['name'];
+            }
         }
     });
     return serie;
@@ -72,6 +79,7 @@ App.format_series = function (data, sort, type, percent){
             }
         });
     }else{
+        var first_serie = false;
         var extract_data = function(series_item){
             var value = series_item['value'];
             if(percent){
@@ -104,7 +112,12 @@ App.format_series = function (data, sort, type, percent){
                                   ['y', 0]])
                     );
                 });
-            if (sort){
+            if (sort && !first_serie){
+                serie = sort_serie(serie, sort);
+                first_serie = serie;
+            }
+            else{
+                _(sort).extend({'first_serie': first_serie});
                 serie = sort_serie(serie, sort);
             }
             return _.object(
