@@ -3,11 +3,13 @@
 <input type="hidden" name="configuration"
        tal:attributes="value python:view.configuration" />
 
-<script>
-  (function($) {
-    $(document).ready(function() {
+<script tal:define="view_url "
+        tal:content="string:
+  (function($$) {
+    $$(document).ready(function() {
       var form = $('form.daviz-view-form')[0];
-      App.create_editor(form);
+      var view_url = ${view/object_url_json};
+      App.create_editor(form, view_url);
     });
   })(App.jQuery);
-</script>
+"></script>

@@ -18,6 +18,10 @@ class Edit(EditForm):
     def configuration(self):
         return self._data.get('configuration', '{}')
 
+    @property
+    def object_url_json(self):
+        return json.dumps(self.context.absolute_url())
+
     def jsapp_html(self):
         return jsapp_html_for_visualization(self.context)
 

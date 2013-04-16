@@ -17,6 +17,8 @@
 <script>
   window.App = {
 
+    window: window,
+
     templates: {{ get_js_templates()|json|safe }},
 
     JSAPP: {{ JSAPP|json|safe }},

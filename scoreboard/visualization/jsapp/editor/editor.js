@@ -10,7 +10,8 @@ App.EditForm = Backbone.View.extend({
     template: App.get_template('editor/editor_form.html'),
 
     events: {
-       'click button[type="submit"]': 'on_submit'
+       'click button[type="submit"]': 'on_submit',
+       'click button[type="button"]': 'on_cancel'
     },
 
     initialize: function(options) {
@@ -27,6 +28,11 @@ App.EditForm = Backbone.View.extend({
     on_submit: function(evt) {
         evt.preventDefault();
         this.save_form();
+    },
+
+    on_cancel: function(evt) {
+        evt.preventDefault();
+        App.window.location.href = this.options['object_url'];
     },
 
     save_form: function() {
@@ -104,11 +110,12 @@ App.Editor = Backbone.View.extend({
 });
 
 
-App.create_editor = function(form) {
+App.create_editor = function(form, object_url) {
     var configuration = new Backbone.Model();
     App.editor_form = new App.EditForm({
         model: configuration,
-        el: form
+        el: form,
+        object_url: object_url
     });
 
     var create_editor_view = function() {
