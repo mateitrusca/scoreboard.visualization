@@ -99,6 +99,7 @@ App.Editor = Backbone.View.extend({
             all_steps: all_steps
         }));
         this.$el.append(this.step.el);
+        this.step.delegateEvents();
     },
 
     on_click_step: function(evt) {
