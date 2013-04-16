@@ -15,6 +15,7 @@ var country_data = [
     {code: 'DK',   color: '#45BF55', label: "Denmark"},
     {code: 'EE',   color: '#0EEAFF', label: "Estonia"},
     {code: 'GR',   color: '#6A07B0', label: "Greece"},
+    {code: 'EL',   color: '#6A07B0', label: "Greece"}, // duplicate GR
     {code: 'ES',   color: '#044C29', label: "Spain"},
     {code: 'FI',   color: '#7FB2F0', label: "Finland"},
     {code: 'FR',   color: '#15A9FA', label: "France"},
@@ -37,6 +38,7 @@ var country_data = [
     {code: 'SK',   color: '#7DC30F', label: "Slovak Republic"},
     {code: 'TR',   color: '#9900AB', label: "Turkey"},
     {code: 'GB',   color: '#D000C4', label: "United Kingdom"},
+    {code: 'UK',   color: '#D000C4', label: "United Kingdom"}, // duplicate GB
     {code: 'EU27', color: '#94090D', label: "European Union - 27 countries"}
 ];
 
