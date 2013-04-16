@@ -11,15 +11,13 @@ App.FacetEditorField = Backbone.View.extend({
     template: App.get_template('editor/facet-field.html'),
 
     events: {
-        'change [name="type"]': 'on_input_change',
-        'change [name="on_client"]': 'on_input_change'
+        'change [name="type"]': 'on_input_change'
     },
 
     type_options: [
-        {value: 'select', label: "select filter"},
-        {value: 'multiple_select', label: "multiple select filter"},
-        {value: 'all-values', label: "all values as series"},
-        {value: 'data-column', label: "datapoints"}
+        {value: 'select', label: "single selection"},
+        {value: 'multiple_select', label: "multiple selection"},
+        {value: 'all-values', label: "all values"}
     ],
 
     initialize: function(options) {
@@ -41,8 +39,7 @@ App.FacetEditorField = Backbone.View.extend({
 
     on_input_change: function(evt) {
         this.model.set({
-            type: this.$el.find('[name="type"]').val(),
-            on_client: this.$el.find('[name="on_client"]').is(':checked')
+            type: this.$el.find('[name="type"]').val()
         });
     }
 

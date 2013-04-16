@@ -99,13 +99,13 @@ describe('FacetsEditor', function() {
                 el: this.box,
                 dimensions: [{type_label: 'dimension', notation: 'time-period'}]
             });
-            view.$el.find('select[name="type"]').val('data-column').change();
-            expect(model.get('facets')[0]['type']).to.equal('data-column');
+            view.$el.find('select[name="type"]').val('multiple_select').change();
+            expect(model.get('facets')[0]['type']).to.equal('multiple_select');
         });
 
         it('should create missing facets when loading config', function() {
             var model = new Backbone.Model({
-                facets: [{name: 'time-period', type: 'data-column'}]
+                facets: [{name: 'time-period', type: 'multiple_select'}]
             });
             var view = new NoAjaxFacetsEditor({
                 model: model,
@@ -121,7 +121,7 @@ describe('FacetsEditor', function() {
 
         it('should remove facets with no corresponding dimension', function() {
             var model = new Backbone.Model({
-                facets: [{name: 'time-period', type: 'data-column'}]
+                facets: [{name: 'time-period', type: 'multiple_select'}]
             });
             var view = new NoAjaxFacetsEditor({
                 model: model,
@@ -137,7 +137,7 @@ describe('FacetsEditor', function() {
 
         it('should select existing filter type', function() {
             var model = new Backbone.Model({
-                facets: [{name: 'time-period', type: 'data-column'}]
+                facets: [{name: 'time-period', type: 'multiple_select'}]
             });
             var view = new NoAjaxFacetsEditor({
                 model: model,
@@ -145,12 +145,12 @@ describe('FacetsEditor', function() {
                 dimensions: [{type_label: 'dimension', notation: 'time-period'}]
             });
             var select = view.$el.find('select[name="type"]');
-            expect(select.val()).to.equal('data-column');
+            expect(select.val()).to.equal('multiple_select');
         });
 
         it('should reload from model on demand', function() {
             var model = new Backbone.Model({
-                facets: [{name: 'time-period', type: 'data-column'}]
+                facets: [{name: 'time-period', type: 'multiple_select'}]
             });
             var view = new NoAjaxFacetsEditor({
                 model: model,
@@ -160,50 +160,10 @@ describe('FacetsEditor', function() {
             var read_current_selection = function() {
                 return view.$el.find('select[name="type"]').val();
             };
-            expect(read_current_selection()).to.equal('data-column');
+            expect(read_current_selection()).to.equal('multiple_select');
             model.set('facets', [{name: 'time-period', type: 'all-values'}]);
             view.load_value();
             expect(read_current_selection()).to.equal('all-values');
-        });
-
-    });
-
-    describe('edit-on-client flag', function() {
-
-        it('should update model when changing flag', function() {
-            var model = new Backbone.Model();
-            var view = new NoAjaxFacetsEditor({
-                model: model,
-                el: this.box,
-                dimensions: [{type_label: 'dimension', notation: 'ref-area'}]
-            });
-            view.$el.find('[name="on_client"]').click();
-            expect(model.get('facets')[0]['on_client']).to.equal(true);
-            view.$el.find('[name="on_client"]').click();
-            expect(model.get('facets')[0]['on_client']).to.equal(false);
-        });
-
-        it('should render checkbox according to model value', function() {
-            var model = new Backbone.Model({
-                facets: [
-                    {name: 'time-period', on_client: true},
-                    {name: 'ref-area', on_client: false},
-                ]
-            });
-            var view = new NoAjaxFacetsEditor({
-                model: model,
-                el: this.box,
-                dimensions: [
-                    {type_label: 'dimension', notation: 'ref-area'},
-                    {type_label: 'dimension', notation: 'time-period'},
-                ]
-            });
-            var checkbox_state = function(name) {
-                var sel = 'tr[data-name="' + name + '"] [name="on_client"]';
-                return view.$el.find(sel).is(':checked');
-            }
-            expect(checkbox_state('time-period')).to.equal(true);
-            expect(checkbox_state('ref-area')).to.equal(false);
         });
 
     });
