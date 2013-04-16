@@ -68,19 +68,20 @@ App.Editor = Backbone.View.extend({
     ],
 
     initialize: function(options) {
+        this.step_views = {};
         this.all_steps = _(this.step_cls).map(function(name) {
             var Cls = App[name];
             var step = new Cls({
                 model: this.model,
                 cube_url: options['cube_url']
             });
+            this.step_views[name] = step;
             step.$el.addClass('editor-current-step');
             return step;
         }, this);
         this.step = this.all_steps[0];
         this.render();
-        var advanced = _(this.all_steps).findWhere({title: 'Advanced'});
-        advanced.on('save', function() {
+        this.step_views['AdvancedEditor'].on('save', function() {
             this.trigger('advanced_save');
         }, this);
     },
