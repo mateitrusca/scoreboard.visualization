@@ -14,6 +14,7 @@
   <include package=".browser" />
   <include package=".content" />
   <include package=".views" />
+  <include package=".events" />
 
   <browser:resourceDirectory
     name="scoreboard-jsapp"

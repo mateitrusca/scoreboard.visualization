@@ -1,0 +1,11 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    i18n_domain="scoreboard">
+
+  <!-- DataCube -->
+  <subscriber
+      for="edw.datacube.interfaces.IDataCube Products.CMFCore.interfaces.IActionSucceededEvent"
+      handler=".state.handler"
+      />
+
+</configure>
