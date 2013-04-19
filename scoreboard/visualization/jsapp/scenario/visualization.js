@@ -1,4 +1,4 @@
-/*global App, Backbone */
+/*global App, Scoreboard, Backbone */
 /*jshint sub:true */
 
 (function($) {
@@ -37,7 +37,7 @@ App.Visualization = Backbone.View.extend({
             el: this.$el.find('#the-share')
         });
 
-        this.navigation = new App.NavigationView({
+        this.navigation = new Scoreboard.Views.ScenarioNavigationView({
             el: this.$el.find('#the-navigation'),
             cube_url: options['cube_url'],
             scenario_url: App.SCENARIO_URL

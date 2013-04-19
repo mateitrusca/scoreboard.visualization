@@ -446,38 +446,6 @@ App.ShareOptionsView = Backbone.View.extend({
 });
 
 
-App.NavigationView = Backbone.View.extend({
-
-    id: 'scenarios',
-
-    template: App.get_template('scenario/navigation.html'),
-
-    initialize: function(options) {
-        this.cube_url = options['cube_url'];
-        this.scenario_url = options['scenario_url'];
-        this.scenarios = [];
-        this.update();
-    },
-
-    update: function() {
-        $.get(this.cube_url + '/@@relations').done(_.bind(function(resp) {
-            this.scenarios = _(resp).map(function(item) {
-                if(item['url'] == this.scenario_url) {
-                    item['selected'] = true;
-                }
-                return item;
-            }, this);
-            this.render();
-        }, this));
-    },
-
-    render: function() {
-        this.$el.html(this.template({"scenarios": this.scenarios}));
-    }
-
-});
-
-
 App.ChartRouter = Backbone.Router.extend({
 
     encode: function(value) {
