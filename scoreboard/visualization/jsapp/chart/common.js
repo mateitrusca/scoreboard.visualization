@@ -92,26 +92,33 @@ App.format_series = function (data, sort, type, percent){
                              ['y', value]]);
         };
 
-        var labels_collection = []
+        var diffs_collection = {}
         var series = _.chain(data).map(function(item){
             var data = _(item['data']).map(extract_data);
-            labels_collection = _.chain(item['data']).
-                                    pluck('label').
-                                    union(labels_collection).
-                                    value();
+            _.chain(item['data']).
+              each(function(item){
+                  _(diffs_collection).extend(
+                    _.object([[item['code'], item]])
+                  )
+              }).
+              uniq(diffs_collection).
+              value();
             return _.object(
                     ['name', 'data'],
                     [item['label'], data]);
         }).map(function(item){
             var serie = item['data'];
-            _.chain(labels_collection).
-                difference(_(serie).pluck('name')).
-                each(function(diff_label){
-                    _(serie).push(
-                        _.object([['name', diff_label],
-                                  ['y', null]])
-                    );
-                });
+            _.chain(diffs_collection).
+              keys().
+              difference(_(serie).pluck('code')).
+              each(function(diff_code){
+                  var data = diffs_collection[diff_code];
+                  _(serie).push(
+                      _.object([['code', data['code']],
+                                ['name', data['label']],
+                                ['y', null]])
+                  );
+              });
             if (sort && !first_serie){
                 serie = sort_serie(serie, sort);
                 first_serie = serie;

@@ -81,6 +81,44 @@ describe('ChartSeriesPreparation', function() {
         }]);
     });
 
+    it('should append missing series points with null y values', function(){
+        var series = [
+            {data: [
+                    { "code": "DK",
+                      "label": "Denmark",
+                      "value": 0.4808
+                    },
+                    { "code": "AT",
+                      "label": "Austria",
+                      "value": 0.4808
+                    },
+                   ],
+             label:'2000'},
+            {data: [
+                    { "code": "DK",
+                      "label": "Denmark",
+                      "value": 0.4808
+                    }
+                   ],
+             label:'2001'},
+            {data: [
+                    { "code": "DK",
+                      "label": "Denmark",
+                      "value": 0.4808
+                    },
+                    { "code": "AT",
+                      "label": "Austria",
+                      "value": 0.4808
+                    },
+                   ],
+             label:'2002'}
+        ];
+        var sort = _.object(["sort_by", "order"],['label', 1]);
+        var result = App.format_series(series, sort);
+        expect(_(_(result).pluck('data')[1]).pluck('y')).to.deep.equal([
+            null, 0.4808]);
+    })
+
     it('should sort the xy series by label', function(){
         var series = [
             {data: [
@@ -122,7 +160,8 @@ describe('ChartSeriesPreparation', function() {
                'code': 'AT',
                'y': 0.4808}],
             [{ 'name': 'Austria',
-               'y': 0}]
+               'code': 'AT',
+               'y': null}]
         ]);
     });
 
