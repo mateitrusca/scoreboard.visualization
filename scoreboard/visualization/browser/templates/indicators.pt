@@ -5,6 +5,9 @@
 
     <p id="dataset-description"></p>
 
+    <div id="dataset-navigation" class="navigation-widget"></div>
+    <br />
+
     <p>The following table provides methodological information about the source, the scope and the definition of each indicator. For more details, click on the links in the table or explore the whole database.</p>
 
     <div id="indicators-toc" class="listing-description"> </div>

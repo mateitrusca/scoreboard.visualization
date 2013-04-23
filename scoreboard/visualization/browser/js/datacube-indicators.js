@@ -91,13 +91,31 @@ scoreboard.visualization.datacube.indicators = {
                     '<br />' +
                     '<strong class="notes">Notes: </strong>' + indicator.notes +
                 '</td>');
-        tr.append('<td class="odd"><a href="' + indicator.sourcelink + '">' + indicator.sourcelabel + '</a></td>');
+        var source = jQuery('<td class="odd">');
+        if(indicator.sourcelink){
+          source.append('<a href="' + indicator.sourcelink + '">' + indicator.sourcelabel + '</a>');
+        }
+        else if(indicator.sourcelabel){
+          source.text(indicator.sourcelabel);
+        }
+        tr.append(source);
         jQuery('tr#' + groupId).after(tr);
+    },
+    addNavigation: function(){
+      var locationPath = window.location.href.split('/');
+      var location = locationPath.slice(0, locationPath.length - 1).join('/');
+      var navigation = new Scoreboard.Views.DatasetNavigationView({
+          el: jQuery('#dataset-navigation'),
+          cube_url: location,
+          selected_url: location,
+          url_extension: '/indicators'
+      });
     }
 };
 
 jQuery(document).ready(function(){
     scoreboard.visualization.datacube.indicators.getDatasetMetadata();
     scoreboard.visualization.datacube.indicators.getDatasetDetails();
+    scoreboard.visualization.datacube.indicators.addNavigation();
 });
 
