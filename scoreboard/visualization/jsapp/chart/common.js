@@ -123,9 +123,9 @@ App.format_series = function (data, sort, type, percent){
             return _.object(
                     ['name', 'data'],
                     [item['name'], serie]);
-        }).sortBy('name').value();
+        }).value();
     }
-    return series;
+    return _(series).sortBy('name');
 
 }
 
