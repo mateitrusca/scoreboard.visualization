@@ -210,6 +210,23 @@ describe('FacetsEditor', function() {
             expect(model.get('multiple_series')).to.equal('dim3');
         });
 
+        it('should render multiple_series with selected value', function() {
+            var model = new Backbone.Model({
+                facets: [
+                    {name: 'dim3', type: 'all-values'},
+                    {name: 'dim4', type: 'all-values'}
+                ],
+                multiple_series: 'dim3'
+            });
+            var view = new NoAjaxFacetsEditor({
+                model: model,
+                el: this.box,
+                dimensions: four_dimensions
+            });
+            var select = view.$el.find('[name="multiple_series"]');
+            expect(select.val()).to.equal('dim3');
+        });
+
     });
 
 });

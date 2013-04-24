@@ -22,7 +22,9 @@
     <select name="multiple_series">
       <option value="">--</option>
       {{# series_options }}
-        <option value="{{ name }}">{{ label }}</option>
+        <option value="{{ name }}"
+          {{# if selected }}selected{{/ if }}
+          >{{ label }}</option>
       {{/ series_options }}
     </select>
   </label>

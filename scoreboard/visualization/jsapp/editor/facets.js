@@ -114,9 +114,16 @@ App.FacetsEditor = Backbone.View.extend({
             return;
         }
         var series_options = this.facets.where({type: 'all-values'});
-        this.$el.html(this.template({
-            series_options: _(series_options).invoke('toJSON')
-        }));
+        var context = {
+            series_options: _(series_options).map(function(opt) {
+                var rv = opt.toJSON();
+                if(rv['name'] == this.model.get('multiple_series')) {
+                    rv['selected'] = true;
+                }
+                return rv;
+            }, this)
+        };
+        this.$el.html(this.template(context));
         this.facets.forEach(function(facet_model) {
             var facet_view = this.facet_views[facet_model.cid];
             this.$el.find('tbody').append(facet_view.el);
