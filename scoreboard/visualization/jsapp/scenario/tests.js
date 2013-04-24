@@ -460,30 +460,6 @@ describe('ScenarioChartView', function() {
 });
 
 
-describe('NavigationView', function() {
-    "use strict";
-
-    beforeEach(function() {
-        this.sandbox = sinon.sandbox.create();
-        this.sandbox.useFakeServer();
-        this.model = new Backbone.Model();
-    });
-
-    afterEach(function () {
-        this.sandbox.restore();
-    });
-
-    it('should highlight the selected scenario', function(){
-        var view = new App.NavigationView({scenario_url: 'scenario2/url'});
-        App.respond_json(this.sandbox.server.requests[0], [
-            {"id": "scenario1", "url": "scenario1/url"},
-            {"id": "scenario2", "url": "scenario2/url"}
-        ]);
-        expect(view.$el.find('#scenario2').attr('class')).to.equal('selected')
-    });
-
-});
-
 describe('AnnotationsView', function() {
     "use strict";
 
