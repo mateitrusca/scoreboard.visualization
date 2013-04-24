@@ -14,6 +14,10 @@ App.SelectFilter = Backbone.View.extend({
 
     template: App.get_template('filters/dropdown.html'),
 
+    simple_template: App.get_template('filters/dropdown.html'),
+
+    group_template: App.get_template('filters/dropdown_with_groups.html'),
+
     events: {
         'change select': 'on_selection_change'
     },
@@ -65,6 +69,9 @@ App.SelectFilter = Backbone.View.extend({
             if(other_option == 'any' && App.groupers[this.dimension] == other_dimension){
                 this.display_in_groups = true;
             }
+            else{
+                this.display_in_groups = false;
+            }
         }, this);
         if(incomplete) {
             this.$el.html("--");
@@ -106,10 +113,18 @@ App.SelectFilter = Backbone.View.extend({
             var selected = (item['notation'] == selected_value);
             return _({'selected': selected}).extend(item);
         });
-        this.$el.html(this.template({
-            'dimension_options': options,
-            'filter_label': this.label
-        }));
+        if (this.display_in_groups){
+            this.$el.html(this.group_template({
+                'dimension_options': options,
+                'filter_label': this.label
+            }));
+        }
+        else{
+            this.$el.html(this.simple_template({
+                'dimension_options': options,
+                'filter_label': this.label
+            }));
+        }
     },
 
     on_selection_change: function() {
