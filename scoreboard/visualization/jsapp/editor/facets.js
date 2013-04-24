@@ -123,6 +123,9 @@ App.FacetsEditor = Backbone.View.extend({
                 return rv;
             }, this)
         };
+        if(! _(context['series_options']).findWhere({selected: true})) {
+            this.model.set('multiple_series', null);
+        }
         this.$el.html(this.template(context));
         this.facets.forEach(function(facet_model) {
             var facet_view = this.facet_views[facet_model.cid];
