@@ -102,10 +102,8 @@ App.FacetsEditor = Backbone.View.extend({
                 this.facets.remove(facet);
             }
         }, this);
-        this.facets.on('change', this.save_value, this);
-        this.facets.on('change', this.render, this);
-        this.save_value();
-        this.render();
+        this.facets.on('change', this.apply_changes, this);
+        this.apply_changes();
     },
 
     compute_dimension_roles: function() {
@@ -155,9 +153,15 @@ App.FacetsEditor = Backbone.View.extend({
         this.model.set('facets', value);
     },
 
+    apply_changes: function() {
+        this.render();
+        this.save_value();
+    },
+
     on_multiple_series_change: function() {
         var select = this.$el.find('[name="multiple_series"]');
         this.model.set('multiple_series', select.val() || null);
+        this.apply_changes();
     }
 
 });
