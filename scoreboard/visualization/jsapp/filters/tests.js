@@ -277,6 +277,13 @@ describe('modular filters', function() {
             expect(view.$el.find('option').val()).to.deep.equal('any');
         });
 
+        it("should have a mapping to groupers on App", function(){
+            expect(App.groupers).to.deep.equal({
+                'indicator': 'indicator-group',
+                'breakdown': 'breakdown-group'
+            });
+        });
+
     });
 
     describe('FilterPositioning', function() {

@@ -4,6 +4,11 @@
 (function($) {
 "use strict";
 
+App.groupers =  {
+    'indicator': 'indicator-group',
+    'breakdown': 'breakdown-group'
+};
+
 
 App.SelectFilter = Backbone.View.extend({
 
