@@ -103,8 +103,15 @@ App.SelectFilter = Backbone.View.extend({
 
     fetch_options: function(args) {
         var view_name = this.xy ? 'dimension_values_xy' : 'dimension_values';
-        args = _({rev: this.data_revision}).extend(args);
-        return $.get(this.cube_url + '/' + view_name, args);
+        var relevant_args = {}
+        _(args).each(function(value, key){
+            if (value!='any'){
+                var pair = _.object([[key, value]]);
+                _(relevant_args).extend(pair);
+            }
+        });
+        relevant_args = _({rev: this.data_revision}).extend(relevant_args);
+        return $.get(this.cube_url + '/' + view_name, relevant_args);
     },
 
     render: function() {

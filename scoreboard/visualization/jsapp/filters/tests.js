@@ -370,6 +370,45 @@ describe('modular filters', function() {
             expect(group_template.callCount).to.equal(1);
         });
 
+        it("should omit its grouper=='any' when making options requests", function(){
+            var server = this.sandbox.server;
+            var schema = {
+                facets: [
+                    {type: 'select',
+                     name: 'indicator-group',
+                     label: 'Indicator group',
+                     dimension: 'indicator-group',
+                     include_wildcard: true,
+                     constraints: {}},
+                    {type: 'select',
+                     name: 'indicator',
+                     label: 'Indicator',
+                     dimension: 'indicator',
+                     constraints: {
+                         'indicator-group': 'indicator-group'
+                     }}
+                ]
+            };
+
+            var box = $('<div></div>');
+            box.html(App.get_template('scenario.html')());
+
+            var filter_loadstate = new Backbone.Model();
+
+            this.model = new Backbone.Model();
+            var filters_box = new App.FiltersBox({
+                el: $('#the-filters', box)[0],
+                model: this.model,
+                loadstate: filter_loadstate,
+                schema: schema
+            });
+
+            this.model.set('indicator-group', 'any');
+            App.respond_json(server.requests[0], {'options': []});
+            expect(url_param(server.requests[1].url, 'indicator-group')).
+                to.equal(null);
+        })
+
     });
 
     describe('FilterPositioning', function() {
