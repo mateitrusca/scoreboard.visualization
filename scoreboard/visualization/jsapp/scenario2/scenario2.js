@@ -41,7 +41,6 @@ App.scenario2_filters_schema = {
          name: 'ref-area',
          label: 'Countries',
          dimension: 'ref-area',
-         multiple_series: true,
          default_value: ['EU27'],
          position: '.right_column',
          constraints: {
@@ -53,6 +52,7 @@ App.scenario2_filters_schema = {
          {type: 'data-column', dimension: 'time-period'},
          {type: 'data-column', dimension: 'value'}
     ],
+    multiple_series: 'ref-area',
     annotations: {
         source: '/dimension_value_metadata',
         filters: [{name: 'indicator', part: 'label'},

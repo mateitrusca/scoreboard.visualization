@@ -504,13 +504,13 @@ describe('ScenarioChartViewParameters', function() {
                      name: 'country',
                      label: 'Select one indicator',
                      dimension: 'ref-area',
-                     multiple_series: true,
                      constraints: {
                          'indicator': 'indicator'
                      }},
                      {type: 'data-column', dimension: 'dimension1'},
                      {type: 'data-column', dimension: 'value1'}
                 ],
+                multiple_series: 'country',
                 chart_meta_labels: [
                     {targets: ['label1'], filter_name: 'indicator', type: 'label'}
                 ]
@@ -531,7 +531,7 @@ describe('ScenarioChartViewParameters', function() {
     it('should fetch all series from an AllValuesFilter', function() {
         var loadstate = new Backbone.Model();
         var facets = [
-            {type: 'all-values', multiple_series: true,
+            {type: 'all-values',
              dimension: 'ref-area', name: 'ref-area'},
             {type: 'data-column', dimension: 'value'}
         ];
@@ -542,7 +542,10 @@ describe('ScenarioChartViewParameters', function() {
         var chart = new App.ScenarioChartView({
             model: this.model,
             loadstate: loadstate,
-            schema: {facets: facets},
+            schema: {
+                facets: facets,
+                multiple_series: 'ref-area'
+            },
             scenario_chart: this.scenario_chart
         });
         var country_options = [{'notation': 'area1'}, {'notation': 'area2'}];

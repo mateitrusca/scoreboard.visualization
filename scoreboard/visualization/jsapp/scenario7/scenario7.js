@@ -62,7 +62,6 @@ App.scenario7_filters_schema = {
          }},
          {type: 'all-values',
           dimension: 'breakdown',
-          multiple_series: true,
           label: 'Breakdown',
           name: 'breakdown',
           constraints: {
@@ -74,6 +73,7 @@ App.scenario7_filters_schema = {
           }},
          {type: 'data-column', dimension: 'value'}
     ],
+    multiple_series: 'breakdown',
     annotations: {
         source: '/dimension_value_metadata',
         filters: [{name: 'indicator', part: 'label'},
