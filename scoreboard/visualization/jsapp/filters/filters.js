@@ -62,6 +62,9 @@ App.SelectFilter = Backbone.View.extend({
                 incomplete = true;
             }
             args[other_dimension] = other_option;
+            if(other_option == 'any' && App.groupers[this.dimension] == other_dimension){
+                this.display_in_groups = true;
+            }
         }, this);
         if(incomplete) {
             this.$el.html("--");
