@@ -170,6 +170,11 @@ describe('FacetsEditor', function() {
 
     describe('multiple series', function() {
 
+        var four_dimensions = [{type_label: 'dimension', notation: 'dim1'},
+                               {type_label: 'dimension', notation: 'dim2'},
+                               {type_label: 'dimension', notation: 'dim3'},
+                               {type_label: 'dimension', notation: 'dim4'}];
+
         it('should display list of series options', function() {
             var view = new NoAjaxFacetsEditor({
                 model: new Backbone.Model({
@@ -179,10 +184,7 @@ describe('FacetsEditor', function() {
                     ]
                 }),
                 el: this.box,
-                dimensions: [{type_label: 'dimension', notation: 'dim1'},
-                             {type_label: 'dimension', notation: 'dim2'},
-                             {type_label: 'dimension', notation: 'dim3'},
-                             {type_label: 'dimension', notation: 'dim4'}]
+                dimensions: four_dimensions
             });
             var options = view.$el.find('[name="multiple_series"] option');
             var series_options = _(options).map(function(opt) {
@@ -201,10 +203,7 @@ describe('FacetsEditor', function() {
             var view = new NoAjaxFacetsEditor({
                 model: model,
                 el: this.box,
-                dimensions: [{type_label: 'dimension', notation: 'dim1'},
-                             {type_label: 'dimension', notation: 'dim2'},
-                             {type_label: 'dimension', notation: 'dim3'},
-                             {type_label: 'dimension', notation: 'dim4'}]
+                dimensions: four_dimensions
             });
             expect(model.get('multiple_series')).to.be.null;
             view.$el.find('[name="multiple_series"]').val('dim3').change();
