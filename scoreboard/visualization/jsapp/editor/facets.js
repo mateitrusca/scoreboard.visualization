@@ -106,7 +106,7 @@ App.FacetsEditor = Backbone.View.extend({
         this.apply_changes();
     },
 
-    compute_dimension_roles: function() {
+    compute_facet_roles: function() {
         var series_options = [];
         var no_multiple_series = true;
         this.facets.forEach(function(facet_model) {
@@ -123,7 +123,7 @@ App.FacetsEditor = Backbone.View.extend({
         if(no_multiple_series) {
             this.model.set('multiple_series', null);
         }
-        this.dimension_roles = {
+        this.facet_roles = {
             series_options: series_options
         };
     },
@@ -134,7 +134,7 @@ App.FacetsEditor = Backbone.View.extend({
             return;
         }
         var context = {
-            series_options: this.dimension_roles.series_options
+            series_options: this.facet_roles.series_options
         };
         this.$el.html(this.template(context));
         this.facets.forEach(function(facet_model) {
@@ -153,7 +153,7 @@ App.FacetsEditor = Backbone.View.extend({
     },
 
     apply_changes: function() {
-        this.compute_dimension_roles();
+        this.compute_facet_roles();
         this.save_value();
         this.render();
     },
