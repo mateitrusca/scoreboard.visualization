@@ -191,6 +191,26 @@ describe('FacetsEditor', function() {
             expect(series_options).to.deep.equal(['', 'dim3', 'dim4']);
         });
 
+        it('should update model with selection', function() {
+            var model = new Backbone.Model({
+                facets: [
+                    {name: 'dim3', type: 'all-values'},
+                    {name: 'dim4', type: 'all-values'}
+                ]
+            });
+            var view = new NoAjaxFacetsEditor({
+                model: model,
+                el: this.box,
+                dimensions: [{type_label: 'dimension', notation: 'dim1'},
+                             {type_label: 'dimension', notation: 'dim2'},
+                             {type_label: 'dimension', notation: 'dim3'},
+                             {type_label: 'dimension', notation: 'dim4'}]
+            });
+            expect(model.get('multiple_series')).to.be.null;
+            view.$el.find('[name="multiple_series"]').val('dim3').change();
+            expect(model.get('multiple_series')).to.equal('dim3');
+        });
+
     });
 
 });

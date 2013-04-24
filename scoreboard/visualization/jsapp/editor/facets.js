@@ -53,7 +53,14 @@ App.FacetsEditor = Backbone.View.extend({
 
     title: "Facets",
 
+    events: {
+        'change [name="multiple_series"]': 'on_multiple_series_change'
+    },
+
     initialize: function(options) {
+        if(! this.model.has('multiple_series')) {
+            this.model.set('multiple_series', null);
+        }
         this.render();
         this.get_dimensions();
     },
@@ -123,6 +130,11 @@ App.FacetsEditor = Backbone.View.extend({
             value.push(facet.toJSON());
         });
         this.model.set('facets', value);
+    },
+
+    on_multiple_series_change: function() {
+        var select = this.$el.find('[name="multiple_series"]');
+        this.model.set('multiple_series', select.val() || null);
     }
 
 });
