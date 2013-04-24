@@ -168,6 +168,31 @@ describe('FacetsEditor', function() {
 
     });
 
+    describe('multiple series', function() {
+
+        it('should display list of series options', function() {
+            var view = new NoAjaxFacetsEditor({
+                model: new Backbone.Model({
+                    facets: [
+                        {name: 'dim3', type: 'all-values'},
+                        {name: 'dim4', type: 'all-values'}
+                    ]
+                }),
+                el: this.box,
+                dimensions: [{type_label: 'dimension', notation: 'dim1'},
+                             {type_label: 'dimension', notation: 'dim2'},
+                             {type_label: 'dimension', notation: 'dim3'},
+                             {type_label: 'dimension', notation: 'dim4'}]
+            });
+            var options = view.$el.find('[name="multiple_series"] option');
+            var series_options = _(options).map(function(opt) {
+                return $(opt).attr('value');
+            });
+            expect(series_options).to.deep.equal(['', 'dim3', 'dim4']);
+        });
+
+    });
+
 });
 
 

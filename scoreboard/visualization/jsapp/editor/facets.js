@@ -106,7 +106,10 @@ App.FacetsEditor = Backbone.View.extend({
             this.$el.html('loading...');
             return;
         }
-        this.$el.html(this.template());
+        var series_options = this.facets.where({type: 'all-values'});
+        this.$el.html(this.template({
+            series_options: _(series_options).invoke('toJSON')
+        }));
         this.facets.forEach(function(facet_model) {
             var facet_view = this.facet_views[facet_model.cid];
             this.$el.find('tbody').append(facet_view.el);

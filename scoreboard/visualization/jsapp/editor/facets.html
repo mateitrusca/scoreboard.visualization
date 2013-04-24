@@ -19,10 +19,11 @@
 
   <label>
     Multiple series by
-    <select>
-      <option>--</option>
-      <option value="time-period">Year</option>
-      <option value="ref-area" selected>Country</option>
+    <select name="multiple_series">
+      <option value="">--</option>
+      {{# series_options }}
+        <option value="{{ name }}">{{ label }}</option>
+      {{/ series_options }}
     </select>
   </label>
 </div>
