@@ -21,7 +21,7 @@ App.ScenarioChartView = Backbone.View.extend({
         this.columns = [];
         this.xy_columns = [];
         this.dimensions_mapping = {};
-        this.multiseries_name = options['schema']['multiple_series'];
+        this.multiple_series = options['schema']['multiple_series'];
         this.client_filter = null;
         _(options.schema['facets']).forEach(function(facet) {
             if(facet['type'] == 'data-column') {
@@ -92,7 +92,7 @@ App.ScenarioChartView = Backbone.View.extend({
         var args = {};
         var requests = [];
         _(this.dimensions_mapping).each(function(dimension, filter_name) {
-            if(filter_name != this.multiseries_name &&
+            if(filter_name != this.multiple_series &&
                filter_name != this.client_filter) {
                 args[filter_name] = this.model.get(filter_name);
                 if(! args[filter_name]) { incomplete = true; }
@@ -127,8 +127,8 @@ App.ScenarioChartView = Backbone.View.extend({
                 unit_is_pc.push(true);
             }
         }
-        var tooltip_with_breakdown = (this.multiseries_name == 'breakdown');
-        var breakdowns = this.model.get(this.multiseries_name);
+        var tooltip_with_breakdown = (this.multiple_series == 'breakdown');
+        var breakdowns = this.model.get(this.multiple_series);
         var chart_data = {
             'tooltip_formatter': function() {
                 var tooltip_label = chart_data.meta_data['unit'];
@@ -160,10 +160,10 @@ App.ScenarioChartView = Backbone.View.extend({
                                              : '/datapoints');
         var datapoints_url = this.cube_url + data_method;
 
-        if (this.multiseries_name) {
+        if (this.multiple_series) {
             var groupby_dimension = this.dimensions_mapping[
-                this.multiseries_name];
-            multiseries_values = this.model.get(this.multiseries_name);
+                this.multiple_series];
+            multiseries_values = this.model.get(this.multiple_series);
             requests = _(multiseries_values).map(function(value) {
                 args[groupby_dimension] = value;
                 return this.request_datapoints(datapoints_url, args);
