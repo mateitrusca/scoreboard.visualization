@@ -66,6 +66,17 @@ App.SelectFilter = Backbone.View.extend({
         this.ajax = this.fetch_options(args);
         this.ajax.done(_.bind(function(data) {
             this.ajax = null;
+            if (this.options.include_wildcard){
+                _(data['options']).push(
+                    _.object([
+                        ['group_notation', null],
+                        ['label', 'Any'],
+                        ['short_label', 'Any'],
+                        ['notation', 'any'],
+                        ['uri', null],
+                    ]
+                ));
+            }
             this.dimension_options = _(data['options']).sortBy(function(item){
                 return item['notation']
             });
@@ -197,6 +208,7 @@ App.FiltersBox = Backbone.View.extend({
                 default_all: item['default_all'],
                 dimension: item['dimension'],
                 position: item['position'],
+                include_wildcard: item['include_wildcard'],
                 constraints: item['constraints']
             });
             this.filters.push(filter);

@@ -191,6 +191,20 @@ describe('modular filters', function() {
             expect(model.get('this-time-period')).to.equal('two');
         });
 
+        it('should include "any" option if allowed in schema', function() {
+            this.sandbox.useFakeServer();
+            var server = this.sandbox.server;
+            var view = new App.SelectFilter({
+                model: new Backbone.Model(),
+                name: 'this-time-period',
+                dimension: 'time-period',
+                include_wildcard: true
+            });
+            App.respond_json(server.requests[0], {'options': []});
+            expect(_(view.dimension_options).pluck('notation')).to.deep.equal(['any']);
+            expect(view.$el.find('option').val()).to.deep.equal('any');
+        });
+
     });
 
 
