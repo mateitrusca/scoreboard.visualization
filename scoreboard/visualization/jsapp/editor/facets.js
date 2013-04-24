@@ -96,6 +96,7 @@ App.FacetsEditor = Backbone.View.extend({
             }
         }, this);
         this.facets.on('change', this.save_value, this);
+        this.facets.on('change', this.render, this);
         this.save_value();
         this.render();
     },
@@ -109,6 +110,7 @@ App.FacetsEditor = Backbone.View.extend({
         this.facets.forEach(function(facet_model) {
             var facet_view = this.facet_views[facet_model.cid];
             this.$el.find('tbody').append(facet_view.el);
+            facet_view.delegateEvents();
         }, this);
     },
 
