@@ -191,20 +191,6 @@ describe('modular filters', function() {
             expect(model.get('this-time-period')).to.equal('two');
         });
 
-        it('should include "any" option if allowed in schema', function() {
-            this.sandbox.useFakeServer();
-            var server = this.sandbox.server;
-            var view = new App.SelectFilter({
-                model: new Backbone.Model(),
-                name: 'this-time-period',
-                dimension: 'time-period',
-                include_wildcard: true
-            });
-            App.respond_json(server.requests[0], {'options': []});
-            expect(_(view.dimension_options).pluck('notation')).to.deep.equal(['any']);
-            expect(view.$el.find('option').val()).to.deep.equal('any');
-        });
-
     });
 
 
@@ -262,6 +248,33 @@ describe('modular filters', function() {
             view.ajax.resolve({options: options});
             expect(view.$el.find('select').val()).to.deep.equal(['v2', 'v3']);
             expect(model.get('fil1')).to.deep.equal(['v2', 'v3']);
+        });
+
+    });
+
+    describe('AnyOption', function(){
+        "use strict";
+
+        beforeEach(function() {
+            this.sandbox = sinon.sandbox.create();
+            this.sandbox.useFakeServer();
+        });
+
+        afterEach(function () {
+            this.sandbox.restore();
+        });
+
+        it('should include "any" option if allowed in schema', function() {
+            var server = this.sandbox.server;
+            var view = new App.SelectFilter({
+                model: new Backbone.Model(),
+                name: 'this-time-period',
+                dimension: 'time-period',
+                include_wildcard: true
+            });
+            App.respond_json(server.requests[0], {'options': []});
+            expect(_(view.dimension_options).pluck('notation')).to.deep.equal(['any']);
+            expect(view.$el.find('option').val()).to.deep.equal('any');
         });
 
     });
