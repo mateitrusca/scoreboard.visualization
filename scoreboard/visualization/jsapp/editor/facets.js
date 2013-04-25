@@ -22,6 +22,9 @@ App.FacetEditorField = Backbone.View.extend({
     ],
 
     initialize: function(options) {
+        if(! this.model.has('type')) {
+            this.model.set('type', this.type_options[0]['value']);
+        }
         this.render();
     },
 

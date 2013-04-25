@@ -129,6 +129,15 @@ describe('FacetsEditor', function() {
 
     describe('facet type', function() {
 
+        it('should default to "select"', function() {
+            var view = new NoAjaxFacetsEditor({
+                model: new Backbone.Model(),
+                dimensions: [{type_label: 'dimension', notation: 'dim1'}]
+            });
+            var facet0 = view.model.toJSON()['facets'][0];
+            expect(facet0['type']).to.equal('select');
+        });
+
         it('should select existing filter type', function() {
             var model = new Backbone.Model({
                 facets: [{name: 'time-period', type: 'multiple_select'}]
