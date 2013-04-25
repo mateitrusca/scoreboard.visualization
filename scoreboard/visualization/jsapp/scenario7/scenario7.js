@@ -71,7 +71,7 @@ App.scenario7_filters_schema = {
              'indicator-group': 'indicator-group',
              'indicator': 'indicator'
           }},
-         {type: 'data-column', dimension: 'value'}
+         {type: 'all-values', dimension: 'value'}
     ],
     category_facet: 'ref-area',
     multiple_series: 'breakdown',

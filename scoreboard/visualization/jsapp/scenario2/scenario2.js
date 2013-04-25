@@ -49,8 +49,8 @@ App.scenario2_filters_schema = {
              'breakdown': 'breakdown',
              'unit-measure': 'unit-measure'
          }},
-         {type: 'data-column', dimension: 'time-period'},
-         {type: 'data-column', dimension: 'value'}
+         {type: 'all-values', dimension: 'time-period'},
+         {type: 'all-values', dimension: 'value'}
     ],
     category_facet: 'time-period',
     multiple_series: 'ref-area',

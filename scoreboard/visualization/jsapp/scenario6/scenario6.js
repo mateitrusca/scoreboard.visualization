@@ -59,7 +59,7 @@ App.scenario6_filters_schema = {
               'unit-measure': 'unit-measure'
           },
           name: 'time-period'},
-         {type: 'data-column', dimension: 'value'}
+         {type: 'all-values', dimension: 'value'}
     ],
     category_facet: 'ref-area',
     multiple_series: 'time-period',

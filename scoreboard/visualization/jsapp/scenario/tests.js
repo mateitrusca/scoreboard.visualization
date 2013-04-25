@@ -423,8 +423,8 @@ describe('ScenarioChartViewParameters', function() {
             model: this.model,
             schema: {},
             values_schema: [
-                {type: 'data-column', dimension: 'dim1'},
-                {type: 'data-column', dimension: 'dim2'}
+                {type: 'all-values', dimension: 'dim1'},
+                {type: 'all-values', dimension: 'dim2'}
             ],
             scenario_chart: this.scenario_chart
         });
@@ -510,8 +510,8 @@ describe('ScenarioChartViewParameters', function() {
                  }},
             ],
             values_schema: [
-                 {type: 'data-column', dimension: 'dimension1'},
-                 {type: 'data-column', dimension: 'value1'}
+                 {type: 'all-values', dimension: 'dimension1'},
+                 {type: 'all-values', dimension: 'value1'}
             ],
             scenario_chart: this.scenario_chart
         });
@@ -546,7 +546,7 @@ describe('ScenarioChartViewParameters', function() {
                 {type: 'all-values', dimension: 'ref-area', name: 'ref-area'}
             ],
             values_schema: [
-                {type: 'data-column', dimension: 'value'}
+                {type: 'all-values', dimension: 'value'}
             ]
         });
         var country_options = [{'notation': 'area1'}, {'notation': 'area2'}];
@@ -604,8 +604,8 @@ describe('ScenarioChartView', function() {
                 }
             ],
             values_schema: [
-                {type: 'data-column', dimension: 'ref-area'},
-                {type: 'data-column', dimension: 'value'}
+                {type: 'all-values', dimension: 'ref-area'},
+                {type: 'all-values', dimension: 'value'}
             ],
             scenario_chart: this.scenario_chart
         });
@@ -671,7 +671,7 @@ describe('ScenarioChartView', function() {
                 {name: 'filter3', dimension: 'dim3', on_client: true}
             ],
             values_schema: [
-                {type: 'data-column', dimension: 'dim4'}
+                {type: 'all-values', dimension: 'dim4'}
             ]
         });
         model.set({'filter1': 'f1v',
