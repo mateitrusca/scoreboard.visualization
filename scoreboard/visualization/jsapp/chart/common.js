@@ -152,13 +152,36 @@ App.format_plotLines = function(series, type){
         }
     }
     else if(type == 'value') {
-        var min = _.chain(series).pluck('data').map(function(serie){
-            return _.chain(serie).pluck('x').min().value();
-        }).min().value();
-        var max = _.chain(series).pluck('data').map(function(serie){
-            return _.chain(serie).pluck('x').max().value();
-        }).max().value();
-        resp.x = (min + max)/2;
+        var values = _.chain(series).pluck('data').map(function(serie){
+            var min =  _.object([
+                ['x', _.chain(serie).pluck('x').min().value()],
+                ['y', _.chain(serie).pluck('y').min().value()]
+            ]);
+            var max =  _.object([
+                ['x', _.chain(serie).pluck('x').max().value()],
+                ['y', _.chain(serie).pluck('y').max().value()]
+            ]);
+
+            return _.object([
+                ['min', min],
+                ['max', max]
+            ]);
+        }).reduce(function(memo, item){
+            var min = _.object([
+                ['x', _([item.min.x, memo.min.x]).min()],
+                ['y', _([item.min.y, memo.min.y]).min()],
+            ]);
+            var max = _.object([
+                ['x', _([item.max.x, memo.max.x]).max()],
+                ['y', _([item.max.y, memo.max.y]).max()],
+            ]);
+            return _.object([
+                ['min', min],
+                ['max', max]
+            ]);
+        }).value();
+        resp.x = (values.min.x + values.max.x)/2;
+        resp.y = (values.min.y + values.max.y)/2;
     }
     return resp;
 }
