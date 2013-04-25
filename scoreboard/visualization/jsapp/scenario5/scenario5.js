@@ -74,6 +74,7 @@ App.scenario5_filters_schema = {
          }},
          {type: 'data-column', dimension: 'value'}
     ],
+    category_facet: 'ref-area',
     annotations: {
         source: '/dimension_value_metadata',
         filters: [{name: 'indicator', part: 'label'},

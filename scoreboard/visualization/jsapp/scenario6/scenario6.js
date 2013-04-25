@@ -61,6 +61,7 @@ App.scenario6_filters_schema = {
           name: 'time-period'},
          {type: 'data-column', dimension: 'value'}
     ],
+    category_facet: 'ref-area',
     multiple_series: 'time-period',
     annotations: {
         source: '/dimension_value_metadata',

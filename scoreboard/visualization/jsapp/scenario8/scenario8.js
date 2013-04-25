@@ -60,6 +60,7 @@ App.scenario8_filters_schema = {
          {type: 'data-column', dimension: 'time-period'},
          {type: 'data-column', dimension: 'value'}
     ],
+    category_facet: 'time-period',
     multiple_series: 'breakdown',
     annotations: {
         source: '/dimension_value_metadata',
