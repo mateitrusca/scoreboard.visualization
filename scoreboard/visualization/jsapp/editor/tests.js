@@ -36,12 +36,10 @@ describe('FacetsEditor', function() {
 
     beforeEach(function() {
         this.sandbox = sinon.sandbox.create();
-        this.box = $('<div>').css('display', 'none').appendTo($('body'));
     });
 
     afterEach(function () {
         this.sandbox.restore();
-        this.box.remove();
     });
 
     describe('facet list', function() {
@@ -85,7 +83,6 @@ describe('FacetsEditor', function() {
             var model = new Backbone.Model();
             var view = new NoAjaxFacetsEditor({
                 model: model,
-                el: this.box,
                 dimensions: [{type_label: 'dimension', notation: 'time-period'}]
             });
             expect(model.get('facets')[0]['name']).to.equal('time-period');
@@ -96,7 +93,6 @@ describe('FacetsEditor', function() {
             var model = new Backbone.Model();
             var view = new NoAjaxFacetsEditor({
                 model: model,
-                el: this.box,
                 dimensions: [{type_label: 'dimension', notation: 'time-period'}]
             });
             view.$el.find('select[name="type"]').val('multiple_select').change();
@@ -109,7 +105,6 @@ describe('FacetsEditor', function() {
             });
             var view = new NoAjaxFacetsEditor({
                 model: model,
-                el: this.box,
                 dimensions: [
                     {type_label: 'dimension', notation: 'indicator'},
                     {type_label: 'dimension', notation: 'time-period'}
@@ -125,7 +120,6 @@ describe('FacetsEditor', function() {
             });
             var view = new NoAjaxFacetsEditor({
                 model: model,
-                el: this.box,
                 dimensions: []
             });
             expect(model.get('facets').length).to.equal(0);
@@ -141,7 +135,6 @@ describe('FacetsEditor', function() {
             });
             var view = new NoAjaxFacetsEditor({
                 model: model,
-                el: this.box,
                 dimensions: [{type_label: 'dimension', notation: 'time-period'}]
             });
             var select = view.$el.find('select[name="type"]');
@@ -154,7 +147,6 @@ describe('FacetsEditor', function() {
             });
             var view = new NoAjaxFacetsEditor({
                 model: model,
-                el: this.box,
                 dimensions: [{type_label: 'dimension', notation: 'time-period'}]
             });
             var read_current_selection = function() {
@@ -183,7 +175,6 @@ describe('FacetsEditor', function() {
                         {name: 'dim4', type: 'all-values'}
                     ]
                 }),
-                el: this.box,
                 dimensions: four_dimensions
             });
             var options = view.$el.find('[name="multiple_series"] option');
@@ -202,7 +193,6 @@ describe('FacetsEditor', function() {
             });
             var view = new NoAjaxFacetsEditor({
                 model: model,
-                el: this.box,
                 dimensions: four_dimensions
             });
             expect(model.get('multiple_series')).to.be.null;
@@ -220,7 +210,6 @@ describe('FacetsEditor', function() {
             });
             var view = new NoAjaxFacetsEditor({
                 model: model,
-                el: this.box,
                 dimensions: four_dimensions
             });
             var select = view.$el.find('[name="multiple_series"]');
