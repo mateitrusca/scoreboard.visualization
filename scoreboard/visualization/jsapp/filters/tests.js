@@ -549,7 +549,8 @@ describe('modular filters', function() {
                 el: $('#the-filters', box)[0],
                 model: this.model,
                 loadstate: App.filter_loadstate,
-                schema: schema
+                schema: schema,
+                filters_schema: schema.facets
             });
             expect($('.left_column', filters_box.$el).children().length).to.equal(1);
         });
@@ -565,7 +566,8 @@ describe('modular filters', function() {
                 el: $('#the-filters', box)[0],
                 model: this.model,
                 loadstate: App.filter_loadstate,
-                schema: this.schema
+                schema: this.schema,
+                filters_schema: this.schema.facets
             });
             expect($('.left_column', filters_box.$el).children().length).to.equal(1);
             expect($('.right_column', filters_box.$el).children().length).to.equal(1);

@@ -15,13 +15,22 @@ App.Visualization = Backbone.View.extend({
         this.filter_loadstate = new Backbone.Model();
         this.router = new App.ChartRouter(this.filters);
 
+        var filters_schema = [];
+        _(options['schema']['facets']).forEach(function(item) {
+            if(item['dimension'] == 'value') { return; }
+            if(item['dimension'] == options['schema']['category_facet']
+               && item['type'] == 'data-column') { return; }
+            filters_schema.push(item);
+        });
+
         this.filters_box = new App.FiltersBox({
             el: this.$el.find('#the-filters'),
             model: this.filters,
             loadstate: this.filter_loadstate,
             cube_url: options['cube_url'],
             data_revision: options['data_revision'],
-            schema: options['schema']
+            schema: options['schema'],
+            filters_schema: filters_schema
         });
 
         this.metadata = new App.AnnotationsView({
