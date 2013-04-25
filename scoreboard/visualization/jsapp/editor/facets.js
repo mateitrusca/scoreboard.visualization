@@ -143,7 +143,10 @@ App.FacetsEditor = Backbone.View.extend({
             return;
         }
         var context = {
-            series_options: this.facet_roles.series_options
+            series_options: this.facet_roles.series_options,
+            err_too_few: this.facet_roles.err_too_few,
+            err_too_many: this.facet_roles.err_too_many,
+            category_facet: this.facet_roles.category_facet
         };
         this.$el.html(this.template(context));
         this.facets.forEach(function(facet_model) {
