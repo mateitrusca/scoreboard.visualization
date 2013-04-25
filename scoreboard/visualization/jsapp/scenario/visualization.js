@@ -17,9 +17,12 @@ App.Visualization = Backbone.View.extend({
 
         var filters_schema = [];
         _(options['schema']['facets']).forEach(function(item) {
-            if(item['dimension'] == 'value') { return; }
-            if(item['dimension'] == options['schema']['category_facet']
-               && item['type'] == 'data-column') { return; }
+            if(item['type'] == 'data-column') {
+                if(item['dimension'] == 'value' ||
+                   item['dimension'] == options['schema']['category_facet']) {
+                    return;
+                }
+            }
             filters_schema.push(item);
         });
 
