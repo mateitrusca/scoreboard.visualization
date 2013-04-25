@@ -110,11 +110,15 @@ App.FacetsEditor = Backbone.View.extend({
         var series_options = [];
         var no_multiple_series = true;
         var free_dimensions = [];
+        var facets_above = {};
         this.facets.forEach(function(facet_model) {
+            facet_model.set('constraints', _({}).extend(facets_above));
+            var name = facet_model.get('name');
+            facets_above[name] = name;
             var facet = facet_model.toJSON();
             if(facet['type'] == 'all-values') {
                 var option = _({}).extend(facet);
-                if(facet['name'] == this.model.get('multiple_series')) {
+                if(name == this.model.get('multiple_series')) {
                     option['selected'] = true;
                     no_multiple_series = false;
                 }

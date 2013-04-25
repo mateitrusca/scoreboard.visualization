@@ -272,6 +272,37 @@ describe('FacetsEditor', function() {
 
     });
 
+    describe('constraints between filters', function() {
+
+        var four_dimensions = [{type_label: 'dimension', notation: 'dim1'},
+                               {type_label: 'dimension', notation: 'dim2'},
+                               {type_label: 'dimension', notation: 'dim3'},
+                               {type_label: 'dimension', notation: 'dim4'}];
+
+        it('should generate no constraints for first filter', function() {
+            var view = new NoAjaxFacetsEditor({
+                model: new Backbone.Model(),
+                dimensions: four_dimensions
+            });
+            var constr0 = view.model.toJSON()['facets'][0]['constraints'];
+            expect(constr0).to.deep.equal({});
+        });
+
+        it('should generate 3 constraints for 4th filter', function() {
+            var view = new NoAjaxFacetsEditor({
+                model: new Backbone.Model(),
+                dimensions: four_dimensions
+            });
+            var constr3 = view.model.toJSON()['facets'][3]['constraints'];
+            expect(constr3).to.deep.equal({
+                'dim1': 'dim1',
+                'dim2': 'dim2',
+                'dim3': 'dim3'
+            });
+        });
+
+    });
+
 });
 
 
