@@ -249,6 +249,23 @@ describe('FacetsEditor', function() {
             expect(view.facet_roles.err_too_few).to.be.true;
         });
 
+        it('should warn if there is more than one category', function() {
+            var model = new Backbone.Model({
+                facets: [
+                    {name: 'dim3', type: 'all-values'},
+                    {name: 'dim4', type: 'all-values'}
+                ],
+                multiple_series: 'dim3'
+            });
+            var view = new NoAjaxFacetsEditor({
+                model: model,
+                dimensions: four_dimensions
+            });
+            expect(view.facet_roles.err_too_many).to.be.false;
+            view.$el.find('[name="multiple_series"]').val('').change();
+            expect(view.facet_roles.err_too_many).to.be.true;
+        });
+
     });
 
 });

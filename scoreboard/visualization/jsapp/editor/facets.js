@@ -129,7 +129,8 @@ App.FacetsEditor = Backbone.View.extend({
         }
         this.facet_roles = {
             series_options: series_options,
-            err_too_few: (free_dimensions.length < 1)
+            err_too_few: (free_dimensions.length < 1),
+            err_too_many: (free_dimensions.length > 1)
         }
     },
 
