@@ -266,6 +266,21 @@ describe('FacetsEditor', function() {
             expect(view.facet_roles.err_too_many).to.be.true;
         });
 
+        it('should mark remaining dimension as category', function() {
+            var model = new Backbone.Model({
+                facets: [
+                    {name: 'dim3', type: 'all-values'},
+                    {name: 'dim4', type: 'all-values'}
+                ],
+                multiple_series: 'dim3'
+            });
+            var view = new NoAjaxFacetsEditor({
+                model: model,
+                dimensions: four_dimensions
+            });
+            expect(view.facet_roles.category_facet['name']).to.equal('dim4');
+        });
+
     });
 
 });
