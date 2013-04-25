@@ -109,6 +109,7 @@ App.FacetsEditor = Backbone.View.extend({
     compute_facet_roles: function() {
         var series_options = [];
         var no_multiple_series = true;
+        var free_dimensions = [];
         this.facets.forEach(function(facet_model) {
             var facet = facet_model.toJSON();
             if(facet['type'] == 'all-values') {
@@ -117,6 +118,9 @@ App.FacetsEditor = Backbone.View.extend({
                     option['selected'] = true;
                     no_multiple_series = false;
                 }
+                else {
+                    free_dimensions.push(option);
+                }
                 series_options.push(option);
             }
         }, this);
@@ -124,8 +128,9 @@ App.FacetsEditor = Backbone.View.extend({
             this.model.set('multiple_series', null);
         }
         this.facet_roles = {
-            series_options: series_options
-        };
+            series_options: series_options,
+            err_too_few: (free_dimensions.length < 1)
+        }
     },
 
     render: function() {

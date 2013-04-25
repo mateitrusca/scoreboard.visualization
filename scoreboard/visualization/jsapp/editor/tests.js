@@ -229,6 +229,28 @@ describe('FacetsEditor', function() {
 
     });
 
+    describe('facet verification', function() {
+
+        var four_dimensions = [{type_label: 'dimension', notation: 'dim1'},
+                               {type_label: 'dimension', notation: 'dim2'},
+                               {type_label: 'dimension', notation: 'dim3'},
+                               {type_label: 'dimension', notation: 'dim4'}];
+
+        it('should warn if there is no category facet', function() {
+            var model = new Backbone.Model({
+                facets: [{name: 'dim3', type: 'all-values'}]
+            });
+            var view = new NoAjaxFacetsEditor({
+                model: model,
+                dimensions: four_dimensions
+            });
+            expect(view.facet_roles.err_too_few).to.be.false;
+            view.$el.find('[name="multiple_series"]').val('dim3').change();
+            expect(view.facet_roles.err_too_few).to.be.true;
+        });
+
+    });
+
 });
 
 
