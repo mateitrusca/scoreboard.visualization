@@ -136,5 +136,32 @@ App.format_series = function (data, sort, type, percent){
 
 }
 
+App.format_plotLines = function(series, type){
+    var resp = _.object([
+        ['x', 0],
+        ['y', 0]]);
+    if (! type){
+        type = 'length';
+    }
+    if (type == 'length'){
+        if (series.length % 2 == 0){
+            resp.x = series.length/2;
+        }
+        else{
+            resp.x = (series.length-1)/2;
+        }
+    }
+    else if(type == 'value') {
+        var min = _.chain(series).pluck('data').map(function(serie){
+            return _.chain(serie).pluck('x').min().value();
+        }).min().value();
+        var max = _.chain(series).pluck('data').map(function(serie){
+            return _.chain(serie).pluck('x').max().value();
+        }).max().value();
+        resp.x = (min + max)/2;
+    }
+    return resp;
+}
+
 })();
 

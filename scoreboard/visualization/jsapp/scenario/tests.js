@@ -177,6 +177,67 @@ describe('ChartSeriesPreparation', function() {
         var result = App.format_series(series, false, '', [true]);
         expect(result[0]['data'][0]['y']).to.deep.equal(48.08);
     });
+
+    it('should compute the values for plot lines (single dimension)', function(){
+        // EVEN SERIES
+        var series = [
+         { 'name': 'Austria',
+           'code': 'AT',
+           'y': 1},
+         { 'name': 'Belgium',
+           'code': 'BE',
+           'y': 0}];
+        var plotlines = App.format_plotLines(series);
+        expect(plotlines.x).to.equal(1);
+
+        // ODD SERIES
+        _(series).push(
+         { 'name': 'Bulgaria',
+           'code': 'BG',
+           'y': 2});
+        plotlines = App.format_plotLines(series, 'length');
+        expect(plotlines.x).to.equal(1);
+    });
+
+    it('should compute the values for plot lines (two dimensions)', function(){
+        // EVEN SERIES
+        var series = [
+         { 'name': 'Austria',
+           'data': [
+              {
+                'name': 'AS',
+                'x': 1,
+                'y': 1
+              }
+            ]
+         },
+         { 'name': 'Belgium',
+           'data': [
+              {
+                'name': 'BE',
+                'x': 2,
+                'y': 2
+              }
+            ]
+         },
+        ]
+        var plotlines = App.format_plotLines(series, 'value');
+        expect(plotlines.x).to.equal(1.5);
+
+        // ODD SERIES
+        _(series).push(
+         { 'name': 'Bulgaria',
+           'data': [
+              {
+                'name': 'BG',
+                'x': 3,
+                'y': 2
+              }
+            ]
+         });
+        plotlines = App.format_plotLines(series, 'value');
+        expect(plotlines.x).to.equal(2);
+    });
 });
 
 describe('ScenarioChartViewParameters', function() {
