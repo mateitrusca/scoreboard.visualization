@@ -349,25 +349,89 @@ describe('modular filters', function() {
             var filter_loadstate = new Backbone.Model();
 
             this.model = new Backbone.Model();
-            var filters_box = new App.FiltersBox({
+            App.visualization = sinon.mock();
+            App.visualization.filters_box = new App.FiltersBox({
                 el: $('#the-filters', box)[0],
                 model: this.model,
                 loadstate: filter_loadstate,
                 schema: schema
             });
+            var filters_box = App.visualization.filters_box;
             var simple_template = new sinon.spy();
             var group_template = new sinon.spy();
             filters_box.filters[1].simple_template = simple_template;
             filters_box.filters[1].group_template = group_template;
 
-            App.respond_json(server.requests[0], {'options': []});
-            var options = [{'label': "Option One", 'notation': 'one'}];
+            App.respond_json(server.requests[0],
+                    {'options': [
+                        {'short_label': 'lbl',
+                         'notation': 'group'}
+                     ]
+                    });
+            var options = [{'label': "Option One", 'notation': 'one', 'group_notation': 'group'}];
             App.respond_json(server.requests[1], {'options': options});
             expect(group_template.callCount).to.equal(1);
             this.model.set('indicator-group', 'option');
             App.respond_json(server.requests[2], {'options': options});
             expect(simple_template.callCount).to.equal(1);
             expect(group_template.callCount).to.equal(1);
+        });
+
+        it("should format the data for the group template", function(){
+            var server = this.sandbox.server;
+            var schema = {
+                facets: [
+                    {type: 'select',
+                     name: 'indicator-group',
+                     label: 'Indicator group',
+                     dimension: 'indicator-group',
+                     include_wildcard: true,
+                     constraints: {}},
+                    {type: 'select',
+                     name: 'indicator',
+                     label: 'Indicator',
+                     dimension: 'indicator',
+                     constraints: {
+                         'indicator-group': 'indicator-group'
+                     }}
+                ]
+            };
+
+            var box = $('<div></div>');
+            box.html(App.get_template('scenario.html')());
+
+            var filter_loadstate = new Backbone.Model();
+
+            this.model = new Backbone.Model();
+            App.visualization = sinon.mock();
+            App.visualization.filters_box = new App.FiltersBox({
+                el: $('#the-filters', box)[0],
+                model: this.model,
+                loadstate: filter_loadstate,
+                schema: schema
+            });
+            var filters_box = App.visualization.filters_box;
+            var group_template = new sinon.spy();
+            filters_box.filters[1].group_template = group_template;
+            App.respond_json(server.requests[0],
+                    {'options': [
+                        {'short_label': 'lbl',
+                         'notation': 'group'}
+                     ]
+                    });
+            var options = [{'label': "Option One", 'notation': 'one', 'group_notation': 'group'}];
+            App.respond_json(server.requests[1], {'options': options});
+            expect(group_template.callCount).to.equal(1);
+            expect(group_template.args[0][0]['groups']).to.deep.equal(
+                [{
+                    group: 'lbl',
+                    options: [{
+                        group_notation: 'group',
+                        label: 'Option One',
+                        notation: 'one'
+                    }]
+                }]
+            );
         });
 
         it("should omit its grouper=='any' when making options requests", function(){

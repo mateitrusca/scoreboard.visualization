@@ -95,6 +95,13 @@ App.SelectFilter = Backbone.View.extend({
             this.dimension_options = _(data['options']).sortBy(function(item){
                 return item['notation']
             });
+            this.options_labels = {};
+            _(this.dimension_options).each(function(opt){
+                  if (opt['notation'] != 'any'){
+                      _(this.options_labels).extend(
+                          _.object([[opt['notation'], opt]]));
+                  }
+            }, this);
             this.adjust_value();
             this.render();
             this.loadstate.set(this.name, false);
@@ -120,17 +127,28 @@ App.SelectFilter = Backbone.View.extend({
             var selected = (item['notation'] == selected_value);
             return _({'selected': selected}).extend(item);
         });
+        var template_data = {
+            'dimension_options': options,
+            'filter_label': this.label
+        }
         if (this.display_in_groups){
-            this.$el.html(this.group_template({
-                'dimension_options': options,
-                'filter_label': this.label
-            }));
+            var grouped_data = _(this.dimension_options).groupBy('group_notation');
+            var groups = _.zip(_(grouped_data).keys(), _(grouped_data).values())
+            var grouper = _.chain(App.visualization.filters_box.filters).
+              findWhere({name: App.groupers[this.name]}).value();
+            template_data = _(template_data).extend({
+                'groups': _.chain(groups).map(function(item){
+                                var label = grouper.options_labels[item[0]].short_label ||
+                                            grouper.options_labels[item[0]].label;
+                                var out = _.object(['group', 'options'],
+                                                   [label, item[1]]);
+                                return out;
+                            }).sortBy('group').value()
+            });
+            this.$el.html(this.group_template(template_data));
         }
         else{
-            this.$el.html(this.simple_template({
-                'dimension_options': options,
-                'filter_label': this.label
-            }));
+            this.$el.html(this.simple_template(template_data));
         }
     },
 
