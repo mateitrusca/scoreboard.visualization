@@ -77,7 +77,15 @@ App.ScenarioChartView = Backbone.View.extend({
     },
 
     request_datapoints: function(url, args){
-        return $.get(url, args);
+        var relevant_args = {}
+        _(args).each(function(value, key){
+            if (value!='any'){
+                var pair = _.object([[key, value]]);
+                _(relevant_args).extend(pair);
+            }
+        });
+        relevant_args = _({rev: this.data_revision}).extend(relevant_args);
+        return $.get(url, relevant_args);
     },
 
     load_chart: function() {

@@ -473,6 +473,38 @@ describe('modular filters', function() {
                 to.equal(null);
         })
 
+        it("should omit 'any' options when making data requests", function(){
+            var server = this.sandbox.server;
+            var schema = {
+                facets: [
+                    {type: 'select',
+                     name: 'indicator-group',
+                     label: 'Indicator group',
+                     dimension: 'indicator-group',
+                     include_wildcard: true,
+                     constraints: {}},
+                    {type: 'select',
+                     name: 'indicator',
+                     label: 'Indicator',
+                     dimension: 'indicator',
+                     constraints: {
+                         'indicator-group': 'indicator-group'
+                     }}
+                ]
+            };
+            var scenario_chart = sinon.spy();
+            this.model = new Backbone.Model();
+            this.model.set({'indicator-group': 'any',
+                            'indicator': 'option'});
+            var chart = new App.ScenarioChartView({
+                model: this.model,
+                schema: schema,
+                scenario_chart: scenario_chart
+            });
+            expect(url_param(server.requests[0].url, 'indicator-group')).
+                to.equal(null);
+        });
+
     });
 
     describe('FilterPositioning', function() {
