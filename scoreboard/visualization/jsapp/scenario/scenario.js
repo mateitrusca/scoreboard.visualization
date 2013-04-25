@@ -23,21 +23,19 @@ App.ScenarioChartView = Backbone.View.extend({
         this.dimensions_mapping = {};
         this.multiple_series = options['schema']['multiple_series'];
         this.client_filter = null;
-        _(options.schema['facets']).forEach(function(facet) {
-            if(facet['type'] == 'data-column') {
-                if(facet['xy']) {
-                    this.xy_columns.push(facet['dimension']);
-                }
-                else {
-                    this.columns.push(facet['dimension']);
-                }
+        _(options.filters_schema).forEach(function(facet) {
+            this.dimensions_mapping[facet['name']] = facet['dimension'];
+            if(facet['on_client']) {
+                this.client_filter = facet['name'];
+                this.columns.push(facet['dimension']);
+            }
+        }, this);
+        _(options.values_schema).forEach(function(facet) {
+            if(facet['xy']) {
+                this.xy_columns.push(facet['dimension']);
             }
             else {
-                this.dimensions_mapping[facet['name']] = facet['dimension'];
-                if(facet['on_client']) {
-                    this.client_filter = facet['name'];
-                    this.columns.push(facet['dimension']);
-                }
+                this.columns.push(facet['dimension']);
             }
         }, this);
         this.requests_in_flight = [];

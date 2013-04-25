@@ -385,11 +385,9 @@ describe('ScenarioChartViewParameters', function() {
        function() {
         var chart = new App.ScenarioChartView({
             model: this.model,
-            schema: {
-                facets: [{name: 'indicator', dimension: 'dim1'}],
-                chart_meta_labels: []
-            },
-            scenario_chart: this.scenario_chart
+            schema: {},
+            scenario_chart: this.scenario_chart,
+            filters_schema: [{name: 'indicator', dimension: 'dim1'}]
         });
         expect(chart.dimensions_mapping).to.deep.equal(
             _.object(
@@ -403,14 +401,14 @@ describe('ScenarioChartViewParameters', function() {
         var chart = new App.ScenarioChartView({
             model: this.model,
             schema: {
-                facets: [{name: 'filter1', dimension: 'dim1'}],
                 chart_meta_labels: [
                     {targets: ['x_title'],
                      filter_name: 'filter1',
                      type: 'short_label'}
                 ]
             },
-            scenario_chart: this.scenario_chart
+            scenario_chart: this.scenario_chart,
+            filters_schema: [{name: 'filter1', dimension: 'dim1'}]
         });
         chart.model.set({'filter1': 'dim1'});
         App.respond_json(server.requests[0], {'datapoints': []});
@@ -423,13 +421,11 @@ describe('ScenarioChartViewParameters', function() {
         var server = this.sandbox.server;
         var chart = new App.ScenarioChartView({
             model: this.model,
-            schema: {
-                facets: [
-                    {type: 'data-column', dimension: 'dim1'},
-                    {type: 'data-column', dimension: 'dim2'}
-                ],
-                chart_meta_labels: []
-            },
+            schema: {},
+            values_schema: [
+                {type: 'data-column', dimension: 'dim1'},
+                {type: 'data-column', dimension: 'dim2'}
+            ],
             scenario_chart: this.scenario_chart
         });
         var url = server.requests[0].url;
@@ -493,28 +489,30 @@ describe('ScenarioChartViewParameters', function() {
         var chart = new App.ScenarioChartView({
             model: this.model,
             schema: {
-                facets: [
-                    {type: 'select',
-                     name: 'indicator',
-                     label: 'Select one indicator',
-                     dimension: 'indicator',
-                     constraints: { }
-                    },
-                    {type: 'select',
-                     name: 'country',
-                     label: 'Select one indicator',
-                     dimension: 'ref-area',
-                     constraints: {
-                         'indicator': 'indicator'
-                     }},
-                     {type: 'data-column', dimension: 'dimension1'},
-                     {type: 'data-column', dimension: 'value1'}
-                ],
                 multiple_series: 'country',
                 chart_meta_labels: [
                     {targets: ['label1'], filter_name: 'indicator', type: 'label'}
                 ]
             },
+            filters_schema: [
+                {type: 'select',
+                 name: 'indicator',
+                 label: 'Select one indicator',
+                 dimension: 'indicator',
+                 constraints: { }
+                },
+                {type: 'select',
+                 name: 'country',
+                 label: 'Select one indicator',
+                 dimension: 'ref-area',
+                 constraints: {
+                     'indicator': 'indicator'
+                 }},
+            ],
+            values_schema: [
+                 {type: 'data-column', dimension: 'dimension1'},
+                 {type: 'data-column', dimension: 'value1'}
+            ],
             scenario_chart: this.scenario_chart
         });
         this.model.set({
@@ -530,23 +528,26 @@ describe('ScenarioChartViewParameters', function() {
 
     it('should fetch all series from an AllValuesFilter', function() {
         var loadstate = new Backbone.Model();
-        var facets = [
-            {type: 'all-values',
-             dimension: 'ref-area', name: 'ref-area'},
-            {type: 'data-column', dimension: 'value'}
-        ];
-        var filter = new App.AllValuesFilter(_({
+        var filter = new App.AllValuesFilter({
             model: this.model,
-            loadstate: loadstate
-        }).extend(facets[0]));
+            loadstate: loadstate,
+            type: 'all-values',
+            dimension: 'ref-area',
+            name: 'ref-area'
+        });
         var chart = new App.ScenarioChartView({
             model: this.model,
             loadstate: loadstate,
             schema: {
-                facets: facets,
                 multiple_series: 'ref-area'
             },
-            scenario_chart: this.scenario_chart
+            scenario_chart: this.scenario_chart,
+            filters_schema: [
+                {type: 'all-values', dimension: 'ref-area', name: 'ref-area'}
+            ],
+            values_schema: [
+                {type: 'data-column', dimension: 'value'}
+            ]
         });
         var country_options = [{'notation': 'area1'}, {'notation': 'area2'}];
         var url_param = App.testing.url_param;
@@ -582,28 +583,30 @@ describe('ScenarioChartView', function() {
         this.chart = new App.ScenarioChartView({
             model: this.model,
             schema: {
-                facets: [
-                    {name: 'indicator',
-                     label: 'Select indicator',
-                     dimension: 'dim1',
-                    },
-                    {name: 'unit-measure',
-                     label: 'Select unit of measure',
-                     dimension: 'dim2',
-                    },
-                    {name: 'time-period',
-                     label: 'Select period',
-                     dimension: 'dim3',
-                    },
-                    {type: 'data-column', dimension: 'ref-area'},
-                    {type: 'data-column', dimension: 'value'}
-                ],
                 chart_meta_labels: [
                     {targets: ['extra_label'],
                      filter_name: 'time-period',
                      type: 'label'}
                 ]
             },
+            filters_schema: [
+                {name: 'indicator',
+                 label: 'Select indicator',
+                 dimension: 'dim1',
+                },
+                {name: 'unit-measure',
+                 label: 'Select unit of measure',
+                 dimension: 'dim2',
+                },
+                {name: 'time-period',
+                 label: 'Select period',
+                 dimension: 'dim3',
+                }
+            ],
+            values_schema: [
+                {type: 'data-column', dimension: 'ref-area'},
+                {type: 'data-column', dimension: 'value'}
+            ],
             scenario_chart: this.scenario_chart
         });
         this.model.set({
@@ -658,14 +661,18 @@ describe('ScenarioChartView', function() {
     it('should make a single data query and then filter in JS', function() {
         var scenario_chart = sinon.spy();
         var model = new Backbone.Model();
-        var facets = [{name: 'filter1', dimension: 'dim1'},
-                      {name: 'filter2', dimension: 'dim2'},
-                      {name: 'filter3', dimension: 'dim3', on_client: true},
-                      {type: 'data-column', dimension: 'dim4'}];
         var chart = new App.ScenarioChartView({
             model: model,
-            schema: {facets: facets},
-            scenario_chart: scenario_chart
+            schema: {},
+            scenario_chart: scenario_chart,
+            filters_schema: [
+                {name: 'filter1', dimension: 'dim1'},
+                {name: 'filter2', dimension: 'dim2'},
+                {name: 'filter3', dimension: 'dim3', on_client: true}
+            ],
+            values_schema: [
+                {type: 'data-column', dimension: 'dim4'}
+            ]
         });
         model.set({'filter1': 'f1v',
                    'filter2': 'f2v',
