@@ -136,22 +136,11 @@ App.format_series = function (data, sort, type, percent){
 
 }
 
-App.format_plotLines = function(series, type){
+App.format_plotLines = function(series, chart_type){
     var resp = _.object([
         ['x', 0],
         ['y', 0]]);
-    if (! type){
-        type = 'length';
-    }
-    if (type == 'length'){
-        if (series.length % 2 == 0){
-            resp.x = series.length/2;
-        }
-        else{
-            resp.x = (series.length-1)/2;
-        }
-    }
-    else if(type == 'value') {
+    if (chart_type.multiseries){
         var values = _.chain(series).pluck('data').map(function(serie){
             var min =  _.object([
                 ['x', _.chain(serie).pluck('x').min().value()],
@@ -181,6 +170,39 @@ App.format_plotLines = function(series, type){
             ]);
         }).value();
         resp.x = (values.min.x + values.max.x)/2;
+        resp.y = (values.min.y + values.max.y)/2;
+    }
+    else{
+        if (series.length % 2 == 0){
+            resp.x = series.length/2;
+        }
+        else{
+            resp.x = (series.length-1)/2;
+        }
+        var values = _.chain(series).map(function(item){
+            var min =  _.object([
+                ['y', item['y']]
+            ]);
+            var max =  _.object([
+                ['y', item['y']]
+            ]);
+
+            return _.object([
+                ['min', min],
+                ['max', max]
+            ]);
+        }).reduce(function(memo, item){
+            var min = _.object([
+                ['y', _([item.min.y, memo.min.y]).min()],
+            ]);
+            var max = _.object([
+                ['y', _([item.max.y, memo.max.y]).max()],
+            ]);
+            return _.object([
+                ['min', min],
+                ['max', max]
+            ]);
+        }).value();
         resp.y = (values.min.y + values.max.y)/2;
     }
     return resp;

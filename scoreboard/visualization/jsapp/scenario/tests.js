@@ -187,15 +187,18 @@ describe('ChartSeriesPreparation', function() {
          { 'name': 'Belgium',
            'code': 'BE',
            'y': 0}];
-        var plotlines = App.format_plotLines(series);
+        var chart_type = {multiseries: false, x: 'discrete', y: 'continuos'};
+        var plotlines = App.format_plotLines(series, chart_type);
         expect(plotlines.x).to.equal(1);
+        expect(plotlines.y).to.equal(0.5);
 
         // ODD SERIES
         _(series).push(
          { 'name': 'Bulgaria',
            'code': 'BG',
            'y': 2});
-        plotlines = App.format_plotLines(series, 'length');
+        var chart_type = {multiseries: false, x: 'discrete', y: 'continuous'};
+        plotlines = App.format_plotLines(series, chart_type);
         expect(plotlines.x).to.equal(1);
     });
 
@@ -221,7 +224,8 @@ describe('ChartSeriesPreparation', function() {
             ]
          },
         ]
-        var plotlines = App.format_plotLines(series, 'value');
+        var chart_type = {multiseries: true, x: 'discrete', y: 'cont'};
+        var plotlines = App.format_plotLines(series, chart_type);
         expect(plotlines.x).to.equal(1.5);
 
         // ODD SERIES
@@ -235,7 +239,8 @@ describe('ChartSeriesPreparation', function() {
               }
             ]
          });
-        plotlines = App.format_plotLines(series, 'value');
+        var chart_type = {multiseries: true, x: 'discrete', y: 'cont'};
+        plotlines = App.format_plotLines(series, chart_type);
         expect(plotlines.x).to.equal(2);
     });
 });
