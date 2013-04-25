@@ -387,8 +387,9 @@ App.AnnotationsView = Backbone.View.extend({
     render: function() {
         var data = [];
         var requests = [];
-        _(this.schema['annotations']['filters']).each(function(filter, key) {
-            var source = this.schema.annotations.source;
+        var annotations = this.schema['annotations'] || {};
+        _(annotations['filters']).each(function(filter, key) {
+            var source = annotations.source;
             var args = {};
             args['dimension'] = this.dimensions_mapping[filter.name];
             var facet_values = this.model.get(filter.name);
@@ -412,7 +413,7 @@ App.AnnotationsView = Backbone.View.extend({
         var ajax_calls = $.when.apply($, requests);
         ajax_calls.done(_.bind(function() {
             if(data != []) {
-                var blocks_order = _(this.schema.annotations.filters).pluck('name');
+                var blocks_order = _(annotations.filters).pluck('name');
                 var blocks = _.chain(data).sortBy(function(item){
                     return _(blocks_order).indexOf(item['filter_name']);
                 }).map(function(item){
