@@ -175,18 +175,44 @@ function compute_plotLines(coord, series, axis_type){
 
 App.add_plotLines = function(chartOptions, series, chart_type){
     if (_(chart_type).has('x')){
-        chartOptions.xAxis.plotLines = [{
-                    color: '#FF0000',
-                    width: 2,
-                    value: compute_plotLines('x', series, chart_type['x'])
-        }];
+        if (_(chartOptions.xAxis).isArray()){
+            _(chartOptions.xAxis).each(function(axis){
+                _(axis).extend({
+                    plotLines: [{
+                        color: '#FF0000',
+                        width: 2,
+                        value: compute_plotLines('x', series, chart_type['x'])
+                    }]
+                });
+            });
+        }
+        else{
+            chartOptions.xAxis.plotLines = [{
+                        color: '#FF0000',
+                        width: 2,
+                        value: compute_plotLines('x', series, chart_type['x'])
+            }];
+        }
     }
     if (_(chart_type).has('y')){
-        chartOptions.yAxis.plotLines = [{
-                    color: '#FF0000',
-                    width: 2,
-                    value: compute_plotLines('y', series, chart_type['y'])
-        }];
+        if (_(chartOptions.yAxis).isArray()){
+            _(chartOptions.yAxis).each(function(axis){
+                _(axis).extend({
+                    plotLines: [{
+                        color: '#FF0000',
+                        width: 2,
+                        value: compute_plotLines('y', series, chart_type['y'])
+                    }]
+                });
+            });
+        }
+        else{
+            chartOptions.yAxis.plotLines = [{
+                        color: '#FF0000',
+                        width: 2,
+                        value: compute_plotLines('y', series, chart_type['y'])
+            }];
+        }
     }
     return chartOptions;
 }

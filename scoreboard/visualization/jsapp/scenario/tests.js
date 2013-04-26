@@ -339,10 +339,8 @@ describe('ScenarioChartViewParameters', function() {
         var chart_type = {x: 'categories', y: 'values'};
 
         var chartOptions = {
-            xAxis: {
-            },
-            yAxis: {
-            }
+            xAxis: { },
+            yAxis: { }
         }
 
         chartOptions = App.add_plotLines(chartOptions, series, chart_type);
@@ -354,6 +352,27 @@ describe('ScenarioChartViewParameters', function() {
             }]
         );
         expect(chartOptions.yAxis.plotLines).to.deep.equal(
+            [{
+                color: '#FF0000',
+                width: 2,
+                value: 0.5,
+            }]
+        );
+
+        var chartOptions = {
+            xAxis: [{ }, { }],
+            yAxis: [{ }, { }]
+        }
+
+        chartOptions = App.add_plotLines(chartOptions, series, chart_type);
+        expect(chartOptions.xAxis[1].plotLines).to.deep.equal(
+            [{
+                color: '#FF0000',
+                width: 2,
+                value: 1,
+            }]
+        );
+        expect(chartOptions.yAxis[1].plotLines).to.deep.equal(
             [{
                 color: '#FF0000',
                 width: 2,
