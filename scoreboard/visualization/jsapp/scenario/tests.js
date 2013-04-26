@@ -251,13 +251,26 @@ describe('ChartSeriesPreparation', function() {
               {
                 'name': 'BG',
                 'x': 3,
-                'y': 2
+                'y': 3
               }
             ]
          });
         var chart_type = {x: 'values', y: 'values'};
         plotlines = App.add_plotLines(chartOptions, series, chart_type);
         expect(plotlines.xAxis.plotLines[0].value).to.equal(2);
+        expect(plotlines.yAxis.plotLines[0].value).to.equal(2);
+
+        var chartOptions = {
+            xAxis: {
+            },
+            yAxis: {
+            }
+        }
+
+        var chart_type = {x: 'values'};
+        plotlines = App.add_plotLines(chartOptions, series, chart_type);
+        expect(plotlines.xAxis.plotLines[0].value).to.equal(2);
+        expect(plotlines.yAxis.plotLines).to.equal(undefined);
     });
 });
 
@@ -301,12 +314,14 @@ describe('ScenarioChartViewParameters', function() {
             model: this.model,
             schema: {
                 facets: [],
-                plotlines: true
+                plotlines: {x: 'categories', y: 'values'}
             },
             scenario_chart: this.scenario_chart
         });
         App.respond_json(server.requests[0], {'datapoints': []});
-        expect(this.scenario_chart.args[0][1]['plotlines']).to.equal(true);
+        expect(this.scenario_chart.args[0][1]['plotlines']).to.deep.equal(
+            {x: 'categories', y: 'values'}
+        );
 
         var series = [
             {data:

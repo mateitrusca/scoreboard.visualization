@@ -174,16 +174,20 @@ function compute_plotLines(coord, series, axis_type){
 }
 
 App.add_plotLines = function(chartOptions, series, chart_type){
-    chartOptions.xAxis.plotLines = [{
-                color: '#FF0000',
-                width: 2,
-                value: compute_plotLines('x', series, chart_type['x'])
-    }];
-    chartOptions.yAxis.plotLines = [{
-                color: '#FF0000',
-                width: 2,
-                value: compute_plotLines('y', series, chart_type['y'])
-    }];
+    if (_(chart_type).has('x')){
+        chartOptions.xAxis.plotLines = [{
+                    color: '#FF0000',
+                    width: 2,
+                    value: compute_plotLines('x', series, chart_type['x'])
+        }];
+    }
+    if (_(chart_type).has('y')){
+        chartOptions.yAxis.plotLines = [{
+                    color: '#FF0000',
+                    width: 2,
+                    value: compute_plotLines('y', series, chart_type['y'])
+        }];
+    }
     return chartOptions;
 }
 
