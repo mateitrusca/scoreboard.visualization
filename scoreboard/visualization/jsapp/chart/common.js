@@ -173,46 +173,37 @@ function compute_plotLines(coord, series, axis_type){
     return (values.min + values.max)/2;
 }
 
+function format_plotline(axis, value){
+    if (_(axis).isArray()){
+        _(axis).each(function(item){
+            _(item).extend({
+                plotLines: [{
+                    color: '#FF0000',
+                    width: 2,
+                    value: value
+                }]
+            });
+        });
+    }
+    else{
+        _(axis).extend({
+            plotLines: [{
+                color: '#FF0000',
+                width: 2,
+                value: value
+            }]
+        });
+    }
+}
+
 App.add_plotLines = function(chartOptions, series, chart_type){
     if (_(chart_type).has('x')){
-        if (_(chartOptions.xAxis).isArray()){
-            _(chartOptions.xAxis).each(function(axis){
-                _(axis).extend({
-                    plotLines: [{
-                        color: '#FF0000',
-                        width: 2,
-                        value: compute_plotLines('x', series, chart_type['x'])
-                    }]
-                });
-            });
-        }
-        else{
-            chartOptions.xAxis.plotLines = [{
-                        color: '#FF0000',
-                        width: 2,
-                        value: compute_plotLines('x', series, chart_type['x'])
-            }];
-        }
+        var value = compute_plotLines('x', series, chart_type['x']);
+        format_plotline(chartOptions.xAxis, value);
     }
     if (_(chart_type).has('y')){
-        if (_(chartOptions.yAxis).isArray()){
-            _(chartOptions.yAxis).each(function(axis){
-                _(axis).extend({
-                    plotLines: [{
-                        color: '#FF0000',
-                        width: 2,
-                        value: compute_plotLines('y', series, chart_type['y'])
-                    }]
-                });
-            });
-        }
-        else{
-            chartOptions.yAxis.plotLines = [{
-                        color: '#FF0000',
-                        width: 2,
-                        value: compute_plotLines('y', series, chart_type['y'])
-            }];
-        }
+        var value = compute_plotLines('y', series, chart_type['y']);
+        format_plotline(chartOptions.yAxis, value);
     }
     return chartOptions;
 }
