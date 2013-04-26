@@ -173,13 +173,18 @@ function compute_plotLines(coord, series, axis_type){
     return (values.min + values.max)/2;
 }
 
-App.add_plotLines = function(series, chart_type){
-    var resp = _.object([
-        ['x', 0],
-        ['y', 0]]);
-    resp.x = compute_plotLines('x', series, chart_type['x']);
-    resp.y = compute_plotLines('y', series, chart_type['y']);
-    return resp;
+App.add_plotLines = function(chartOptions, series, chart_type){
+    chartOptions.xAxis.plotLines = [{
+                color: '#FF0000',
+                width: 2,
+                value: compute_plotLines('x', series, chart_type['x'])
+    }];
+    chartOptions.yAxis.plotLines = [{
+                color: '#FF0000',
+                width: 2,
+                value: compute_plotLines('y', series, chart_type['y'])
+    }];
+    return chartOptions;
 }
 
 })();

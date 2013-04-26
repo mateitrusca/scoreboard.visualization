@@ -193,9 +193,15 @@ describe('ChartSeriesPreparation', function() {
             }
         ];
         var chart_type = {x: 'categories', y: 'values'};
-        var plotlines = App.add_plotLines(series, chart_type);
-        expect(plotlines.x).to.equal(1);
-        expect(plotlines.y).to.equal(0.5);
+        var chartOptions = {
+            xAxis: {
+            },
+            yAxis: {
+            }
+        }
+        var plotlines = App.add_plotLines(chartOptions, series, chart_type);
+        expect(plotlines.xAxis.plotLines[0].value).to.equal(1);
+        expect(plotlines.yAxis.plotLines[0].value).to.equal(0.5);
 
         // ODD SERIES
         _(series[0]['data']).push(
@@ -203,8 +209,8 @@ describe('ChartSeriesPreparation', function() {
            'code': 'BG',
            'y': 2});
         var chart_type = {x: 'categories', y: 'values'};
-        plotlines = App.add_plotLines(series, chart_type);
-        expect(plotlines.x).to.equal(1);
+        var plotlines = App.add_plotLines(chartOptions, series, chart_type);
+        expect(plotlines.xAxis.plotLines[0].value).to.equal(1);
     });
 
     it('should compute the values for plot lines (two dimensions)', function(){
@@ -229,9 +235,15 @@ describe('ChartSeriesPreparation', function() {
             ]
          },
         ]
+        var chartOptions = {
+            xAxis: {
+            },
+            yAxis: {
+            }
+        }
         var chart_type = {x: 'values', y: 'values'};
-        var plotlines = App.add_plotLines(series, chart_type);
-        expect(plotlines.x).to.equal(1.5);
+        var plotlines = App.add_plotLines(chartOptions, series, chart_type);
+        expect(plotlines.xAxis.plotLines[0].value).to.equal(1.5);
         // ODD SERIES
         _(series).push(
          { 'name': 'Bulgaria',
@@ -244,8 +256,8 @@ describe('ChartSeriesPreparation', function() {
             ]
          });
         var chart_type = {x: 'values', y: 'values'};
-        plotlines = App.add_plotLines(series, chart_type);
-        expect(plotlines.x).to.equal(2);
+        plotlines = App.add_plotLines(chartOptions, series, chart_type);
+        expect(plotlines.xAxis.plotLines[0].value).to.equal(2);
     });
 });
 
@@ -280,6 +292,58 @@ describe('ScenarioChartViewParameters', function() {
         var url = server.requests[0].url;
         expect(_(chart.meta_labels).pluck('targets')).to.deep.equal(
             [['dyn_lbl']]
+        );
+    });
+
+    it('should add plotlines to the chart', function() {
+        var server = this.sandbox.server;
+        var chart = new App.ScenarioChartView({
+            model: this.model,
+            schema: {
+                facets: [],
+                plotlines: true
+            },
+            scenario_chart: this.scenario_chart
+        });
+        App.respond_json(server.requests[0], {'datapoints': []});
+        expect(this.scenario_chart.args[0][1]['plotlines']).to.equal(true);
+
+        var series = [
+            {data:
+                [
+                 { 'name': 'Austria',
+                   'code': 'AT',
+                   'y': 1},
+                 { 'name': 'Belgium',
+                   'code': 'BE',
+                   'y': 0}],
+             name: 'serie_name'
+            }
+        ];
+
+        var chart_type = {x: 'categories', y: 'values'};
+
+        var chartOptions = {
+            xAxis: {
+            },
+            yAxis: {
+            }
+        }
+
+        chartOptions = App.add_plotLines(chartOptions, series, chart_type);
+        expect(chartOptions.xAxis.plotLines).to.deep.equal(
+            [{
+                color: '#FF0000',
+                width: 2,
+                value: 1,
+            }]
+        );
+        expect(chartOptions.yAxis.plotLines).to.deep.equal(
+            [{
+                color: '#FF0000',
+                width: 2,
+                value: 0.5,
+            }]
         );
     });
 
