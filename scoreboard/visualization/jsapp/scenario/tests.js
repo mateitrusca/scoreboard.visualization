@@ -61,7 +61,7 @@ describe('ChartSeriesPreparation', function() {
         expect(result[0]['data'][0]['name']).equal('Austria');
     });
 
-    it('should sort the snapshots by label', function(){
+    it('should sort the series by label', function(){
         var series = [
             {data: [],
              label:'2001'},
@@ -81,6 +81,68 @@ describe('ChartSeriesPreparation', function() {
         }]);
     });
 
+    it('should append missing series points with null y values', function(){
+        var series = [
+            {data: [
+                    { "code": "DK",
+                      "label": "Denmark",
+                      "value": 0.4808
+                    },
+                    { "code": "AT",
+                      "label": "Austria",
+                      "value": 0.4808
+                    },
+                   ],
+             label:'2000'},
+            {data: [
+                    { "code": "DK",
+                      "label": "Denmark",
+                      "value": 0.4808
+                    }
+                   ],
+             label:'2001'},
+            {data: [
+                    { "code": "DK",
+                      "label": "Denmark",
+                      "value": 0.4808
+                    },
+                    { "code": "AT",
+                      "label": "Austria",
+                      "value": 0.4808
+                    },
+                   ],
+             label:'2002'}
+        ];
+        var sort = _.object(["sort_by", "order"],['label', 1]);
+        var result = App.format_series(series, sort);
+        expect(_(_(result).pluck('data')[1]).pluck('y')).to.deep.equal([
+            null, 0.4808]);
+    })
+
+    it('should sort the xy series by label', function(){
+        var series = [
+            {data: [
+                    { "code": "DK",
+                      "label": "Denmark",
+                      "value": {
+                          "x": 0.4808,
+                          "y": 0.4808
+                      }
+                    },
+                    { "code": "AT",
+                      "label": "Austria",
+                      "value": {
+                          "x": 0.4808,
+                          "y": 0.4808
+                      }
+                    },
+                    ],
+             label:'2000'},
+        ];
+        var result = App.format_series(series, false, 'xy');
+        expect(_(result).pluck('name')).to.deep.equal(['Austria', 'Denmark']);
+    });
+
     it('should return an array of data for each year', function(){
         var series = [
             {data: [],
@@ -98,7 +160,8 @@ describe('ChartSeriesPreparation', function() {
                'code': 'AT',
                'y': 0.4808}],
             [{ 'name': 'Austria',
-               'y': 0}]
+               'code': 'AT',
+               'y': null}]
         ]);
     });
 
@@ -113,6 +176,101 @@ describe('ChartSeriesPreparation', function() {
         ];
         var result = App.format_series(series, false, '', [true]);
         expect(result[0]['data'][0]['y']).to.deep.equal(48.08);
+    });
+
+    it('should compute the values for plot lines (single dimension)', function(){
+        // EVEN SERIES
+        var series = [
+            {data:
+                [
+                 { 'name': 'Austria',
+                   'code': 'AT',
+                   'y': 1},
+                 { 'name': 'Belgium',
+                   'code': 'BE',
+                   'y': 0}],
+             name: 'serie_name'
+            }
+        ];
+        var chart_type = {x: 'categories', y: 'values'};
+        var chartOptions = {
+            xAxis: {
+            },
+            yAxis: {
+            }
+        }
+        var plotlines = App.add_plotLines(chartOptions, series, chart_type);
+        expect(plotlines.xAxis.plotLines[0].value).to.equal(1);
+        expect(plotlines.yAxis.plotLines[0].value).to.equal(0.5);
+
+        // ODD SERIES
+        _(series[0]['data']).push(
+         { 'name': 'Bulgaria',
+           'code': 'BG',
+           'y': 2});
+        var chart_type = {x: 'categories', y: 'values'};
+        var plotlines = App.add_plotLines(chartOptions, series, chart_type);
+        expect(plotlines.xAxis.plotLines[0].value).to.equal(1);
+    });
+
+    it('should compute the values for plot lines (two dimensions)', function(){
+        // EVEN SERIES
+        var series = [
+         { 'name': 'Austria',
+           'data': [
+              {
+                'name': 'AS',
+                'x': 1,
+                'y': 1
+              }
+            ]
+         },
+         { 'name': 'Belgium',
+           'data': [
+              {
+                'name': 'BE',
+                'x': 2,
+                'y': 2
+              }
+            ]
+         },
+        ]
+        var chartOptions = {
+            xAxis: {
+            },
+            yAxis: {
+            }
+        }
+        var chart_type = {x: 'values', y: 'values'};
+        var plotlines = App.add_plotLines(chartOptions, series, chart_type);
+        expect(plotlines.xAxis.plotLines[0].value).to.equal(1.5);
+        // ODD SERIES
+        _(series).push(
+         { 'name': 'Bulgaria',
+           'data': [
+              {
+                'name': 'BG',
+                'x': 3,
+                'y': 3
+              }
+            ]
+         });
+        var chart_type = {x: 'values', y: 'values'};
+        plotlines = App.add_plotLines(chartOptions, series, chart_type);
+        expect(plotlines.xAxis.plotLines[0].value).to.equal(2);
+        expect(plotlines.yAxis.plotLines[0].value).to.equal(2);
+
+        var chartOptions = {
+            xAxis: {
+            },
+            yAxis: {
+            }
+        }
+
+        var chart_type = {x: 'values'};
+        plotlines = App.add_plotLines(chartOptions, series, chart_type);
+        expect(plotlines.xAxis.plotLines[0].value).to.equal(2);
+        expect(plotlines.yAxis.plotLines).to.equal(undefined);
     });
 });
 
@@ -147,6 +305,79 @@ describe('ScenarioChartViewParameters', function() {
         var url = server.requests[0].url;
         expect(_(chart.meta_labels).pluck('targets')).to.deep.equal(
             [['dyn_lbl']]
+        );
+    });
+
+    it('should add plotlines to the chart', function() {
+        var server = this.sandbox.server;
+        var chart = new App.ScenarioChartView({
+            model: this.model,
+            schema: {
+                facets: [],
+                plotlines: {x: 'categories', y: 'values'}
+            },
+            scenario_chart: this.scenario_chart
+        });
+        App.respond_json(server.requests[0], {'datapoints': []});
+        expect(this.scenario_chart.args[0][1]['plotlines']).to.deep.equal(
+            {x: 'categories', y: 'values'}
+        );
+
+        var series = [
+            {data:
+                [
+                 { 'name': 'Austria',
+                   'code': 'AT',
+                   'y': 1},
+                 { 'name': 'Belgium',
+                   'code': 'BE',
+                   'y': 0}],
+             name: 'serie_name'
+            }
+        ];
+
+        var chart_type = {x: 'categories', y: 'values'};
+
+        var chartOptions = {
+            xAxis: { },
+            yAxis: { }
+        }
+
+        chartOptions = App.add_plotLines(chartOptions, series, chart_type);
+        expect(chartOptions.xAxis.plotLines).to.deep.equal(
+            [{
+                color: '#FF0000',
+                width: 2,
+                value: 1,
+            }]
+        );
+        expect(chartOptions.yAxis.plotLines).to.deep.equal(
+            [{
+                color: '#FF0000',
+                width: 2,
+                value: 0.5,
+            }]
+        );
+
+        var chartOptions = {
+            xAxis: [{ }, { }],
+            yAxis: [{ }, { }]
+        }
+
+        chartOptions = App.add_plotLines(chartOptions, series, chart_type);
+        expect(chartOptions.xAxis[1].plotLines).to.deep.equal(
+            [{
+                color: '#FF0000',
+                width: 2,
+                value: 1,
+            }]
+        );
+        expect(chartOptions.yAxis[1].plotLines).to.deep.equal(
+            [{
+                color: '#FF0000',
+                width: 2,
+                value: 0.5,
+            }]
         );
     });
 

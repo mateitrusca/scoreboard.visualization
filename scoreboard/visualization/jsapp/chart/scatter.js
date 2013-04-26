@@ -113,6 +113,9 @@ App.chart_library['scatter'] = function(container, options) {
         series: series
     };
 
+    if (options['plotlines']){
+        chartOptions = App.add_plotLines(chartOptions, series, options['plotlines']);
+    }
     var chart = new Highcharts.Chart(chartOptions);
 
 };

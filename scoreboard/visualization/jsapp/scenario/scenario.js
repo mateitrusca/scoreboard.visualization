@@ -154,7 +154,8 @@ App.ScenarioChartView = Backbone.View.extend({
                 return this.value;
             },
             'group_labels': {},
-            'unit_is_pc': unit_is_pc
+            'unit_is_pc': unit_is_pc,
+            'plotlines': this.schema['plotlines'] || false
         };
 
         var multiseries_values = null;
@@ -324,6 +325,7 @@ App.GraphControlsView = Backbone.View.extend({
                 else{
                     options['auto'] = false;
                     clearInterval(this.interval);
+                    options['value'] = 0;
                     this.model.set(options);
                     this.render();
                 }

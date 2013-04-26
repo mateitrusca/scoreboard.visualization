@@ -92,26 +92,33 @@ App.format_series = function (data, sort, type, percent){
                              ['y', value]]);
         };
 
-        var labels_collection = []
+        var diffs_collection = {}
         var series = _.chain(data).map(function(item){
             var data = _(item['data']).map(extract_data);
-            labels_collection = _.chain(item['data']).
-                                    pluck('label').
-                                    union(labels_collection).
-                                    value();
+            _.chain(item['data']).
+              each(function(item){
+                  _(diffs_collection).extend(
+                    _.object([[item['code'], item]])
+                  )
+              }).
+              uniq(diffs_collection).
+              value();
             return _.object(
                     ['name', 'data'],
                     [item['label'], data]);
         }).map(function(item){
             var serie = item['data'];
-            _.chain(labels_collection).
-                difference(_(serie).pluck('name')).
-                each(function(diff_label){
-                    _(serie).push(
-                        _.object([['name', diff_label],
-                                  ['y', 0]])
-                    );
-                });
+            _.chain(diffs_collection).
+              keys().
+              difference(_(serie).pluck('code')).
+              each(function(diff_code){
+                  var data = diffs_collection[diff_code];
+                  _(serie).push(
+                      _.object([['code', data['code']],
+                                ['name', data['label']],
+                                ['y', null]])
+                  );
+              });
             if (sort && !first_serie){
                 serie = sort_serie(serie, sort);
                 first_serie = serie;
@@ -123,10 +130,82 @@ App.format_series = function (data, sort, type, percent){
             return _.object(
                     ['name', 'data'],
                     [item['name'], serie]);
-        }).sortBy('name').value();
+        }).value();
     }
-    return series;
+    return _(series).sortBy('name');
 
+}
+
+function compute_plotLines(coord, series, axis_type){
+    var values = _.chain(series);
+    var map_stage = function(serie){
+        if (axis_type == 'categories'){
+            var value = null;
+            if (serie.length % 2 == 0){
+                value = serie.length/2;
+            }
+            else{
+                value = (serie.length-1)/2;
+            }
+            return _.object([
+                ['min', value],
+                ['max', value]
+            ]);
+        }
+        else{
+            var min =  _.chain(serie).pluck(coord).min().value();
+            var max = _.chain(serie).pluck(coord).max().value();
+            return _.object([
+                ['min', min],
+                ['max', max]
+            ]);
+        }
+    };
+    var reduce_stage = function(memo, item){
+        var min = _([item.min, memo.min]).min();
+        var max = _([item.max, memo.max]).max();
+        return _.object([
+            ['min', min],
+            ['max', max]
+        ]);
+    };
+    values = values.pluck('data').map(map_stage).reduce(reduce_stage).value();
+    return (values.min + values.max)/2;
+}
+
+function format_plotline(axis, value){
+    if (_(axis).isArray()){
+        _(axis).each(function(item){
+            _(item).extend({
+                plotLines: [{
+                    color: '#FF0000',
+                    width: 2,
+                    value: value
+                }]
+            });
+        });
+    }
+    else{
+        _(axis).extend({
+            plotLines: [{
+                color: '#FF0000',
+                width: 2,
+                value: value
+            }]
+        });
+    }
+}
+
+App.add_plotLines = function(chartOptions, series, chart_type){
+    if (_(chart_type).has('x')){
+        var value = compute_plotLines('x', series, chart_type['x']);
+        format_plotline(chartOptions.xAxis, value);
+    }
+    if (_(chart_type).has('y')){
+        var value = compute_plotLines('y', series, chart_type['y']);
+        format_plotline(chartOptions.yAxis, value);
+    }
+    return chartOptions;
 }
 
 })();
