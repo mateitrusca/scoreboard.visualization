@@ -181,24 +181,29 @@ describe('ChartSeriesPreparation', function() {
     it('should compute the values for plot lines (single dimension)', function(){
         // EVEN SERIES
         var series = [
-         { 'name': 'Austria',
-           'code': 'AT',
-           'y': 1},
-         { 'name': 'Belgium',
-           'code': 'BE',
-           'y': 0}];
-        var chart_type = {multiseries: false, x: 'discrete', y: 'continuos'};
-        var plotlines = App.format_plotLines(series, chart_type);
+            {data:
+                [
+                 { 'name': 'Austria',
+                   'code': 'AT',
+                   'y': 1},
+                 { 'name': 'Belgium',
+                   'code': 'BE',
+                   'y': 0}],
+             name: 'serie_name'
+            }
+        ];
+        var chart_type = {x: 'categories', y: 'values'};
+        var plotlines = App.add_plotLines(series, chart_type);
         expect(plotlines.x).to.equal(1);
         expect(plotlines.y).to.equal(0.5);
 
         // ODD SERIES
-        _(series).push(
+        _(series[0]['data']).push(
          { 'name': 'Bulgaria',
            'code': 'BG',
            'y': 2});
-        var chart_type = {multiseries: false, x: 'discrete', y: 'continuous'};
-        plotlines = App.format_plotLines(series, chart_type);
+        var chart_type = {x: 'categories', y: 'values'};
+        plotlines = App.add_plotLines(series, chart_type);
         expect(plotlines.x).to.equal(1);
     });
 
@@ -224,10 +229,9 @@ describe('ChartSeriesPreparation', function() {
             ]
          },
         ]
-        var chart_type = {multiseries: true, x: 'discrete', y: 'cont'};
-        var plotlines = App.format_plotLines(series, chart_type);
+        var chart_type = {x: 'values', y: 'values'};
+        var plotlines = App.add_plotLines(series, chart_type);
         expect(plotlines.x).to.equal(1.5);
-
         // ODD SERIES
         _(series).push(
          { 'name': 'Bulgaria',
@@ -239,8 +243,8 @@ describe('ChartSeriesPreparation', function() {
               }
             ]
          });
-        var chart_type = {multiseries: true, x: 'discrete', y: 'cont'};
-        plotlines = App.format_plotLines(series, chart_type);
+        var chart_type = {x: 'values', y: 'values'};
+        plotlines = App.add_plotLines(series, chart_type);
         expect(plotlines.x).to.equal(2);
     });
 });
