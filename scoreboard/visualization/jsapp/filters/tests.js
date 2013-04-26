@@ -411,8 +411,7 @@ describe('modular filters', function() {
                 schema: schema
             });
             var filters_box = App.visualization.filters_box;
-            var group_template = new sinon.spy();
-            filters_box.filters[1].group_template = group_template;
+            var group_template = sinon.spy(filters_box.filters[1], 'group_template');
             App.respond_json(server.requests[0],
                     {'options': [
                         {'short_label': 'lbl',
@@ -432,6 +431,9 @@ describe('modular filters', function() {
                     }]
                 }]
             );
+            var target = filters_box.filters[1]
+            expect(target.$el.find('optgroup').attr('label')).to.equal('lbl');
+            expect(target.$el.find('option').attr('value')).to.equal('one');
         });
 
         it("should omit its grouper=='any' when making options requests", function(){

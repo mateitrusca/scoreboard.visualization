@@ -117,7 +117,7 @@ App.SelectFilter = Backbone.View.extend({
                 _(relevant_args).extend(pair);
             }
         });
-        relevant_args = _({rev: this.data_revision}).extend(relevant_args);
+        relevant_args['rev'] = this.data_revision;
         return $.get(this.cube_url + '/' + view_name, relevant_args);
     },
 
@@ -136,15 +136,13 @@ App.SelectFilter = Backbone.View.extend({
             var groups = _.zip(_(grouped_data).keys(), _(grouped_data).values())
             var grouper = _.chain(App.visualization.filters_box.filters).
               findWhere({name: App.groupers[this.name]}).value();
-            template_data = _(template_data).extend({
-                'groups': _.chain(groups).map(function(item){
-                                var label = grouper.options_labels[item[0]].short_label ||
-                                            grouper.options_labels[item[0]].label;
-                                var out = _.object(['group', 'options'],
-                                                   [label, item[1]]);
-                                return out;
-                            }).sortBy('group').value()
-            });
+            template_data['groups'] = _.chain(groups).map(function(item){
+                var label = grouper.options_labels[item[0]].short_label ||
+                            grouper.options_labels[item[0]].label;
+                var out = _.object(['group', 'options'],
+                                   [label, item[1]]);
+                return out;
+            }).sortBy('group').value();
             this.$el.html(this.group_template(template_data));
         }
         else{
