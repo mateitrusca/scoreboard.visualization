@@ -4,10 +4,19 @@
 (function($) {
 "use strict";
 
+App.groupers =  {
+    'indicator': 'indicator-group',
+    'breakdown': 'breakdown-group'
+};
+
 
 App.SelectFilter = Backbone.View.extend({
 
     template: App.get_template('filters/dropdown.html'),
+
+    simple_template: App.get_template('filters/dropdown.html'),
+
+    group_template: App.get_template('filters/dropdown_with_groups.html'),
 
     events: {
         'change select': 'on_selection_change'
@@ -57,6 +66,12 @@ App.SelectFilter = Backbone.View.extend({
                 incomplete = true;
             }
             args[other_dimension] = other_option;
+            if(other_option == 'any' && App.groupers[this.dimension] == other_dimension){
+                this.display_in_groups = true;
+            }
+            else{
+                this.display_in_groups = false;
+            }
         }, this);
         if(incomplete) {
             this.$el.html("--");
@@ -66,9 +81,27 @@ App.SelectFilter = Backbone.View.extend({
         this.ajax = this.fetch_options(args);
         this.ajax.done(_.bind(function(data) {
             this.ajax = null;
+            if (this.options.include_wildcard){
+                _(data['options']).push(
+                    _.object([
+                        ['group_notation', null],
+                        ['label', 'Any'],
+                        ['short_label', 'Any'],
+                        ['notation', 'any'],
+                        ['uri', null],
+                    ]
+                ));
+            }
             this.dimension_options = _(data['options']).sortBy(function(item){
                 return item['notation']
             });
+            this.options_labels = {};
+            _(this.dimension_options).each(function(opt){
+                  if (opt['notation'] != 'any'){
+                      _(this.options_labels).extend(
+                          _.object([[opt['notation'], opt]]));
+                  }
+            }, this);
             this.adjust_value();
             this.render();
             this.loadstate.set(this.name, false);
@@ -77,8 +110,15 @@ App.SelectFilter = Backbone.View.extend({
 
     fetch_options: function(args) {
         var view_name = this.xy ? 'dimension_values_xy' : 'dimension_values';
-        args = _({rev: this.data_revision}).extend(args);
-        return $.get(this.cube_url + '/' + view_name, args);
+        var relevant_args = {}
+        _(args).each(function(value, key){
+            if (value!='any'){
+                var pair = _.object([[key, value]]);
+                _(relevant_args).extend(pair);
+            }
+        });
+        relevant_args['rev'] = this.data_revision;
+        return $.get(this.cube_url + '/' + view_name, relevant_args);
     },
 
     render: function() {
@@ -87,10 +127,27 @@ App.SelectFilter = Backbone.View.extend({
             var selected = (item['notation'] == selected_value);
             return _({'selected': selected}).extend(item);
         });
-        this.$el.html(this.template({
+        var template_data = {
             'dimension_options': options,
             'filter_label': this.label
-        }));
+        }
+        if (this.display_in_groups){
+            var grouped_data = _(this.dimension_options).groupBy('group_notation');
+            var groups = _.zip(_(grouped_data).keys(), _(grouped_data).values())
+            var grouper = _.chain(App.visualization.filters_box.filters).
+              findWhere({name: App.groupers[this.name]}).value();
+            template_data['groups'] = _.chain(groups).map(function(item){
+                var label = grouper.options_labels[item[0]].short_label ||
+                            grouper.options_labels[item[0]].label;
+                var out = _.object(['group', 'options'],
+                                   [label, item[1]]);
+                return out;
+            }).sortBy('group').value();
+            this.$el.html(this.group_template(template_data));
+        }
+        else{
+            this.$el.html(this.simple_template(template_data));
+        }
     },
 
     on_selection_change: function() {
@@ -197,6 +254,7 @@ App.FiltersBox = Backbone.View.extend({
                 default_all: item['default_all'],
                 dimension: item['dimension'],
                 position: item['position'],
+                include_wildcard: item['include_wildcard'],
                 constraints: item['constraints']
             });
             this.filters.push(filter);

@@ -76,6 +76,18 @@ App.ScenarioChartView = Backbone.View.extend({
         return requests;
     },
 
+    request_datapoints: function(url, args){
+        var relevant_args = {}
+        _(args).each(function(value, key){
+            if (value!='any'){
+                var pair = _.object([[key, value]]);
+                _(relevant_args).extend(pair);
+            }
+        });
+        relevant_args = _({rev: this.data_revision}).extend(relevant_args);
+        return $.get(url, relevant_args);
+    },
+
     load_chart: function() {
         _(this.requests_in_flight).forEach(function(req) { req.abort(); });
         this.requests_in_flight = [];
@@ -156,7 +168,7 @@ App.ScenarioChartView = Backbone.View.extend({
             multiseries_values = this.model.get(this.multiseries_name);
             requests = _(multiseries_values).map(function(value) {
                 args[groupby_dimension] = value;
-                return $.get(datapoints_url, args);
+                return this.request_datapoints(datapoints_url, args);
             }, this);
             var groupby_facet = _(this.schema.facets).find(function(facet, idx){
                 return facet['name'] == groupby_dimension;
@@ -188,7 +200,7 @@ App.ScenarioChartView = Backbone.View.extend({
         }
         else {
             multiseries_values = [null];
-            requests.push($.get(datapoints_url, args));
+            requests.push(this.request_datapoints(datapoints_url, args));
         }
 
         var client_filter_options = [];

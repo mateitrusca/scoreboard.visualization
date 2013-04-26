@@ -252,6 +252,263 @@ describe('modular filters', function() {
 
     });
 
+    describe('AnyOption', function(){
+        "use strict";
+
+        beforeEach(function() {
+            this.sandbox = sinon.sandbox.create();
+            this.sandbox.useFakeServer();
+        });
+
+        afterEach(function () {
+            this.sandbox.restore();
+        });
+
+        it('should include "any" option if allowed in schema', function() {
+            var server = this.sandbox.server;
+            var view = new App.SelectFilter({
+                model: new Backbone.Model(),
+                name: 'this-time-period',
+                dimension: 'time-period',
+                include_wildcard: true
+            });
+            App.respond_json(server.requests[0], {'options': []});
+            expect(_(view.dimension_options).pluck('notation')).to.deep.equal(['any']);
+            expect(view.$el.find('option').val()).to.deep.equal('any');
+        });
+
+        it("should have a mapping to groupers on App", function(){
+            expect(App.groupers).to.deep.equal({
+                'indicator': 'indicator-group',
+                'breakdown': 'breakdown-group'
+            });
+        });
+
+        it("should set display_in_groups to true", function(){
+            var server = this.sandbox.server;
+            var schema = {
+                facets: [
+                    {type: 'select',
+                     name: 'indicator-group',
+                     label: 'Indicator group',
+                     dimension: 'indicator-group',
+                     include_wildcard: true,
+                     constraints: {}},
+                    {type: 'select',
+                     name: 'indicator',
+                     label: 'Indicator',
+                     dimension: 'indicator',
+                     constraints: {
+                         'indicator-group': 'indicator-group'
+                     }}
+                ]
+            };
+
+            var box = $('<div></div>');
+            box.html(App.get_template('scenario.html')());
+
+            var filter_loadstate = new Backbone.Model();
+
+            this.model = new Backbone.Model();
+            var filters_box = new App.FiltersBox({
+                el: $('#the-filters', box)[0],
+                model: this.model,
+                loadstate: filter_loadstate,
+                schema: schema
+            });
+
+            this.model.set('indicator-group', 'option');
+            expect(filters_box.filters[1].display_in_groups).to.equal(false);
+            this.model.set('indicator-group', 'any');
+            expect(filters_box.filters[1].display_in_groups).to.equal(true);
+        });
+
+        it("should use the group template if its grouper's value is 'any'", function(){
+            var server = this.sandbox.server;
+            var schema = {
+                facets: [
+                    {type: 'select',
+                     name: 'indicator-group',
+                     label: 'Indicator group',
+                     dimension: 'indicator-group',
+                     include_wildcard: true,
+                     constraints: {}},
+                    {type: 'select',
+                     name: 'indicator',
+                     label: 'Indicator',
+                     dimension: 'indicator',
+                     constraints: {
+                         'indicator-group': 'indicator-group'
+                     }}
+                ]
+            };
+
+            var box = $('<div></div>');
+            box.html(App.get_template('scenario.html')());
+
+            var filter_loadstate = new Backbone.Model();
+
+            this.model = new Backbone.Model();
+            App.visualization = sinon.mock();
+            App.visualization.filters_box = new App.FiltersBox({
+                el: $('#the-filters', box)[0],
+                model: this.model,
+                loadstate: filter_loadstate,
+                schema: schema
+            });
+            var filters_box = App.visualization.filters_box;
+            var simple_template = new sinon.spy();
+            var group_template = new sinon.spy();
+            filters_box.filters[1].simple_template = simple_template;
+            filters_box.filters[1].group_template = group_template;
+
+            App.respond_json(server.requests[0],
+                    {'options': [
+                        {'short_label': 'lbl',
+                         'notation': 'group'}
+                     ]
+                    });
+            var options = [{'label': "Option One", 'notation': 'one', 'group_notation': 'group'}];
+            App.respond_json(server.requests[1], {'options': options});
+            expect(group_template.callCount).to.equal(1);
+            this.model.set('indicator-group', 'option');
+            App.respond_json(server.requests[2], {'options': options});
+            expect(simple_template.callCount).to.equal(1);
+            expect(group_template.callCount).to.equal(1);
+        });
+
+        it("should format the data for the group template", function(){
+            var server = this.sandbox.server;
+            var schema = {
+                facets: [
+                    {type: 'select',
+                     name: 'indicator-group',
+                     label: 'Indicator group',
+                     dimension: 'indicator-group',
+                     include_wildcard: true,
+                     constraints: {}},
+                    {type: 'select',
+                     name: 'indicator',
+                     label: 'Indicator',
+                     dimension: 'indicator',
+                     constraints: {
+                         'indicator-group': 'indicator-group'
+                     }}
+                ]
+            };
+
+            var box = $('<div></div>');
+            box.html(App.get_template('scenario.html')());
+
+            var filter_loadstate = new Backbone.Model();
+
+            this.model = new Backbone.Model();
+            App.visualization = sinon.mock();
+            App.visualization.filters_box = new App.FiltersBox({
+                el: $('#the-filters', box)[0],
+                model: this.model,
+                loadstate: filter_loadstate,
+                schema: schema
+            });
+            var filters_box = App.visualization.filters_box;
+            var group_template = sinon.spy(filters_box.filters[1], 'group_template');
+            App.respond_json(server.requests[0],
+                    {'options': [
+                        {'short_label': 'lbl',
+                         'notation': 'group'}
+                     ]
+                    });
+            var options = [{'label': "Option One", 'notation': 'one', 'group_notation': 'group'}];
+            App.respond_json(server.requests[1], {'options': options});
+            expect(group_template.callCount).to.equal(1);
+            expect(group_template.args[0][0]['groups']).to.deep.equal(
+                [{
+                    group: 'lbl',
+                    options: [{
+                        group_notation: 'group',
+                        label: 'Option One',
+                        notation: 'one'
+                    }]
+                }]
+            );
+            var target = filters_box.filters[1]
+            expect(target.$el.find('optgroup').attr('label')).to.equal('lbl');
+            expect(target.$el.find('option').attr('value')).to.equal('one');
+        });
+
+        it("should omit its grouper=='any' when making options requests", function(){
+            var server = this.sandbox.server;
+            var schema = {
+                facets: [
+                    {type: 'select',
+                     name: 'indicator-group',
+                     label: 'Indicator group',
+                     dimension: 'indicator-group',
+                     include_wildcard: true,
+                     constraints: {}},
+                    {type: 'select',
+                     name: 'indicator',
+                     label: 'Indicator',
+                     dimension: 'indicator',
+                     constraints: {
+                         'indicator-group': 'indicator-group'
+                     }}
+                ]
+            };
+
+            var box = $('<div></div>');
+            box.html(App.get_template('scenario.html')());
+
+            var filter_loadstate = new Backbone.Model();
+
+            this.model = new Backbone.Model();
+            var filters_box = new App.FiltersBox({
+                el: $('#the-filters', box)[0],
+                model: this.model,
+                loadstate: filter_loadstate,
+                schema: schema
+            });
+
+            this.model.set('indicator-group', 'any');
+            App.respond_json(server.requests[0], {'options': []});
+            expect(url_param(server.requests[1].url, 'indicator-group')).
+                to.equal(null);
+        })
+
+        it("should omit 'any' options when making data requests", function(){
+            var server = this.sandbox.server;
+            var schema = {
+                facets: [
+                    {type: 'select',
+                     name: 'indicator-group',
+                     label: 'Indicator group',
+                     dimension: 'indicator-group',
+                     include_wildcard: true,
+                     constraints: {}},
+                    {type: 'select',
+                     name: 'indicator',
+                     label: 'Indicator',
+                     dimension: 'indicator',
+                     constraints: {
+                         'indicator-group': 'indicator-group'
+                     }}
+                ]
+            };
+            var scenario_chart = sinon.spy();
+            this.model = new Backbone.Model();
+            this.model.set({'indicator-group': 'any',
+                            'indicator': 'option'});
+            var chart = new App.ScenarioChartView({
+                model: this.model,
+                schema: schema,
+                scenario_chart: scenario_chart
+            });
+            expect(url_param(server.requests[0].url, 'indicator-group')).
+                to.equal(null);
+        });
+
+    });
+
     describe('FilterPositioning', function() {
         "use strict";
 

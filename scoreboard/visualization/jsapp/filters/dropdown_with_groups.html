@@ -1,0 +1,16 @@
+<label>{{ filter_label }}</label>
+<select>
+{{# groups }}
+  <optgroup label="{{ this.group }}">
+    {{# this.options }}
+      <option {{# if selected }} selected="selected" {{/ if }} value="{{ notation }}">
+        {{# if short_label }}
+          {{ short_label }}
+        {{ else }}
+          {{ label }}
+        {{/ if }}
+      </option>
+    {{/ this.options }}
+  </optgroup>
+{{/ groups }}
+</select>

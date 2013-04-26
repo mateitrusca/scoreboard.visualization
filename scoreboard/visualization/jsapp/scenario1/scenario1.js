@@ -11,6 +11,7 @@ App.scenario1_filters_schema = {
          name: 'indicator-group',
          label: 'Indicator group',
          dimension: 'indicator-group',
+         include_wildcard: true,
          constraints: {}},
         {type: 'select',
          name: 'indicator',
