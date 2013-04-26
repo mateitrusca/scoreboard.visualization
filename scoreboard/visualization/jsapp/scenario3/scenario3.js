@@ -123,6 +123,7 @@ App.scenario3_filters_schema = {
     },
     chart_type: 'scatter',
     xy: true,
+    plotlines: {x: 'values', y: 'values'},
     chart_meta_labels: [
         {targets: ['indicator_x_label'],
          filter_name: 'x-indicator',
