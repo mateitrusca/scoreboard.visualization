@@ -83,6 +83,7 @@ App.scenario1_filters_schema = {
                   {name: 'unit-measure', part: 'label'}]
     },
     chart_type: 'columns',
+    plotlines: {y: 'values'},
     chart_meta_labels: [
         {targets: ['x_title'],
          filter_name: 'indicator',
