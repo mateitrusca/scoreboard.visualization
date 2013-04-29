@@ -74,8 +74,8 @@ describe('FacetsEditor', function() {
             });
 
             expect(_(model.get('facets')).pluck('dimension')).to.deep.equal([
-                'indicator-group', 'indicator', 'breakdown-group',
-                'breakdown', 'unit-measure', 'ref-area', 'time-period',
+                'indicator-group', 'indicator', 'breakdown-group', 'breakdown',
+                'unit-measure', 'ref-area', 'time-period', 'value'
             ]);
         });
 
@@ -101,7 +101,9 @@ describe('FacetsEditor', function() {
 
         it('should create missing facets when loading config', function() {
             var model = new Backbone.Model({
-                facets: [{name: 'time-period', type: 'multiple_select'}]
+                facets: [{name: 'time-period',
+                          dimension: 'time-period',
+                          type: 'multiple_select'}]
             });
             var view = new NoAjaxFacetsEditor({
                 model: model,
@@ -110,8 +112,8 @@ describe('FacetsEditor', function() {
                     {type_label: 'dimension', notation: 'time-period'}
                 ]
             });
-            expect(_(model.get('facets')).pluck('name')).to.deep.equal(
-                ['time-period', 'indicator']);
+            expect(_(model.get('facets')).pluck('dimension')).to.deep.equal(
+                ['time-period', 'indicator', 'value']);
         });
 
         it('should remove facets with no corresponding dimension', function() {
@@ -122,7 +124,8 @@ describe('FacetsEditor', function() {
                 model: model,
                 dimensions: []
             });
-            expect(model.get('facets').length).to.equal(0);
+            expect(_(model.get('facets')).pluck('dimension')).to.deep.equal(
+                ['value']);
         });
 
     });

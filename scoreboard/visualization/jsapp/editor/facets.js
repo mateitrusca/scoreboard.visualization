@@ -168,6 +168,7 @@ App.FacetsEditor = Backbone.View.extend({
         this.facets.forEach(function(facet) {
             value.push(facet.toJSON());
         });
+        value.push({type: 'all-values', dimension: 'value'});
         this.model.set('facets', value);
     },
 
