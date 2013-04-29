@@ -12,7 +12,8 @@ App.FacetEditorField = Backbone.View.extend({
     template: App.get_template('editor/facet-field.html'),
 
     events: {
-        'change [name="type"]': 'on_input_change'
+        'change [name="type"]': 'on_input_change',
+        'click .facet-sort': 'on_click_sort'
     },
 
     type_options: [
@@ -45,6 +46,15 @@ App.FacetEditorField = Backbone.View.extend({
         this.model.set({
             type: this.$el.find('[name="type"]').val()
         });
+    },
+
+    on_click_sort: function(evt) {
+        evt.preventDefault();
+        var direction = $(evt.target).data('sort-direction');
+        var idx = this.model.collection.indexOf(this.model);
+        var new_idx = idx + (direction == 'down' ? +1 : -1);
+        if(new_idx < 0) { new_idx = 0; }
+        this.model.collection.move(this.model, new_idx);
     }
 
 });
@@ -105,7 +115,7 @@ App.FacetsEditor = Backbone.View.extend({
                 this.facets.remove(facet);
             }
         }, this);
-        this.facets.on('change', this.apply_changes, this);
+        this.facets.on('change sort', this.apply_changes, this);
         this.apply_changes();
     },
 
@@ -122,13 +132,11 @@ App.FacetsEditor = Backbone.View.extend({
             }
             facet_model.set('constraints', constraints);
             var facet = facet_model.toJSON();
+            var name = facet['name'];
+            facets_above[name] = name;
             if(facet['type'] == 'multiple_select' ||
                facet['type'] == 'all-values') {
                 found_multiple_value = true;
-            }
-            var name = facet['name'];
-            facets_above[name] = name;
-            if(facet['type'] == 'all-values') {
                 var option = _({}).extend(facet);
                 if(name == this.model.get('multiple_series')) {
                     option['selected'] = true;
