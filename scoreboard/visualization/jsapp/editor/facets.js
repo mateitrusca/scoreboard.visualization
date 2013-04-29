@@ -170,6 +170,10 @@ App.FacetsEditor = Backbone.View.extend({
         });
         value.push({type: 'all-values', dimension: 'value'});
         this.model.set('facets', value);
+        var category_facet = this.facet_roles.category_facet;
+        if(category_facet) {
+            this.model.set('category_facet', category_facet['name']);
+        }
     },
 
     apply_changes: function() {

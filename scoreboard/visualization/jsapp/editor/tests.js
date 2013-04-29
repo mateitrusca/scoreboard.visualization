@@ -282,6 +282,21 @@ describe('FacetsEditor', function() {
             expect(view.facet_roles.category_facet['name']).to.equal('dim4');
         });
 
+        it('should write category facet on model', function() {
+            var model = new Backbone.Model({
+                facets: [
+                    {name: 'dim3', type: 'all-values'},
+                    {name: 'dim4', type: 'all-values'}
+                ],
+                multiple_series: 'dim3'
+            });
+            var view = new NoAjaxFacetsEditor({
+                model: model,
+                dimensions: four_dimensions
+            });
+            expect(model.get('category_facet')).to.equal('dim4');
+        });
+
     });
 
     describe('constraints between filters', function() {
