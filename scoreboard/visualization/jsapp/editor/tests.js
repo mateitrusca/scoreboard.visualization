@@ -328,6 +328,26 @@ describe('FacetsEditor', function() {
             });
         });
 
+        it('should generate no constraints below multiple_select', function() {
+            var view = new NoAjaxFacetsEditor({
+                model: new Backbone.Model({
+                    facets: [{name: 'dim2', type: 'multiple_select'}]
+                }),
+                dimensions: four_dimensions
+            });
+            expect(view.model.get('facets')[3]['constraints']).to.be.null;
+        });
+
+        it('should generate no constraints below all-values', function() {
+            var view = new NoAjaxFacetsEditor({
+                model: new Backbone.Model({
+                    facets: [{name: 'dim2', type: 'all-values'}]
+                }),
+                dimensions: four_dimensions
+            });
+            expect(view.model.get('facets')[3]['constraints']).to.be.null;
+        });
+
     });
 
 });

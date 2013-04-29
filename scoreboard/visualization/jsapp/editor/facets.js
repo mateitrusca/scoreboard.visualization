@@ -112,13 +112,22 @@ App.FacetsEditor = Backbone.View.extend({
     compute_facet_roles: function() {
         var series_options = [];
         var no_multiple_series = true;
+        var found_multiple_value = false;
         var free_dimensions = [];
         var facets_above = {};
         this.facets.forEach(function(facet_model) {
-            facet_model.set('constraints', _({}).extend(facets_above));
-            var name = facet_model.get('name');
-            facets_above[name] = name;
+            var constraints = null;
+            if(! found_multiple_value) {
+                constraints = _({}).extend(facets_above)
+            }
+            facet_model.set('constraints', constraints);
             var facet = facet_model.toJSON();
+            if(facet['type'] == 'multiple_select' ||
+               facet['type'] == 'all-values') {
+                found_multiple_value = true;
+            }
+            var name = facet['name'];
+            facets_above[name] = name;
             if(facet['type'] == 'all-values') {
                 var option = _({}).extend(facet);
                 if(name == this.model.get('multiple_series')) {
