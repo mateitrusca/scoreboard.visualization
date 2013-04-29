@@ -58,10 +58,11 @@ App.scenario6_filters_schema = {
               'breakdown': 'breakdown',
               'unit-measure': 'unit-measure'
           },
-          multiple_series: true,
           name: 'time-period'},
-         {type: 'data-column', dimension: 'value'}
+         {type: 'all-values', dimension: 'value'}
     ],
+    category_facet: 'ref-area',
+    multiple_series: 'time-period',
     annotations: {
         source: '/dimension_value_metadata',
         filters: [{name: 'indicator', part: 'label'},

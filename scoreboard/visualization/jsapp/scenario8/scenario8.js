@@ -48,7 +48,6 @@ App.scenario8_filters_schema = {
           }},
          {type: 'all-values',
           dimension: 'breakdown',
-          multiple_series: true,
           label: 'Breakdown',
           name: 'breakdown',
           constraints: {
@@ -58,9 +57,11 @@ App.scenario8_filters_schema = {
              'indicator': 'indicator',
              'ref-area': 'ref-area'
           }},
-         {type: 'data-column', dimension: 'time-period'},
-         {type: 'data-column', dimension: 'value'}
+         {type: 'all-values', dimension: 'time-period'},
+         {type: 'all-values', dimension: 'value'}
     ],
+    category_facet: 'time-period',
+    multiple_series: 'breakdown',
     annotations: {
         source: '/dimension_value_metadata',
         filters: [{name: 'indicator', part: 'label'},

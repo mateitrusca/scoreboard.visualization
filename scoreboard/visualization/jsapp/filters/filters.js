@@ -239,8 +239,7 @@ App.FiltersBox = Backbone.View.extend({
         this.loadstate = options['loadstate'] || new Backbone.Model();
         this.cube_url = options['cube_url'];
         this.data_revision = options['data_revision'] || '';
-        _(options['schema']['facets']).forEach(function(item) {
-            if(item['type'] == 'data-column') { return; }
+        _(options['filters_schema']).forEach(function(item) {
             var cls = this.filter_types[item['type']];
             var filter = new cls({
                 model: this.model,

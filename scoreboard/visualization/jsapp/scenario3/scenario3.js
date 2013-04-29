@@ -108,8 +108,9 @@ App.scenario3_filters_schema = {
              'y-unit-measure': 'y-unit-measure',
              'time-period': 'time-period'
          }},
-         {type: 'data-column', dimension: 'value', xy: true}
+         {type: 'all-values', dimension: 'value', xy: true}
     ],
+    category_facet: 'ref-area',
     annotations: {
         source: '/dimension_value_metadata',
         filters: [{name: 'x-indicator', part: 'label'},
