@@ -22,6 +22,9 @@ App.FacetEditorField = Backbone.View.extend({
     ],
 
     initialize: function(options) {
+        if(! this.model.has('type')) {
+            this.model.set('type', this.type_options[0]['value']);
+        }
         this.render();
     },
 
@@ -53,7 +56,14 @@ App.FacetsEditor = Backbone.View.extend({
 
     title: "Facets",
 
+    events: {
+        'change [name="multiple_series"]': 'on_multiple_series_change'
+    },
+
     initialize: function(options) {
+        if(! this.model.has('multiple_series')) {
+            this.model.set('multiple_series', null);
+        }
         this.render();
         this.get_dimensions();
     },
@@ -95,9 +105,52 @@ App.FacetsEditor = Backbone.View.extend({
                 this.facets.remove(facet);
             }
         }, this);
-        this.facets.on('change', this.save_value, this);
-        this.save_value();
-        this.render();
+        this.facets.on('change', this.apply_changes, this);
+        this.apply_changes();
+    },
+
+    compute_facet_roles: function() {
+        var series_options = [];
+        var no_multiple_series = true;
+        var found_multiple_value = false;
+        var free_dimensions = [];
+        var facets_above = {};
+        this.facets.forEach(function(facet_model) {
+            var constraints = null;
+            if(! found_multiple_value) {
+                constraints = _({}).extend(facets_above)
+            }
+            facet_model.set('constraints', constraints);
+            var facet = facet_model.toJSON();
+            if(facet['type'] == 'multiple_select' ||
+               facet['type'] == 'all-values') {
+                found_multiple_value = true;
+            }
+            var name = facet['name'];
+            facets_above[name] = name;
+            if(facet['type'] == 'all-values') {
+                var option = _({}).extend(facet);
+                if(name == this.model.get('multiple_series')) {
+                    option['selected'] = true;
+                    no_multiple_series = false;
+                }
+                else {
+                    free_dimensions.push(option);
+                }
+                series_options.push(option);
+            }
+        }, this);
+        if(no_multiple_series) {
+            this.model.set('multiple_series', null);
+        }
+        this.facet_roles = {
+            series_options: series_options,
+            err_too_few: (free_dimensions.length < 1),
+            err_too_many: (free_dimensions.length > 1),
+            category_facet: (free_dimensions.length == 1
+                             ? free_dimensions[0]
+                             : null)
+        }
     },
 
     render: function() {
@@ -105,10 +158,17 @@ App.FacetsEditor = Backbone.View.extend({
             this.$el.html('loading...');
             return;
         }
-        this.$el.html(this.template());
+        var context = {
+            series_options: this.facet_roles.series_options,
+            err_too_few: this.facet_roles.err_too_few,
+            err_too_many: this.facet_roles.err_too_many,
+            category_facet: this.facet_roles.category_facet
+        };
+        this.$el.html(this.template(context));
         this.facets.forEach(function(facet_model) {
             var facet_view = this.facet_views[facet_model.cid];
             this.$el.find('tbody').append(facet_view.el);
+            facet_view.delegateEvents();
         }, this);
     },
 
@@ -117,7 +177,24 @@ App.FacetsEditor = Backbone.View.extend({
         this.facets.forEach(function(facet) {
             value.push(facet.toJSON());
         });
+        value.push({type: 'all-values', dimension: 'value'});
         this.model.set('facets', value);
+        var category_facet = this.facet_roles.category_facet;
+        if(category_facet) {
+            this.model.set('category_facet', category_facet['name']);
+        }
+    },
+
+    apply_changes: function() {
+        this.compute_facet_roles();
+        this.save_value();
+        this.render();
+    },
+
+    on_multiple_series_change: function() {
+        var select = this.$el.find('[name="multiple_series"]');
+        this.model.set('multiple_series', select.val() || null);
+        this.apply_changes();
     }
 
 });

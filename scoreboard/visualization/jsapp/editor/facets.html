@@ -19,10 +19,25 @@
 
   <label>
     Multiple series by
-    <select>
-      <option>--</option>
-      <option value="time-period">Year</option>
-      <option value="ref-area" selected>Country</option>
+    <select name="multiple_series">
+      <option value="">--</option>
+      {{# series_options }}
+        <option value="{{ name }}"
+          {{# if selected }}selected{{/ if }}
+          >{{ label }}</option>
+      {{/ series_options }}
     </select>
   </label>
+
+  {{# if err_too_few }}
+    too few facets remaining for categories
+  {{/ if }}
+
+  {{# if err_too_many }}
+    too many facets remaining for categories
+  {{/ if }}
+
+  {{# if category_facet }}
+    categories by {{ category_facet.label }}
+  {{/ if }}
 </div>
