@@ -508,13 +508,11 @@ describe('modular filters', function() {
             this.schema = {
                 facets: [
                     {type: 'select',
-                     position: '.left_column',
                      name: 'indicator-group',
                      label: 'Indicator group',
                      dimension: 'indicator-group',
                      constraints: {}},
-                    {type: 'select',
-                     position: '.right_column',
+                    {type: 'multiple_select',
                      name: 'indicator',
                      label: 'Indicator',
                      dimension: 'indicator',
@@ -555,7 +553,7 @@ describe('modular filters', function() {
             expect($('.left_column', filters_box.$el).children().length).to.equal(1);
         });
 
-        it('should position filters according to configuration', function(){
+        it('should position filters according to their type', function(){
 
             var box = $('<div></div>');
             box.html(App.get_template('scenario.html')());

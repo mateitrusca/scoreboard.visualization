@@ -39,7 +39,6 @@ App.SelectFilter = Backbone.View.extend({
             this.model.on('change:' + other_name, this.update, this);
             this.loadstate.on('change:' + other_name, this.update, this);
         }, this);
-        this.position = options['position'];
         this.update();
     },
 
@@ -254,13 +253,12 @@ App.FiltersBox = Backbone.View.extend({
                 default_value: item['default_value'],
                 default_all: default_all,
                 dimension: item['dimension'],
-                position: item['position'],
                 include_wildcard: item['include_wildcard'],
                 constraints: item['constraints']
             });
             this.filters.push(filter);
-            if(filter.position){
-                $(filter.el).appendTo($(filter.position, this.$el));
+            if(item['type'] == 'multiple_select'){
+                $(filter.el).appendTo($('.right_column', this.$el));
             }
             else{
                 $(filter.el).appendTo($('.left_column', this.$el));

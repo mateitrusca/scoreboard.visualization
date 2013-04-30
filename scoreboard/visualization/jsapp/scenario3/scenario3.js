@@ -96,7 +96,6 @@ App.scenario3_filters_schema = {
          name: 'ref-area',
          label: 'Country / Countries',
          dimension: 'ref-area',
-         position: '.right_column',
          constraints: {
              'x-indicator':    'x-indicator',
              'x-breakdown':    'x-breakdown',
