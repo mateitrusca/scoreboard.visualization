@@ -114,7 +114,7 @@ App.scenario3_bubbles_filters_schema = {
              'breakdown':       'z-breakdown'
          }},
         {type: 'select',
-         xy: true,
+         xyz: true,
          name: 'time-period',
          label: "Year",
          dimension: 'time-period',
@@ -124,10 +124,13 @@ App.scenario3_bubbles_filters_schema = {
              'x-unit-measure': 'x-unit-measure',
              'y-indicator':    'y-indicator',
              'y-breakdown':    'y-breakdown',
-             'y-unit-measure': 'y-unit-measure'
+             'y-unit-measure': 'y-unit-measure',
+             'z-indicator':    'z-indicator',
+             'z-breakdown':    'z-breakdown',
+             'z-unit-measure': 'z-unit-measure'
          }},
         {type: 'multiple_select',
-         xy: true,
+         xyz: true,
          name: 'ref-area',
          on_client: true,
          label: 'Country / Countries',
@@ -141,9 +144,12 @@ App.scenario3_bubbles_filters_schema = {
              'y-indicator':    'y-indicator',
              'y-breakdown':    'y-breakdown',
              'y-unit-measure': 'y-unit-measure',
+             'z-indicator':    'z-indicator',
+             'z-breakdown':    'z-breakdown',
+             'z-unit-measure': 'z-unit-measure',
              'time-period': 'time-period'
          }},
-         {type: 'all-values', dimension: 'value', xy: true}
+         {type: 'all-values', dimension: 'value', xyz: true}
     ],
     category_facet: 'ref-area',
     annotations: {
@@ -158,7 +164,6 @@ App.scenario3_bubbles_filters_schema = {
                   {name: 'y-unit-measure', part: 'label'}]
     },
     chart_type: 'bubbles',
-    xy: true,
     xyz: true,
     plotlines: {x: 'values', y: 'values'},
     chart_meta_labels: [
