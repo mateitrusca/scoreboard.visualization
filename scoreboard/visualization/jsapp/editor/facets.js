@@ -171,6 +171,7 @@ App.FacetsEditor = Backbone.View.extend({
         this.$el.html(this.template(context));
         this.facets.forEach(function(facet_model) {
             var facet_view = this.facet_views[facet_model.cid];
+            facet_view.render();
             this.$el.find('tbody').append(facet_view.el);
             facet_view.delegateEvents();
         }, this);
