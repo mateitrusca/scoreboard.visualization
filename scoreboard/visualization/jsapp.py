@@ -17,7 +17,7 @@ def get_js_templates(parent=MODULE_PATH / 'jsapp'):
 
 
 jinja_env = jinja2.Environment()
-jinja_env.globals['JSAPP'] = '/++resource++scoreboard-jsapp'
+jinja_env.globals['JSAPP'] = '++resource++scoreboard-jsapp'
 jinja_env.globals['get_js_templates'] = get_js_templates
 jinja_env.filters['json'] = lambda v: jinja2.Markup(json.dumps(v))
 
