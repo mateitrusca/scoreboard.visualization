@@ -71,6 +71,10 @@ App.chart_library['columns'] = function(container, options) {
         series: series
     };
 
+    if (!options['legend']){
+        App.disable_legend(chartOptions);
+    }
+
     var chart = new Highcharts.Chart(chartOptions);
 };
 

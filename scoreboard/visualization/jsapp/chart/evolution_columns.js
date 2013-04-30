@@ -91,6 +91,10 @@ App.chart_library['evolution_columns'] = function(container, options) {
         chartOptions.yAxis['max'] = 100;
     }
 
+    if (!options['legend']){
+        App.disable_legend(chartOptions);
+    }
+
     var chart = new Highcharts.Chart(chartOptions);
 
     if(!App.chart_controls){
