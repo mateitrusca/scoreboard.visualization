@@ -50,7 +50,6 @@ App.scenario7_filters_schema = {
          name: 'ref-area',
          label: 'Country / Countries',
          dimension: 'ref-area',
-         default_all: true,
          position: '.right_column',
          constraints: {
              'unit-measure': 'unit-measure',

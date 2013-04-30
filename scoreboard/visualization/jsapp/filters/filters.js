@@ -239,8 +239,10 @@ App.FiltersBox = Backbone.View.extend({
         this.loadstate = options['loadstate'] || new Backbone.Model();
         this.cube_url = options['cube_url'];
         this.data_revision = options['data_revision'] || '';
+        var schema = options['schema'];
         _(options['filters_schema']).forEach(function(item) {
             var cls = this.filter_types[item['type']];
+            var default_all = (item['name'] == schema['category_facet']);
             var filter = new cls({
                 model: this.model,
                 loadstate: this.loadstate,
@@ -250,7 +252,7 @@ App.FiltersBox = Backbone.View.extend({
                 name: item['name'],
                 label: item['label'],
                 default_value: item['default_value'],
-                default_all: item['default_all'],
+                default_all: default_all,
                 dimension: item['dimension'],
                 position: item['position'],
                 include_wildcard: item['include_wildcard'],
