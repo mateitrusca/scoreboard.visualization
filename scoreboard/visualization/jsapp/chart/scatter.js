@@ -116,6 +116,11 @@ App.chart_library['scatter'] = function(container, options) {
     if (options['plotlines']){
         chartOptions = App.add_plotLines(chartOptions, series, options['plotlines']);
     }
+
+    if (!options['legend']){
+        App.disable_legend(chartOptions);
+    }
+
     var chart = new Highcharts.Chart(chartOptions);
 
 };

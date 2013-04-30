@@ -208,5 +208,12 @@ App.add_plotLines = function(chartOptions, series, chart_type){
     return chartOptions;
 }
 
+App.disable_legend = function(chartOptions, legend_options){
+    var disabled_legend = {
+        legend: {enabled: false}
+    };
+    _(chartOptions).extend(disabled_legend);
+}
+
 })();
 

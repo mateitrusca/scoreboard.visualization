@@ -69,6 +69,7 @@ App.scenario8_filters_schema = {
                   {name: 'unit-measure', part: 'label'}]
     },
     chart_type: 'lines',
+    legend: true,
     chart_meta_labels: [
         {targets: ['x_title'],
          filter_name: 'breakdown-group',

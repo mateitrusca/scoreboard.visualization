@@ -79,7 +79,8 @@ App.scenario7_filters_schema = {
                   {name: 'breakdown', part: 'label'},
                   {name: 'unit-measure', part: 'label'}]
     },
-    chart_type: 'split_columns',
+    chart_type: 'columns',
+    legend: true,
     chart_meta_labels: [
         {targets: ['x_title'],
          filter_name: 'indicator',
