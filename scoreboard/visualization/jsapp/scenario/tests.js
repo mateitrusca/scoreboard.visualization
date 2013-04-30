@@ -381,6 +381,17 @@ describe('ScenarioChartViewParameters', function() {
         );
     });
 
+    it('should add a legend', function() {
+        var chartOptions = {
+            xAxis: {},
+            legend: {
+                enabled: true
+            }
+        }
+        App.disable_legend(chartOptions);
+        expect(chartOptions.legend.enabled).to.equal(false);
+    });
+
     it('should build dimensions_mapping from received facets schema',
        function() {
         var chart = new App.ScenarioChartView({
