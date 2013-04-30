@@ -25,7 +25,7 @@ App.ScenarioChartView = Backbone.View.extend({
         this.client_filter = null;
         _(options.filters_schema).forEach(function(facet) {
             this.dimensions_mapping[facet['name']] = facet['dimension'];
-            if(facet['on_client']) {
+            if(facet['name'] == this.schema['category_facet']) {
                 this.client_filter = facet['name'];
                 this.columns.push(facet['dimension']);
             }

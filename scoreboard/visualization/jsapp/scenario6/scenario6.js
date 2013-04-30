@@ -39,11 +39,8 @@ App.scenario6_filters_schema = {
          }},
         {type: 'multiple_select',
          name: 'ref-area',
-         on_client: true,
          label: 'Countries',
          dimension: 'ref-area',
-         default_all: true,
-         position: '.right_column',
          constraints: {
              'indicator-group': 'indicator-group',
              'indicator': 'indicator',
