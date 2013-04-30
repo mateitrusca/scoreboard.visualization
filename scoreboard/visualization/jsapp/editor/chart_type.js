@@ -18,12 +18,12 @@ App.ChartTypeEditor = Backbone.View.extend({
     },
 
     chart_types: [
-        {label: "Bar", value: 'bars', disabled: true},
         {label: "Line", value: 'lines'},
         {label: "Column", value: 'columns'},
+        {label: "Column animation", value: 'evolution_columns'},
+        {label: "Bar", value: 'bars', disabled: true},
         {label: "Scatterplot", value: 'scatter'},
-        {label: "Map", value: 'map'},
-        {label: "Country Profile", value: 'country-profile', disabled: true}
+        {label: "Map", value: 'map'}
     ],
 
     initialize: function(options) {
