@@ -4,7 +4,6 @@
 (function() {
 "use strict";
 
-
 App.chart_library['columns'] = function(container, options) {
 
     var sort = _.object(["sort_by", "order"],['value', -1]);
@@ -63,22 +62,14 @@ App.chart_library['columns'] = function(container, options) {
             }
         },
         legend: {
-            enabled:false
+            enabled: true,
+            layout: "vertical"
         },
         tooltip: {
             formatter: options['tooltip_formatter']
         },
-        plotOptions: {
-            column: {
-                stacking: 'normal'
-            }
-        },
         series: series
     };
-
-    if (options['plotlines']){
-        chartOptions = App.add_plotLines(chartOptions, series, options['plotlines']);
-    }
 
     var chart = new Highcharts.Chart(chartOptions);
 };
