@@ -663,12 +663,12 @@ describe('ScenarioChartView', function() {
         var model = new Backbone.Model();
         var chart = new App.ScenarioChartView({
             model: model,
-            schema: {},
+            schema: {category_facet: 'filter3'},
             scenario_chart: scenario_chart,
             filters_schema: [
                 {name: 'filter1', dimension: 'dim1'},
                 {name: 'filter2', dimension: 'dim2'},
-                {name: 'filter3', dimension: 'dim3', on_client: true}
+                {name: 'filter3', dimension: 'dim3'}
             ],
             values_schema: [
                 {type: 'all-values', dimension: 'dim4'}
