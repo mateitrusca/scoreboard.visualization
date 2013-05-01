@@ -32,6 +32,9 @@ scoreboard.visualization.datacube.indicators = {
             'url': '@@dataset_details',
             'success': function(data){
                 self.renderDatasetDetails(data);
+            },
+            'complete': function(data){
+                jQuery('#indicatorsSpinner').remove();
             }
         });
     },

@@ -6,10 +6,8 @@
     <div class="dataset-manage bootstrap">
       <a class="btn btn-mini" tal:attributes="href string:${here/absolute_url}"><i class="icon-file"></i> Dataset</a>
       <a class="btn btn-mini btn-primary" tal:attributes="href string:${here/absolute_url}/visualizations"><i class="icon-tasks icon-white"></i> Charts</a>
-      <a class="btn btn-mini" href="/"><i class="icon-align-justify"></i> Datasets</a>
+      <a class="btn btn-mini" tal:attributes="href string:${here/absolute_url}/../"><i class="icon-align-justify"></i> Datasets</a>
     </div>
-
-    <div id="dataset-navigation" class="navigation-widget"></div>
     <br />
 
     <p id="dataset-description"></p>
@@ -26,11 +24,16 @@
               <th style="width:40%">Definition and scope</th>
               <th style="width:20%">Source</th></tr>
       </thead>
+
       <tbody>
       </tbody>
     </table>
 
+    <div class="indicatorsSpinner" id="indicatorsSpinner">Loading ...</div>
+
     <input type="hidden" id="dataset-value" tal:attributes="value here/dataset" />
+
+    <div id="dataset-navigation" class="navigation-widget"></div>
 
   </div>
 </html>
