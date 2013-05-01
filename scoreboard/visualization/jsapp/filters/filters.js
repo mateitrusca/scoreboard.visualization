@@ -127,7 +127,7 @@ App.SelectFilter = Backbone.View.extend({
             }
         });
         relevant_args['rev'] = this.data_revision;
-        return $.get(this.cube_url + '/' + view_name, relevant_args);
+        return $.getJSON(this.cube_url + '/' + view_name, relevant_args);
     },
 
     render: function() {

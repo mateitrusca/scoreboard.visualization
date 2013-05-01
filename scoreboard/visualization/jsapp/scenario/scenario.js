@@ -213,7 +213,7 @@ App.ScenarioChartView = Backbone.View.extend({
                     );
                 }, this);
             }
-            var labels_request = $.get(this.cube_url + '/dimension_values',
+            var labels_request = $.getJSON(this.cube_url + '/dimension_values',
                                        labels_args);
             labels_request.done(function(data) {
                 var results = data['options'];
