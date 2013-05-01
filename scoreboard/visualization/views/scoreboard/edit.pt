@@ -13,3 +13,7 @@
     });
   })(App.jQuery);
 "></script>
+
+<div class="bootstrap action-buttons">
+  <a tal:attributes="href python:view.context.absolute_url()" class="btn btn-info">View</a>
+</div>
