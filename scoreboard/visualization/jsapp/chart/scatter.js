@@ -135,6 +135,7 @@ App.chart_library['scatter'] = function(container, options) {
             App.chart_controls.$el.insertAfter(container);
         }else{
             App.chart_controls.chart = chart;
+            App.chart_controls.snapshots_data = series;
         };
     }
 
