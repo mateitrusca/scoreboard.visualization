@@ -88,7 +88,8 @@ App.chart_library['bubbles'] = function(container, options) {
             formatter: function() {
             return ('<b>'+ this.series.name +'</b><br/>x: '+
                 this.x + ' ' + options.meta_data['x_unit_label'] + '<br>y: '+
-                this.y + ' ' + options.meta_data['y_unit_label']
+                this.y + ' ' + options.meta_data['y_unit_label'] + '<br>z: '+
+                this.point.z + ' ' + options.meta_data['z_unit_label']
             )}
         },
         legend: {

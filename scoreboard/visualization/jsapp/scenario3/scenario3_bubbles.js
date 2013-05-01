@@ -181,6 +181,9 @@ App.scenario3_bubbles_filters_schema = {
          type: 'short_label'},
         {targets: ['y_unit_label'],
          filter_name: 'y-unit-measure',
+         type: 'short_label'},
+        {targets: ['z_unit_label'],
+         filter_name: 'z-unit-measure',
          type: 'short_label'}
     ]
 };
