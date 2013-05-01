@@ -111,13 +111,33 @@ App.chart_library['bubbles'] = function(container, options) {
                 }
             }
         },
-        series: series
+        series: series[0]
     };
 
     if (options['plotlines']){
         chartOptions = App.add_plotLines(chartOptions, series, options['plotlines']);
     }
+
+    if (!options['legend']){
+        App.disable_legend(chartOptions);
+    }
+
     var chart = new Highcharts.Chart(chartOptions);
+
+    if (options['animation']){
+        if(!App.chart_controls){
+            App.chart_controls = new App.GraphControlsView({
+                model: new Backbone.Model(),
+                chart: chart,
+                snapshots_data: series,
+                interval: window.interval_set,
+                multiseries: options['multiseries']
+            });
+            App.chart_controls.$el.insertAfter(container);
+        }else{
+            App.chart_controls.chart = chart;
+        };
+    }
 
 };
 

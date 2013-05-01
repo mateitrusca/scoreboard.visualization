@@ -110,7 +110,7 @@ App.chart_library['scatter'] = function(container, options) {
                 }
             }
         },
-        series: series
+        series: series[0]
     };
 
     if (options['plotlines']){

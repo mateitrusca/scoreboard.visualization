@@ -53,36 +53,38 @@ App.format_series = function (data, sort, type, percent){
             return this.point.name;
         };
 
-        var series = _(data[0]['data']).map(function(datapoint) {
-            var code = datapoint['code'];
-            var data = [{
-                'name': code,
-                'x': datapoint['value']['x'] * multiplicators[0],
-                'y': datapoint['value']['y'] * multiplicators[1]
-            }]
-            if (type == 'xyz'){
-                data[0]['z'] = datapoint['value']['z'] * multiplicators[1]
-            }
-            var output = {
-                'name': App.COUNTRY_NAME[code],
-                'color': countrycolor(code),
-                'data': data,
-                'marker': {
-                    'radius': 5,
-                    'symbol': 'circle',
-                    'states': {
-                        hover: {'enabled': true, 'lineColor': 'rgb(100,100,100)'}
-                    }
-                },
-                'dataLabels': {
-                    'enabled': true,
-                    'x': 16,
-                    'y': 4,
-                    'formatter': label_formatter
+        var series = _.chain(data).map(function(serie){
+            return _(serie['data']).map(function(datapoint) {
+                var code = datapoint['code'];
+                var data = [{
+                    'name': code,
+                    'x': datapoint['value']['x'] * multiplicators[0],
+                    'y': datapoint['value']['y'] * multiplicators[1]
+                }]
+                if (type == 'xyz'){
+                    data[0]['z'] = datapoint['value']['z'] * multiplicators[1]
                 }
-            }
-            return output
-        });
+                var output = {
+                    'name': App.COUNTRY_NAME[code],
+                    'color': countrycolor(code),
+                    'data': data,
+                    'marker': {
+                        'radius': 5,
+                        'symbol': 'circle',
+                        'states': {
+                            hover: {'enabled': true, 'lineColor': 'rgb(100,100,100)'}
+                        }
+                    },
+                    'dataLabels': {
+                        'enabled': true,
+                        'x': 16,
+                        'y': 4,
+                        'formatter': label_formatter
+                    }
+                }
+                return output
+            });
+        }).value();
     }else{
         var first_serie = false;
         var extract_data = function(series_item){

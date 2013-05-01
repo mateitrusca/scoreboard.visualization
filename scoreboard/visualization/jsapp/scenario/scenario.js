@@ -169,7 +169,9 @@ App.ScenarioChartView = Backbone.View.extend({
             },
             'group_labels': {},
             'unit_is_pc': unit_is_pc,
-            'plotlines': this.schema['plotlines'] || false
+            'plotlines': this.schema['plotlines'] || false,
+            'animation': this.schema['animation'] || false,
+            'multiseries': this.multiple_series
         };
 
         var multiseries_values = null;
@@ -298,11 +300,19 @@ App.GraphControlsView = Backbone.View.extend({
         this.interval = options['interval'];
         this.model.on('change', this.render, this);
         this.model.set({'value': 0, 'auto': false});
+        this.multiseries = options['multiseries'] || false;
     },
 
     update_chart: function(){
         var data = this.snapshots_data[this.model.get('value')];
-        this.chart.series[0].update({'data': data['data']}, true);
+        if (this.multiseries){
+            _(this.chart.series).each(function(value, idx){
+                value.update({'data': data[idx]['data']}, true);
+            })
+        }
+        else{
+            this.chart.series[0].update({'data': data['data']}, true);
+        }
         this.chart.setTitle(null, {text: data['name']});
     },
 
