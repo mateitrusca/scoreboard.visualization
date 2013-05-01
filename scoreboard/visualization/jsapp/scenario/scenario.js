@@ -63,7 +63,7 @@ App.ScenarioChartView = Backbone.View.extend({
                 'value': this.model.get(item['filter_name']),
                 'rev': this.data_revision
             };
-            var ajax = $.get(this.cube_url + '/dimension_labels', args);
+            var ajax = $.getJSON(this.cube_url + '/dimension_labels', args);
             ajax.done(function(data) {
                 _(item['targets']).each(function(target){
                     meta_data[target] = data[item['type']];
@@ -84,7 +84,7 @@ App.ScenarioChartView = Backbone.View.extend({
             }
         });
         relevant_args = _({rev: this.data_revision}).extend(relevant_args);
-        return $.get(url, relevant_args);
+        return $.getJSON(url, relevant_args);
     },
 
     load_chart: function() {
@@ -440,7 +440,7 @@ App.AnnotationsView = Backbone.View.extend({
                 }
                 args['rev'] = this.data_revision;
                 requests.push(
-                    $.get(this.cube_url + source, args, function(resp) {
+                    $.getJSON(this.cube_url + source, args, function(resp) {
                         data.push(resp);
                         _(resp).extend({filter_name: filter.name});
                     })
