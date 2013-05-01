@@ -39,7 +39,7 @@ App.format_series = function (data, sort, type, percent){
     var multiplicators = _(percent).map(function(pc){
         return pc?100:1;
     });
-    if (type=='xy'){
+    if (type=='xy' || type=='xyz'){
         var countrycolor = function(code) {
             if (_.isNull(App.COUNTRY_COLOR[code])) {
                 return '#1C3FFD';
@@ -55,14 +55,18 @@ App.format_series = function (data, sort, type, percent){
 
         var series = _(data[0]['data']).map(function(datapoint) {
             var code = datapoint['code'];
-            return {
+            var data = [{
+                'name': code,
+                'x': datapoint['value']['x'] * multiplicators[0],
+                'y': datapoint['value']['y'] * multiplicators[1]
+            }]
+            if (type == 'xyz'){
+                data[0]['z'] = datapoint['value']['z'] * multiplicators[1]
+            }
+            var output = {
                 'name': App.COUNTRY_NAME[code],
                 'color': countrycolor(code),
-                'data': [{
-                    'name': code,
-                    'x': datapoint['value']['x'] * multiplicators[0],
-                    'y': datapoint['value']['y'] * multiplicators[1]
-                }],
+                'data': data,
                 'marker': {
                     'radius': 5,
                     'symbol': 'circle',
@@ -77,6 +81,7 @@ App.format_series = function (data, sort, type, percent){
                     'formatter': label_formatter
                 }
             }
+            return output
         });
     }else{
         var first_serie = false;

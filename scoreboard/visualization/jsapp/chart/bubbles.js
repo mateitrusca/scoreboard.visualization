@@ -10,12 +10,12 @@ App.chart_library['bubbles'] = function(container, options) {
     $(container).addClass('normal-chart');
 
     var percent = options['unit_is_pc'];
-    var series = App.format_series(options['series'], false, 'xy', percent);
+    var series = App.format_series(options['series'], false, 'xyz', percent);
 
     var chartOptions = {
         chart: {
+            type: 'bubble',
             renderTo: container,
-            defaultSeriesType: 'scatter',
             zoomType: 'xy',
             marginRight: 25,
             marginBottom: 150,
