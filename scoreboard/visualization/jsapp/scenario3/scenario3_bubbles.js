@@ -161,7 +161,11 @@ App.scenario3_bubbles_filters_schema = {
                   {name: 'y-indicator', part: 'label'},
                   {name: 'y-breakdown-group', part: 'label'},
                   {name: 'y-breakdown', part: 'label'},
-                  {name: 'y-unit-measure', part: 'label'}]
+                  {name: 'y-unit-measure', part: 'label'},
+                  {name: 'z-indicator', part: 'label'},
+                  {name: 'z-breakdown-group', part: 'label'},
+                  {name: 'z-breakdown', part: 'label'},
+                  {name: 'z-unit-measure', part: 'label'}]
     },
     chart_type: 'bubbles',
     xyz: true,
