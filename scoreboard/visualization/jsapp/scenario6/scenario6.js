@@ -68,6 +68,7 @@ App.scenario6_filters_schema = {
                   {name: 'unit-measure', part: 'label'}]
     },
     chart_type: 'evolution_columns',
+    animation: true,
     chart_meta_labels: [
         {targets: ['x_title'],
          filter_name: 'indicator',
