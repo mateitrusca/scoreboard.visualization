@@ -306,12 +306,29 @@ App.GraphControlsView = Backbone.View.extend({
     update_chart: function(){
         var data = this.snapshots_data[this.model.get('value')];
         if (this.multiseries){
-            _(this.chart.series).each(function(value, idx){
-                value.update({'data': data[idx]['data']}, true);
-            })
+            _(this.chart.series).each(function(serie, serie_idx){
+                _(serie['data']).each(function(point, idx){
+                    console.log(serie);
+                    var color = App.bar_colors['bar_color'];
+                    var point_data = data[serie_idx]['data'][0];
+                    serie['data'][0].update(
+                        point_data,
+                        false,
+                        {duration: 950, easing: 'linear'});
+                }, this);
+            }, this);
+            this.chart.redraw();
         }
         else{
-            this.chart.series[0].update({'data': data['data']}, true);
+            _(this.chart.series[0]['data']).each(function(item, idx){
+                var color = App.bar_colors['bar_color'];
+                var point_data = data['data'][idx];
+                this.chart.series[0]['data'][idx].update(
+                    point_data,
+                    false,
+                    {duration: 950, easing: 'linear'});
+            }, this);
+            this.chart.redraw();
         }
         this.chart.setTitle(null, {text: data['name']});
     },
