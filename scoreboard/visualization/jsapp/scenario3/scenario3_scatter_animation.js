@@ -5,7 +5,7 @@
 "use strict";
 
 
-App.scenario3_bubbles_animation_filters_schema = {
+App.scenario3_scatter_animation_filters_schema = {
     facets: [
         {type: 'select',
          name: 'x-indicator-group',
@@ -78,43 +78,8 @@ App.scenario3_bubbles_animation_filters_schema = {
              'indicator':       'y-indicator',
              'breakdown':       'y-breakdown'
          }},
-        {type: 'select',
-         name: 'z-indicator-group',
-         label: "(Z) indicator group",
-         dimension: 'indicator-group',
-         constraints: {}},
-        {type: 'select',
-         name: 'z-indicator',
-         label: "(Z) indicator",
-         dimension: 'indicator',
-         constraints: {
-             'indicator-group': 'z-indicator-group'
-         }},
-        {type: 'select',
-         name: 'z-breakdown-group',
-         label: "(Z) breakdown group",
-         dimension: 'breakdown-group',
-         constraints: {
-             'indicator':       'x-indicator'
-         }},
-        {type: 'select',
-         name: 'z-breakdown',
-         label: "(Z) breakdown",
-         dimension: 'breakdown',
-         constraints: {
-             'indicator':       'z-indicator',
-             'breakdown-group': 'z-breakdown-group'
-         }},
-        {type: 'select',
-         name: 'z-unit-measure',
-         label: "(Z) unit of measure",
-         dimension: 'unit-measure',
-         constraints: {
-             'indicator':       'z-indicator',
-             'breakdown':       'z-breakdown'
-         }},
         {type: 'all-values',
-         xyz: true,
+         xy: true,
          name: 'time-period',
          dimension: 'time-period',
          constraints: {
@@ -123,31 +88,22 @@ App.scenario3_bubbles_animation_filters_schema = {
              'x-unit-measure': 'x-unit-measure',
              'y-indicator':    'y-indicator',
              'y-breakdown':    'y-breakdown',
-             'y-unit-measure': 'y-unit-measure',
-             'z-indicator':    'z-indicator',
-             'z-breakdown':    'z-breakdown',
-             'z-unit-measure': 'z-unit-measure'
+             'y-unit-measure': 'y-unit-measure'
          }},
         {type: 'multiple_select',
-         xyz: true,
+         xy: true,
          name: 'ref-area',
-         on_client: true,
          label: 'Country / Countries',
          dimension: 'ref-area',
-         default_all: true,
-         position: '.right_column',
          constraints: {
              'x-indicator':    'x-indicator',
              'x-breakdown':    'x-breakdown',
              'x-unit-measure': 'x-unit-measure',
              'y-indicator':    'y-indicator',
              'y-breakdown':    'y-breakdown',
-             'y-unit-measure': 'y-unit-measure',
-             'z-indicator':    'z-indicator',
-             'z-breakdown':    'z-breakdown',
-             'z-unit-measure': 'z-unit-measure',
+             'y-unit-measure': 'y-unit-measure'
          }},
-         {type: 'all-values', dimension: 'value', xyz: true}
+         {type: 'all-values', dimension: 'value', xy: true}
     ],
     category_facet: 'ref-area',
     multiple_series: 'time-period',
@@ -160,16 +116,12 @@ App.scenario3_bubbles_animation_filters_schema = {
                   {name: 'y-indicator', part: 'label'},
                   {name: 'y-breakdown-group', part: 'label'},
                   {name: 'y-breakdown', part: 'label'},
-                  {name: 'y-unit-measure', part: 'label'},
-                  {name: 'z-indicator', part: 'label'},
-                  {name: 'z-breakdown-group', part: 'label'},
-                  {name: 'z-breakdown', part: 'label'},
-                  {name: 'z-unit-measure', part: 'label'}]
+                  {name: 'y-unit-measure', part: 'label'}]
     },
-    chart_type: 'bubbles',
-    xyz: true,
-    animation: true,
+    chart_type: 'scatter',
+    xy: true,
     legend: true,
+    animation: true,
     chart_meta_labels: [
         {targets: ['indicator_x_label'],
          filter_name: 'x-indicator',
@@ -182,17 +134,14 @@ App.scenario3_bubbles_animation_filters_schema = {
          type: 'short_label'},
         {targets: ['y_unit_label'],
          filter_name: 'y-unit-measure',
-         type: 'short_label'},
-        {targets: ['z_unit_label'],
-         filter_name: 'z-unit-measure',
          type: 'short_label'}
     ]
 };
 
 
-App.scenario3_bubbles_animation_initialize = function() {
+App.scenario3_scatter_animation_initialize = function() {
     App.create_visualization($('#scenario-box')[0],
-                             App.scenario3_bubbles_animation_filters_schema);
+                             App.scenario3_scatter_animation_filters_schema);
 };
 
 

@@ -123,6 +123,22 @@ App.chart_library['scatter'] = function(container, options) {
 
     var chart = new Highcharts.Chart(chartOptions);
 
+    if (options['animation']){
+        if(!App.chart_controls){
+            App.chart_controls = new App.GraphControlsView({
+                model: new Backbone.Model(),
+                chart: chart,
+                snapshots_data: series,
+                interval: window.interval_set,
+                multiseries: options['multiseries']
+            });
+            App.chart_controls.$el.insertAfter(container);
+        }else{
+            App.chart_controls.chart = chart;
+        };
+    }
+
+
 };
 
 
