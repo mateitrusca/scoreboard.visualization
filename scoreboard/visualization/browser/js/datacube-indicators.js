@@ -117,8 +117,7 @@ scoreboard.visualization.datacube.indicators = {
 };
 
 jQuery(document).ready(function(){
-    scoreboard.visualization.datacube.indicators.getDatasetMetadata();
+    //scoreboard.visualization.datacube.indicators.getDatasetMetadata();
     scoreboard.visualization.datacube.indicators.getDatasetDetails();
     scoreboard.visualization.datacube.indicators.addNavigation();
 });
-

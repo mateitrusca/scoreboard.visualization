@@ -97,17 +97,20 @@ App.chart_library['evolution_columns'] = function(container, options) {
 
     var chart = new Highcharts.Chart(chartOptions);
 
-    if(!App.chart_controls){
-        App.chart_controls = new App.GraphControlsView({
-            model: new Backbone.Model(),
-            chart: chart,
-            snapshots_data: time_snapshots,
-            interval: window.interval_set,
-        });
-        App.chart_controls.$el.insertAfter(container);
-    }else{
-        App.chart_controls.chart = chart;
-    };
+    if (options['animation']){
+        if(!App.chart_controls){
+            App.chart_controls = new App.GraphControlsView({
+                model: new Backbone.Model(),
+                chart: chart,
+                snapshots_data: time_snapshots,
+                interval: window.interval_set,
+            });
+            App.chart_controls.$el.insertAfter(container);
+        }else{
+            App.chart_controls.chart = chart;
+            App.chart_controls.snapshots_data = time_snapshots;
+        };
+    }
 };
 
 })();

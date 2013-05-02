@@ -60,6 +60,7 @@ App.scenario6_filters_schema = {
     ],
     category_facet: 'ref-area',
     multiple_series: 'time-period',
+    animation: true,
     annotations: {
         source: '/dimension_value_metadata',
         filters: [{name: 'indicator', part: 'label'},

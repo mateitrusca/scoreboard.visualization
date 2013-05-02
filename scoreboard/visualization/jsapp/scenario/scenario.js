@@ -63,7 +63,7 @@ App.ScenarioChartView = Backbone.View.extend({
                 'value': this.model.get(item['filter_name']),
                 'rev': this.data_revision
             };
-            var ajax = $.get(this.cube_url + '/dimension_labels', args);
+            var ajax = $.getJSON(this.cube_url + '/dimension_labels', args);
             ajax.done(function(data) {
                 _(item['targets']).each(function(target){
                     meta_data[target] = data[item['type']];
@@ -84,7 +84,7 @@ App.ScenarioChartView = Backbone.View.extend({
             }
         });
         relevant_args = _({rev: this.data_revision}).extend(relevant_args);
-        return $.get(url, relevant_args);
+        return $.getJSON(url, relevant_args);
     },
 
     load_chart: function() {
@@ -213,7 +213,7 @@ App.ScenarioChartView = Backbone.View.extend({
                     );
                 }, this);
             }
-            var labels_request = $.get(this.cube_url + '/dimension_values',
+            var labels_request = $.getJSON(this.cube_url + '/dimension_values',
                                        labels_args);
             labels_request.done(function(data) {
                 var results = data['options'];
@@ -306,12 +306,29 @@ App.GraphControlsView = Backbone.View.extend({
     update_chart: function(){
         var data = this.snapshots_data[this.model.get('value')];
         if (this.multiseries){
-            _(this.chart.series).each(function(value, idx){
-                value.update({'data': data[idx]['data']}, true);
-            })
+            _(this.chart.series).each(function(serie, serie_idx){
+                _(serie['data']).each(function(point, idx){
+                    console.log(serie);
+                    var color = App.bar_colors['bar_color'];
+                    var point_data = data[serie_idx]['data'][0];
+                    serie['data'][0].update(
+                        point_data,
+                        false,
+                        {duration: 950, easing: 'linear'});
+                }, this);
+            }, this);
+            this.chart.redraw();
         }
         else{
-            this.chart.series[0].update({'data': data['data']}, true);
+            _(this.chart.series[0]['data']).each(function(item, idx){
+                var color = App.bar_colors['bar_color'];
+                var point_data = data['data'][idx];
+                this.chart.series[0]['data'][idx].update(
+                    point_data,
+                    false,
+                    {duration: 950, easing: 'linear'});
+            }, this);
+            this.chart.redraw();
         }
         this.chart.setTitle(null, {text: data['name']});
     },
@@ -440,7 +457,7 @@ App.AnnotationsView = Backbone.View.extend({
                 }
                 args['rev'] = this.data_revision;
                 requests.push(
-                    $.get(this.cube_url + source, args, function(resp) {
+                    $.getJSON(this.cube_url + source, args, function(resp) {
                         data.push(resp);
                         _(resp).extend({filter_name: filter.name});
                     })

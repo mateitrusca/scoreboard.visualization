@@ -3,22 +3,23 @@
   "layers": [{
     "id": "countries",
     "src": "natearth/ne_50m_admin_0_countries.shp",
-    "filter": ["iso_a2", "in", ["AT", "BE", "BG", "CY", "CZ", "DE", "DK", "EE",
-                                "GR", "ES", "FI", "FR", "HR", "HU", "IE", "IS",
-                                "IT", "LT", "LU", "LV", "MT", "NL", "NO", "PL",
-                                "PT", "RO", "SE", "SI", "SK", "TR", "GB"]],
     "attributes": {
-      "code": "iso_a2"
+      "code": "iso_a2",
+      "name": "name"
     }
   }],
 
   "bounds": {
     "mode": "bbox",
-    "data": [-13, 33, 45, 75]
+    "data": [-25, 33, 45, 75]
   },
 
   "proj": {
     "id": "robinson"
+  },
+
+  "export": {
+    "round": 0
   }
 
 }
