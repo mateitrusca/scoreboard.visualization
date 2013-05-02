@@ -1,7 +1,7 @@
 <html metal:use-macro="here/main_template/macros/master"
   i18n:domain="plone">
   <div metal:fill-slot="main">
-    <h1><span id="dataset-title" /> - list indicators</h1>
+    <h1><span id="dataset-title" tal:content="here/getExtended_title"/> - list indicators</h1>
 
     <div class="dataset-manage bootstrap">
       <a class="btn btn-mini" tal:attributes="href string:${here/absolute_url}"><i class="icon-file"></i> Dataset</a>
@@ -10,7 +10,7 @@
     </div>
     <br />
 
-    <p id="dataset-description"></p>
+    <p id="dataset-description" tal:content="structure here/getSummary"></p>
 
     <p>The following table provides methodological information about the source, the scope and the definition of each indicator. For more details, click on the links in the table or explore the whole database.</p>
 
