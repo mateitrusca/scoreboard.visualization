@@ -4,7 +4,8 @@
     "id": "countries",
     "src": "natearth/ne_50m_admin_0_countries.shp",
     "attributes": {
-      "code": "iso_a2"
+      "code": "iso_a2",
+      "name": "name"
     }
   }],
 
@@ -15,6 +16,10 @@
 
   "proj": {
     "id": "robinson"
+  },
+
+  "export": {
+    "round": 0
   }
 
 }
