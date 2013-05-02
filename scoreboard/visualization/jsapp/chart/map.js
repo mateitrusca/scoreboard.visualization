@@ -46,8 +46,13 @@ App.chart_library['map'] = function(container, options) {
             tooltips: function(feature) {
                 var code = feature['code'];
                 var value = get_value_for_code(code, series);
-                return [App.COUNTRY_NAME[code],
-                        (value ? App.round(value, 3) + ' ' + unit : 'n/a')];
+                var name = (code == 'MK'
+                            ? name = "Macedonia, FYR"
+                            : feature['name']);
+                var value_text = (value
+                                  ? App.round(value, 3) + ' ' + unit
+                                  : 'n/a');
+                return [name, value_text];
             }
         });
         map.getLayer('countries').style({
