@@ -21,8 +21,8 @@ App.chart_library['scatter'] = function(container, options) {
             marginRight: 150,
             marginBottom: 50,
             marginTop: 50,
-            height: 550,
-            width: 600
+            height: 600,
+            width: 650
         },
         credits: {
             href: options['credits']['href'],
