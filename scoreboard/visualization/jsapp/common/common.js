@@ -39,7 +39,7 @@ var country_data = [
     {code: 'TR',   color: '#9900AB', label: "Turkey"},
     {code: 'GB',   color: '#D000C4', label: "United Kingdom"},
     {code: 'UK',   color: '#D000C4', label: "United Kingdom"}, // duplicate GB
-    {code: 'EU27', color: '#94090D', label: "European Union - 27 countries"}
+    {code: 'EU27', color: '#94090D', label: "European Union"}
 ];
 
 

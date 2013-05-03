@@ -7,7 +7,8 @@
 
 App.chart_library['scatter'] = function(container, options) {
 
-    $(container).addClass('normal-chart');
+    $(container).addClass('high-chart');
+    $(container).addClass('scatter-chart');
 
     var percent = options['unit_is_pc'];
     var series = App.format_series(options['series'], false, 'xy', percent);
@@ -17,10 +18,11 @@ App.chart_library['scatter'] = function(container, options) {
             renderTo: container,
             defaultSeriesType: 'scatter',
             zoomType: 'xy',
-            marginRight: 25,
-            marginBottom: 150,
-            marginTop: 100
-
+            marginRight: 150,
+            marginBottom: 50,
+            marginTop: 50,
+            height: 600,
+            width: 650
         },
         credits: {
             href: options['credits']['href'],
@@ -51,6 +53,7 @@ App.chart_library['scatter'] = function(container, options) {
                     fontWeight: 'bold'
                 }
             },
+			min: 0,
             startOnTick: true,
             endOnTick: true,
             showLastLabel: true,
@@ -78,6 +81,7 @@ App.chart_library['scatter'] = function(container, options) {
                     fontWeight: 'bold'
                 }
             },
+			min: 0,
             labels: {
                 style: {
                     color: '#000000'
@@ -92,11 +96,11 @@ App.chart_library['scatter'] = function(container, options) {
             )}
         },
         legend: {
-            layout: 'horizontal',
-            align: 'center',
-            verticalAlign: 'bottom',
-            x: 0,
-            y: -20,
+            layout: 'vertical',
+            align: 'right',
+            verticalAlign: 'top',
+            x: 10,
+            y: 50,
             borderWidth: 0
         },
         plotOptions: {
