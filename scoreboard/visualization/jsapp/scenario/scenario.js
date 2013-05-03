@@ -171,6 +171,7 @@ App.ScenarioChartView = Backbone.View.extend({
             'unit_is_pc': unit_is_pc,
             'plotlines': this.schema['plotlines'] || false,
             'animation': this.schema['animation'] || false,
+            'legend': this.schema['legend'] || false,
             'multiseries': this.multiple_series
         };
 
