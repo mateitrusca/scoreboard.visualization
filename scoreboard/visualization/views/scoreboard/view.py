@@ -6,13 +6,18 @@ from eea.app.visualization.views.view import ViewForm
 from edw.datacube.interfaces import IDataCube
 from .interfaces import IScoreboardView
 from scoreboard.visualization import jsapp
+from Products.CMFCore.utils import getToolByName
 
-
-def jsapp_html_for_visualization(visualization):
+def get_source(visualization):
     for source in visualization.getRelatedItems():
         if IDataCube.providedBy(source):
-            break
-    else:
+            return source
+    return None
+
+def jsapp_html_for_visualization(visualization):
+    source = get_source(visualization)
+
+    if not source:
         return "No data source available"
 
     cube = source.get_cube()
@@ -20,6 +25,17 @@ def jsapp_html_for_visualization(visualization):
                             SCENARIO_URL=visualization.absolute_url(),
                             DATA_REVISION=cube.get_revision())
 
+def source_workflow_state(visualization):
+    state = 'private'
+    source = get_source(visualization)
+
+    if not source:
+        return state
+
+    workflowTool = getToolByName(visualization, "portal_workflow")
+    status = workflowTool.getStatusOf("simple_publication_workflow", source)
+    state = status["review_state"]
+    return state
 
 class View(ViewForm):
     """ Tile view
@@ -39,3 +55,7 @@ class View(ViewForm):
 
     def jsapp_html(self):
         return jsapp_html_for_visualization(self.context)
+
+    def source_state(self):
+        state = source_workflow_state(self.context)
+        return state
