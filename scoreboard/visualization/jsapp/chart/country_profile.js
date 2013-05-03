@@ -13,8 +13,9 @@ App.chart_library['country_profile'] = function(container, options) {
     var chartOptions = {
         chart: {
             renderTo: container,
-            defaultSeriesType: 'column',
-            marginBottom: 150
+            defaultSeriesType: 'bar',
+            marginBottom: 50,
+            marginLeft: 250
         },
         credits: {
             href: options['credits']['href'],
@@ -36,16 +37,14 @@ App.chart_library['country_profile'] = function(container, options) {
             }
         },
         subtitle: {
-            text: options.meta_data['year_text'],
-            align: 'left'
-
+            text: options.meta_data['year_text']
         },
         xAxis: {
             type: 'category',
             labels: {
-                rotation: -45,
+                rotation: 0,
                 align: 'right',
-                formatter: options['xlabels_formatter'],
+                //formatter: options['xlabels_formatter'],
                 style: {
                     color: '#000000',
                 }
@@ -53,6 +52,7 @@ App.chart_library['country_profile'] = function(container, options) {
         },
         yAxis: {
             min: 0,
+            //tickPositions: [0],
             title: {
                 text: options.meta_data['y_title'],
                 style: {

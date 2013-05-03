@@ -66,7 +66,11 @@ App.ScenarioChartView = Backbone.View.extend({
             var ajax = $.getJSON(this.cube_url + '/dimension_labels', args);
             ajax.done(function(data) {
                 _(item['targets']).each(function(target){
-                    meta_data[target] = data[item['type']];
+                    if(typeof meta_data[target] === 'string'){
+                        meta_data[target] += ', ' + data[item['type']];
+                    }else{
+                        meta_data[target] = data[item['type']];
+                    }
                 });
             });
             requests.push(ajax);
@@ -262,6 +266,9 @@ App.ScenarioChartView = Backbone.View.extend({
                             'time-period': 'code',
                             'ref-area-label': 'label',
                             'time-period-label': 'label',
+                            'indicator': 'code',
+                            //'indicator-label': 'label',
+                            'indicator-short-label': 'label',
                             'value': 'value'
                         };
                         var item_out = _.object();
