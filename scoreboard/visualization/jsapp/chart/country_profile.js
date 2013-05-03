@@ -10,11 +10,20 @@ App.chart_library['country_profile'] = function(container, options) {
     var percent = options['unit_is_pc'];
     var series = App.format_series(options['series'], sort, '', percent);
 
+    //var xlabels_formatter = function() {
+        //var max_length = 35;
+        //if (this.value.length > (max_length + 3)){
+            //return this.value.substr(0, max_length) + '...';
+        //}
+        //return this.value;
+    //};
+
     var chartOptions = {
         chart: {
             renderTo: container,
             defaultSeriesType: 'bar',
-            marginBottom: 50,
+            height: 700,
+            marginBottom: 100,
             marginLeft: 250
         },
         credits: {
@@ -44,7 +53,7 @@ App.chart_library['country_profile'] = function(container, options) {
             labels: {
                 rotation: 0,
                 align: 'right',
-                //formatter: options['xlabels_formatter'],
+                //formatter: xlabels_formatter,
                 style: {
                     color: '#000000',
                 }
