@@ -24,9 +24,6 @@ def initialize(context):
     with Zope and the CMF.
     """
 
-    # Initialize monkey patch for sparql-client to send queries as POST
-    from scoreboard.visualization import monkey_patch
-
     # Retrieve the content types that have been registered with Archetypes
     # This happens when the content type is imported and the registerType()
     # call in the content type's module is invoked. Actually, this happens
