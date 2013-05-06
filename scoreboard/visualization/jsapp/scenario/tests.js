@@ -539,7 +539,7 @@ describe('ScenarioChartViewParameters', function() {
         var country_options = [{'notation': 'area1'}, {'notation': 'area2'}];
         var url_param = App.testing.url_param;
         var requests = this.sandbox.server.requests;
-        expect(requests[0].url).to.have.string('/dimension_values?');
+        expect(requests[0].url).to.have.string('/dimension_options?');
         expect(url_param(requests[0].url, 'dimension')).to.equal('ref-area');
         App.respond_json(requests[0], {'options': country_options});
         expect(url_param(requests[1].url, 'ref-area')).to.equal('area1');

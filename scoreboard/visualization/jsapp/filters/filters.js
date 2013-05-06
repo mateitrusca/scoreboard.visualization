@@ -111,13 +111,13 @@ App.SelectFilter = Backbone.View.extend({
     fetch_options: function(args) {
         var view_name = '';
         if(this.xyz) {
-            view_name = 'dimension_values_xyz';
+            view_name = 'dimension_options_xyz';
         }
         else if(this.xy) {
-            view_name = 'dimension_values_xy';
+            view_name = 'dimension_options_xy';
         }
         else {
-            view_name = 'dimension_values';
+            view_name = 'dimension_options';
         }
         var relevant_args = {}
         _(args).each(function(value, key){
