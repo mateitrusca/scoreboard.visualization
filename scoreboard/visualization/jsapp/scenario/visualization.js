@@ -18,6 +18,9 @@ App.Visualization = Backbone.View.extend({
         var filters_schema = [];
         var values_schema = [];
         _(options['schema']['facets']).forEach(function(item) {
+            if(item['type'] == 'ignore') {
+                return;
+            }
             if(item['type'] == 'all-values') {
                 if(item['dimension'] == 'value' ||
                    item['dimension'] == options['schema']['category_facet']) {

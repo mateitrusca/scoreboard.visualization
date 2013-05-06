@@ -230,6 +230,22 @@ describe('FacetsEditor', function() {
 
     });
 
+    describe('hidden facet', function() {
+
+        it('should not include ignore facet in constraints', function() {
+            var model = new Backbone.Model({
+                'facets': [{name: 'dim2', type: 'ignore'}]
+            });
+            var view = new NoAjaxFacetsEditor({
+                model: model,
+                dimensions: four_dimensions
+            });
+            expect(model.get('facets')[3]['constraints']).to.deep.equal(
+                {'dim1': 'dim1', 'dim3': 'dim3'});
+        });
+
+    });
+
     describe('facet verification', function() {
 
         it('should warn if there is no category facet', function() {
