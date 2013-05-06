@@ -18,11 +18,12 @@ App.chart_library['scatter'] = function(container, options) {
             renderTo: container,
             defaultSeriesType: 'scatter',
             zoomType: 'xy',
+            marginLeft: 100,
             marginRight: 150,
-            marginBottom: 50,
             marginTop: 50,
-            height: 600,
-            width: 650
+            marginBottom: 100,
+            height: 650,
+            width: 750
         },
         credits: {
             href: options['credits']['href'],
@@ -100,7 +101,7 @@ App.chart_library['scatter'] = function(container, options) {
             align: 'right',
             verticalAlign: 'top',
             x: 10,
-            y: 50,
+            y: 30,
             borderWidth: 0
         },
         plotOptions: {
