@@ -42,6 +42,11 @@ describe('FacetsEditor', function() {
         this.sandbox.restore();
     });
 
+    var four_dimensions = [{type_label: 'dimension', notation: 'dim1'},
+                           {type_label: 'dimension', notation: 'dim2'},
+                           {type_label: 'dimension', notation: 'dim3'},
+                           {type_label: 'dimension', notation: 'dim4'}];
+
     describe('facet list', function() {
 
         it('should load dimensions via ajax', function() {
@@ -174,11 +179,6 @@ describe('FacetsEditor', function() {
 
     describe('multiple series', function() {
 
-        var four_dimensions = [{type_label: 'dimension', notation: 'dim1'},
-                               {type_label: 'dimension', notation: 'dim2'},
-                               {type_label: 'dimension', notation: 'dim3'},
-                               {type_label: 'dimension', notation: 'dim4'}];
-
         it('should display list of series options', function() {
             var view = new NoAjaxFacetsEditor({
                 model: new Backbone.Model({
@@ -231,11 +231,6 @@ describe('FacetsEditor', function() {
     });
 
     describe('facet verification', function() {
-
-        var four_dimensions = [{type_label: 'dimension', notation: 'dim1'},
-                               {type_label: 'dimension', notation: 'dim2'},
-                               {type_label: 'dimension', notation: 'dim3'},
-                               {type_label: 'dimension', notation: 'dim4'}];
 
         it('should warn if there is no category facet', function() {
             var model = new Backbone.Model({
@@ -300,11 +295,6 @@ describe('FacetsEditor', function() {
     });
 
     describe('constraints between filters', function() {
-
-        var four_dimensions = [{type_label: 'dimension', notation: 'dim1'},
-                               {type_label: 'dimension', notation: 'dim2'},
-                               {type_label: 'dimension', notation: 'dim3'},
-                               {type_label: 'dimension', notation: 'dim4'}];
 
         it('should generate no constraints for first filter', function() {
             var view = new NoAjaxFacetsEditor({
