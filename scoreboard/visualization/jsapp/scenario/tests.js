@@ -119,30 +119,6 @@ describe('ChartSeriesPreparation', function() {
             null, 0.4808]);
     })
 
-    it('should sort the xy series by label', function(){
-        var series = [
-            {data: [
-                    { "code": "DK",
-                      "label": "Denmark",
-                      "value": {
-                          "x": 0.4808,
-                          "y": 0.4808
-                      }
-                    },
-                    { "code": "AT",
-                      "label": "Austria",
-                      "value": {
-                          "x": 0.4808,
-                          "y": 0.4808
-                      }
-                    },
-                    ],
-             label:'2000'},
-        ];
-        var result = App.format_series(series, false, 'xy');
-        expect(_(result).pluck('name')).to.deep.equal(['Austria', 'Denmark']);
-    });
-
     it('should return an array of data for each year', function(){
         var series = [
             {data: [],
