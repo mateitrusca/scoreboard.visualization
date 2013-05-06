@@ -21,7 +21,7 @@ App.ChartTypeEditor = Backbone.View.extend({
         {label: "Line", value: 'lines'},
         {label: "Column", value: 'columns'},
         {label: "Column animation", value: 'evolution_columns'},
-        {label: "Scatterplot", value: 'scatter'},
+        //{label: "Scatterplot", value: 'scatter'},
         {label: "Map", value: 'map'}
     ],
 
