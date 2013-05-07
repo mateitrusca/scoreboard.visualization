@@ -233,6 +233,18 @@ App.ScenarioChartView = Backbone.View.extend({
             requests.push(this.request_datapoints(datapoints_url, args));
         }
 
+        // TODO Use requests.push also for this case
+        if(this.schema.chart_type === 'country_profile'){
+            var new_args = $.extend({}, args);
+            chart_data['ref-area'] = new_args['ref-area'];
+            delete new_args['ref-area'];
+            new_args['columns'] = 'ref-area,' + new_args['columns'];
+            var ajax = this.request_datapoints(datapoints_url, new_args);
+            ajax.done(_.bind(function(){
+                chart_data['all_series'] = arguments[0];
+            }, this));
+        }
+
         var client_filter_options = [];
         if(this.client_filter) {
             client_filter_options = this.model.get(this.client_filter);
