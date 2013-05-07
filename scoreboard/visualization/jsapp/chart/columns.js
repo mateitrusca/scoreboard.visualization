@@ -14,7 +14,12 @@ App.chart_library['columns'] = function(container, options) {
         chart: {
             renderTo: container,
             defaultSeriesType: 'column',
-            marginBottom: 150
+            marginLeft: 100,
+            marginRight: 170,
+            marginTop: 50,
+            marginBottom: 100,
+            height: 450,
+            width: 1100
         },
         credits: {
             href: options['credits']['href'],
@@ -62,8 +67,15 @@ App.chart_library['columns'] = function(container, options) {
             }
         },
         legend: {
-            enabled: true,
-            layout: "vertical"
+            layout: 'vertical',
+            align: 'right',
+            verticalAlign: 'top',
+            x: 10,
+            y: 30,
+            borderWidth: 0,
+            itemStyle: {
+                width: 150
+            },
         },
         tooltip: {
             formatter: options['tooltip_formatter']
