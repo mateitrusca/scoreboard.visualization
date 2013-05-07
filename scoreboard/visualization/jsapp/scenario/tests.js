@@ -119,30 +119,6 @@ describe('ChartSeriesPreparation', function() {
             null, 0.4808]);
     })
 
-    it('should sort the xy series by label', function(){
-        var series = [
-            {data: [
-                    { "code": "DK",
-                      "label": "Denmark",
-                      "value": {
-                          "x": 0.4808,
-                          "y": 0.4808
-                      }
-                    },
-                    { "code": "AT",
-                      "label": "Austria",
-                      "value": {
-                          "x": 0.4808,
-                          "y": 0.4808
-                      }
-                    },
-                    ],
-             label:'2000'},
-        ];
-        var result = App.format_series(series, false, 'xy');
-        expect(_(result).pluck('name')).to.deep.equal(['Austria', 'Denmark']);
-    });
-
     it('should return an array of data for each year', function(){
         var series = [
             {data: [],
@@ -563,7 +539,7 @@ describe('ScenarioChartViewParameters', function() {
         var country_options = [{'notation': 'area1'}, {'notation': 'area2'}];
         var url_param = App.testing.url_param;
         var requests = this.sandbox.server.requests;
-        expect(requests[0].url).to.have.string('/dimension_values?');
+        expect(requests[0].url).to.have.string('/dimension_options?');
         expect(url_param(requests[0].url, 'dimension')).to.equal('ref-area');
         App.respond_json(requests[0], {'options': country_options});
         expect(url_param(requests[1].url, 'ref-area')).to.equal('area1');

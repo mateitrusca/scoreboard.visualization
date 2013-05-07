@@ -19,7 +19,8 @@ App.FacetEditorField = Backbone.View.extend({
     type_options: [
         {value: 'select', label: "single selection"},
         {value: 'multiple_select', label: "multiple selection"},
-        {value: 'all-values', label: "all values"}
+        {value: 'all-values', label: "all values"},
+        {value: 'ignore', label: "ignore"}
     ],
 
     initialize: function(options) {
@@ -140,7 +141,7 @@ App.FacetsEditor = Backbone.View.extend({
                 }
                 series_options.push(option);
             }
-            else {
+            else if(facet['type'] != 'ignore') {
                 facets_above[name] = name;
             }
         }, this);

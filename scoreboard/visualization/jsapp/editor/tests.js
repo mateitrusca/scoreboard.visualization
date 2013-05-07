@@ -42,6 +42,11 @@ describe('FacetsEditor', function() {
         this.sandbox.restore();
     });
 
+    var four_dimensions = [{type_label: 'dimension', notation: 'dim1'},
+                           {type_label: 'dimension', notation: 'dim2'},
+                           {type_label: 'dimension', notation: 'dim3'},
+                           {type_label: 'dimension', notation: 'dim4'}];
+
     describe('facet list', function() {
 
         it('should load dimensions via ajax', function() {
@@ -174,11 +179,6 @@ describe('FacetsEditor', function() {
 
     describe('multiple series', function() {
 
-        var four_dimensions = [{type_label: 'dimension', notation: 'dim1'},
-                               {type_label: 'dimension', notation: 'dim2'},
-                               {type_label: 'dimension', notation: 'dim3'},
-                               {type_label: 'dimension', notation: 'dim4'}];
-
         it('should display list of series options', function() {
             var view = new NoAjaxFacetsEditor({
                 model: new Backbone.Model({
@@ -230,12 +230,23 @@ describe('FacetsEditor', function() {
 
     });
 
-    describe('facet verification', function() {
+    describe('hidden facet', function() {
 
-        var four_dimensions = [{type_label: 'dimension', notation: 'dim1'},
-                               {type_label: 'dimension', notation: 'dim2'},
-                               {type_label: 'dimension', notation: 'dim3'},
-                               {type_label: 'dimension', notation: 'dim4'}];
+        it('should not include ignore facet in constraints', function() {
+            var model = new Backbone.Model({
+                'facets': [{name: 'dim2', type: 'ignore'}]
+            });
+            var view = new NoAjaxFacetsEditor({
+                model: model,
+                dimensions: four_dimensions
+            });
+            expect(model.get('facets')[3]['constraints']).to.deep.equal(
+                {'dim1': 'dim1', 'dim3': 'dim3'});
+        });
+
+    });
+
+    describe('facet verification', function() {
 
         it('should warn if there is no category facet', function() {
             var model = new Backbone.Model({
@@ -300,11 +311,6 @@ describe('FacetsEditor', function() {
     });
 
     describe('constraints between filters', function() {
-
-        var four_dimensions = [{type_label: 'dimension', notation: 'dim1'},
-                               {type_label: 'dimension', notation: 'dim2'},
-                               {type_label: 'dimension', notation: 'dim3'},
-                               {type_label: 'dimension', notation: 'dim4'}];
 
         it('should generate no constraints for first filter', function() {
             var view = new NoAjaxFacetsEditor({
