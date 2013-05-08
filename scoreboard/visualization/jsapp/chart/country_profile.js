@@ -143,8 +143,16 @@ App.chart_library['country_profile'] = function(container, options) {
             formatter: function(){
                 var val = (this.point.y - 1) * 100;
                 val = val.toFixed(0);
-                var unit = val <=0  ? 'MIN' : 'MAX';
-                return '<b>'+ this.point.name +'</b><br> ' + val + '% of the gap between EU27 and the ' + unit +' observed value';
+                var unit = val <= 0  ? 'MIN' : 'MAX';
+                return [
+                    '<div>',
+                        '<strong>', this.point.name, '</strong>',
+                        '<br />',
+                        '<p>',
+                            val, '% of the gap between EU27 and the ', unit, ' observed value',
+                        '</p>',
+                    '</div>'
+                ].join('\n');
             }
         },
         series: series
