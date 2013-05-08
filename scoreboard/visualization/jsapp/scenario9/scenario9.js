@@ -9,7 +9,6 @@ App.scenario9_filters_schema = {
   chart_type: "country_profile",
   category_facet: "indicator",
   multiple_series: null,
-  legend: true,
   facets: [
     {
       type: "select",
@@ -38,15 +37,15 @@ App.scenario9_filters_schema = {
       }
     },
     {
-      "constraints": {
+      constraints: {
         "indicator-group": "indicator-group",
         "ref-area": "ref-area",
         "time-period": "time-period"
       },
-      "dimension": "indicator",
-      "name": "indicator",
-      "type": "all-values",
-      "label": "Indicator"
+      dimension: "indicator",
+      name: "indicator",
+      type: "all-values",
+      label: "Indicator"
     },
     {
       type: "all-values",

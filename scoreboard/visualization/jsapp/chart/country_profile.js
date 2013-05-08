@@ -55,19 +55,11 @@ App.chart_library['country_profile'] = function(container, options) {
         var max = mapping[key]['max']['value'];
         var med = mapping[key]['med']['value'];
         if (val <= med){
-            item.y = 1 + (med - val) / (med - min);
+            item.y = (val - min) / (med - min);
         }else{
-            item.y = (val - med) / (max - med)
+            item.y = 1 + (val - med) / (max - med);
         }
     });
-
-    //var xlabels_formatter = function() {
-        //var max_length = 35;
-        //if (this.value.length > (max_length + 3)){
-            //return this.value.substr(0, max_length) + '...';
-        //}
-        //return this.value;
-    //};
 
     var chartOptions = {
         chart: {
@@ -104,7 +96,6 @@ App.chart_library['country_profile'] = function(container, options) {
             labels: {
                 rotation: 0,
                 align: 'right',
-                //formatter: xlabels_formatter,
                 style: {
                     color: '#000000',
                 }
@@ -149,7 +140,12 @@ App.chart_library['country_profile'] = function(container, options) {
             layout: "vertical"
         },
         tooltip: {
-            formatter: options['tooltip_formatter']
+            formatter: function(){
+                var val = (this.point.y - 1) * 100;
+                val = val.toFixed(0);
+                var unit = val <=0  ? 'MIN' : 'MAX';
+                return '<b>'+ this.point.name +'</b><br> ' + val + '% of the gap between EU27 and the ' + unit +' observed value';
+            }
         },
         series: series
     };
