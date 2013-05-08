@@ -26,8 +26,12 @@ App.chart_library['lines'] = function(container, options) {
         chart: {
             renderTo: container,
             type: 'spline',
-            marginRight: 50,
-            marginBottom: 100
+            marginLeft: 100,
+            marginRight: 170,
+            marginTop: 50,
+            marginBottom: 100,
+            height: 450,
+            width: 1100
         },
         credits: {
             href: options['credits']['href'],
@@ -80,12 +84,15 @@ App.chart_library['lines'] = function(container, options) {
             }
         },
         legend: {
-            layout: 'horizontal',
-            align: 'center',
-            verticalAlign: 'bottom',
-            x: 0,
-            y: -20,
-            borderWidth: 0
+            layout: 'vertical',
+            align: 'right',
+            verticalAlign: 'top',
+            x: 10,
+            y: 30,
+            borderWidth: 0,
+            itemStyle: {
+                width: 150
+            },
         },
         plotOptions: {
             series: {
