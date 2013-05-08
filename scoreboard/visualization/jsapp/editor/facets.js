@@ -12,8 +12,9 @@ App.FacetEditorField = Backbone.View.extend({
     template: App.get_template('editor/facet-field.html'),
 
     events: {
-        'change [name="type"]': 'on_input_change',
-        'click .facet-sort': 'on_click_sort'
+        'change [name="type"]': 'on_change_type',
+        'click .facet-sort': 'on_click_sort',
+        'change [name="include_wildcard"]': 'on_change_wildcard'
     },
 
     type_options: [
@@ -37,13 +38,14 @@ App.FacetEditorField = Backbone.View.extend({
                 return _({
                     selected: selected
                 }).extend(opt);
-            }, this)
+            }, this),
+            'is_single_select': (this.model.get('type') == 'select')
         }).extend(this.model.toJSON());
         this.$el.html(this.template(context));
         this.$el.attr('data-name', this.model.get('name'));
     },
 
-    on_input_change: function(evt) {
+    on_change_type: function(evt) {
         this.model.set({
             type: this.$el.find('[name="type"]').val()
         });
@@ -56,6 +58,15 @@ App.FacetEditorField = Backbone.View.extend({
         var new_idx = idx + (direction == 'down' ? +1 : -1);
         if(new_idx < 0) { new_idx = 0; }
         this.model.collection.move(this.model, new_idx);
+    },
+
+    on_change_wildcard: function(evt) {
+        if($(evt.target).is(':checked')) {
+            this.model.set('include_wildcard', true);
+        }
+        else {
+            this.model.unset('include_wildcard');
+        }
     }
 
 });
