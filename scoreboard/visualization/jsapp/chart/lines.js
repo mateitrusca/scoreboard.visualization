@@ -9,6 +9,18 @@ App.chart_library['lines'] = function(container, options) {
     var sort = _.object(["sort_by", "order"],['label', 1]);
     var percent = options['unit_is_pc'];
     var series = App.format_series(options['series'], sort, '', percent);
+	_.map(series, function(elem) {
+        _(_.last(elem.data)).extend({
+            dataLabels: {
+              enabled: true,
+              crop: false,
+              x: 3,
+              align: 'left',
+              verticalAlign: 'middle',
+              formatter: function() { return this.series.name }
+            }
+        });
+    });
     var all_years = _(series[0]['data']).pluck('code');
     var chartOptions = {
         chart: {
