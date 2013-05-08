@@ -372,6 +372,18 @@ describe('FacetsEditor', function() {
             expect(facet0()['include_wildcard']).to.be.undefined;
         });
 
+        it('should be removed if facet is not single select', function() {
+            var model = new Backbone.Model({
+                facets: [{name: 'dim2', type: 'select', include_wildcard: true}]
+            });
+            var view = new NoAjaxFacetsEditor({
+                model: model,
+                dimensions: four_dimensions
+            });
+            view.$el.find('[name="type"]').val('multiple_select').change();
+            expect(model.get('facets')[0]['include_wildcard']).to.be.undefined;
+        });
+
     });
 
 });

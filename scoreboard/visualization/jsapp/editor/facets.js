@@ -49,6 +49,7 @@ App.FacetEditorField = Backbone.View.extend({
         this.model.set({
             type: this.$el.find('[name="type"]').val()
         });
+        this.check_constraints();
     },
 
     on_click_sort: function(evt) {
@@ -65,6 +66,13 @@ App.FacetEditorField = Backbone.View.extend({
             this.model.set('include_wildcard', true);
         }
         else {
+            this.model.unset('include_wildcard');
+        }
+        this.check_constraints();
+    },
+
+    check_constraints: function() {
+        if(this.model.get('type') != 'select') {
             this.model.unset('include_wildcard');
         }
     }
