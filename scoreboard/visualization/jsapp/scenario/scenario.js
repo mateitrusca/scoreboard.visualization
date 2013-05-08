@@ -233,16 +233,12 @@ App.ScenarioChartView = Backbone.View.extend({
             requests.push(this.request_datapoints(datapoints_url, args));
         }
 
-        // TODO Use requests.push also for this case
         if(this.schema.chart_type === 'country_profile'){
             var new_args = $.extend({}, args);
             chart_data['ref-area'] = new_args['ref-area'];
             delete new_args['ref-area'];
             new_args['columns'] = 'ref-area,' + new_args['columns'];
-            var ajax = this.request_datapoints(datapoints_url, new_args);
-            ajax.done(_.bind(function(){
-                chart_data['all_series'] = arguments[0];
-            }, this));
+            requests.push(this.request_datapoints(datapoints_url, new_args));
         }
 
         var client_filter_options = [];
@@ -260,6 +256,11 @@ App.ScenarioChartView = Backbone.View.extend({
         ajax_calls.done(_.bind(function() {
             var responses = _(arguments).toArray();
             if(requests.length < 2) { responses = [responses]; }
+
+            if(this.schema.chart_type === 'country_profile'){
+                chart_data['all_series'] = responses.length > 1 ? responses[1][0] : {};
+            }
+
             chart_data['series'] = _(multiseries_values).map(function(value, n) {
                 //TODO resp should always have the same keys
                 var resp = responses[n];
@@ -512,7 +513,6 @@ App.AnnotationsView = Backbone.View.extend({
     }
 
 });
-
 
 App.ShareOptionsView = Backbone.View.extend({
 
