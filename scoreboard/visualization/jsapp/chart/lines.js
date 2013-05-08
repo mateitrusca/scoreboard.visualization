@@ -77,6 +77,7 @@ App.chart_library['lines'] = function(container, options) {
         },
         plotOptions: {
             series: {
+			    connectNulls: true,
                 dataLabels: {
                     enabled: true,
                     formatter: function() {
