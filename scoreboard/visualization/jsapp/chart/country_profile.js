@@ -70,6 +70,10 @@ App.chart_library['country_profile'] = function(container, options) {
     x_title = 'Country profile for ' + x_title;
 
     var x_formatter = function(value){
+        if(!value.toFixed){
+            return value;
+        }
+
         if(value > 100){
             return value.toFixed(0);
         }else{
