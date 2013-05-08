@@ -87,9 +87,9 @@ App.chart_library['bubbles'] = function(container, options) {
         tooltip: {
             formatter: function() {
             return ('<b>'+ this.series.name +'</b><br/>x: '+
-                this.x + ' ' + options.meta_data['x_unit_label'] + '<br>y: '+
-                this.y + ' ' + options.meta_data['y_unit_label'] + '<br>z: '+
-                this.point.z + ' ' + options.meta_data['z_unit_label']
+                Math.round(this.x*10)/10 + ' ' + options.meta_data['x_unit_label'] + '<br>y: '+
+                Math.round(this.y*10)/10 + ' ' + options.meta_data['y_unit_label'] + '<br>z: '+
+                Math.round(this.point.z*10)/10 + ' ' + options.meta_data['z_unit_label']
             )}
         },
         legend: {

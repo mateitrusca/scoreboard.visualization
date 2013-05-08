@@ -9,13 +9,29 @@ App.chart_library['lines'] = function(container, options) {
     var sort = _.object(["sort_by", "order"],['label', 1]);
     var percent = options['unit_is_pc'];
     var series = App.format_series(options['series'], sort, '', percent);
+	_.map(series, function(elem) {
+        _(_.last(elem.data)).extend({
+            dataLabels: {
+              enabled: true,
+              crop: false,
+              x: 3,
+              align: 'left',
+              verticalAlign: 'middle',
+              formatter: function() { return this.series.name }
+            }
+        });
+    });
     var all_years = _(series[0]['data']).pluck('code');
     var chartOptions = {
         chart: {
             renderTo: container,
             type: 'spline',
-            marginRight: 50,
-            marginBottom: 100
+            marginLeft: 100,
+            marginRight: 170,
+            marginTop: 50,
+            marginBottom: 100,
+            height: 450,
+            width: 1100
         },
         credits: {
             href: options['credits']['href'],
@@ -68,15 +84,19 @@ App.chart_library['lines'] = function(container, options) {
             }
         },
         legend: {
-            layout: 'horizontal',
-            align: 'center',
-            verticalAlign: 'bottom',
-            x: 0,
-            y: -20,
-            borderWidth: 0
+            layout: 'vertical',
+            align: 'right',
+            verticalAlign: 'top',
+            x: 10,
+            y: 30,
+            borderWidth: 0,
+            itemStyle: {
+                width: 150
+            },
         },
         plotOptions: {
             series: {
+			    connectNulls: true,
                 dataLabels: {
                     enabled: true,
                     formatter: function() {
