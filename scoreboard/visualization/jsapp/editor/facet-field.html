@@ -17,3 +17,10 @@
   <a href="#" class="facet-sort" data-sort-direction="up">&uarr;</a>
   <a href="#" class="facet-sort" data-sort-direction="down">&darr;</a>
 </td>
+
+<td>
+{{# if is_single_select }}
+  <input type="checkbox" name="include_wildcard"
+      {{# if include_wildcard }}checked{{/ if }}>
+{{/ if }}
+</td>

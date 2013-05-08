@@ -358,6 +358,34 @@ describe('FacetsEditor', function() {
 
     });
 
+    describe('include_wildcard option', function() {
+
+        it('should be controlled by checkbox', function() {
+            var view = new NoAjaxFacetsEditor({
+                model: new Backbone.Model(),
+                dimensions: four_dimensions
+            });
+            var facet0 = function() { return view.model.get('facets')[0]; };
+            view.$el.find('[name="include_wildcard"]').click().change();
+            expect(facet0()['include_wildcard']).to.be.true;
+            view.$el.find('[name="include_wildcard"]').click().change();
+            expect(facet0()['include_wildcard']).to.be.undefined;
+        });
+
+        it('should be removed if facet is not single select', function() {
+            var model = new Backbone.Model({
+                facets: [{name: 'dim2', type: 'select', include_wildcard: true}]
+            });
+            var view = new NoAjaxFacetsEditor({
+                model: model,
+                dimensions: four_dimensions
+            });
+            view.$el.find('[name="type"]').val('multiple_select').change();
+            expect(model.get('facets')[0]['include_wildcard']).to.be.undefined;
+        });
+
+    });
+
 });
 
 
