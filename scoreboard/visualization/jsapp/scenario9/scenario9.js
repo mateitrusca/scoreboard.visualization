@@ -76,6 +76,21 @@ App.scenario9_filters_schema = {
       targets: ['year_text'],
       filter_name: 'time-period',
       type: 'short_label'
+    },
+    {
+      targets: ['indicator-group'],
+      filter_name: 'indicator-group',
+      type: 'label'
+    },
+    {
+      targets: ['ref-area'],
+      filter_name: 'ref-area',
+      type: 'label'
+    },
+    {
+      targets: ['time-period'],
+      filter_name: 'time-period',
+      type: 'short_label'
     }
   ]
 };

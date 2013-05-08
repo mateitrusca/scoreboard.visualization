@@ -1,4 +1,4 @@
-/*global App, _, Highcharts */
+/*global $, App, _, Highcharts, Backbone */
 /*jshint sub:true */
 
 (function() {
@@ -54,6 +54,8 @@ App.chart_library['country_profile'] = function(container, options) {
         var min = mapping[key]['min']['value'];
         var max = mapping[key]['max']['value'];
         var med = mapping[key]['med']['value'];
+        item.old_y = item.y;
+        item.eu27 = med;
         if (val <= med){
             item.y = (val - min) / (med - min);
         }else{
@@ -61,13 +63,28 @@ App.chart_library['country_profile'] = function(container, options) {
         }
     });
 
+    var x_title = options.meta_data['x_title'];
+    if(options.meta_data['ref-area'] && options.meta_data['indicator-group']){
+        x_title = [options.meta_data['ref-area'], options.meta_data['indicator-group']].join(', ');
+    }
+    x_title = 'Country profile for ' + x_title;
+
+    var x_formatter = function(value){
+        if(value > 100){
+            return value.toFixed(0);
+        }else{
+            return value.toFixed(2);
+        }
+    };
+
     var chartOptions = {
         chart: {
             renderTo: container,
             defaultSeriesType: 'bar',
             height: 700,
             marginBottom: 100,
-            marginLeft: 250
+            marginLeft: 250,
+            marginRight: 50
         },
         credits: {
             href: options['credits']['href'],
@@ -80,7 +97,7 @@ App.chart_library['country_profile'] = function(container, options) {
             }
         },
         title: {
-            text: options.meta_data['x_title'],
+            text: x_title,
             style: {
                 color: '#000000',
                 fontWeight: 'bold',
@@ -97,7 +114,7 @@ App.chart_library['country_profile'] = function(container, options) {
                 rotation: 0,
                 align: 'right',
                 style: {
-                    color: '#000000',
+                    color: '#000000'
                 }
              }
         },
@@ -131,7 +148,7 @@ App.chart_library['country_profile'] = function(container, options) {
             labels: {
                 formatter: function() {
                     return ['Min', 'EU27', 'Max'][this.value];
-                },
+                }
             },
             opposite:true
         }],
@@ -141,18 +158,17 @@ App.chart_library['country_profile'] = function(container, options) {
         },
         tooltip: {
             formatter: function(){
-                var val = (this.point.y - 1) * 100;
-                val = val.toFixed(0);
-                var unit = val <= 0  ? 'MIN' : 'MAX';
-                return [
-                    '<div>',
-                        '<strong>', this.point.name, '</strong>',
-                        '<br />',
-                        '<p>',
-                            val, '% of the gap between EU27 and the ', unit, ' observed value',
-                        '</p>',
-                    '</div>'
-                ].join('\n');
+                return x_formatter(this.point.old_y);
+            }
+        },
+        plotOptions: {
+            bar: {
+                dataLabels: {
+                    enabled: true,
+                    formatter: function(){
+                        return x_formatter(this.point.old_y);
+                    }
+                }
             }
         },
         series: series
@@ -163,6 +179,20 @@ App.chart_library['country_profile'] = function(container, options) {
     }
 
     var chart = new Highcharts.Chart(chartOptions);
+
+    if(!$('#country-profile-table').length){
+        $('<div>').attr('id', 'country-profile-table').insertAfter(container);
+    }
+
+    App.country_profile = new App.CountryProfileView({
+        el: '#country-profile-table',
+        model: new Backbone.Model(),
+        chart: chart,
+        data: series[0].data,
+        meta_data: options.meta_data,
+        credits: options.credits,
+        x_formatter: x_formatter
+    });
 };
 
 })();

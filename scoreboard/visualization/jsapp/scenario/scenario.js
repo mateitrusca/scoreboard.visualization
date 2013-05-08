@@ -235,7 +235,6 @@ App.ScenarioChartView = Backbone.View.extend({
 
         if(this.schema.chart_type === 'country_profile'){
             var new_args = $.extend({}, args);
-            chart_data['ref-area'] = new_args['ref-area'];
             delete new_args['ref-area'];
             new_args['columns'] = 'ref-area,' + new_args['columns'];
             requests.push(this.request_datapoints(datapoints_url, new_args));
@@ -512,6 +511,44 @@ App.AnnotationsView = Backbone.View.extend({
         }, this));
     }
 
+});
+
+App.CountryProfileView = Backbone.View.extend({
+
+    template: App.get_template('scenario/country_profile.html'),
+
+    initialize: function(options) {
+        this.options = $.extend({}, options);
+        this.render();
+    },
+
+    table: function(){
+        var table = [];
+        var self = this;
+        _(this.options.data).forEach(function(item){
+            var row = {};
+            row.name = item.name;
+            row.eu27 = self.options.x_formatter(item.eu27);
+            row.rank = self.options.x_formatter(item.y - 1);
+            if(row.rank > 0){
+                row.rank = '+' + row.rank;
+            }
+            row.value = self.options.x_formatter(item.old_y);
+            table.push(row);
+        });
+        return table;
+    },
+
+    render: function(){
+        this.$el.html(
+            this.template({
+                'ref-area': this.options.meta_data['ref-area'],
+                'time-period': this.options.meta_data['time-period'],
+                'credits': this.options.credits,
+                'table': this.table()
+            })
+        );
+    }
 });
 
 App.ShareOptionsView = Backbone.View.extend({
