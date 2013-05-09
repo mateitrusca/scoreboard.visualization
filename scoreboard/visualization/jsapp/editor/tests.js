@@ -414,6 +414,14 @@ describe('AxesEditor', function() {
         expect(x_title_label['type']).to.equal('short_label');
     });
 
+    it('should set vertical title in model', function() {
+        var model = new Backbone.Model();
+        var view = new App.AxesEditor({model: model});
+        var y_title_label = pluck_label(model.get('chart_meta_labels'), 'y_title');
+        expect(y_title_label['filter_name']).to.equal('unit-measure');
+        expect(y_title_label['type']).to.equal('short_label');
+    });
+
 });
 
 

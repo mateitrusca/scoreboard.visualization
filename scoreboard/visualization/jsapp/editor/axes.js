@@ -33,13 +33,19 @@ App.AxesEditor = Backbone.View.extend({
             x_title_options: x_title_options
         };
         this.$el.html(this.template(context));
+        this.on_change_label();
     },
 
     on_change_label: function(evt) {
         var facet = this.$el.find('[name="label-horizontal-facet"]').val();
         var type = this.$el.find('[name="label-horizontal-type"]').val();
         this.model.set('chart_meta_labels', [
-            {targets: ['x_title'], filter_name: facet, type: type}
+            {targets: ['x_title'],
+             filter_name: facet,
+             type: type},
+            {targets: ['y_title', 'unit-measure'],
+             filter_name: 'unit-measure',
+             type: 'short_label'}
         ]);
     }
 
