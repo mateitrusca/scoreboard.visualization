@@ -10,8 +10,11 @@
   {{/ x_title.facet_options }}
   </select>
   <select name="label-horizontal-type" class="span2">
-    <option value="label">Long labels</option>
-    <option value="short_label">Short labels</option>
+  {{# x_title.label_options }}
+    <option value="{{ value }}"
+      {{# if selected }}selected{{/ if }}
+      >{{ label }}</option>
+  {{/ x_title.label_options }}
   </select>
 
   <br>color: <tt>#000000</tt>

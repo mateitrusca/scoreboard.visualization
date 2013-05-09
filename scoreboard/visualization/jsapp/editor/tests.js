@@ -422,6 +422,26 @@ describe('AxesEditor', function() {
         expect(y_title_label['type']).to.equal('short_label');
     });
 
+    it('should display current values', function() {
+        var model = new Backbone.Model({
+            facets: [{name: 'dim1', type: 'select'},
+                     {name: 'dim2', type: 'select'}],
+            chart_meta_labels: [
+                {targets: ['x_title'],
+                 filter_name: 'dim2',
+                 type: 'short_label'},
+                {targets: ['y_title', 'unit'],
+                 filter_name: 'unit-measure',
+                 type: 'short_label'}
+            ]
+        });
+        var view = new App.AxesEditor({model: model});
+        expect(view.$el.find('[name="label-horizontal-facet"]').val())
+            .to.equal('dim2');
+        expect(view.$el.find('[name="label-horizontal-type"]').val())
+            .to.equal('short_label');
+    });
+
 });
 
 
