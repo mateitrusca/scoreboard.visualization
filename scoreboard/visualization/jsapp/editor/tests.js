@@ -391,6 +391,16 @@ describe('FacetsEditor', function() {
 
 describe('AxesEditor', function() {
 
+    var pluck_label = function(chart_meta_labels, target) {
+        var needle = null;
+        _(chart_meta_labels).forEach(function(item) {
+            if(_(item.targets).contains(target)) {
+                needle = item;
+            }
+        });
+        return needle;
+    }
+
     it('should set horizontal title in model', function() {
         var model = new Backbone.Model({
             facets: [{name: 'dim1', type: 'select'},
@@ -399,9 +409,9 @@ describe('AxesEditor', function() {
         var view = new App.AxesEditor({model: model});
         view.$el.find('[name="label-horizontal-facet"]').val('dim2').change();
         view.$el.find('[name="label-horizontal-type"]').val('short_label').change();
-        expect(model.get('chart_meta_labels')).to.deep.equal([
-            {targets: ['x_title'], filter_name: 'dim2', type: 'short_label'}
-        ]);
+        var x_title_label = pluck_label(model.get('chart_meta_labels'), 'x_title');
+        expect(x_title_label['filter_name']).to.equal('dim2');
+        expect(x_title_label['type']).to.equal('short_label');
     });
 
 });
