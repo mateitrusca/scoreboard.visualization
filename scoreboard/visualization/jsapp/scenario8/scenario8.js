@@ -63,10 +63,9 @@ App.scenario8_filters_schema = {
     category_facet: 'time-period',
     multiple_series: 'breakdown',
     annotations: {
-        source: '/dimension_value_metadata',
-        filters: [{name: 'indicator', part: 'label'},
-                  {name: 'breakdown-group', part: 'label'},
-                  {name: 'unit-measure', part: 'label'}]
+        filters: [{name: 'indicator'},
+                  {name: 'breakdown-group'},
+                  {name: 'unit-measure'}]
     },
     chart_type: 'lines',
     legend: true,

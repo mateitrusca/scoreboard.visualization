@@ -469,7 +469,6 @@ App.AnnotationsView = Backbone.View.extend({
         var requests = [];
         var annotations = this.schema['annotations'] || {};
         _(annotations['filters']).each(function(filter, key) {
-            var source = annotations.source;
             var args = {};
             args['dimension'] = this.dimensions_mapping[filter.name];
             var facet_values = this.model.get(filter.name);
@@ -482,8 +481,9 @@ App.AnnotationsView = Backbone.View.extend({
                     return;
                 }
                 args['rev'] = this.data_revision;
+                var url = this.cube_url + '/dimension_value_metadata';
                 requests.push(
-                    $.getJSON(this.cube_url + source, args, function(resp) {
+                    $.getJSON(url, args, function(resp) {
                         data.push(resp);
                         _(resp).extend({filter_name: filter.name});
                     })

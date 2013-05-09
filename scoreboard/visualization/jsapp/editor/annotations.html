@@ -8,11 +8,15 @@
 <br>
 <label>Include metadata from:</label>
 <ul>
-  <li><input type="checkbox">Indicator group</li>
-  <li><input type="checkbox">Indicator</li>
-  <li><input type="checkbox">Breakdown group</li>
-  <li><input type="checkbox">Breakdown</li>
-  <li><input type="checkbox">Unit of measure</li>
-  <li><input type="checkbox">Country</li>
-  <li><input type="checkbox">Time period</li>
+{{# facets }}
+  <li>
+    <label>
+      <input type="checkbox"
+             name="annotation"
+             value="{{ value }}"
+             {{# if checked }}checked{{/ if }}>
+      {{ label }}
+    </label>
+  </li>
+{{/ facets }}
 </ul>

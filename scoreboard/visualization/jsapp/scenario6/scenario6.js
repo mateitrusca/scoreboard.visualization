@@ -62,11 +62,10 @@ App.scenario6_filters_schema = {
     multiple_series: 'time-period',
     animation: true,
     annotations: {
-        source: '/dimension_value_metadata',
-        filters: [{name: 'indicator', part: 'label'},
-                  {name: 'breakdown-group', part: 'label'},
-                  {name: 'breakdown', part: 'label'},
-                  {name: 'unit-measure', part: 'label'}]
+        filters: [{name: 'indicator'},
+                  {name: 'breakdown-group'},
+                  {name: 'breakdown'},
+                  {name: 'unit-measure'}]
     },
     chart_type: 'evolution_columns',
     chart_meta_labels: [
