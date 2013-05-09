@@ -5,9 +5,9 @@
 "use strict";
 
 
-App.scenario9_filters_schema = {
+App.scenario9_table_filters_schema = {
   chart_type: "country_profile",
-  chart_subtype: 'bar',
+  chart_subtype: 'table',
   category_facet: "indicator",
   multiple_series: null,
   facets: [
@@ -97,9 +97,9 @@ App.scenario9_filters_schema = {
 };
 
 
-App.scenario9_initialize = function() {
+App.scenario9_table_initialize = function() {
     App.create_visualization($("#scenario-box")[0],
-                             App.scenario9_filters_schema);
+                             App.scenario9_table_filters_schema);
 };
 
 

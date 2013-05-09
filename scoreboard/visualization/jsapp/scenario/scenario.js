@@ -234,6 +234,7 @@ App.ScenarioChartView = Backbone.View.extend({
         }
 
         if(this.schema.chart_type === 'country_profile'){
+            chart_data['subtype'] = this.schema.chart_subtype;
             var new_args = $.extend({}, args);
             delete new_args['ref-area'];
             new_args['columns'] = 'ref-area,' + new_args['columns'];
@@ -529,10 +530,7 @@ App.CountryProfileView = Backbone.View.extend({
             var row = {};
             row.name = item.name;
             row.eu27 = self.options.x_formatter(item.eu27);
-            row.rank = self.options.x_formatter(item.y - 1);
-            if(row.rank > 0){
-                row.rank = '+' + row.rank;
-            }
+            row.rank = item.rank;
             row.value = self.options.x_formatter(item.old_y);
             table.push(row);
         });
