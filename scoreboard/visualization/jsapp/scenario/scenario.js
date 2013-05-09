@@ -239,6 +239,10 @@ App.ScenarioChartView = Backbone.View.extend({
             delete new_args['ref-area'];
             new_args['columns'] = 'ref-area,' + new_args['columns'];
             requests.push(this.request_datapoints(datapoints_url, new_args));
+
+            // Also request list of EU countries
+            var eurl = this.cube_url + '/european-union.json';
+            requests.push($.getJSON(eurl, {}));
         }
 
         var client_filter_options = [];
@@ -259,6 +263,7 @@ App.ScenarioChartView = Backbone.View.extend({
 
             if(this.schema.chart_type === 'country_profile'){
                 chart_data['all_series'] = responses.length > 1 ? responses[1][0] : {};
+                chart_data['EU'] = responses.length > 2 ? responses[2][0]: {};
             }
 
             chart_data['series'] = _(multiseries_values).map(function(value, n) {
@@ -529,7 +534,7 @@ App.CountryProfileView = Backbone.View.extend({
         _(this.options.data).forEach(function(item){
             var row = {};
             row.name = item.name;
-            row.eu27 = self.options.x_formatter(item.eu27);
+            row.eu = self.options.x_formatter(item.eu);
             row.rank = item.rank;
             row.value = self.options.x_formatter(item.old_y);
             table.push(row);
