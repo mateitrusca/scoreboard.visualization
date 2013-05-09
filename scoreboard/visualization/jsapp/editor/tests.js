@@ -445,6 +445,37 @@ describe('AxesEditor', function() {
 });
 
 
+describe('AnnotationsEditor', function() {
+
+    it('should add selected items to model', function() {
+        var model = new Backbone.Model({
+            facets: [{name: 'dim1', type: 'select'},
+                     {name: 'dim2', type: 'select'}],
+        });
+        var view = new App.AnnotationsEditor({model: model});
+        view.$el.find('[name="annotation"][value="dim2"]').click().change();
+        var names = _(model.get('annotations')['filters']).pluck('name');
+        expect(names).to.not.contain('dim1');
+        expect(names).to.contain('dim2');
+    });
+
+    it('should preselect checkboxes with current value', function() {
+        var model = new Backbone.Model({
+            facets: [{name: 'dim1', type: 'select'},
+                     {name: 'dim2', type: 'select'}],
+            annotations: {filters: [{name: 'dim2'}]}
+        });
+        var view = new App.AnnotationsEditor({model: model});
+        var get_checkbox = function(name) {
+            return view.$el.find('[name="annotation"][value="' + name + '"]');
+        }
+        expect(get_checkbox('dim1').is(':checked')).to.be.false;
+        expect(get_checkbox('dim2').is(':checked')).to.be.true;
+    });
+
+});
+
+
 describe('AdvancedEditor', function() {
     "use strict";
 
