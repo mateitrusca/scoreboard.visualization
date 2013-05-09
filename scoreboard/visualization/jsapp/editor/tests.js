@@ -389,6 +389,62 @@ describe('FacetsEditor', function() {
 });
 
 
+describe('AxesEditor', function() {
+
+    var pluck_label = function(chart_meta_labels, target) {
+        var needle = null;
+        _(chart_meta_labels).forEach(function(item) {
+            if(_(item.targets).contains(target)) {
+                needle = item;
+            }
+        });
+        return needle;
+    }
+
+    it('should set horizontal title in model', function() {
+        var model = new Backbone.Model({
+            facets: [{name: 'dim1', type: 'select'},
+                     {name: 'dim2', type: 'select'}]
+        });
+        var view = new App.AxesEditor({model: model});
+        view.$el.find('[name="label-horizontal-facet"]').val('dim2').change();
+        view.$el.find('[name="label-horizontal-type"]').val('short_label').change();
+        var x_title_label = pluck_label(model.get('chart_meta_labels'), 'x_title');
+        expect(x_title_label['filter_name']).to.equal('dim2');
+        expect(x_title_label['type']).to.equal('short_label');
+    });
+
+    it('should set vertical title in model', function() {
+        var model = new Backbone.Model();
+        var view = new App.AxesEditor({model: model});
+        var y_title_label = pluck_label(model.get('chart_meta_labels'), 'y_title');
+        expect(y_title_label['filter_name']).to.equal('unit-measure');
+        expect(y_title_label['type']).to.equal('short_label');
+    });
+
+    it('should display current values', function() {
+        var model = new Backbone.Model({
+            facets: [{name: 'dim1', type: 'select'},
+                     {name: 'dim2', type: 'select'}],
+            chart_meta_labels: [
+                {targets: ['x_title'],
+                 filter_name: 'dim2',
+                 type: 'short_label'},
+                {targets: ['y_title', 'unit'],
+                 filter_name: 'unit-measure',
+                 type: 'short_label'}
+            ]
+        });
+        var view = new App.AxesEditor({model: model});
+        expect(view.$el.find('[name="label-horizontal-facet"]').val())
+            .to.equal('dim2');
+        expect(view.$el.find('[name="label-horizontal-type"]').val())
+            .to.equal('short_label');
+    });
+
+});
+
+
 describe('AdvancedEditor', function() {
     "use strict";
 
