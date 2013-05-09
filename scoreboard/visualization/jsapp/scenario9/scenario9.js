@@ -54,12 +54,7 @@ App.scenario9_filters_schema = {
     }
   ],
   annotations: {
-    filters: [
-      {
-        name: "ref-area",
-        part: "label"
-      }
-    ]
+    filters: [{name: "ref-area"}]
   },
   chart_meta_labels: [
     {

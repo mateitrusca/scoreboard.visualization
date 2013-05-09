@@ -74,10 +74,10 @@ App.scenario1_filters_schema = {
     ],
     category_facet: 'ref-area',
     annotations: {
-        filters: [{name: 'indicator', part: 'label'},
-                  {name: 'breakdown-group', part: 'label'},
-                  {name: 'breakdown', part: 'label'},
-                  {name: 'unit-measure', part: 'label'}]
+        filters: [{name: 'indicator'},
+                  {name: 'breakdown-group'},
+                  {name: 'breakdown'},
+                  {name: 'unit-measure'}]
     },
     chart_type: 'columns',
     plotlines: {y: 'values'},

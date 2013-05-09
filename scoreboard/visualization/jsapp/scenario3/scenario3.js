@@ -109,14 +109,14 @@ App.scenario3_filters_schema = {
     ],
     category_facet: 'ref-area',
     annotations: {
-        filters: [{name: 'x-indicator', part: 'label'},
-                  {name: 'x-breakdown-group', part: 'label'},
-                  {name: 'x-breakdown', part: 'label'},
-                  {name: 'x-unit-measure', part: 'label'},
-                  {name: 'y-indicator', part: 'label'},
-                  {name: 'y-breakdown-group', part: 'label'},
-                  {name: 'y-breakdown', part: 'label'},
-                  {name: 'y-unit-measure', part: 'label'}]
+        filters: [{name: 'x-indicator'},
+                  {name: 'x-breakdown-group'},
+                  {name: 'x-breakdown'},
+                  {name: 'x-unit-measure'},
+                  {name: 'y-indicator'},
+                  {name: 'y-breakdown-group'},
+                  {name: 'y-breakdown'},
+                  {name: 'y-unit-measure'}]
     },
     chart_type: 'scatter',
     xy: true,
