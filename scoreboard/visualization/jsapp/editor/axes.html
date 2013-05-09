@@ -3,11 +3,11 @@
 
   <label>Title</label>
   <select name="label-horizontal-facet" class="span3">
-  {{# x_title_options }}
+  {{# x_title.facet_options }}
     <option value="{{ value }}"
       {{# if selected }}selected{{/ if }}
       >{{ label }}</option>
-  {{/ x_title_options }}
+  {{/ x_title.facet_options }}
   </select>
   <select name="label-horizontal-type" class="span2">
     <option value="label">Long labels</option>

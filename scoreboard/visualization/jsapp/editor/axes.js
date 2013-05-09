@@ -25,17 +25,20 @@ App.AxesEditor = Backbone.View.extend({
     },
 
     render: function() {
-        var x_title_options = [];
+        var x_title_facet_options = [];
         _(this.model.get('facets')).forEach(function(facet) {
             if(facet['type'] == 'select') {
-                x_title_options.push({
+                var item = {
                     value: facet['name'],
                     label: facet['label']
-                });
+                };
+                x_title_facet_options.push(item);
             }
         });
         var context = {
-            x_title_options: x_title_options
+            x_title: {
+                facet_options: x_title_facet_options
+            }
         };
         this.$el.html(this.template(context));
     },
