@@ -20,6 +20,11 @@ App.AxesEditor = Backbone.View.extend({
     },
 
     initialize: function(options) {
+        this.render();
+        this.on_change_label();
+    },
+
+    render: function() {
         var x_title_options = [];
         _(this.model.get('facets')).forEach(function(facet) {
             if(facet['type'] == 'select') {
@@ -33,7 +38,6 @@ App.AxesEditor = Backbone.View.extend({
             x_title_options: x_title_options
         };
         this.$el.html(this.template(context));
-        this.on_change_label();
     },
 
     on_change_label: function(evt) {
