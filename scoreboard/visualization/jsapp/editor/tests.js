@@ -389,6 +389,24 @@ describe('FacetsEditor', function() {
 });
 
 
+describe('AxesEditor', function() {
+
+    it('should set horizontal title in model', function() {
+        var model = new Backbone.Model({
+            facets: [{name: 'dim1', type: 'select'},
+                     {name: 'dim2', type: 'select'}]
+        });
+        var view = new App.AxesEditor({model: model});
+        view.$el.find('[name="label-horizontal-facet"]').val('dim2').change();
+        view.$el.find('[name="label-horizontal-type"]').val('short_label').change();
+        expect(model.get('chart_meta_labels')).to.deep.equal([
+            {targets: ['x_title'], filter_name: 'dim2', type: 'short_label'}
+        ]);
+    });
+
+});
+
+
 describe('AdvancedEditor', function() {
     "use strict";
 

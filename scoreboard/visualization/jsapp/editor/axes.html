@@ -2,13 +2,16 @@
   <legend>Horizontal</legend>
 
   <label>Title</label>
-  <select class="span3">
-    <option>None</option>
-    <option>Year</option>
+  <select name="label-horizontal-facet" class="span3">
+  {{# x_title_options }}
+    <option value="{{ value }}"
+      {{# if selected }}selected{{/ if }}
+      >{{ label }}</option>
+  {{/ x_title_options }}
   </select>
-  <select class="span2">
-    <option>Long labels</option>
-    <option>Short labels</option>
+  <select name="label-horizontal-type" class="span2">
+    <option value="label">Long labels</option>
+    <option value="short_label">Short labels</option>
   </select>
 
   <br>color: <tt>#000000</tt>
