@@ -459,6 +459,20 @@ describe('AnnotationsEditor', function() {
         expect(names).to.contain('dim2');
     });
 
+    it('should preselect checkboxes with current value', function() {
+        var model = new Backbone.Model({
+            facets: [{name: 'dim1', type: 'select'},
+                     {name: 'dim2', type: 'select'}],
+            annotations: {filters: [{name: 'dim2'}]}
+        });
+        var view = new App.AnnotationsEditor({model: model});
+        var get_checkbox = function(name) {
+            return view.$el.find('[name="annotation"][value="' + name + '"]');
+        }
+        expect(get_checkbox('dim1').is(':checked')).to.be.false;
+        expect(get_checkbox('dim2').is(':checked')).to.be.true;
+    });
+
 });
 
 
