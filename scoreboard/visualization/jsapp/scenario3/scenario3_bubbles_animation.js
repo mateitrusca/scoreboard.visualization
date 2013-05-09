@@ -152,7 +152,6 @@ App.scenario3_bubbles_animation_filters_schema = {
     category_facet: 'ref-area',
     multiple_series: 'time-period',
     annotations: {
-        source: '/dimension_value_metadata',
         filters: [{name: 'x-indicator', part: 'label'},
                   {name: 'x-breakdown-group', part: 'label'},
                   {name: 'x-breakdown', part: 'label'},

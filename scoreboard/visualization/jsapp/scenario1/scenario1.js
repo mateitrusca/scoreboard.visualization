@@ -74,7 +74,6 @@ App.scenario1_filters_schema = {
     ],
     category_facet: 'ref-area',
     annotations: {
-        source: '/dimension_value_metadata',
         filters: [{name: 'indicator', part: 'label'},
                   {name: 'breakdown-group', part: 'label'},
                   {name: 'breakdown', part: 'label'},

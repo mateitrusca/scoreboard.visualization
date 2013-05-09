@@ -153,7 +153,6 @@ App.scenario3_bubbles_filters_schema = {
     ],
     category_facet: 'ref-area',
     annotations: {
-        source: '/dimension_value_metadata',
         filters: [{name: 'x-indicator', part: 'label'},
                   {name: 'x-breakdown-group', part: 'label'},
                   {name: 'x-breakdown', part: 'label'},
