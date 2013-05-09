@@ -445,6 +445,23 @@ describe('AxesEditor', function() {
 });
 
 
+describe('AnnotationsEditor', function() {
+
+    it('should add selected items to model', function() {
+        var model = new Backbone.Model({
+            facets: [{name: 'dim1', type: 'select'},
+                     {name: 'dim2', type: 'select'}],
+        });
+        var view = new App.AnnotationsEditor({model: model});
+        view.$el.find('[name="annotation"][value="dim2"]').click().change();
+        var names = _(model.get('annotations')['filters']).pluck('name');
+        expect(names).to.not.contain('dim1');
+        expect(names).to.contain('dim2');
+    });
+
+});
+
+
 describe('AdvancedEditor', function() {
     "use strict";
 
