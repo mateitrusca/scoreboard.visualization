@@ -145,11 +145,13 @@ App.FacetsEditor = Backbone.View.extend({
                 'label': dimension['label']
             });
         }, this);
+        var to_remove = [];
         this.facets.forEach(function(facet) {
             if(! this.facet_views[facet.cid]) {
-                this.facets.remove(facet);
+                to_remove.push(facet);
             }
         }, this);
+        this.facets.remove(to_remove);
         this.facets.on('change sort', this.apply_changes, this);
         this.apply_changes();
     },
