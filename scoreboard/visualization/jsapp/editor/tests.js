@@ -399,6 +399,12 @@ describe('FacetsEditor', function() {
 
     describe('multidim facets', function() {
 
+        var facets_by_name = function(facets) {
+            return _.object(_(facets).map(function(facet) {
+                return [facet['name'], facet];
+            }));
+        };
+
         it('should generate double facets if multidim=2', function() {
             var model = new Backbone.Model({multidim: 2});
             var view = new NoAjaxFacetsEditor({
@@ -409,6 +415,22 @@ describe('FacetsEditor', function() {
             expect(model.get('facets')[0]['name']).to.equal('x-dim1');
             expect(model.get('facets')[1]['name']).to.equal('y-dim1');
             expect(model.get('facets')[2]['name']).to.equal('dim2');
+        });
+
+        it('multidim dimensions should depend on their axis only', function() {
+            var model = new Backbone.Model({multidim: 2});
+            var view = new NoAjaxFacetsEditor({
+                model: model,
+                dimensions: four_dimensions
+            });
+            view.$el.find('[data-name="dim1"] [name="multidim"]').click().change();
+            view.$el.find('[data-name="dim2"] [name="multidim"]').click().change();
+            view.$el.find('[data-name="dim3"] [name="multidim"]').click().change();
+            var facets = facets_by_name(model.get('facets'));
+            expect(facets['x-dim2']['constraints']).to.deep.equal(
+                {'dim1': 'x-dim1'});
+            expect(facets['x-dim3']['constraints']).to.deep.equal(
+                {'dim1': 'x-dim1', 'dim2': 'x-dim2'});
         });
 
     });

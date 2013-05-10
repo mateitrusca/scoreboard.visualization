@@ -222,8 +222,14 @@ App.FacetsEditor = Backbone.View.extend({
             if(multidim) {
                 _(_.range(this.model.get('multidim'))).forEach(function(n) {
                     var letter = 'xyz'[n];
+                    var prefix = letter + '-';
+                    var constraints = {};
+                    _(facet.constraints).forEach(function(name, value) {
+                        constraints[name] = prefix + value;
+                    });
                     value.push(_({
-                        name: letter + '-' + facet['name']
+                        name: prefix + facet['name'],
+                        constraints: constraints
                     }).defaults(facet));
                 });
             }
