@@ -124,8 +124,22 @@ App.FacetsEditor = Backbone.View.extend({
         var add_model = _.bind(function(name, defaults) {
             var facet_model = this.facets.findWhere({name: name});
             if(! facet_model) {
-                facet_model = new Backbone.Model({'name': name});
-                facet_model.set(defaults);
+                var facet_model = this.facets.findWhere({name: 'x-' + name});
+                if(facet_model) { // hey, it's a multidim facet
+                    var label = facet_model.get('label') || defaults['label'];
+                    if(label.substr(0, 4) == '(X) ') {
+                        label = label.substr(4);
+                    }
+                    facet_model.set({
+                        name: name,
+                        multidim: true,
+                        label: label
+                    });
+                }
+                else {
+                    facet_model = new Backbone.Model({'name': name});
+                    facet_model.set(defaults);
+                }
             }
             this.facets.add(facet_model);
             var facet_view = new App.FacetEditorField({
@@ -228,8 +242,11 @@ App.FacetsEditor = Backbone.View.extend({
                     _(facets_above).forEach(function(name) {
                         constraints[name] = prefix + name;
                     });
+                    var label = '(' + letter.toUpperCase() + ') '
+                              + facet['label'];
                     value.push(_({
                         name: prefix + facet['name'],
+                        label: label,
                         constraints: constraints
                     }).defaults(facet));
                 });

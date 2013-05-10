@@ -452,6 +452,31 @@ describe('FacetsEditor', function() {
                 'dim3': 'dim3'});
         });
 
+        it('should parse multidim facets and preserve labels', function() {
+            var model = new Backbone.Model({
+                multidim: 2,
+                facets: [
+                    {name: 'x-dim1', label: '(X) blah dim1'},
+                    {name: 'y-dim1', label: '(Y) ignored dim1'},
+                    {name: 'x-dim2', label: '(X) blah dim2'},
+                    {name: 'y-dim2', label: '(Y) ignored dim2'},
+                    {name: 'dim3', label: 'blah dim3'},
+                    {name: 'dim4', label: 'blah dim4'}
+                ]
+            });
+            var view = new NoAjaxFacetsEditor({
+                model: model,
+                dimensions: four_dimensions
+            });
+            var facets = facets_by_name(model.get('facets'));
+            expect(facets['x-dim1'].label).to.equal('(X) blah dim1');
+            expect(facets['y-dim1'].label).to.equal('(Y) blah dim1');
+            expect(facets['x-dim2'].label).to.equal('(X) blah dim2');
+            expect(facets['y-dim2'].label).to.equal('(Y) blah dim2');
+            expect(facets['dim3'].label).to.equal('blah dim3');
+            expect(facets['dim4'].label).to.equal('blah dim4');
+        });
+
     });
 
 });
