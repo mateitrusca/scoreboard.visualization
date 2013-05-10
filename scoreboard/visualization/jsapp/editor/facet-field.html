@@ -24,3 +24,10 @@
       {{# if include_wildcard }}checked{{/ if }}>
 {{/ if }}
 </td>
+
+{{# if chart_is_multidim }}
+<td>
+  <input type="checkbox" name="multidim"
+      {{# if multidim }}checked{{/ if }}>
+</td>
+{{/ if }}

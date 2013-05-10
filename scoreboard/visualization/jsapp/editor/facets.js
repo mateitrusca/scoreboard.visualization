@@ -28,18 +28,20 @@ App.FacetEditorField = Backbone.View.extend({
         if(! this.model.has('type')) {
             this.model.set('type', this.type_options[0]['value']);
         }
+        this.facets_editor = options['facets_editor'];
         this.render();
     },
 
     render: function() {
         var context = _({
-            'type_options': _(this.type_options).map(function(opt) {
+            type_options: _(this.type_options).map(function(opt) {
                 var selected = this.model.get('type') == opt['value'];
                 return _({
                     selected: selected
                 }).extend(opt);
             }, this),
-            'is_single_select': (this.model.get('type') == 'select')
+            is_single_select: (this.model.get('type') == 'select'),
+            chart_is_multidim: this.facets_editor.chart_is_multidim()
         }).extend(this.model.toJSON());
         this.$el.html(this.template(context));
         this.$el.attr('data-name', this.model.get('name'));
@@ -116,7 +118,10 @@ App.FacetsEditor = Backbone.View.extend({
                 facet_model.set(defaults);
             }
             this.facets.add(facet_model);
-            var facet_view = new App.FacetEditorField({model: facet_model});
+            var facet_view = new App.FacetEditorField({
+                model: facet_model,
+                facets_editor: this
+            });
             this.facet_views[facet_model.cid] = facet_view;
         }, this);
         _(this.dimensions).forEach(function(dimension) {
@@ -186,7 +191,8 @@ App.FacetsEditor = Backbone.View.extend({
             series_options: this.facet_roles.series_options,
             err_too_few: this.facet_roles.err_too_few,
             err_too_many: this.facet_roles.err_too_many,
-            category_facet: this.facet_roles.category_facet
+            category_facet: this.facet_roles.category_facet,
+            chart_is_multidim: this.chart_is_multidim()
         };
         this.$el.html(this.template(context));
         this.facets.forEach(function(facet_model) {
@@ -208,6 +214,10 @@ App.FacetsEditor = Backbone.View.extend({
         if(category_facet) {
             this.model.set('category_facet', category_facet['name']);
         }
+    },
+
+    chart_is_multidim: function() {
+        return this.model.get('multidim') ? true : false;
     },
 
     apply_changes: function() {
