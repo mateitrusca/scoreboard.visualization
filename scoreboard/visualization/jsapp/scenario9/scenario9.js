@@ -8,6 +8,7 @@
 App.scenario9_filters_schema = {
   chart_type: "country_profile",
   chart_subtype: 'bar',
+  legend: true,
   category_facet: "indicator",
   multiple_series: null,
   facets: [
