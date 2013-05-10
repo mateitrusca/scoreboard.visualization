@@ -10,7 +10,9 @@ App.chart_library['country_profile'] = function(container, options) {
     var percent = options['unit_is_pc'];
     var series = App.format_series(options['series'], sort, '', percent);
     var all_series = options.all_series;
+    var eu = options.EU;
 
+    // Compute new values from all_series based on EU27 value
     var mapping = {};
     _(all_series.datapoints).forEach(function(item){
         var key, oldValue, newValue, exists, myName, myValue;
@@ -28,13 +30,31 @@ App.chart_library['country_profile'] = function(container, options) {
                 'min': {'value': Math.min(), 'ref-area': ''},
                 'max': {'value': Math.max(), 'ref-area': ''},
                 'med': {'value': 0, 'ref-area': ''},
-                'rank': {'value': 1, 'ref-area': myName}
+                'rank': {'value': 0, 'ref-area': myName}
             };
+        }
+
+        // Update med
+        if(item['ref-area'] === 'EU27'){
+            mapping[key]['med']['value'] = item.value;
+            mapping[key]['med']['ref-area'] = item['ref-area'];
+        }
+
+        var inEu = _(eu).find(function(v, k){
+            return (v === myName);
+        });
+
+        if(!inEu){
+            return;
         }
 
         // Update rank
         if(item.value > myValue){
-            mapping[key]['rank']['value'] += 1;
+            if(!mapping[key]['rank']['value']){
+                mapping[key]['rank']['value'] = 1;
+            }else{
+                mapping[key]['rank']['value'] += 1;
+            }
         }
 
         // Update min
@@ -52,13 +72,20 @@ App.chart_library['country_profile'] = function(container, options) {
             mapping[key]['max']['value'] = newValue;
             mapping[key]['max']['ref-area'] = item['ref-area'];
         }
-
-        // Update med
-        if(item['ref-area'] === 'EU27'){
-            mapping[key]['med']['value'] = item.value;
-            mapping[key]['med']['ref-area'] = item['ref-area'];
-        }
     });
+
+    var stack_series = [
+        {
+            name: 'Under EU27 average',
+            color: '#7dc30f',
+            data: []
+        },
+        {
+            name: 'Above EU27 average',
+            color: '#436b06',
+            data: []
+        }
+    ];
 
     // Update series with new values
     _(series[0].data).forEach(function(item){
@@ -75,6 +102,20 @@ App.chart_library['country_profile'] = function(container, options) {
             item.y = (val - min) / (med - min);
         }else{
             item.y = 1 + (val - med) / (max - med);
+        }
+
+        // Fill stack
+        var fake;
+        if(item.old_y > item.eu){
+            stack_series[1].data.push(item);
+            fake = $.extend({}, item);
+            fake.y = 0;
+            stack_series[0].data.push(fake);
+        }else{
+            stack_series[0].data.push(item);
+            fake = $.extend({}, item);
+            fake.y = 0;
+            stack_series[1].data.push(fake);
         }
     });
 
@@ -106,7 +147,7 @@ App.chart_library['country_profile'] = function(container, options) {
                 marginTop: 60,
                 marginBottom: 100,
                 marginLeft: 200,
-                marginRight: 150,
+                marginRight: 200,
                 height: 200 + series[0].data.length * 50,
                 width: 850,
             },
@@ -179,8 +220,8 @@ App.chart_library['country_profile'] = function(container, options) {
             legend: {
                 enabled: true,
                 layout: 'vertical',
-				align: 'right',
-				verticalAlign: 'top',
+                align: 'right',
+                verticalAlign: 'top',
                 x: 10,
                 y: 30,
                 borderWidth: 0
@@ -191,17 +232,11 @@ App.chart_library['country_profile'] = function(container, options) {
                 }
             },
             plotOptions: {
-                bar: {
-				    pointWidth: 30,
-                    dataLabels: {
-                        enabled: true,
-                        formatter: function(){
-                            return x_formatter(this.point.old_y);
-                        }
-                    }
+                series: {
+                    stacking: 'normal',
                 }
             },
-            series: series
+            series: stack_series
         };
 
         if (!options['legend']){

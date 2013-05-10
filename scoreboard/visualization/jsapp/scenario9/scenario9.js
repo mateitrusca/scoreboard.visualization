@@ -54,9 +54,6 @@ App.scenario9_filters_schema = {
       dimension: "value"
     }
   ],
-  annotations: {
-    filters: [{name: "ref-area"}]
-  },
   chart_meta_labels: [
     {
       targets: ['x_title'],
