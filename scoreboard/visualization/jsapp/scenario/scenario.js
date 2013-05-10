@@ -176,7 +176,8 @@ App.ScenarioChartView = Backbone.View.extend({
             'plotlines': this.schema['plotlines'] || false,
             'animation': this.schema['animation'] || false,
             'legend': this.schema['legend'] || false,
-            'multiseries': this.multiple_series
+            'multiseries': this.multiple_series,
+            'category_facet': this.schema['category_facet']
         };
 
         var multiseries_values = null;
