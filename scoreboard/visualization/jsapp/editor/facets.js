@@ -158,9 +158,7 @@ App.FacetsEditor = Backbone.View.extend({
         var series_options = [];
         var no_multiple_series = true;
         var free_dimensions = [];
-        var facets_above = {};
         this.facets.forEach(function(facet_model) {
-            facet_model.set('constraints', _({}).extend(facets_above));
             var facet = facet_model.toJSON();
             var name = facet['name'];
             if(facet['type'] == 'multiple_select' ||
@@ -174,9 +172,6 @@ App.FacetsEditor = Backbone.View.extend({
                     free_dimensions.push(option);
                 }
                 series_options.push(option);
-            }
-            else if(facet['type'] != 'ignore') {
-                facets_above[name] = name;
             }
         }, this);
         if(no_multiple_series) {
@@ -217,6 +212,7 @@ App.FacetsEditor = Backbone.View.extend({
         var value = [];
         var multidim_facets = {};
         var all_multidim = _.range(this.model.get('multidim'));
+        var facets_above = [];
         this.facets.forEach(function(facet_model) {
             var facet = facet_model.toJSON();
             var multidim = facet['multidim'];
@@ -227,8 +223,8 @@ App.FacetsEditor = Backbone.View.extend({
                     var letter = 'xyz'[n];
                     var prefix = letter + '-';
                     var constraints = {};
-                    _(facet.constraints).forEach(function(name, value) {
-                        constraints[name] = prefix + value;
+                    _(facets_above).forEach(function(name) {
+                        constraints[name] = prefix + name;
                     });
                     value.push(_({
                         name: prefix + facet['name'],
@@ -238,20 +234,23 @@ App.FacetsEditor = Backbone.View.extend({
             }
             else {
                 var constraints = {};
-                _(facet['constraints']).forEach(function(name, value) {
+                _(facets_above).forEach(function(name) {
                     if(multidim_facets[name]) {
                         _(all_multidim).forEach(function(n) {
                             var letter = 'xyz'[n];
                             var prefix = letter + '-';
-                            constraints[prefix+name] = prefix+value;
+                            constraints[prefix + name] = prefix + name;
                         });
                     }
                     else {
-                        constraints[name] = value;
+                        constraints[name] = name;
                     }
                 });
                 facet['constraints'] = constraints;
                 value.push(facet);
+            }
+            if(facet['type'] == 'select') {
+                facets_above.push(facet['name']);
             }
         }, this);
         value.push({type: 'all-values', dimension: 'value'});
