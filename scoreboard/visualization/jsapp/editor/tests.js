@@ -19,6 +19,17 @@ describe('ChartTypeEditor', function() {
         expect(editor.$el.find(':checked').val()).to.equal('columns');
     });
 
+    it('should set multidim according to chart type', function() {
+        var model = new Backbone.Model();
+        var editor = new App.ChartTypeEditor({model: model});
+        testing.choose_radio(editor.$el.find('[name=chart-type]'), 'scatter');
+        expect(model.get('multidim')).to.equal(2);
+        testing.choose_radio(editor.$el.find('[name=chart-type]'), 'bubbles');
+        expect(model.get('multidim')).to.equal(3);
+        testing.choose_radio(editor.$el.find('[name=chart-type]'), 'columns');
+        expect(model.get('multidim')).to.be.undefined;
+    });
+
 });
 
 
