@@ -433,6 +433,24 @@ describe('FacetsEditor', function() {
                 {'dim1': 'x-dim1', 'dim2': 'x-dim2'});
         });
 
+        it('subsequent dimensions depend on all multidim axes', function() {
+            var model = new Backbone.Model({multidim: 2});
+            var view = new NoAjaxFacetsEditor({
+                model: model,
+                dimensions: four_dimensions
+            });
+            view.$el.find('[data-name="dim1"] [name="multidim"]').click().change();
+            view.$el.find('[data-name="dim2"] [name="multidim"]').click().change();
+            var facets = facets_by_name(model.get('facets'));
+            expect(facets['dim3']['constraints']).to.deep.equal({
+                'x-dim1': 'x-dim1', 'x-dim2': 'x-dim2',
+                'y-dim1': 'y-dim1', 'y-dim2': 'y-dim2'});
+            expect(facets['dim4']['constraints']).to.deep.equal({
+                'x-dim1': 'x-dim1', 'x-dim2': 'x-dim2',
+                'y-dim1': 'y-dim1', 'y-dim2': 'y-dim2',
+                'dim3': 'dim3'});
+        });
+
     });
 
 });

@@ -215,12 +215,15 @@ App.FacetsEditor = Backbone.View.extend({
 
     save_value: function() {
         var value = [];
+        var multidim_facets = {};
+        var all_multidim = _.range(this.model.get('multidim'));
         this.facets.forEach(function(facet_model) {
             var facet = facet_model.toJSON();
             var multidim = facet['multidim'];
             delete facet['multidim'];
             if(multidim) {
-                _(_.range(this.model.get('multidim'))).forEach(function(n) {
+                multidim_facets[facet['name']] = true;
+                _(all_multidim).forEach(function(n) {
                     var letter = 'xyz'[n];
                     var prefix = letter + '-';
                     var constraints = {};
@@ -234,6 +237,20 @@ App.FacetsEditor = Backbone.View.extend({
                 });
             }
             else {
+                var constraints = {};
+                _(facet['constraints']).forEach(function(name, value) {
+                    if(multidim_facets[name]) {
+                        _(all_multidim).forEach(function(n) {
+                            var letter = 'xyz'[n];
+                            var prefix = letter + '-';
+                            constraints[prefix+name] = prefix+value;
+                        });
+                    }
+                    else {
+                        constraints[name] = value;
+                    }
+                });
+                facet['constraints'] = constraints;
                 value.push(facet);
             }
         }, this);
