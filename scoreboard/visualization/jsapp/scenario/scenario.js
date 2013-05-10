@@ -273,27 +273,13 @@ App.ScenarioChartView = Backbone.View.extend({
                 if(this.client_filter) {
                     var dimension = this.dimensions_mapping[this.client_filter];
                     datapoints = _(datapoints).filter(function(item) {
-                        return _(client_filter_options).contains(item[dimension]);
+                        return _(client_filter_options).contains(
+                            item[dimension]['notation']);
                     }, this);
                 }
                 return {
                     'label': chart_data['group_labels'][value],
-                    'data': _(datapoints).map(function(item){
-                        var category_facet = this.schema['category_facet'];
-                        var keys = _(item).keys().sort();
-                        var mapping = _.object([
-                            [category_facet, 'code'],
-                            [category_facet + '-label', 'label'],
-                            [category_facet + '-short-label', '-short-label'],
-                            ['value', 'value']]);
-                        var item_out = _.object();
-                        _(keys).each(function(key){
-                            item_out = _(item_out).extend(
-                                _.object([[mapping[key], item[key]]])
-                            );
-                        });
-                        return item_out;
-                    }, this)
+                    'data': datapoints
                 };
             }, this);
             this.data = chart_data;
