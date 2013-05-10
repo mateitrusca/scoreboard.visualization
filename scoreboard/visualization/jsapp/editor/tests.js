@@ -53,10 +53,11 @@ describe('FacetsEditor', function() {
         this.sandbox.restore();
     });
 
-    var four_dimensions = [{type_label: 'dimension', notation: 'dim1'},
-                           {type_label: 'dimension', notation: 'dim2'},
-                           {type_label: 'dimension', notation: 'dim3'},
-                           {type_label: 'dimension', notation: 'dim4'}];
+    var four_dimensions = [
+        {type_label: 'dimension', notation: 'dim1', label: "Dim 1"},
+        {type_label: 'dimension', notation: 'dim2', label: "Dim 2"},
+        {type_label: 'dimension', notation: 'dim3', label: "Dim 3"},
+        {type_label: 'dimension', notation: 'dim4', label: "Dim 4"}];
 
     describe('facet list', function() {
 
