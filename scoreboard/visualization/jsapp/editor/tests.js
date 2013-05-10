@@ -397,6 +397,22 @@ describe('FacetsEditor', function() {
 
     });
 
+    describe('multidim facets', function() {
+
+        it('should generate double facets if multidim=2', function() {
+            var model = new Backbone.Model({multidim: 2});
+            var view = new NoAjaxFacetsEditor({
+                model: model,
+                dimensions: four_dimensions
+            });
+            view.$el.find('[data-name="dim1"] [name="multidim"]').click().change();
+            expect(model.get('facets')[0]['name']).to.equal('x-dim1');
+            expect(model.get('facets')[1]['name']).to.equal('y-dim1');
+            expect(model.get('facets')[2]['name']).to.equal('dim2');
+        });
+
+    });
+
 });
 
 

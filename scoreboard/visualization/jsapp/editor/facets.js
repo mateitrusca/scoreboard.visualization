@@ -14,7 +14,8 @@ App.FacetEditorField = Backbone.View.extend({
     events: {
         'change [name="type"]': 'on_change_type',
         'click .facet-sort': 'on_click_sort',
-        'change [name="include_wildcard"]': 'on_change_wildcard'
+        'change [name="include_wildcard"]': 'on_change_wildcard',
+        'change [name="multidim"]': 'on_change_multidim'
     },
 
     type_options: [
@@ -71,6 +72,15 @@ App.FacetEditorField = Backbone.View.extend({
             this.model.unset('include_wildcard');
         }
         this.check_constraints();
+    },
+
+    on_change_multidim: function(evt) {
+        if($(evt.target).is(':checked')) {
+            this.model.set('multidim', true);
+        }
+        else {
+            this.model.unset('multidim');
+        }
     },
 
     check_constraints: function() {
@@ -205,9 +215,22 @@ App.FacetsEditor = Backbone.View.extend({
 
     save_value: function() {
         var value = [];
-        this.facets.forEach(function(facet) {
-            value.push(facet.toJSON());
-        });
+        this.facets.forEach(function(facet_model) {
+            var facet = facet_model.toJSON();
+            var multidim = facet['multidim'];
+            delete facet['multidim'];
+            if(multidim) {
+                _(_.range(this.model.get('multidim'))).forEach(function(n) {
+                    var letter = 'xyz'[n];
+                    value.push(_({
+                        name: letter + '-' + facet['name']
+                    }).defaults(facet));
+                });
+            }
+            else {
+                value.push(facet);
+            }
+        }, this);
         value.push({type: 'all-values', dimension: 'value'});
         this.model.set('facets', value);
         var category_facet = this.facet_roles.category_facet;
