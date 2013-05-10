@@ -279,17 +279,13 @@ App.ScenarioChartView = Backbone.View.extend({
                 return {
                     'label': chart_data['group_labels'][value],
                     'data': _(datapoints).map(function(item){
+                        var category_facet = this.schema['category_facet'];
                         var keys = _(item).keys().sort();
-                        var mapping = {
-                            'ref-area': 'code',
-                            'time-period': 'code',
-                            'ref-area-label': 'label',
-                            'time-period-label': 'label',
-                            'indicator': 'code',
-                            //'indicator-label': 'label',
-                            'indicator-short-label': 'label',
-                            'value': 'value'
-                        };
+                        var mapping = _.object([
+                            [category_facet, 'code'],
+                            [category_facet + '-label', 'label'],
+                            [category_facet + '-short-label', '-short-label'],
+                            ['value', 'value']]);
                         var item_out = _.object();
                         _(keys).each(function(key){
                             item_out = _(item_out).extend(
@@ -297,7 +293,7 @@ App.ScenarioChartView = Backbone.View.extend({
                             );
                         });
                         return item_out;
-                    })
+                    }, this)
                 };
             }, this);
             this.data = chart_data;
