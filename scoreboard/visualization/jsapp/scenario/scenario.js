@@ -108,14 +108,14 @@ App.ScenarioChartView = Backbone.View.extend({
         }
         this.$el.html('-- loading --');
         args['columns'] = this.columns.join(',');
-        if(this.schema['xyz']) {
+        if(this.schema['multidim'] == 3) {
             args['xyz_columns'] = this.multidim_common_columns.join(',');
         }
-        else if(this.schema['xy']) {
+        else if(this.schema['multidim'] == 2) {
             args['xy_columns'] = this.multidim_common_columns.join(',');
         }
         var unit_is_pc = [];
-        if(this.schema['xyz']){
+        if(this.schema['multidim'] == 3){
             var units = [this.model.get('x-unit-measure') || '',
                          this.model.get('y-unit-measure') || '',
                          this.model.get('z-unit-measure') || '']
@@ -127,7 +127,7 @@ App.ScenarioChartView = Backbone.View.extend({
                 unit_is_pc.push(evaluation);
             });
         }
-        else if(this.schema['xy']){
+        else if(this.schema['multidim'] == 2){
             var units = [this.model.get('x-unit-measure') || '',
                          this.model.get('y-unit-measure') || '']
             _(units).each(function(unit){
@@ -177,10 +177,10 @@ App.ScenarioChartView = Backbone.View.extend({
 
         var multiseries_values = null;
         var data_method = '';
-        if (this.schema['xyz']) {
+        if (this.schema['multidim'] == 3) {
             data_method = '/datapoints_xyz';
         }
-        else if (this.schema['xy']) {
+        else if (this.schema['multidim'] == 2) {
             data_method = '/datapoints_xy';
         }
         else {

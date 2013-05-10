@@ -166,7 +166,7 @@ App.scenario3_bubbles_animation_filters_schema = {
                   {name: 'z-unit-measure'}]
     },
     chart_type: 'bubbles',
-    xyz: true,
+    multidim: 3,
     animation: true,
     legend: true,
     chart_meta_labels: [

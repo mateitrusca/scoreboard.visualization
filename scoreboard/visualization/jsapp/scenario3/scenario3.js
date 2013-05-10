@@ -119,7 +119,7 @@ App.scenario3_filters_schema = {
                   {name: 'y-unit-measure'}]
     },
     chart_type: 'scatter',
-    xy: true,
+    multidim: 2,
     plotlines: {x: 'values', y: 'values'},
     legend: true,
     chart_meta_labels: [

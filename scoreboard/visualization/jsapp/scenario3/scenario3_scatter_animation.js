@@ -118,7 +118,7 @@ App.scenario3_scatter_animation_filters_schema = {
                   {name: 'y-unit-measure'}]
     },
     chart_type: 'scatter',
-    xy: true,
+    multidim: 2,
     legend: true,
     animation: true,
     chart_meta_labels: [
