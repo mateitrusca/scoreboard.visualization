@@ -266,6 +266,9 @@ App.FacetsEditor = Backbone.View.extend({
                     }
                 });
                 facet['constraints'] = constraints;
+                if(this.chart_is_multidim()) {
+                    facet['multidim_common'] = true;
+                }
                 value.push(facet);
             }
             if(facet['type'] == 'select') {

@@ -452,6 +452,18 @@ describe('FacetsEditor', function() {
                 'dim3': 'dim3'});
         });
 
+        it('should set multidim_common on non-multidim facets', function() {
+            var model = new Backbone.Model({multidim: 2});
+            var view = new NoAjaxFacetsEditor({
+                model: model,
+                dimensions: four_dimensions
+            });
+            view.$el.find('[data-name="dim1"] [name="multidim"]').click().change();
+            var facets = facets_by_name(model.get('facets'));
+            expect(facets['x-dim1']['multidim_common']).to.be.undefined;
+            expect(facets['dim3']['multidim_common']).to.be.true;
+        });
+
         it('should parse multidim facets and preserve labels', function() {
             var model = new Backbone.Model({
                 multidim: 2,
