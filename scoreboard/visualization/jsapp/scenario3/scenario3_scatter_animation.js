@@ -79,7 +79,7 @@ App.scenario3_scatter_animation_filters_schema = {
              'breakdown':       'y-breakdown'
          }},
         {type: 'all-values',
-         xy: true,
+         multidim_common: true,
          name: 'time-period',
          dimension: 'time-period',
          constraints: {
@@ -91,7 +91,7 @@ App.scenario3_scatter_animation_filters_schema = {
              'y-unit-measure': 'y-unit-measure'
          }},
         {type: 'multiple_select',
-         xy: true,
+         multidim_common: true,
          name: 'ref-area',
          label: 'Country / Countries',
          dimension: 'ref-area',
@@ -103,7 +103,7 @@ App.scenario3_scatter_animation_filters_schema = {
              'y-breakdown':    'y-breakdown',
              'y-unit-measure': 'y-unit-measure'
          }},
-         {type: 'all-values', dimension: 'value', xy: true}
+         {type: 'all-values', dimension: 'value', multidim_common: true}
     ],
     category_facet: 'ref-area',
     multiple_series: 'time-period',

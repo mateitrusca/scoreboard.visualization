@@ -19,8 +19,7 @@ App.ScenarioChartView = Backbone.View.extend({
         this.meta_labels = this.schema['chart_meta_labels'];
         this.scenario_chart = options['scenario_chart'];
         this.columns = [];
-        this.xy_columns = [];
-        this.xyz_columns = [];
+        this.multidim_common_columns = [];
         this.dimensions_mapping = {};
         this.multiple_series = options['schema']['multiple_series'];
         this.client_filter = null;
@@ -32,11 +31,8 @@ App.ScenarioChartView = Backbone.View.extend({
             }
         }, this);
         _(options.values_schema).forEach(function(facet) {
-            if(facet['xyz']) {
-                this.xyz_columns.push(facet['dimension']);
-            }
-            else if(facet['xy']) {
-                this.xy_columns.push(facet['dimension']);
+            if(facet['multidim_common']) {
+                this.multidim_common_columns.push(facet['dimension']);
             }
             else {
                 this.columns.push(facet['dimension']);
@@ -113,10 +109,10 @@ App.ScenarioChartView = Backbone.View.extend({
         this.$el.html('-- loading --');
         args['columns'] = this.columns.join(',');
         if(this.schema['xyz']) {
-            args['xyz_columns'] = this.xyz_columns.join(',');
+            args['xyz_columns'] = this.multidim_common_columns.join(',');
         }
         else if(this.schema['xy']) {
-            args['xy_columns'] = this.xy_columns.join(',');
+            args['xy_columns'] = this.multidim_common_columns.join(',');
         }
         var unit_is_pc = [];
         if(this.schema['xyz']){

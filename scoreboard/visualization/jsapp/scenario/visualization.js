@@ -31,6 +31,14 @@ App.Visualization = Backbone.View.extend({
             filters_schema.push(item);
         });
 
+        var multidim = false;
+        if(options['schema']['xy']) {
+            multidim = 2;
+        }
+        if(options['schema']['xyz']) {
+            multidim = 3;
+        }
+
         this.filters_box = new App.FiltersBox({
             el: this.$el.find('#the-filters'),
             model: this.filters,
@@ -38,7 +46,8 @@ App.Visualization = Backbone.View.extend({
             cube_url: options['cube_url'],
             data_revision: options['data_revision'],
             schema: options['schema'],
-            filters_schema: filters_schema
+            filters_schema: filters_schema,
+            multidim: multidim
         });
 
         this.metadata = new App.AnnotationsView({
