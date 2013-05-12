@@ -170,10 +170,10 @@ App.scenario3_bubbles_filters_schema = {
     multidim: 3,
     plotlines: {x: 'values', y: 'values'},
     chart_meta_labels: [
-        {targets: ['indicator_x_label'],
+        {targets: ['title_x'],
          filter_name: 'x-indicator',
          type: 'short_label'},
-        {targets: ['indicator_y_label'],
+        {targets: ['title_y'],
          filter_name: 'y-indicator',
          type: 'short_label'},
         {targets: ['period_label'],
