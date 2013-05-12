@@ -81,7 +81,7 @@ App.scenario5_filters_schema = {
     chart_type: 'map',
     chart_meta_labels: [
         {targets: ['title'], filter_name: 'indicator', type: 'short_label'},
-        {targets: ['y_title', 'unit'],
+        {targets: ['ordinate', 'unit'],
          filter_name: 'unit-measure', type: 'short_label'},
         {targets: ['subtitle'], filter_name: 'time-period', type: 'label'}
     ]

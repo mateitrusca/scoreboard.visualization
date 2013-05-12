@@ -192,7 +192,7 @@ App.chart_library['country_profile'] = function(container, options) {
                     }
                 },
                 title: {
-                    text: options.meta_data['y_title'],
+                    text: options.meta_data['ordinate'],
                     style: {
                         color: '#000000',
                         fontWeight: 'bold'

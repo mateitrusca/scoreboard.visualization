@@ -81,7 +81,7 @@ App.AxesEditor = Backbone.View.extend({
             {name: 'unit-measure'});
         if(unit_measure && unit_measure['type'] == 'select') {
             chart_meta_labels.push({
-                targets: ['y_title', 'unit-measure'],
+                targets: ['ordinate', 'unit-measure'],
                 filter_name: 'unit-measure',
                 type: 'short_label'
             });

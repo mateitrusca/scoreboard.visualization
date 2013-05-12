@@ -64,7 +64,7 @@ App.chart_library['lines'] = function(container, options) {
         },
         yAxis: {
             title: {
-                text: options.meta_data['y_title'],
+                text: options.meta_data['ordinate'],
                 style: {
                     color: '#000000',
                     fontWeight: 'bold'

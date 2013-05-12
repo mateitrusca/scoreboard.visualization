@@ -85,7 +85,7 @@ App.scenario1_filters_schema = {
         {targets: ['title'],
          filter_name: 'indicator',
          type: 'short_label'},
-        {targets: ['y_title', 'unit'],
+        {targets: ['ordinate', 'unit'],
          filter_name: 'unit-measure',
          type: 'short_label'},
         {targets: ['subtitle'],
