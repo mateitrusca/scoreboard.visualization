@@ -281,7 +281,7 @@ App.FacetsEditor = Backbone.View.extend({
             dimension: 'value'
         };
         if(this.chart_is_multidim()) {
-            value_facet['multidim_common'] = true;
+            value_facet['multidim_value'] = true;
         }
         value.push(value_facet);
         this.model.set('facets', value);

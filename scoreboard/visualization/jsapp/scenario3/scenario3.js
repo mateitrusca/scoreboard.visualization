@@ -105,7 +105,7 @@ App.scenario3_filters_schema = {
              'y-unit-measure': 'y-unit-measure',
              'time-period': 'time-period'
          }},
-         {type: 'all-values', dimension: 'value', multidim_common: true}
+         {type: 'all-values', dimension: 'value', multidim_value: true}
     ],
     category_facet: 'ref-area',
     annotations: {

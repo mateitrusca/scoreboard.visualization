@@ -149,7 +149,7 @@ App.scenario3_bubbles_filters_schema = {
              'z-unit-measure': 'z-unit-measure',
              'time-period': 'time-period'
          }},
-         {type: 'all-values', dimension: 'value', multidim_common: true}
+         {type: 'all-values', dimension: 'value', multidim_value: true}
     ],
     category_facet: 'ref-area',
     annotations: {

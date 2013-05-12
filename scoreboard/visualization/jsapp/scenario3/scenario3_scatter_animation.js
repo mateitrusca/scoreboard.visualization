@@ -103,7 +103,7 @@ App.scenario3_scatter_animation_filters_schema = {
              'y-breakdown':    'y-breakdown',
              'y-unit-measure': 'y-unit-measure'
          }},
-         {type: 'all-values', dimension: 'value', multidim_common: true}
+         {type: 'all-values', dimension: 'value', multidim_value: true}
     ],
     category_facet: 'ref-area',
     multiple_series: 'time-period',

@@ -31,7 +31,7 @@ App.ScenarioChartView = Backbone.View.extend({
             }
         }, this);
         _(options.values_schema).forEach(function(facet) {
-            if(this.schema['multidim'] && facet['dimension'] == 'value') {
+            if(facet['multidim_value']) {
                 this.multidim_value.push(facet['dimension']);
             }
             else {
