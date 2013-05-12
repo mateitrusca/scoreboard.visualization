@@ -275,7 +275,15 @@ App.FacetsEditor = Backbone.View.extend({
                 facets_above.push(facet['name']);
             }
         }, this);
-        value.push({type: 'all-values', dimension: 'value'});
+        var value_facet = {
+            name: 'value',
+            type: 'all-values',
+            dimension: 'value'
+        };
+        if(this.chart_is_multidim()) {
+            value_facet['multidim_common'] = true;
+        }
+        value.push(value_facet);
         this.model.set('facets', value);
         var category_facet = this.facet_roles.category_facet;
         if(category_facet) {

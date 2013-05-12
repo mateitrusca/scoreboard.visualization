@@ -462,6 +462,7 @@ describe('FacetsEditor', function() {
             var facets = facets_by_name(model.get('facets'));
             expect(facets['x-dim1']['multidim_common']).to.be.undefined;
             expect(facets['dim3']['multidim_common']).to.be.true;
+            expect(facets['value']['multidim_common']).to.be.true;
         });
 
         it('should parse multidim facets and preserve labels', function() {
