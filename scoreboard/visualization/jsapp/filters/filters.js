@@ -28,8 +28,7 @@ App.SelectFilter = Backbone.View.extend({
         this.name = options['name'];
         this.label = options['label'];
         this.dimension = options['dimension'];
-        this.xy = options['xy'] || false;
-        this.xyz = options['xyz'] || false;
+        this.multidim = options['multidim'];
         this.constraints = options['constraints'] || [];
         this.dimension_options = [];
         this.ajax = null;
@@ -110,10 +109,10 @@ App.SelectFilter = Backbone.View.extend({
 
     fetch_options: function(args) {
         var view_name = '';
-        if(this.xyz) {
+        if(this.multidim == 3) {
             view_name = 'dimension_options_xyz';
         }
-        else if(this.xy) {
+        else if(this.multidim == 2) {
             view_name = 'dimension_options_xy';
         }
         else {
@@ -257,8 +256,7 @@ App.FiltersBox = Backbone.View.extend({
                 loadstate: this.loadstate,
                 cube_url: this.cube_url,
                 data_revision: this.data_revision,
-                xy: item['xy'],
-                xyz: item['xyz'],
+                multidim: item['multidim_common'] ? options['multidim'] : null,
                 name: item['name'],
                 label: item['label'],
                 default_value: item['default_value'],

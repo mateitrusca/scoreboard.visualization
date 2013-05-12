@@ -79,7 +79,7 @@ App.scenario3_filters_schema = {
              'breakdown':       'y-breakdown'
          }},
         {type: 'select',
-         xy: true,
+         multidim_common: true,
          name: 'time-period',
          label: "Year",
          dimension: 'time-period',
@@ -92,7 +92,7 @@ App.scenario3_filters_schema = {
              'y-unit-measure': 'y-unit-measure'
          }},
         {type: 'multiple_select',
-         xy: true,
+         multidim_common: true,
          name: 'ref-area',
          label: 'Country / Countries',
          dimension: 'ref-area',
@@ -105,7 +105,7 @@ App.scenario3_filters_schema = {
              'y-unit-measure': 'y-unit-measure',
              'time-period': 'time-period'
          }},
-         {type: 'all-values', dimension: 'value', xy: true}
+         {type: 'all-values', dimension: 'value', multidim_value: true}
     ],
     category_facet: 'ref-area',
     annotations: {
@@ -119,7 +119,7 @@ App.scenario3_filters_schema = {
                   {name: 'y-unit-measure'}]
     },
     chart_type: 'scatter',
-    xy: true,
+    multidim: 2,
     plotlines: {x: 'values', y: 'values'},
     legend: true,
     chart_meta_labels: [

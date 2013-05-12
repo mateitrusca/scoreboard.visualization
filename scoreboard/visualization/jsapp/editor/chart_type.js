@@ -21,7 +21,8 @@ App.ChartTypeEditor = Backbone.View.extend({
         {label: "Line", value: 'lines'},
         {label: "Column", value: 'columns'},
         {label: "Column animation", value: 'evolution_columns'},
-        //{label: "Scatterplot", value: 'scatter'},
+        {label: "Scatterplot", value: 'scatter', multidim: 2},
+        {label: "Scatterplot with bubbles", value: 'bubbles', multidim: 3},
         {label: "Map", value: 'map'},
         {label: "Country Profile", value: 'country_profile'}
     ],
@@ -49,6 +50,14 @@ App.ChartTypeEditor = Backbone.View.extend({
             });
         }else{
             this.model.unset('animation');
+        }
+        var chart_def = _(this.chart_types).findWhere({value: chart_type});
+        var multidim = chart_def['multidim'];
+        if(multidim) {
+            this.model.set('multidim', multidim);
+        }
+        else {
+            this.model.unset('multidim');
         }
     }
 

@@ -114,7 +114,7 @@ App.scenario3_bubbles_animation_filters_schema = {
              'breakdown':       'z-breakdown'
          }},
         {type: 'all-values',
-         xyz: true,
+         multidim_common: true,
          name: 'time-period',
          dimension: 'time-period',
          constraints: {
@@ -129,7 +129,7 @@ App.scenario3_bubbles_animation_filters_schema = {
              'z-unit-measure': 'z-unit-measure'
          }},
         {type: 'multiple_select',
-         xyz: true,
+         multidim_common: true,
          name: 'ref-area',
          on_client: true,
          label: 'Country / Countries',
@@ -147,7 +147,7 @@ App.scenario3_bubbles_animation_filters_schema = {
              'z-breakdown':    'z-breakdown',
              'z-unit-measure': 'z-unit-measure',
          }},
-         {type: 'all-values', dimension: 'value', xyz: true}
+         {type: 'all-values', dimension: 'value', multidim_value: true}
     ],
     category_facet: 'ref-area',
     multiple_series: 'time-period',
@@ -166,7 +166,7 @@ App.scenario3_bubbles_animation_filters_schema = {
                   {name: 'z-unit-measure'}]
     },
     chart_type: 'bubbles',
-    xyz: true,
+    multidim: 3,
     animation: true,
     legend: true,
     chart_meta_labels: [

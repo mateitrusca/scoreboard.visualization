@@ -114,7 +114,7 @@ App.scenario3_bubbles_filters_schema = {
              'breakdown':       'z-breakdown'
          }},
         {type: 'select',
-         xyz: true,
+         multidim_common: true,
          name: 'time-period',
          label: "Year",
          dimension: 'time-period',
@@ -130,7 +130,7 @@ App.scenario3_bubbles_filters_schema = {
              'z-unit-measure': 'z-unit-measure'
          }},
         {type: 'multiple_select',
-         xyz: true,
+         multidim_common: true,
          name: 'ref-area',
          on_client: true,
          label: 'Country / Countries',
@@ -149,7 +149,7 @@ App.scenario3_bubbles_filters_schema = {
              'z-unit-measure': 'z-unit-measure',
              'time-period': 'time-period'
          }},
-         {type: 'all-values', dimension: 'value', xyz: true}
+         {type: 'all-values', dimension: 'value', multidim_value: true}
     ],
     category_facet: 'ref-area',
     annotations: {
@@ -167,7 +167,7 @@ App.scenario3_bubbles_filters_schema = {
                   {name: 'z-unit-measure'}]
     },
     chart_type: 'bubbles',
-    xyz: true,
+    multidim: 3,
     plotlines: {x: 'values', y: 'values'},
     chart_meta_labels: [
         {targets: ['indicator_x_label'],
