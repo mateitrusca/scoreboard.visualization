@@ -32,7 +32,7 @@ App.chart_library['columns'] = function(container, options) {
             }
         },
         title: {
-            text: options.meta_data['x_title'],
+            text: options.meta_data['title'],
             style: {
                 color: '#000000',
                 fontWeight: 'bold',

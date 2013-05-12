@@ -27,7 +27,7 @@ App.AxesEditor = Backbone.View.extend({
     render: function() {
         var x_title_item = null;
         _(this.model.get('chart_meta_labels')).forEach(function(item) {
-            if(_(item.targets).contains('x_title')) {
+            if(_(item.targets).contains('title')) {
                 x_title_item = item;
             }
         });
@@ -58,7 +58,7 @@ App.AxesEditor = Backbone.View.extend({
             }
         });
         var context = {
-            x_title: {
+            title: {
                 facet_options: x_title_facet_options,
                 label_options: x_title_label_options
             }
@@ -72,7 +72,7 @@ App.AxesEditor = Backbone.View.extend({
         var chart_meta_labels = [];
         if(facet) {
             chart_meta_labels.push({
-                targets: ['x_title'],
+                targets: ['title'],
                 filter_name: facet,
                 type: type
             });

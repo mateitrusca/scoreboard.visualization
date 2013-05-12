@@ -537,7 +537,7 @@ describe('AxesEditor', function() {
         var view = new App.AxesEditor({model: model});
         view.$el.find('[name="label-horizontal-facet"]').val('dim2').change();
         view.$el.find('[name="label-horizontal-type"]').val('short_label').change();
-        var x_title_label = pluck_label(model.get('chart_meta_labels'), 'x_title');
+        var x_title_label = pluck_label(model.get('chart_meta_labels'), 'title');
         expect(x_title_label['filter_name']).to.equal('dim2');
         expect(x_title_label['type']).to.equal('short_label');
     });
@@ -557,7 +557,7 @@ describe('AxesEditor', function() {
             facets: [{name: 'dim1', type: 'select'},
                      {name: 'dim2', type: 'select'}],
             chart_meta_labels: [
-                {targets: ['x_title'],
+                {targets: ['title'],
                  filter_name: 'dim2',
                  type: 'short_label'},
                 {targets: ['y_title', 'unit'],

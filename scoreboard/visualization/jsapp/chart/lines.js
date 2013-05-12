@@ -44,7 +44,7 @@ App.chart_library['lines'] = function(container, options) {
             }
         },
         title: {
-            text: options.meta_data['x_title'],
+            text: options.meta_data['title'],
             x: -20,
             margin: 30,
             style: {

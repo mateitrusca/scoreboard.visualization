@@ -62,7 +62,7 @@ App.scenario2_filters_schema = {
     chart_type: 'lines',
     legend: true,
     chart_meta_labels: [
-        {targets: ['x_title'],
+        {targets: ['title'],
          filter_name: 'indicator',
          type: 'short_label'},
         {targets: ['y_title', 'unit'],
