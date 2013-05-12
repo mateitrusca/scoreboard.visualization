@@ -225,9 +225,13 @@ App.FacetsEditor = Backbone.View.extend({
     },
 
     save_value: function() {
-        var value = [];
         var multidim_facets = {};
         var all_multidim = _.range(this.model.get('multidim'));
+        var facets_by_axis = {'all': []};
+        _(all_multidim).forEach(function(n) {
+            var letter = 'xyz'[n];
+            facets_by_axis[letter] = [];
+        });
         var facets_above = [];
         this.facets.forEach(function(facet_model) {
             var facet = facet_model.toJSON();
@@ -244,7 +248,7 @@ App.FacetsEditor = Backbone.View.extend({
                     });
                     var label = '(' + letter.toUpperCase() + ') '
                               + facet['label'];
-                    value.push(_({
+                    facets_by_axis[letter].push(_({
                         name: prefix + facet['name'],
                         label: label,
                         constraints: constraints
@@ -269,12 +273,18 @@ App.FacetsEditor = Backbone.View.extend({
                 if(this.chart_is_multidim()) {
                     facet['multidim_common'] = true;
                 }
-                value.push(facet);
+                facets_by_axis['all'].push(facet);
             }
             if(facet['type'] == 'select') {
                 facets_above.push(facet['name']);
             }
         }, this);
+        var value = [];
+        _(all_multidim).forEach(function(n) {
+            var letter = 'xyz'[n];
+            value = value.concat(facets_by_axis[letter]);
+        });
+        value = value.concat(facets_by_axis['all']);
         var value_facet = {
             name: 'value',
             type: 'all-values',

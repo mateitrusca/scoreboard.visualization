@@ -499,6 +499,19 @@ describe('FacetsEditor', function() {
             expect(facets['dim4'].label).to.equal('blah dim4');
         });
 
+        it('should order multidim facets grouped by axis', function() {
+            var model = new Backbone.Model({multidim: 2});
+            var view = new NoAjaxFacetsEditor({
+                model: model,
+                dimensions: four_dimensions
+            });
+            view.$el.find('[data-name="dim1"] [name="multidim"]').click().change();
+            view.$el.find('[data-name="dim2"] [name="multidim"]').click().change();
+            expect(_(model.get('facets')).pluck('name')).to.deep.equal(
+                ['x-dim1', 'x-dim2', 'y-dim1', 'y-dim2',
+                 'dim3', 'dim4', 'value']);
+        });
+
     });
 
 });
