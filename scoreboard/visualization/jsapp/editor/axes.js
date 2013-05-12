@@ -69,11 +69,14 @@ App.AxesEditor = Backbone.View.extend({
     on_change_label: function(evt) {
         var facet = this.$el.find('[name="label-horizontal-facet"]').val();
         var type = this.$el.find('[name="label-horizontal-type"]').val();
-        var chart_meta_labels = [
-            {targets: ['x_title'],
-             filter_name: facet,
-             type: type}
-        ];
+        var chart_meta_labels = [];
+        if(facet) {
+            chart_meta_labels.push({
+                targets: ['x_title'],
+                filter_name: facet,
+                type: type
+            });
+        }
         var unit_measure = _(this.model.get('facets')).findWhere(
             {name: 'unit-measure'});
         if(unit_measure && unit_measure['type'] == 'select') {
