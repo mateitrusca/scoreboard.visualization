@@ -122,10 +122,10 @@ App.scenario3_scatter_animation_filters_schema = {
     legend: true,
     animation: true,
     chart_meta_labels: [
-        {targets: ['indicator_x_label'],
+        {targets: ['title_x'],
          filter_name: 'x-indicator',
          type: 'short_label'},
-        {targets: ['indicator_y_label'],
+        {targets: ['title_y'],
          filter_name: 'y-indicator',
          type: 'short_label'},
         {targets: ['x_unit_label'],

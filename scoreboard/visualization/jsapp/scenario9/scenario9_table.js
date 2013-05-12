@@ -55,17 +55,17 @@ App.scenario9_table_filters_schema = {
   ],
   chart_meta_labels: [
     {
-      targets: ['x_title'],
+      targets: ['title'],
       filter_name: 'indicator-group',
       type: 'label'
     },
     {
-      targets: ['x_title'],
+      targets: ['title'],
       filter_name: 'ref-area',
       type: 'label'
     },
     {
-      targets: ['year_text'],
+      targets: ['subtitle'],
       filter_name: 'time-period',
       type: 'short_label'
     },

@@ -389,7 +389,7 @@ describe('ScenarioChartViewParameters', function() {
             model: this.model,
             schema: {
                 chart_meta_labels: [
-                    {targets: ['x_title'],
+                    {targets: ['title'],
                      filter_name: 'filter1',
                      type: 'short_label'}
                 ]

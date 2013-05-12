@@ -81,13 +81,13 @@ App.scenario7_filters_schema = {
     chart_type: 'columns',
     legend: true,
     chart_meta_labels: [
-        {targets: ['x_title'],
+        {targets: ['title'],
          filter_name: 'indicator',
          type: 'short_label'},
-        {targets: ['y_title', 'unit'],
+        {targets: ['ordinate', 'unit'],
          filter_name: 'unit-measure',
          type: 'short_label'},
-        {targets: ['year_text'],
+        {targets: ['subtitle'],
          filter_name: 'time-period',
          type: 'label'}
     ]
