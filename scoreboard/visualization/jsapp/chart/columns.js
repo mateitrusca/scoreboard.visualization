@@ -41,7 +41,7 @@ App.chart_library['columns'] = function(container, options) {
             }
         },
         subtitle: {
-            text: options.meta_data['year_text'],
+            text: options.meta_data['subtitle'],
             align: 'left'
 
         },

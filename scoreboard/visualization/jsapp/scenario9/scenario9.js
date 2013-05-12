@@ -66,7 +66,7 @@ App.scenario9_filters_schema = {
       type: 'label'
     },
     {
-      targets: ['year_text'],
+      targets: ['subtitle'],
       filter_name: 'time-period',
       type: 'short_label'
     },

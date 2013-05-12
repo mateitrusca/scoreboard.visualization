@@ -171,7 +171,7 @@ App.chart_library['country_profile'] = function(container, options) {
                 }
             },
             subtitle: {
-                text: options.meta_data['year_text']
+                text: options.meta_data['subtitle']
             },
             xAxis: {
                 type: 'category',
