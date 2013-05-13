@@ -33,8 +33,8 @@ App.chart_library['bubbles'] = function(container, options) {
             }
         },
         title: {
-            text: (options.meta_data['indicator_x_label'] + ' vs. ' +
-                   options.meta_data['indicator_y_label']),
+            text: (options.meta_data['title_x'] + ' vs. ' +
+                   options.meta_data['title_y']),
             style: {
                 color: '#000000',
                 fontWeight: 'bold',
@@ -45,7 +45,7 @@ App.chart_library['bubbles'] = function(container, options) {
         xAxis: [{
             title: {
                 enabled: true,
-                text: options.meta_data['indicator_x_label'],
+                text: options.meta_data['title_x'],
                 style: {
                     color: '#000000',
                     fontWeight: 'bold'
@@ -72,7 +72,7 @@ App.chart_library['bubbles'] = function(container, options) {
         }],
         yAxis: {
             title: {
-                text: options.meta_data['indicator_y_label'],
+                text: options.meta_data['title_y'],
                 style: {
                     color: '#000000',
                     fontWeight: 'bold'

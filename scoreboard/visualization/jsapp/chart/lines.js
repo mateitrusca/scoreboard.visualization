@@ -45,7 +45,7 @@ App.chart_library['lines'] = function(container, options) {
             }
         },
         title: {
-            text: options.meta_data['x_title'],
+            text: options.meta_data['title'],
             x: -20,
             margin: 30,
             style: {
@@ -65,7 +65,7 @@ App.chart_library['lines'] = function(container, options) {
         },
         yAxis: {
             title: {
-                text: options.meta_data['y_title'],
+                text: options.meta_data['ordinate'],
                 style: {
                     color: '#000000',
                     fontWeight: 'bold'

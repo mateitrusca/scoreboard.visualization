@@ -114,7 +114,7 @@ App.scenario3_bubbles_animation_filters_schema = {
              'breakdown':       'z-breakdown'
          }},
         {type: 'all-values',
-         xyz: true,
+         multidim_common: true,
          name: 'time-period',
          dimension: 'time-period',
          constraints: {
@@ -129,7 +129,7 @@ App.scenario3_bubbles_animation_filters_schema = {
              'z-unit-measure': 'z-unit-measure'
          }},
         {type: 'multiple_select',
-         xyz: true,
+         multidim_common: true,
          name: 'ref-area',
          on_client: true,
          label: 'Country / Countries',
@@ -147,7 +147,7 @@ App.scenario3_bubbles_animation_filters_schema = {
              'z-breakdown':    'z-breakdown',
              'z-unit-measure': 'z-unit-measure',
          }},
-         {type: 'all-values', dimension: 'value', xyz: true}
+         {type: 'all-values', dimension: 'value', multidim_value: true}
     ],
     category_facet: 'ref-area',
     multiple_series: 'time-period',
@@ -166,26 +166,16 @@ App.scenario3_bubbles_animation_filters_schema = {
                   {name: 'z-unit-measure'}]
     },
     chart_type: 'bubbles',
-    xyz: true,
+    multidim: 3,
     animation: true,
     legend: true,
-    chart_meta_labels: [
-        {targets: ['indicator_x_label'],
-         filter_name: 'x-indicator',
-         type: 'short_label'},
-        {targets: ['indicator_y_label'],
-         filter_name: 'y-indicator',
-         type: 'short_label'},
-        {targets: ['x_unit_label'],
-         filter_name: 'x-unit-measure',
-         type: 'short_label'},
-        {targets: ['y_unit_label'],
-         filter_name: 'y-unit-measure',
-         type: 'short_label'},
-        {targets: ['z_unit_label'],
-         filter_name: 'z-unit-measure',
-         type: 'short_label'}
-    ]
+    labels: {
+        title_x: {facet: 'x-indicator', field: 'short_label'},
+        title_y: {facet: 'y-indicator', field: 'short_label'},
+        x_unit_label: {facet: 'x-unit-measure', field: 'short_label'},
+        y_unit_label: {facet: 'y-unit-measure', field: 'short_label'},
+        z_unit_label: {facet: 'z-unit-measure', field: 'short_label'}
+    }
 };
 
 

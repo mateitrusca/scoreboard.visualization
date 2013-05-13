@@ -36,8 +36,8 @@ App.chart_library['scatter'] = function(container, options) {
             }
         },
         title: {
-            text: (options.meta_data['indicator_x_label'] + ' vs. ' +
-                   options.meta_data['indicator_y_label']),
+            text: (options.meta_data['title_x'] + ' vs. ' +
+                   options.meta_data['title_y']),
             style: {
                 color: '#000000',
                 fontWeight: 'bold',
@@ -48,7 +48,7 @@ App.chart_library['scatter'] = function(container, options) {
         xAxis: [{
             title: {
                 enabled: true,
-                text: options.meta_data['indicator_x_label'],
+                text: options.meta_data['title_x'],
                 style: {
                     color: '#000000',
                     fontWeight: 'bold'
@@ -76,7 +76,7 @@ App.chart_library['scatter'] = function(container, options) {
         }],
         yAxis: {
             title: {
-                text: options.meta_data['indicator_y_label'],
+                text: options.meta_data['title_y'],
                 style: {
                     color: '#000000',
                     fontWeight: 'bold'
@@ -92,8 +92,8 @@ App.chart_library['scatter'] = function(container, options) {
         tooltip: {
             formatter: function() {
             return ('<b>'+ this.series.name +'</b><br/>x: '+
-                this.x + ' ' + options.meta_data['x_unit_label'] + '<br>y: '+
-                this.y + ' ' + options.meta_data['y_unit_label']
+                Math.round(this.x*10)/10 + ' ' + options.meta_data['x_unit_label'] + '<br>y: '+
+                Math.round(this.y*10)/10 + ' ' + options.meta_data['y_unit_label']
             )}
         },
         legend: {

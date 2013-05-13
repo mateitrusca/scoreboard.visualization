@@ -79,7 +79,7 @@ App.scenario3_scatter_animation_filters_schema = {
              'breakdown':       'y-breakdown'
          }},
         {type: 'all-values',
-         xy: true,
+         multidim_common: true,
          name: 'time-period',
          dimension: 'time-period',
          constraints: {
@@ -91,7 +91,7 @@ App.scenario3_scatter_animation_filters_schema = {
              'y-unit-measure': 'y-unit-measure'
          }},
         {type: 'multiple_select',
-         xy: true,
+         multidim_common: true,
          name: 'ref-area',
          label: 'Country / Countries',
          dimension: 'ref-area',
@@ -103,7 +103,7 @@ App.scenario3_scatter_animation_filters_schema = {
              'y-breakdown':    'y-breakdown',
              'y-unit-measure': 'y-unit-measure'
          }},
-         {type: 'all-values', dimension: 'value', xy: true}
+         {type: 'all-values', dimension: 'value', multidim_value: true}
     ],
     category_facet: 'ref-area',
     multiple_series: 'time-period',
@@ -118,23 +118,15 @@ App.scenario3_scatter_animation_filters_schema = {
                   {name: 'y-unit-measure'}]
     },
     chart_type: 'scatter',
-    xy: true,
+    multidim: 2,
     legend: true,
     animation: true,
-    chart_meta_labels: [
-        {targets: ['indicator_x_label'],
-         filter_name: 'x-indicator',
-         type: 'short_label'},
-        {targets: ['indicator_y_label'],
-         filter_name: 'y-indicator',
-         type: 'short_label'},
-        {targets: ['x_unit_label'],
-         filter_name: 'x-unit-measure',
-         type: 'short_label'},
-        {targets: ['y_unit_label'],
-         filter_name: 'y-unit-measure',
-         type: 'short_label'}
-    ]
+    labels: {
+        title_x: {facet: 'x-indicator', field: 'short_label'},
+        title_y: {facet: 'y-indicator', field: 'short_label'},
+        x_unit_label: {facet: 'x-unit-measure', field: 'short_label'},
+        y_unit_label: {facet: 'y-unit-measure', field: 'short_label'}
+    }
 };
 
 
