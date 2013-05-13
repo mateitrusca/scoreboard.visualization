@@ -1,11 +1,17 @@
 <label>Title</label>
-<select class="span3">
-  <option>None</option>
-  <option>Year</option>
+<select name="title-facet" class="span3">
+{{# title.facet_options }}
+  <option value="{{ value }}"
+    {{# if selected }}selected{{/ if }}
+    >{{ label }}</option>
+{{/ title.facet_options }}
 </select>
-<select class="span2">
-  <option>Long labels</option>
-  <option>Short labels</option>
+<select name="title-field" class="span2">
+{{# title.field_options }}
+  <option value="{{ value }}"
+    {{# if selected }}selected{{/ if }}
+    >{{ label }}</option>
+{{/ title.field_options }}
 </select>
 
 <br>

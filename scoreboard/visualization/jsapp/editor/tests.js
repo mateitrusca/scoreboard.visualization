@@ -519,19 +519,6 @@ describe('FacetsEditor', function() {
 
 describe('AxesEditor', function() {
 
-    it('should set horizontal title in model', function() {
-        var model = new Backbone.Model({
-            facets: [{name: 'dim1', type: 'select'},
-                     {name: 'dim2', type: 'select'}]
-        });
-        var view = new App.AxesEditor({model: model});
-        view.$el.find('[name="label-horizontal-facet"]').val('dim2').change();
-        view.$el.find('[name="label-horizontal-field"]').val('short_label').change();
-        var x_title_label = model.get('labels')['title'];
-        expect(x_title_label['facet']).to.equal('dim2');
-        expect(x_title_label['field']).to.equal('short_label');
-    });
-
     it('should set vertical title in model', function() {
         var model = new Backbone.Model({
             facets: [{name: 'unit-measure', type: 'select'}]
@@ -542,20 +529,33 @@ describe('AxesEditor', function() {
         expect(ordinate_label['field']).to.equal('short_label');
     });
 
-    it('should display current values', function() {
+});
+
+
+describe('FormatEditor', function() {
+
+    it('should set title in model', function() {
+        var model = new Backbone.Model({
+            facets: [{name: 'dim1', type: 'select'},
+                     {name: 'dim2', type: 'select'}]
+        });
+        var view = new App.FormatEditor({model: model});
+        view.$el.find('[name="title-facet"]').val('dim2').change();
+        view.$el.find('[name="title-field"]').val('short_label').change();
+        var title_label = model.get('labels')['title'];
+        expect(title_label['facet']).to.equal('dim2');
+        expect(title_label['field']).to.equal('short_label');
+    });
+
+    it('should display current title values', function() {
         var model = new Backbone.Model({
             facets: [{name: 'dim1', type: 'select'},
                      {name: 'dim2', type: 'select'}],
-            labels: {
-                title: {facet: 'dim2', field: 'short_label'},
-                ordinate: {facet: 'unit-measure', field: 'short_label'},
-                unit: {facet: 'unit-measure', field: 'short_label'}
-            }
+            labels: {title: {facet: 'dim2', field: 'short_label'}}
         });
-        var view = new App.AxesEditor({model: model});
-        expect(view.$el.find('[name="label-horizontal-facet"]').val())
-            .to.equal('dim2');
-        expect(view.$el.find('[name="label-horizontal-field"]').val())
+        var view = new App.FormatEditor({model: model});
+        expect(view.$el.find('[name="title-facet"]').val()).to.equal('dim2');
+        expect(view.$el.find('[name="title-field"]').val())
             .to.equal('short_label');
     });
 
