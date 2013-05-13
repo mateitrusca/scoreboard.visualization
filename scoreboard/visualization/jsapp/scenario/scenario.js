@@ -16,11 +16,9 @@ App.ScenarioChartView = Backbone.View.extend({
         this.loadstate = options['loadstate'] || new Backbone.Model();
         this.loadstate.on('change', this.load_chart, this);
         this.schema = options['schema'];
-        this.meta_labels = this.schema['chart_meta_labels'];
         this.scenario_chart = options['scenario_chart'];
         this.columns = [];
-        this.xy_columns = [];
-        this.xyz_columns = [];
+        this.multidim_value = [];
         this.dimensions_mapping = {};
         this.multiple_series = options['schema']['multiple_series'];
         this.client_filter = null;
@@ -32,11 +30,8 @@ App.ScenarioChartView = Backbone.View.extend({
             }
         }, this);
         _(options.values_schema).forEach(function(facet) {
-            if(facet['xyz']) {
-                this.xyz_columns.push(facet['dimension']);
-            }
-            else if(facet['xy']) {
-                this.xy_columns.push(facet['dimension']);
+            if(facet['multidim_value']) {
+                this.multidim_value.push(facet['dimension']);
             }
             else {
                 this.columns.push(facet['dimension']);
@@ -57,21 +52,15 @@ App.ScenarioChartView = Backbone.View.extend({
         chart_data['meta_data'] = meta_data;
         var requests = [];
 
-        _(this.meta_labels).forEach(function(item) {
+        _(this.schema['labels']).forEach(function(label_spec, label_name) {
             var args = {
-                'dimension': this.dimensions_mapping[item.filter_name],
-                'value': this.model.get(item['filter_name']),
+                'dimension': this.dimensions_mapping[label_spec['facet']],
+                'value': this.model.get(label_spec['facet']),
                 'rev': this.data_revision
             };
             var ajax = $.getJSON(this.cube_url + '/dimension_labels', args);
             ajax.done(function(data) {
-                _(item['targets']).each(function(target){
-                    if(typeof meta_data[target] === 'string'){
-                        meta_data[target] += ', ' + data[item['type']];
-                    }else{
-                        meta_data[target] = data[item['type']];
-                    }
-                });
+                meta_data[label_name] = data[label_spec['field']];
             });
             requests.push(ajax);
         }, this);
@@ -112,14 +101,14 @@ App.ScenarioChartView = Backbone.View.extend({
         }
         this.$el.html('-- loading --');
         args['columns'] = this.columns.join(',');
-        if(this.schema['xyz']) {
-            args['xyz_columns'] = this.xyz_columns.join(',');
+        if(this.schema['multidim'] == 3) {
+            args['xyz_columns'] = this.multidim_value.join(',');
         }
-        else if(this.schema['xy']) {
-            args['xy_columns'] = this.xy_columns.join(',');
+        else if(this.schema['multidim'] == 2) {
+            args['xy_columns'] = this.multidim_value.join(',');
         }
         var unit_is_pc = [];
-        if(this.schema['xyz']){
+        if(this.schema['multidim'] == 3){
             var units = [this.model.get('x-unit-measure') || '',
                          this.model.get('y-unit-measure') || '',
                          this.model.get('z-unit-measure') || '']
@@ -131,7 +120,7 @@ App.ScenarioChartView = Backbone.View.extend({
                 unit_is_pc.push(evaluation);
             });
         }
-        else if(this.schema['xy']){
+        else if(this.schema['multidim'] == 2){
             var units = [this.model.get('x-unit-measure') || '',
                          this.model.get('y-unit-measure') || '']
             _(units).each(function(unit){
@@ -181,10 +170,10 @@ App.ScenarioChartView = Backbone.View.extend({
 
         var multiseries_values = null;
         var data_method = '';
-        if (this.schema['xyz']) {
+        if (this.schema['multidim'] == 3) {
             data_method = '/datapoints_xyz';
         }
-        else if (this.schema['xy']) {
+        else if (this.schema['multidim'] == 2) {
             data_method = '/datapoints_xy';
         }
         else {

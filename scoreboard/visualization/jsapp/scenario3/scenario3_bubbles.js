@@ -114,7 +114,7 @@ App.scenario3_bubbles_filters_schema = {
              'breakdown':       'z-breakdown'
          }},
         {type: 'select',
-         xyz: true,
+         multidim_common: true,
          name: 'time-period',
          label: "Year",
          dimension: 'time-period',
@@ -130,7 +130,7 @@ App.scenario3_bubbles_filters_schema = {
              'z-unit-measure': 'z-unit-measure'
          }},
         {type: 'multiple_select',
-         xyz: true,
+         multidim_common: true,
          name: 'ref-area',
          on_client: true,
          label: 'Country / Countries',
@@ -149,7 +149,7 @@ App.scenario3_bubbles_filters_schema = {
              'z-unit-measure': 'z-unit-measure',
              'time-period': 'time-period'
          }},
-         {type: 'all-values', dimension: 'value', xyz: true}
+         {type: 'all-values', dimension: 'value', multidim_value: true}
     ],
     category_facet: 'ref-area',
     annotations: {
@@ -167,28 +167,28 @@ App.scenario3_bubbles_filters_schema = {
                   {name: 'z-unit-measure'}]
     },
     chart_type: 'bubbles',
-    xyz: true,
+    multidim: 3,
     plotlines: {x: 'values', y: 'values'},
-    chart_meta_labels: [
-        {targets: ['indicator_x_label'],
-         filter_name: 'x-indicator',
-         type: 'short_label'},
-        {targets: ['indicator_y_label'],
-         filter_name: 'y-indicator',
-         type: 'short_label'},
-        {targets: ['period_label'],
-         filter_name: 'time-period',
-         type: 'label'},
-        {targets: ['x_unit_label'],
-         filter_name: 'x-unit-measure',
-         type: 'short_label'},
-        {targets: ['y_unit_label'],
-         filter_name: 'y-unit-measure',
-         type: 'short_label'},
-        {targets: ['z_unit_label'],
-         filter_name: 'z-unit-measure',
-         type: 'short_label'}
-    ]
+    labels: {
+        title_x: {
+         facet: 'x-indicator',
+         field: 'short_label'},
+        title_y: {
+         facet: 'y-indicator',
+         field: 'short_label'},
+        period_label: {
+         facet: 'time-period',
+         field: 'label'},
+        x_unit_label: {
+         facet: 'x-unit-measure',
+         field: 'short_label'},
+        y_unit_label: {
+         facet: 'y-unit-measure',
+         field: 'short_label'},
+        z_unit_label: {
+         facet: 'z-unit-measure',
+         field: 'short_label'}
+    }
 };
 
 

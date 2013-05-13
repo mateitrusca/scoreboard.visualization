@@ -150,11 +150,11 @@ describe('modular filters', function() {
             expect(model.get('this-time-period')).to.equal('two');
         });
 
-        it('should call dimension_options_xy view if xy is set', function() {
+        it('should call dimension_options_xy view if multidim=2', function() {
             this.sandbox.useFakeServer();
             var server = this.sandbox.server;
             var view = new App.SelectFilter({
-                xy: true,
+                multidim: 2,
                 model: new Backbone.Model(),
                 name: 'this-time-period',
                 dimension: 'time-period'

@@ -79,12 +79,12 @@ App.scenario5_filters_schema = {
                   {name: 'unit-measure'}]
     },
     chart_type: 'map',
-    chart_meta_labels: [
-        {targets: ['x_title'], filter_name: 'indicator', type: 'short_label'},
-        {targets: ['y_title', 'unit'],
-         filter_name: 'unit-measure', type: 'short_label'},
-        {targets: ['year_text'], filter_name: 'time-period', type: 'label'}
-    ]
+    labels: {
+        title: {facet: 'indicator', field: 'short_label'},
+        ordinate: {facet: 'unit-measure', field: 'short_label'},
+        unit: {facet: 'unit-measure', field: 'short_label'},
+        subtitle: {facet: 'time-period', field: 'label'}
+    }
 };
 
 

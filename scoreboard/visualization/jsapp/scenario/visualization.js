@@ -38,7 +38,8 @@ App.Visualization = Backbone.View.extend({
             cube_url: options['cube_url'],
             data_revision: options['data_revision'],
             schema: options['schema'],
-            filters_schema: filters_schema
+            filters_schema: filters_schema,
+            multidim: options['schema']['multidim']
         });
 
         this.metadata = new App.AnnotationsView({

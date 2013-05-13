@@ -19,6 +19,17 @@ describe('ChartTypeEditor', function() {
         expect(editor.$el.find(':checked').val()).to.equal('columns');
     });
 
+    it('should set multidim according to chart type', function() {
+        var model = new Backbone.Model();
+        var editor = new App.ChartTypeEditor({model: model});
+        testing.choose_radio(editor.$el.find('[name=chart-type]'), 'scatter');
+        expect(model.get('multidim')).to.equal(2);
+        testing.choose_radio(editor.$el.find('[name=chart-type]'), 'bubbles');
+        expect(model.get('multidim')).to.equal(3);
+        testing.choose_radio(editor.$el.find('[name=chart-type]'), 'columns');
+        expect(model.get('multidim')).to.be.undefined;
+    });
+
 });
 
 
@@ -42,10 +53,11 @@ describe('FacetsEditor', function() {
         this.sandbox.restore();
     });
 
-    var four_dimensions = [{type_label: 'dimension', notation: 'dim1'},
-                           {type_label: 'dimension', notation: 'dim2'},
-                           {type_label: 'dimension', notation: 'dim3'},
-                           {type_label: 'dimension', notation: 'dim4'}];
+    var four_dimensions = [
+        {type_label: 'dimension', notation: 'dim1', label: "Dim 1"},
+        {type_label: 'dimension', notation: 'dim2', label: "Dim 2"},
+        {type_label: 'dimension', notation: 'dim3', label: "Dim 3"},
+        {type_label: 'dimension', notation: 'dim4', label: "Dim 4"}];
 
     describe('facet list', function() {
 
@@ -386,20 +398,126 @@ describe('FacetsEditor', function() {
 
     });
 
+    describe('multidim facets', function() {
+
+        var facets_by_name = function(facets) {
+            return _.object(_(facets).map(function(facet) {
+                return [facet['name'], facet];
+            }));
+        };
+
+        it('should generate double facets if multidim=2', function() {
+            var model = new Backbone.Model({multidim: 2});
+            var view = new NoAjaxFacetsEditor({
+                model: model,
+                dimensions: four_dimensions
+            });
+            view.$el.find('[data-name="dim1"] [name="multidim"]').click().change();
+            expect(model.get('facets')[0]['name']).to.equal('x-dim1');
+            expect(model.get('facets')[1]['name']).to.equal('y-dim1');
+            expect(model.get('facets')[2]['name']).to.equal('dim2');
+        });
+
+        it('multidim dimensions should depend on their axis only', function() {
+            var model = new Backbone.Model({multidim: 2});
+            var view = new NoAjaxFacetsEditor({
+                model: model,
+                dimensions: four_dimensions
+            });
+            view.$el.find('[data-name="dim1"] [name="multidim"]').click().change();
+            view.$el.find('[data-name="dim2"] [name="multidim"]').click().change();
+            view.$el.find('[data-name="dim3"] [name="multidim"]').click().change();
+            var facets = facets_by_name(model.get('facets'));
+            expect(facets['x-dim2']['constraints']).to.deep.equal(
+                {'dim1': 'x-dim1'});
+            expect(facets['x-dim3']['constraints']).to.deep.equal(
+                {'dim1': 'x-dim1', 'dim2': 'x-dim2'});
+        });
+
+        it('subsequent dimensions depend on all multidim axes', function() {
+            var model = new Backbone.Model({multidim: 2});
+            var view = new NoAjaxFacetsEditor({
+                model: model,
+                dimensions: four_dimensions
+            });
+            view.$el.find('[data-name="dim1"] [name="multidim"]').click().change();
+            view.$el.find('[data-name="dim2"] [name="multidim"]').click().change();
+            var facets = facets_by_name(model.get('facets'));
+            expect(facets['dim3']['constraints']).to.deep.equal({
+                'x-dim1': 'x-dim1', 'x-dim2': 'x-dim2',
+                'y-dim1': 'y-dim1', 'y-dim2': 'y-dim2'});
+            expect(facets['dim4']['constraints']).to.deep.equal({
+                'x-dim1': 'x-dim1', 'x-dim2': 'x-dim2',
+                'y-dim1': 'y-dim1', 'y-dim2': 'y-dim2',
+                'dim3': 'dim3'});
+        });
+
+        it('should set multidim_common on non-multidim facets', function() {
+            var model = new Backbone.Model({multidim: 2});
+            var view = new NoAjaxFacetsEditor({
+                model: model,
+                dimensions: four_dimensions
+            });
+            view.$el.find('[data-name="dim1"] [name="multidim"]').click().change();
+            var facets = facets_by_name(model.get('facets'));
+            expect(facets['x-dim1']['multidim_common']).to.be.undefined;
+            expect(facets['dim3']['multidim_common']).to.be.true;
+        });
+
+        it('should set multidim_value on value facet', function() {
+            var model = new Backbone.Model({multidim: 2});
+            var view = new NoAjaxFacetsEditor({
+                model: model,
+                dimensions: four_dimensions
+            });
+            var facets = facets_by_name(model.get('facets'));
+            expect(facets['value']['multidim_value']).to.be.true;
+        });
+
+        it('should parse multidim facets and preserve labels', function() {
+            var model = new Backbone.Model({
+                multidim: 2,
+                facets: [
+                    {name: 'x-dim1', label: '(X) blah dim1'},
+                    {name: 'y-dim1', label: '(Y) ignored dim1'},
+                    {name: 'x-dim2', label: '(X) blah dim2'},
+                    {name: 'y-dim2', label: '(Y) ignored dim2'},
+                    {name: 'dim3', label: 'blah dim3'},
+                    {name: 'dim4', label: 'blah dim4'}
+                ]
+            });
+            var view = new NoAjaxFacetsEditor({
+                model: model,
+                dimensions: four_dimensions
+            });
+            var facets = facets_by_name(model.get('facets'));
+            expect(facets['x-dim1'].label).to.equal('(X) blah dim1');
+            expect(facets['y-dim1'].label).to.equal('(Y) blah dim1');
+            expect(facets['x-dim2'].label).to.equal('(X) blah dim2');
+            expect(facets['y-dim2'].label).to.equal('(Y) blah dim2');
+            expect(facets['dim3'].label).to.equal('blah dim3');
+            expect(facets['dim4'].label).to.equal('blah dim4');
+        });
+
+        it('should order multidim facets grouped by axis', function() {
+            var model = new Backbone.Model({multidim: 2});
+            var view = new NoAjaxFacetsEditor({
+                model: model,
+                dimensions: four_dimensions
+            });
+            view.$el.find('[data-name="dim1"] [name="multidim"]').click().change();
+            view.$el.find('[data-name="dim2"] [name="multidim"]').click().change();
+            expect(_(model.get('facets')).pluck('name')).to.deep.equal(
+                ['x-dim1', 'x-dim2', 'y-dim1', 'y-dim2',
+                 'dim3', 'dim4', 'value']);
+        });
+
+    });
+
 });
 
 
 describe('AxesEditor', function() {
-
-    var pluck_label = function(chart_meta_labels, target) {
-        var needle = null;
-        _(chart_meta_labels).forEach(function(item) {
-            if(_(item.targets).contains(target)) {
-                needle = item;
-            }
-        });
-        return needle;
-    }
 
     it('should set horizontal title in model', function() {
         var model = new Backbone.Model({
@@ -408,37 +526,36 @@ describe('AxesEditor', function() {
         });
         var view = new App.AxesEditor({model: model});
         view.$el.find('[name="label-horizontal-facet"]').val('dim2').change();
-        view.$el.find('[name="label-horizontal-type"]').val('short_label').change();
-        var x_title_label = pluck_label(model.get('chart_meta_labels'), 'x_title');
-        expect(x_title_label['filter_name']).to.equal('dim2');
-        expect(x_title_label['type']).to.equal('short_label');
+        view.$el.find('[name="label-horizontal-field"]').val('short_label').change();
+        var x_title_label = model.get('labels')['title'];
+        expect(x_title_label['facet']).to.equal('dim2');
+        expect(x_title_label['field']).to.equal('short_label');
     });
 
     it('should set vertical title in model', function() {
-        var model = new Backbone.Model();
+        var model = new Backbone.Model({
+            facets: [{name: 'unit-measure', type: 'select'}]
+        });
         var view = new App.AxesEditor({model: model});
-        var y_title_label = pluck_label(model.get('chart_meta_labels'), 'y_title');
-        expect(y_title_label['filter_name']).to.equal('unit-measure');
-        expect(y_title_label['type']).to.equal('short_label');
+        var ordinate_label = model.get('labels')['ordinate'];
+        expect(ordinate_label['facet']).to.equal('unit-measure');
+        expect(ordinate_label['field']).to.equal('short_label');
     });
 
     it('should display current values', function() {
         var model = new Backbone.Model({
             facets: [{name: 'dim1', type: 'select'},
                      {name: 'dim2', type: 'select'}],
-            chart_meta_labels: [
-                {targets: ['x_title'],
-                 filter_name: 'dim2',
-                 type: 'short_label'},
-                {targets: ['y_title', 'unit'],
-                 filter_name: 'unit-measure',
-                 type: 'short_label'}
-            ]
+            labels: {
+                title: {facet: 'dim2', field: 'short_label'},
+                ordinate: {facet: 'unit-measure', field: 'short_label'},
+                unit: {facet: 'unit-measure', field: 'short_label'}
+            }
         });
         var view = new App.AxesEditor({model: model});
         expect(view.$el.find('[name="label-horizontal-facet"]').val())
             .to.equal('dim2');
-        expect(view.$el.find('[name="label-horizontal-type"]').val())
+        expect(view.$el.find('[name="label-horizontal-field"]').val())
             .to.equal('short_label');
     });
 

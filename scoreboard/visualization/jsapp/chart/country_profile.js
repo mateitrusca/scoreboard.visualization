@@ -134,11 +134,11 @@ App.chart_library['country_profile'] = function(container, options) {
     // Highchart
     if(options.subtype === 'bar'){
 
-        var x_title = options.meta_data['x_title'];
+        var title = options.meta_data['title'];
         if(options.meta_data['ref-area'] && options.meta_data['indicator-group']){
-            x_title = [options.meta_data['ref-area'], options.meta_data['indicator-group']].join(', ');
+            title = [options.meta_data['ref-area'], options.meta_data['indicator-group']].join(', ');
         }
-        x_title = 'Country profile for ' + x_title;
+        title = 'Country profile for ' + title;
 
         var chartOptions = {
             chart: {
@@ -162,7 +162,7 @@ App.chart_library['country_profile'] = function(container, options) {
                 }
             },
             title: {
-                text: x_title,
+                text: title,
                 style: {
                     color: '#000000',
                     fontWeight: 'bold',
@@ -171,7 +171,7 @@ App.chart_library['country_profile'] = function(container, options) {
                 }
             },
             subtitle: {
-                text: options.meta_data['year_text']
+                text: options.meta_data['subtitle']
             },
             xAxis: {
                 type: 'category',
@@ -192,7 +192,7 @@ App.chart_library['country_profile'] = function(container, options) {
                     }
                 },
                 title: {
-                    text: options.meta_data['y_title'],
+                    text: options.meta_data['ordinate'],
                     style: {
                         color: '#000000',
                         fontWeight: 'bold'

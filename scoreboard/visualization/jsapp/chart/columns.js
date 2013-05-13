@@ -32,7 +32,7 @@ App.chart_library['columns'] = function(container, options) {
             }
         },
         title: {
-            text: options.meta_data['x_title'],
+            text: options.meta_data['title'],
             style: {
                 color: '#000000',
                 fontWeight: 'bold',
@@ -41,7 +41,7 @@ App.chart_library['columns'] = function(container, options) {
             }
         },
         subtitle: {
-            text: options.meta_data['year_text'],
+            text: options.meta_data['subtitle'],
             align: 'left'
 
         },
@@ -59,7 +59,7 @@ App.chart_library['columns'] = function(container, options) {
         yAxis: {
             min: 0,
             title: {
-                text: options.meta_data['y_title'],
+                text: options.meta_data['ordinate'],
                 style: {
                     color: '#000000',
                     fontWeight: 'bold'
