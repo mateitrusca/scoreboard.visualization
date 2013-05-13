@@ -1,18 +1,4 @@
-<label>Title</label>
-<select name="title-facet" class="span3">
-{{# title.facet_options }}
-  <option value="{{ value }}"
-    {{# if selected }}selected{{/ if }}
-    >{{ label }}</option>
-{{/ title.facet_options }}
-</select>
-<select name="title-field" class="span2">
-{{# title.field_options }}
-  <option value="{{ value }}"
-    {{# if selected }}selected{{/ if }}
-    >{{ label }}</option>
-{{/ title.field_options }}
-</select>
+<span data-marker="title-label"></span>
 
 <br>
 <label>Subtitle</label>

@@ -5,14 +5,9 @@
 "use strict";
 
 
-App.FormatEditor = Backbone.View.extend({
+App.LabelEditor = Backbone.View.extend({
 
-    tagName: 'form',
-    className: 'editor-format form-inline',
-
-    template: App.get_template('editor/format.html'),
-
-    title: "Format",
+    template: App.get_template('editor/label.html'),
 
     events: {
         'change [name="title-facet"]': 'on_change',
@@ -25,9 +20,10 @@ App.FormatEditor = Backbone.View.extend({
     },
 
     render: function() {
-        var title_item = (this.model.get('labels') || {})['title'] || {};
+        var title_item = this.model.toJSON();
         var title_facet_options = [];
-        _(this.model.get('facets')).forEach(function(facet) {
+        this.options['facets'].forEach(function(facet_model) {
+            var facet = facet_model.toJSON();
             if(facet['type'] == 'select') {
                 title_facet_options.push({
                     value: facet['name'],
@@ -46,22 +42,66 @@ App.FormatEditor = Backbone.View.extend({
             }
         });
         var context = {
-            title: {
-                facet_options: title_facet_options,
-                field_options: title_field_options
-            }
+            title: this.options['title'],
+            facet_options: title_facet_options,
+            field_options: title_field_options
         };
         this.$el.html(this.template(context));
     },
 
     on_change: function(evt) {
-        var facet = this.$el.find('[name="title-facet"]').val();
-        var field = this.$el.find('[name="title-field"]').val();
-        var labels = _({}).extend(this.model.get('labels'));
-        if(facet) {
-            labels['title'] = {facet: facet, field: field};
-        }
-        this.model.set('labels', labels);
+        this.model.set({
+            facet: this.$el.find('[name="title-facet"]').val(),
+            field: this.$el.find('[name="title-field"]').val()
+        });
+    }
+
+});
+
+
+App.FormatEditor = Backbone.View.extend({
+
+    tagName: 'form',
+    className: 'editor-format form-inline',
+
+    template: App.get_template('editor/format.html'),
+
+    title: "Format",
+
+    initialize: function(options) {
+        this.facets = new Backbone.Collection(this.model.get('facets'));
+        var update_title_facets = _.bind(function() {
+            this.facets.reset(this.model.get('facets'));
+        }, this);
+        update_title_facets();
+        this.model.on('change:facets', update_title_facets);
+
+        this.title_label = new App.LabelEditor({
+            title: "Title",
+            facets: this.facets,
+            model: new Backbone.Model(
+                (this.model.get('labels') || {})['title'])
+        });
+        this.title_label.model.on('change', function() {
+            var labels = _({}).extend(this.model.get('labels'));
+            var title = this.title_label.model.toJSON();
+            if(title['facet']) {
+                labels['title'] = title;
+            }
+            else {
+                delete labels['title'];
+            }
+            this.model.set('labels', labels);
+        }, this);
+        this.render();
+    },
+
+    render: function() {
+        this.$el.html(this.template());
+        this.title_label.render();
+        this.$el.find('[data-marker="title-label"]').replaceWith(
+            this.title_label.el);
+        this.title_label.delegateEvents();
     }
 
 });
