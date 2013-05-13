@@ -69,14 +69,11 @@ App.scenario8_filters_schema = {
     },
     chart_type: 'lines',
     legend: true,
-    chart_meta_labels: [
-        {targets: ['title'],
-         filter_name: 'breakdown-group',
-         type: 'short_label'},
-        {targets: ['ordinate', 'unit'],
-         filter_name: 'unit-measure',
-         type: 'short_label'},
-    ]
+    labels: {
+        title: {facet: 'breakdown-group', field: 'short_label'},
+        ordinate: {facet: 'unit-measure', field: 'short_label'},
+        unit: {facet: 'unit-measure', field: 'short_label'}
+    }
 };
 
 

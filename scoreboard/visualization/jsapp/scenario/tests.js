@@ -264,26 +264,6 @@ describe('ScenarioChartViewParameters', function() {
         this.sandbox.restore();
     });
 
-    it('should be initialized with meta labels', function() {
-        var server = this.sandbox.server;
-        var chart = new App.ScenarioChartView({
-            model: this.model,
-            schema: {
-                facets: [],
-                chart_meta_labels: [
-                    {targets: ['dyn_lbl'],
-                     filter_name: 'indicator',
-                     type: 'label'},
-                ]
-            },
-            scenario_chart: this.scenario_chart
-        });
-        var url = server.requests[0].url;
-        expect(_(chart.meta_labels).pluck('targets')).to.deep.equal(
-            [['dyn_lbl']]
-        );
-    });
-
     it('should add plotlines to the chart', function() {
         var server = this.sandbox.server;
         var chart = new App.ScenarioChartView({
@@ -388,11 +368,7 @@ describe('ScenarioChartViewParameters', function() {
         var chart = new App.ScenarioChartView({
             model: this.model,
             schema: {
-                chart_meta_labels: [
-                    {targets: ['title'],
-                     filter_name: 'filter1',
-                     type: 'short_label'}
-                ]
+                labels: {title: {facet: 'filter1', field: 'short_label'}}
             },
             scenario_chart: this.scenario_chart,
             filters_schema: [{name: 'filter1', dimension: 'dim1'}]
@@ -434,8 +410,7 @@ describe('ScenarioChartViewParameters', function() {
         var chart = new App.ScenarioChartView({
             model: this.model,
             schema: {
-                facets: [],
-                chart_meta_labels: []
+                facets: []
             },
             scenario_chart: scenario_chart
         });
@@ -449,25 +424,22 @@ describe('ScenarioChartViewParameters', function() {
             model: this.model,
             schema: {
                 facets: [],
-                chart_meta_labels: [
-                    {targets: ['label1'],
-                     filter_name: 'indicator',
-                     type: 'label'},
-                    {targets: ['label2', 'label3'],
-                     filter_name: 'indicator',
-                     type: 'short_label'}
-                ]
+                labels: {
+                    label1: {facet: 'indicator', field: 'label'},
+                    label2: {facet: 'indicator', field: 'short_label'},
+                    label3: {facet: 'indicator', field: 'short_label'}
+                }
             },
             scenario_chart: this.scenario_chart
         });
         App.respond_json(server.requests[0], {'datapoints': []});
-        App.respond_json(server.requests[1],
-            {'label': 'normal_label', 'short_label': 'short_label'});
-        App.respond_json(server.requests[2],
-            {'label': 'normal_label', 'short_label': 'short_label'});
+        var label_resp = {'label': 'normal_label', 'short_label': 'short_label'};
+        App.respond_json(server.requests[1], label_resp);
+        App.respond_json(server.requests[2], label_resp);
+        App.respond_json(server.requests[3], label_resp);
         expect(chart.data.meta_data.label1).to.equal('normal_label');
         expect(chart.data.meta_data.label2).to.equal('short_label');
-        expect(chart.data.meta_data.label3).to.equal(chart.data.meta_data.label2);
+        expect(chart.data.meta_data.label3).to.equal('short_label');
     });
 
 
@@ -477,9 +449,7 @@ describe('ScenarioChartViewParameters', function() {
             model: this.model,
             schema: {
                 multiple_series: 'country',
-                chart_meta_labels: [
-                    {targets: ['label1'], filter_name: 'indicator', type: 'label'}
-                ]
+                labels: {label1: {facet: 'indicator', field: 'label'}}
             },
             filters_schema: [
                 {type: 'select',
@@ -570,11 +540,7 @@ describe('ScenarioChartView', function() {
         this.chart = new App.ScenarioChartView({
             model: this.model,
             schema: {
-                chart_meta_labels: [
-                    {targets: ['extra_label'],
-                     filter_name: 'time-period',
-                     type: 'label'}
-                ]
+                labels: {extra_label: {facet: 'time-period', field: 'label'}}
             },
             filters_schema: [
                 {name: 'indicator',

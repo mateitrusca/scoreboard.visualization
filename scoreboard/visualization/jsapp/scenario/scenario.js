@@ -16,7 +16,6 @@ App.ScenarioChartView = Backbone.View.extend({
         this.loadstate = options['loadstate'] || new Backbone.Model();
         this.loadstate.on('change', this.load_chart, this);
         this.schema = options['schema'];
-        this.meta_labels = this.schema['chart_meta_labels'];
         this.scenario_chart = options['scenario_chart'];
         this.columns = [];
         this.multidim_value = [];
@@ -53,21 +52,15 @@ App.ScenarioChartView = Backbone.View.extend({
         chart_data['meta_data'] = meta_data;
         var requests = [];
 
-        _(this.meta_labels).forEach(function(item) {
+        _(this.schema['labels']).forEach(function(label_spec, label_name) {
             var args = {
-                'dimension': this.dimensions_mapping[item.filter_name],
-                'value': this.model.get(item['filter_name']),
+                'dimension': this.dimensions_mapping[label_spec['facet']],
+                'value': this.model.get(label_spec['facet']),
                 'rev': this.data_revision
             };
             var ajax = $.getJSON(this.cube_url + '/dimension_labels', args);
             ajax.done(function(data) {
-                _(item['targets']).each(function(target){
-                    if(typeof meta_data[target] === 'string'){
-                        meta_data[target] += ', ' + data[item['type']];
-                    }else{
-                        meta_data[target] = data[item['type']];
-                    }
-                });
+                meta_data[label_name] = data[label_spec['field']];
             });
             requests.push(ajax);
         }, this);

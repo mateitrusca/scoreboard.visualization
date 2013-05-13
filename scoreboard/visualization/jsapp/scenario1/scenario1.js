@@ -81,17 +81,12 @@ App.scenario1_filters_schema = {
     },
     chart_type: 'columns',
     plotlines: {y: 'values'},
-    chart_meta_labels: [
-        {targets: ['title'],
-         filter_name: 'indicator',
-         type: 'short_label'},
-        {targets: ['ordinate', 'unit'],
-         filter_name: 'unit-measure',
-         type: 'short_label'},
-        {targets: ['subtitle'],
-         filter_name: 'time-period',
-         type: 'label'}
-    ]
+    labels: {
+        title: {facet: 'indicator', field: 'short_label'},
+        subtitle: {facet: 'time-period', field: 'label'},
+        ordinate: {facet: 'unit-measure', field: 'short_label'},
+        unit: {facet: 'unit-measure', field: 'short_label'}
+    }
 };
 
 

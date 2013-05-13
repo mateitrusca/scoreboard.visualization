@@ -53,38 +53,13 @@ App.scenario9_table_filters_schema = {
       dimension: "value"
     }
   ],
-  chart_meta_labels: [
-    {
-      targets: ['title'],
-      filter_name: 'indicator-group',
-      type: 'label'
-    },
-    {
-      targets: ['title'],
-      filter_name: 'ref-area',
-      type: 'label'
-    },
-    {
-      targets: ['subtitle'],
-      filter_name: 'time-period',
-      type: 'short_label'
-    },
-    {
-      targets: ['indicator-group'],
-      filter_name: 'indicator-group',
-      type: 'label'
-    },
-    {
-      targets: ['ref-area'],
-      filter_name: 'ref-area',
-      type: 'label'
-    },
-    {
-      targets: ['time-period'],
-      filter_name: 'time-period',
-      type: 'short_label'
-    }
-  ]
+  labels: {
+    title: {facet: 'ref-area', field: 'label'},
+    subtitle: {facet: 'time-period', field: 'short_label'},
+    'indicator-group': {facet: 'indicator-group', field: 'label'},
+    'ref-area': {facet: 'ref-area', field: 'label'},
+    'time-period': {facet: 'time-period', field: 'short_label'}
+  }
 };
 
 
