@@ -10,8 +10,8 @@ App.LabelEditor = Backbone.View.extend({
     template: App.get_template('editor/label.html'),
 
     events: {
-        'change [name="title-facet"]': 'on_change',
-        'change [name="title-field"]': 'on_change'
+        'change [name="facet"]': 'on_change',
+        'change [name="field"]': 'on_change'
     },
 
     initialize: function(options) {
@@ -20,32 +20,32 @@ App.LabelEditor = Backbone.View.extend({
     },
 
     render: function() {
-        var title_facet_options = this.options['facets'].map(function(facet) {
+        var facet_options = this.options['facets'].map(function(facet) {
             return _({
                 selected: (facet.get('value') == this.model.get('facet'))
             }).extend(facet.toJSON());
         }, this);
-        var title_field_options = [
+        var field_options = [
             {value: 'label', label: 'Long labels'},
             {value: 'short_label', label: 'Short labels'}
         ];
-        _(title_field_options).forEach(function(item) {
+        _(field_options).forEach(function(item) {
             if(item['value'] == this.model.get('field')) {
                 item['selected'] = true;
             }
         }, this);
         var context = {
             title: this.options['title'],
-            facet_options: title_facet_options,
-            field_options: title_field_options
+            facet_options: facet_options,
+            field_options: field_options
         };
         this.$el.html(this.template(context));
     },
 
     on_change: function(evt) {
         this.model.set({
-            facet: this.$el.find('[name="title-facet"]').val(),
-            field: this.$el.find('[name="title-field"]').val()
+            facet: this.$el.find('[name="facet"]').val(),
+            field: this.$el.find('[name="field"]').val()
         });
     }
 
