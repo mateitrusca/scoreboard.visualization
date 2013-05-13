@@ -20,27 +20,20 @@ App.LabelEditor = Backbone.View.extend({
     },
 
     render: function() {
-        var title_item = this.model.toJSON();
-        var title_facet_options = [];
-        this.options['facets'].forEach(function(facet_model) {
-            var facet = facet_model.toJSON();
-            if(facet['type'] == 'select') {
-                title_facet_options.push({
-                    value: facet['name'],
-                    label: facet['label'],
-                    selected: (facet['name'] == title_item['facet'])
-                });
-            }
-        });
+        var title_facet_options = this.options['facets'].map(function(facet) {
+            return _({
+                selected: (facet.get('value') == this.model.get('facet'))
+            }).extend(facet.toJSON());
+        }, this);
         var title_field_options = [
             {value: 'label', label: 'Long labels'},
             {value: 'short_label', label: 'Short labels'}
         ];
         _(title_field_options).forEach(function(item) {
-            if(item['value'] == title_item['field']) {
+            if(item['value'] == this.model.get('field')) {
                 item['selected'] = true;
             }
-        });
+        }, this);
         var context = {
             title: this.options['title'],
             facet_options: title_facet_options,
@@ -71,7 +64,11 @@ App.FormatEditor = Backbone.View.extend({
     initialize: function(options) {
         this.facets = new Backbone.Collection(this.model.get('facets'));
         var update_title_facets = _.bind(function() {
-            this.facets.reset(this.model.get('facets'));
+            this.facets.reset(_(_(this.model.get('facets'))
+                                .where({type: 'select'}))
+                              .map(function(facet) {
+                return {value: facet['name'], label: facet['label']};
+            }));
         }, this);
         update_title_facets();
         this.model.on('change:facets', update_title_facets);
