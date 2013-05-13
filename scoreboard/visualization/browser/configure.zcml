@@ -45,6 +45,13 @@
     />
 
   <browser:page
+    name="blacklist.json"
+    for="zope.interface.Interface"
+    permission="zope2.View"
+    class=".views.BlackList"
+    />
+
+  <browser:page
     name="scoreboard_jsapp_unit_tests"
     for="Products.CMFPlone.interfaces.siteroot.IPloneSiteRoot"
     class=".views.TestsView"

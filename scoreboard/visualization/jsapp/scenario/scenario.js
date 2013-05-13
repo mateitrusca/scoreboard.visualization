@@ -177,7 +177,8 @@ App.ScenarioChartView = Backbone.View.extend({
             'animation': this.schema['animation'] || false,
             'legend': this.schema['legend'] || false,
             'multiseries': this.multiple_series,
-            'category_facet': this.schema['category_facet']
+            'category_facet': this.schema['category_facet'],
+            'subtype': this.schema.chart_subtype
         };
 
         var multiseries_values = null;
@@ -187,6 +188,9 @@ App.ScenarioChartView = Backbone.View.extend({
         }
         else if (this.schema['xy']) {
             data_method = '/datapoints_xy';
+        }
+        else if(this.schema['chart_type'] === 'country_profile'){
+            data_method = '/datapoints_cp';
         }
         else {
             data_method = '/datapoints';
@@ -234,18 +238,6 @@ App.ScenarioChartView = Backbone.View.extend({
             requests.push(this.request_datapoints(datapoints_url, args));
         }
 
-        if(this.schema.chart_type === 'country_profile'){
-            chart_data['subtype'] = this.schema.chart_subtype;
-            var new_args = $.extend({}, args);
-            delete new_args['ref-area'];
-            new_args['columns'] = 'ref-area,' + new_args['columns'];
-            requests.push(this.request_datapoints(datapoints_url, new_args));
-
-            // Also request list of EU countries
-            var eurl = this.cube_url + '/european-union.json';
-            requests.push($.getJSON(eurl, {}));
-        }
-
         var client_filter_options = [];
         if(this.client_filter) {
             client_filter_options = this.model.get(this.client_filter);
@@ -261,11 +253,6 @@ App.ScenarioChartView = Backbone.View.extend({
         ajax_calls.done(_.bind(function() {
             var responses = _(arguments).toArray();
             if(requests.length < 2) { responses = [responses]; }
-
-            if(this.schema.chart_type === 'country_profile'){
-                chart_data['all_series'] = responses.length > 1 ? responses[1][0] : {};
-                chart_data['EU'] = responses.length > 2 ? responses[2][0]: {};
-            }
 
             chart_data['series'] = _(multiseries_values).map(function(value, n) {
                 //TODO resp should always have the same keys
@@ -500,41 +487,6 @@ App.AnnotationsView = Backbone.View.extend({
         }, this));
     }
 
-});
-
-App.CountryProfileView = Backbone.View.extend({
-
-    template: App.get_template('scenario/country_profile.html'),
-
-    initialize: function(options) {
-        this.options = $.extend({}, options);
-        this.render();
-    },
-
-    table: function(){
-        var table = [];
-        var self = this;
-        _(this.options.data).forEach(function(item){
-            var row = {};
-            row.name = item.name;
-            row.eu = self.options.x_formatter(item.eu);
-            row.rank = item.rank;
-            row.value = self.options.x_formatter(item.old_y);
-            table.push(row);
-        });
-        return table;
-    },
-
-    render: function(){
-        this.$el.html(
-            this.template({
-                'ref-area': this.options.meta_data['ref-area'],
-                'time-period': this.options.meta_data['time-period'],
-                'credits': this.options.credits,
-                'table': this.table()
-            })
-        );
-    }
 });
 
 App.ShareOptionsView = Backbone.View.extend({

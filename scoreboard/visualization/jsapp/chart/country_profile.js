@@ -8,105 +8,63 @@ App.chart_library['country_profile'] = function(container, options) {
 
     var sort = _.object(["sort_by", "order"],['value', -1]);
     var percent = options['unit_is_pc'];
-    var series = App.format_series(options['series'], sort, '', percent);
-    var all_series = options.all_series;
-    var eu = options.EU;
-
-    // Compute new values from all_series based on EU27 value
-    var mapping = {};
-    _(all_series.datapoints).forEach(function(item){
-        var key, oldValue, newValue, exists, myName, myValue;
-        key = item.indicator;
-
-        myName = options.meta_data['ref-area'];
-        myValue = _(series[0].data).find(function(ind){
-            return (ind.code === key);
-        });
-        myValue = myValue ? myValue.y : 0;
-
-        exists = mapping[key];
-        if(!exists){
-            mapping[key] = {
-                'min': {'value': Math.min(), 'ref-area': ''},
-                'max': {'value': Math.max(), 'ref-area': ''},
-                'med': {'value': 0, 'ref-area': ''},
-                'rank': {'value': 0, 'ref-area': myName}
-            };
-        }
-
-        // Update med
-        if(item['ref-area'] === 'EU27'){
-            mapping[key]['med']['value'] = item.value;
-            mapping[key]['med']['ref-area'] = item['ref-area'];
-        }
-
-        var inEu = _(eu).find(function(v, k){
-            return (v === myName);
-        });
-
-        if(!inEu){
-            return;
-        }
-
-        // Update rank
-        if(item.value > myValue){
-            if(!mapping[key]['rank']['value']){
-                mapping[key]['rank']['value'] = 1;
-            }else{
-                mapping[key]['rank']['value'] += 1;
-            }
-        }
-
-        // Update min
-        oldValue = mapping[key]['min']['value'];
-        newValue = Math.min(item.value, oldValue);
-        if(newValue !== oldValue){
-            mapping[key]['min']['value'] = newValue;
-            mapping[key]['min']['ref-area'] = item['ref-area'];
-        }
-
-        // Update max
-        oldValue = mapping[key]['max']['value'];
-        newValue = Math.max(item.value, oldValue);
-        if(newValue !== oldValue){
-            mapping[key]['max']['value'] = newValue;
-            mapping[key]['max']['ref-area'] = item['ref-area'];
-        }
-    });
+    var category = options['category_facet'];
+    var series = App.format_series(options['series'], sort, '', percent, category);
 
     var stack_series = [
         {
             name: 'Under EU27 average',
             color: '#7dc30f',
+            dataLabels: {
+                color: '#436b06',
+                enabled: true,
+                align: 'right',
+                formatter: function(){
+                    if(this.point.y){
+                        return x_formatter(this.point.original);
+                    }else{
+                        return '';
+                    }
+                }
+            },
             data: []
         },
         {
             name: 'Above EU27 average',
             color: '#436b06',
+            dataLabels: {
+                color: '#7dc30f',
+                enabled: true,
+                align: 'right',
+                formatter: function(){
+                    if(this.point.y){
+                        return x_formatter(this.point.original);
+                    }else{
+                        return '';
+                    }
+                }
+            },
             data: []
         }
     ];
 
     // Update series with new values
     _(series[0].data).forEach(function(item){
-        var key = item.code;
-        var val = item.y;
-        var min = mapping[key]['min']['value'];
-        var max = mapping[key]['max']['value'];
-        var med = mapping[key]['med']['value'];
-        var rank = mapping[key]['rank']['value'];
-        item.old_y = item.y;
-        item.eu = med;
-        item.rank = rank;
-        if (val <= med){
-            item.y = (val - min) / (med - min);
-        }else{
-            item.y = 1 + (val - med) / (max - med);
+        item.eu = item.attributes.eu;
+        item.rank = item.attributes.rank;
+        item.original = item.attributes.original;
+
+        item.name = item.attributes.indicator['short-label'];
+        if(item.attributes.breakdown['label']){
+            item.name += ' by ' + item.attributes.breakdown['label'];
+        }
+        if(item.attributes['unit-measure']['label']){
+            item.name += ' in ' + item.attributes['unit-measure']['label'];
         }
 
         // Fill stack
         var fake;
-        if(item.old_y > item.eu){
+        if(item.original > item.eu){
             stack_series[1].data.push(item);
             fake = $.extend({}, item);
             fake.y = 0;
@@ -148,7 +106,7 @@ App.chart_library['country_profile'] = function(container, options) {
                 marginBottom: 100,
                 marginLeft: 200,
                 marginRight: 200,
-                height: 200 + series[0].data.length * 50,
+                height: 200 + series[0].data.length * 75,
                 width: 850,
             },
             credits: {
@@ -228,7 +186,7 @@ App.chart_library['country_profile'] = function(container, options) {
             },
             tooltip: {
                 formatter: function(){
-                    return x_formatter(this.point.old_y);
+                    return x_formatter(this.point.original);
                 }
             },
             plotOptions: {
@@ -257,5 +215,40 @@ App.chart_library['country_profile'] = function(container, options) {
         });
     }
 };
+
+App.CountryProfileView = Backbone.View.extend({
+
+    template: App.get_template('chart/country_profile.html'),
+
+    initialize: function(options) {
+        this.options = $.extend({}, options);
+        this.render();
+    },
+
+    table: function(){
+        var table = [];
+        var self = this;
+        _(this.options.data).forEach(function(item){
+            var row = {};
+            row.name = item.name;
+            row.eu = self.options.x_formatter(item.eu);
+            row.rank = item.rank ? item.rank : '-';
+            row.value = self.options.x_formatter(item.original);
+            table.push(row);
+        });
+        return table;
+    },
+
+    render: function(){
+        this.$el.html(
+            this.template({
+                'ref-area': this.options.meta_data['ref-area'],
+                'time-period': this.options.meta_data['time-period'],
+                'credits': this.options.credits,
+                'table': this.table()
+            })
+        );
+    }
+});
 
 })();

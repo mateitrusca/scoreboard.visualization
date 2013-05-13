@@ -30,6 +30,8 @@ App.SelectFilter = Backbone.View.extend({
         this.dimension = options['dimension'];
         this.xy = options['xy'] || false;
         this.xyz = options['xyz'] || false;
+        this.chart_type = options['chart_type'];
+        this.chart_subtype = options['chart_subtype'];
         this.constraints = options['constraints'] || [];
         this.dimension_options = [];
         this.ajax = null;
@@ -115,6 +117,10 @@ App.SelectFilter = Backbone.View.extend({
         }
         else if(this.xy) {
             view_name = 'dimension_options_xy';
+        }
+        else if(this.chart_type === 'country_profile'){
+            args.subtype = this.chart_subtype;
+            view_name = 'dimension_options_cp';
         }
         else {
             view_name = 'dimension_options';
@@ -259,6 +265,8 @@ App.FiltersBox = Backbone.View.extend({
                 data_revision: this.data_revision,
                 xy: item['xy'],
                 xyz: item['xyz'],
+                chart_type: schema['chart_type'],
+                chart_subtype: schema['chart_subtype'],
                 name: item['name'],
                 label: item['label'],
                 default_value: item['default_value'],
