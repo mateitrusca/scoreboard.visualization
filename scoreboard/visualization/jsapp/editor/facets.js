@@ -272,6 +272,8 @@ App.FacetsEditor = Backbone.View.extend({
                 facet['constraints'] = constraints;
                 if(this.chart_is_multidim()) {
                     facet['multidim_common'] = true;
+                } else {
+                    delete facet['multidim_common'];
                 }
                 facets_by_axis['all'].push(facet);
             }
