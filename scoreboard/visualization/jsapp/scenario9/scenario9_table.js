@@ -28,20 +28,9 @@ App.scenario9_table_filters_schema = {
       }
     },
     {
-      type: "select",
-      name: "time-period",
-      label: "Year",
-      dimension: "time-period",
       constraints: {
         "indicator-group": "indicator-group",
         "ref-area": "ref-area"
-      }
-    },
-    {
-      constraints: {
-        "indicator-group": "indicator-group",
-        "ref-area": "ref-area",
-        "time-period": "time-period"
       },
       dimension: "indicator",
       name: "indicator",
@@ -54,11 +43,9 @@ App.scenario9_table_filters_schema = {
     }
   ],
   labels: {
-    title: {facet: 'ref-area', field: 'label'},
-    subtitle: {facet: 'time-period', field: 'short_label'},
+    'title': {facet: 'ref-area', field: 'label'},
     'indicator-group': {facet: 'indicator-group', field: 'label'},
-    'ref-area': {facet: 'ref-area', field: 'label'},
-    'time-period': {facet: 'time-period', field: 'short_label'}
+    'ref-area': {facet: 'ref-area', field: 'label'}
   }
 };
 

@@ -9,88 +9,104 @@ App.chart_library['country_profile'] = function(container, options) {
     var sort = _.object(["sort_by", "order"],['value', -1]);
     var percent = options['unit_is_pc'];
     var category = options['category_facet'];
-    var series = App.format_series(options['series'], sort, '', percent, category);
 
-    var stack_series = [
-        {
-            name: 'Under EU27 average',
-            color: '#7dc30f',
-            dataLabels: {
-                color: '#436b06',
-                enabled: true,
-                align: 'right',
-                formatter: function(){
-                    if(this.point.y){
-                        return x_formatter(this.point.original);
-                    }else{
-                        return '';
-                    }
-                }
-            },
-            data: []
-        },
-        {
-            name: 'Above EU27 average',
-            color: '#436b06',
-            dataLabels: {
-                color: '#7dc30f',
-                enabled: true,
-                align: 'right',
-                formatter: function(){
-                    if(this.point.y){
-                        return x_formatter(this.point.original);
-                    }else{
-                        return '';
-                    }
-                }
-            },
-            data: []
+    var add_commas = function(nStr){
+        nStr += '';
+        var x = nStr.split('.');
+        var x1 = x[0];
+        var x2 = x.length > 1 ? '.' + x[1] : '';
+        var rgx = /(\d+)(\d{3})/;
+        while (rgx.test(x1)) {
+            x1 = x1.replace(rgx, '$1' + ',' + '$2');
         }
-    ];
-
-    // Update series with new values
-    _(series[0].data).forEach(function(item){
-        item.eu = item.attributes.eu;
-        item.rank = item.attributes.rank;
-        item.original = item.attributes.original;
-
-        item.name = item.attributes.indicator['short-label'];
-        if(item.attributes.breakdown['label']){
-            item.name += ' by ' + item.attributes.breakdown['label'];
-        }
-        if(item.attributes['unit-measure']['label']){
-            item.name += ' in ' + item.attributes['unit-measure']['label'];
-        }
-
-        // Fill stack
-        var fake;
-        if(item.original > item.eu){
-            stack_series[1].data.push(item);
-            fake = $.extend({}, item);
-            fake.y = 0;
-            stack_series[0].data.push(fake);
-        }else{
-            stack_series[0].data.push(item);
-            fake = $.extend({}, item);
-            fake.y = 0;
-            stack_series[1].data.push(fake);
-        }
-    });
+        return x1 + x2;
+    };
 
     var x_formatter = function(value){
-        if(!value.toFixed){
-            return value;
+        try{
+            value.toFixed(2);
+        }catch(err){
+            return '-';
         }
 
         if(value > 100){
-            return value.toFixed(0);
+            value = value.toFixed(0);
+            return add_commas(value);
         }else{
             return value.toFixed(2);
         }
     };
 
+
     // Highchart
     if(options.subtype === 'bar'){
+        var series = App.format_series(options['series'], sort, '', percent, category);
+
+        var stack_series = [
+            {
+                name: 'Under EU27 average',
+                color: '#7dc30f',
+                dataLabels: {
+                    color: '#436b06',
+                    enabled: true,
+                    align: 'right',
+                    formatter: function(){
+                        if(this.point.y){
+                            return x_formatter(this.point.original);
+                        }else{
+                            return '';
+                        }
+                    }
+                },
+                data: []
+            },
+            {
+                name: 'Above EU27 average',
+                color: '#436b06',
+                dataLabels: {
+                    color: '#7dc30f',
+                    enabled: true,
+                    align: 'right',
+                    formatter: function(){
+                        if(this.point.y){
+                            return x_formatter(this.point.original);
+                        }else{
+                            return '';
+                        }
+                    }
+                },
+                data: []
+            }
+        ];
+
+        // Update series with new values
+        _(series[0].data).forEach(function(item){
+            item.eu = item.attributes.eu;
+            //item.rank = item.attributes.rank;
+            item.original = item.attributes.original;
+
+            item.name = item.attributes.indicator['short-label'];
+            if(item.attributes.breakdown['label']){
+                item.name += ' by ' + item.attributes.breakdown['label'];
+            }
+            if(item.attributes['unit-measure']['label']){
+                item.name += ' in ' + item.attributes['unit-measure']['label'];
+            }
+
+            // Fill stack
+            var fake;
+            if(item.original > item.eu){
+                stack_series[1].data.push(item);
+                fake = $.extend({}, item);
+                fake.y = 0;
+                stack_series[0].data.push(fake);
+            }else{
+                stack_series[0].data.push(item);
+                fake = $.extend({}, item);
+                fake.y = 0;
+                stack_series[1].data.push(fake);
+            }
+        });
 
         var title = options.meta_data['title'];
         if(options.meta_data['ref-area'] && options.meta_data['indicator-group']){
@@ -205,6 +221,7 @@ App.chart_library['country_profile'] = function(container, options) {
 
     // Custom table
     }else{
+        var series = options['series'];
         App.country_profile = new App.CountryProfileView({
             el: '#' + $(container).attr('id'),
             model: new Backbone.Model(),
@@ -228,23 +245,36 @@ App.CountryProfileView = Backbone.View.extend({
     table: function(){
         var table = [];
         var self = this;
-        _(this.options.data).forEach(function(item){
+        var latest = this.options.data.latest;
+        var format = self.options.x_formatter;
+
+        _(this.options.data.table).forEach(function(item, key){
             var row = {};
-            row.name = item.name;
-            row.eu = self.options.x_formatter(item.eu);
-            row.rank = item.rank ? item.rank : '-';
-            row.value = self.options.x_formatter(item.original);
+            row.name = key;
+            row.title = item.name;
+            row.hasRank = self.options.data['has-rank'];
+            row.rank = item.rank || '-';
+            row.eu = format(item.eu);
+            row.year = format(item[latest]);
+            row.year1 = format(item[latest - 1]);
+            row.year2 = format(item[latest - 2]);
+            row.year3 = format(item[latest - 3]);
             table.push(row);
         });
         return table;
     },
 
     render: function(){
+        var data = this.options.data;
         this.$el.html(
             this.template({
-                'ref-area': this.options.meta_data['ref-area'],
-                'time-period': this.options.meta_data['time-period'],
+                'ref-area': data['ref-area'].label,
                 'credits': this.options.credits,
+                'year': data.latest,
+                'year-1': data.latest-1,
+                'year-2': data.latest-2,
+                'year-3': data.latest-3,
+                'has-rank': data['has-rank'],
                 'table': this.table()
             })
         );

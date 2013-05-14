@@ -168,6 +168,7 @@ App.ScenarioChartView = Backbone.View.extend({
             data_method = '/datapoints_xy';
         }
         else if(this.schema['chart_type'] === 'country_profile'){
+            args.subtype = this.schema['chart_subtype'];
             data_method = '/datapoints_cp';
         }
         else {
