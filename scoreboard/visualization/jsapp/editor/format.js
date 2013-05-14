@@ -15,6 +15,7 @@ App.LabelEditor = Backbone.View.extend({
     },
 
     initialize: function(options) {
+        this.$el.attr('data-label', options['name']);
         this.render();
         this.on_change();
     },
@@ -74,6 +75,7 @@ App.FormatEditor = Backbone.View.extend({
         this.model.on('change:facets', update_title_facets);
 
         this.title_label = new App.LabelEditor({
+            name: 'title',
             title: "Title",
             facets: this.facets,
             model: new Backbone.Model(

@@ -540,8 +540,9 @@ describe('FormatEditor', function() {
                      {name: 'dim2', type: 'select'}]
         });
         var view = new App.FormatEditor({model: model});
-        view.$el.find('[name="facet"]').val('dim2').change();
-        view.$el.find('[name="field"]').val('short_label').change();
+        var $title_el = view.$el.find('[data-label="title"]');
+        $title_el.find('[name="facet"]').val('dim2').change();
+        $title_el.find('[name="field"]').val('short_label').change();
         var title_label = model.get('labels')['title'];
         expect(title_label['facet']).to.equal('dim2');
         expect(title_label['field']).to.equal('short_label');
@@ -554,8 +555,9 @@ describe('FormatEditor', function() {
             labels: {title: {facet: 'dim2', field: 'short_label'}}
         });
         var view = new App.FormatEditor({model: model});
-        expect(view.$el.find('[name="facet"]').val()).to.equal('dim2');
-        expect(view.$el.find('[name="field"]').val())
+        var $title_el = view.$el.find('[data-label="title"]');
+        expect($title_el.find('[name="facet"]').val()).to.equal('dim2');
+        expect($title_el.find('[name="field"]').val())
             .to.equal('short_label');
     });
 
