@@ -218,17 +218,6 @@ App.ScenarioChartView = Backbone.View.extend({
             requests.push(this.request_datapoints(datapoints_url, args));
         }
 
-        if(this.schema.chart_type === 'country_profile'){
-            chart_data['subtype'] = this.schema.chart_subtype;
-            var new_args = $.extend({}, args);
-            delete new_args['ref-area'];
-            requests.push(this.request_datapoints(datapoints_url, new_args));
-
-            // Also request list of EU countries
-            var eurl = this.cube_url + '/european-union.json';
-            requests.push($.getJSON(eurl, {}));
-        }
-
         var client_filter_options = [];
         if(this.client_filter) {
             client_filter_options = this.model.get(this.client_filter);
