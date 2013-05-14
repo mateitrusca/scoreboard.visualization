@@ -35,7 +35,7 @@ App.bar_colors = {
 };
 
 
-App.format_series = function (data, sort, type, percent){
+App.format_series = function (data, sort, type, percent, category){
     var multiplicators = _(percent).map(function(pc){
         return pc?100:1;
     });
@@ -55,7 +55,7 @@ App.format_series = function (data, sort, type, percent){
 
         var series = _.chain(data).map(function(serie){
             return _(serie['data']).map(function(datapoint) {
-                var code = datapoint['code'];
+                var code = datapoint[category]['notation'];
                 var data = [{
                     'name': code,
                     'x': datapoint['value']['x'] * multiplicators[0],
@@ -94,18 +94,19 @@ App.format_series = function (data, sort, type, percent){
                     value*=100;
                 }
             }
-            return _.object([['name', series_item['label']],
-                             ['code', series_item['code']],
+            return _.object([['name', series_item[category]['label']],
+                             ['code', series_item[category]['notation']],
+                             ['attributes', _(series_item).omit('value')],
                              ['y', value]]);
         };
 
         var diffs_collection = {}
         var series = _.chain(data).map(function(item){
             var data = _(item['data']).map(extract_data);
-            _.chain(item['data']).
+            _.chain(data).
               each(function(item){
                   _(diffs_collection).extend(
-                    _.object([[item['code'], item]])
+                    _.object([[item['code'], item['attributes']]])
                   )
               }).
               uniq(diffs_collection).
@@ -119,10 +120,12 @@ App.format_series = function (data, sort, type, percent){
               keys().
               difference(_(serie).pluck('code')).
               each(function(diff_code){
-                  var data = diffs_collection[diff_code];
+                  var data = diffs_collection[diff_code][category];
+                  var attributes = _.object([[category, data]]);
                   _(serie).push(
-                      _.object([['code', data['code']],
+                      _.object([['code', data['notation']],
                                 ['name', data['label']],
+                                ['attributes', attributes],
                                 ['y', null]])
                   );
               });

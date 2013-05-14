@@ -10,6 +10,8 @@ ADD_PERMISSIONS = {
 from zope.i18nmessageid.message import MessageFactory
 _ = MessageFactory('scoreboard')
 
+# This list is used by country_profile chart and can be customized within
+# ZMI > portal_properties > scoreboard_properties
 EU = {
     "BE": "Belgium",
     "BG": "Bulgaria",
@@ -39,3 +41,27 @@ EU = {
     "SE": "Sweden",
     "UK": "United Kingdom"
 }
+
+# This list is used by country_profile chart and can be customized within
+# ZMI > portal_properties > scoreboard_properties
+BLACKLIST = [
+    {
+        'indicator': 'bb_lines',
+        'breakdown': 'TOTAL',
+    },
+    {
+        'indicator': 'mob_subs',
+        'unit-measure': 'nbr_subs',
+    },
+    {
+        'indicator': 'FP7ICT_EC_funding',
+        'unit-measure': 'euro',
+    },
+    {
+        'indicator': 'FP7ICT_TOTcost',
+        'unit-measure': 'euro',
+    },
+    {
+        'unit-measure': 'million_euro',
+    },
+]

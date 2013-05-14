@@ -9,17 +9,21 @@ describe('ChartSeriesPreparation', function() {
             {data: [],
              label:'2000'},
             {data: [{
-                        "code": "AT",
-                        "label": "Austria",
+                        "ref-area": {
+                            "notation": "AT",
+                            "label": "Austria",
+                            "short-label": "AT"
+                        },
                         "value": 0.4808
                     }],
              label:'2001'},
         ];
-        var result = App.format_series(series);
+        var result = App.format_series(series, null, null, null, 'ref-area');
         expect(result.length).to.equal(2);
         expect(result[1]['data']).to.deep.equal([{
             'name': 'Austria',
             'code': 'AT',
+            'attributes': _(series[1]['data'][0]).omit('value'),
             'y': 0.4808
         }]);
     });
@@ -28,13 +32,17 @@ describe('ChartSeriesPreparation', function() {
         var series = [
             {data: [
                     {
-                        "code": "BE",
-                        "label": "Belgium",
+                        "ref-area": {
+                            "notation": "BE",
+                            "label": "Belgium",
+                        },
                         "value": 0.3
                     },
                     {
-                        "code": "BG",
-                        "label": "Bulgaria",
+                        "ref-area": {
+                            "notation": "BG",
+                            "label": "Bulgaria",
+                        },
                         "value": 0.4
                     },
 
@@ -42,13 +50,17 @@ describe('ChartSeriesPreparation', function() {
              label:'2000'},
             {data: [
                     {
-                        "code": "BE",
-                        "label": "Belgium",
+                        "ref-area": {
+                            "notation": "BE",
+                            "label": "Belgium",
+                        },
                         "value": 0.4808
                     },
                     {
-                        "code": "AT",
-                        "label": "Austria",
+                        "ref-area": {
+                            "notation": "AT",
+                            "label": "Austria",
+                        },
                         "value": 0.4808
                     },
 
@@ -56,7 +68,7 @@ describe('ChartSeriesPreparation', function() {
              label:'2001'},
         ];
         var sort = _.object(["sort_by", "order"],['label', 1]);
-        var result = App.format_series(series, sort);
+        var result = App.format_series(series, sort, null, null, 'ref-area');
         expect(result.length).to.equal(2);
         expect(result[0]['data'][0]['name']).equal('Austria');
     });
@@ -66,17 +78,20 @@ describe('ChartSeriesPreparation', function() {
             {data: [],
              label:'2001'},
             {data: [{
-                        "code": "AT",
-                        "label": "Austria",
+                        "ref-area": {
+                            "notation": "AT",
+                            "label": "Austria",
+                        },
                         "value": 0.4808
                     }],
              label:'2000'},
         ];
-        var result = App.format_series(series);
+        var result = App.format_series(series, null, null, null, 'ref-area');
         expect(_(result).pluck('name')).to.deep.equal(['2000', '2001']);
         expect(result[0]['data']).to.deep.equal([{
             "name": "Austria",
             'code': 'AT',
+            'attributes': _(series[1]['data'][0]).omit('value'),
             "y": 0.4808
         }]);
     });
@@ -84,37 +99,47 @@ describe('ChartSeriesPreparation', function() {
     it('should append missing series points with null y values', function(){
         var series = [
             {data: [
-                    { "code": "DK",
-                      "label": "Denmark",
+                    { "ref-area": {
+                          "notation": "DK",
+                          "label": "Denmark",
+                      },
                       "value": 0.4808
                     },
-                    { "code": "AT",
-                      "label": "Austria",
+                    { "ref-area": {
+                          "notation": "AT",
+                          "label": "Austria",
+                      },
                       "value": 0.4808
                     },
                    ],
              label:'2000'},
             {data: [
-                    { "code": "DK",
-                      "label": "Denmark",
+                    { "ref-area": {
+                          "notation": "DK",
+                          "label": "Denmark",
+                      },
                       "value": 0.4808
                     }
                    ],
              label:'2001'},
             {data: [
-                    { "code": "DK",
-                      "label": "Denmark",
+                    { "ref-area": {
+                          "notation": "DK",
+                          "label": "Denmark",
+                      },
                       "value": 0.4808
                     },
-                    { "code": "AT",
-                      "label": "Austria",
+                    { "ref-area": {
+                          "notation": "AT",
+                          "label": "Austria",
+                      },
                       "value": 0.4808
                     },
                    ],
              label:'2002'}
         ];
         var sort = _.object(["sort_by", "order"],['label', 1]);
-        var result = App.format_series(series, sort);
+        var result = App.format_series(series, sort, null, null, 'ref-area');
         expect(_(_(result).pluck('data')[1]).pluck('y')).to.deep.equal([
             null, 0.4808]);
     })
@@ -123,34 +148,39 @@ describe('ChartSeriesPreparation', function() {
         var series = [
             {data: [],
              label:'2003'},
-            {data: [{
-                        "code": "AT",
-                        "label": "Austria",
+            {data: [{ "ref-area": {
+                          "notation": "AT",
+                          "label": "Austria",
+                      },
                         "value": 0.4808
                     }],
              label:'2001'},
         ];
-        var result = App.format_series(series);
+        var result = App.format_series(series, null, null, null, 'ref-area');
+        var attributes = _(series[1]['data'][0]).omit('value');
         expect(_(result).pluck('data')).to.deep.equal([
             [{ 'name': 'Austria',
                'code': 'AT',
+               'attributes': attributes,
                'y': 0.4808}],
             [{ 'name': 'Austria',
                'code': 'AT',
+               'attributes': attributes,
                'y': null}]
         ]);
     });
 
     it('should multiply the values with 100 when unit is %', function(){
         var series = [
-            {data: [{
-                        "code": "AT",
-                        "label": "Austria",
+            {data: [{ "ref-area": {
+                          "notation": "AT",
+                          "label": "Austria",
+                      },
                         "value": 0.4808
                     }],
              label:'2001'},
         ];
-        var result = App.format_series(series, false, '', [true]);
+        var result = App.format_series(series, false, '', [true], "ref-area");
         expect(result[0]['data'][0]['y']).to.deep.equal(48.08);
     });
 
@@ -380,21 +410,6 @@ describe('ScenarioChartViewParameters', function() {
         expect(url).to.have.string('value=dim1');
     });
 
-    it('should compute columns based on facets', function() {
-        var server = this.sandbox.server;
-        var chart = new App.ScenarioChartView({
-            model: this.model,
-            schema: {},
-            values_schema: [
-                {type: 'all-values', dimension: 'dim1'},
-                {type: 'all-values', dimension: 'dim2'}
-            ],
-            scenario_chart: this.scenario_chart
-        });
-        var url = server.requests[0].url;
-        expect(App.testing.url_param(url, 'columns')).to.equal('dim1,dim2');
-    });
-
     it('should render the chart passed as parameter', function() {
         var server = this.sandbox.server;
         var scenario_chart = sinon.spy();
@@ -479,7 +494,6 @@ describe('ScenarioChartViewParameters', function() {
         var url = server.requests[0].url;
         var url_param = App.testing.url_param;
         expect(url_param(url, 'indicator')).to.equal('ind1');
-        expect(url_param(url, 'columns')).to.equal('dimension1,value1');
         expect(url_param(url, 'ref-area')).to.equal('BE');
     });
 
@@ -513,9 +527,7 @@ describe('ScenarioChartViewParameters', function() {
         expect(url_param(requests[0].url, 'dimension')).to.equal('ref-area');
         App.respond_json(requests[0], {'options': country_options});
         expect(url_param(requests[1].url, 'ref-area')).to.equal('area1');
-        expect(url_param(requests[1].url, 'columns')).to.equal('value');
         expect(url_param(requests[2].url, 'ref-area')).to.equal('area2');
-        expect(url_param(requests[2].url, 'columns')).to.equal('value');
     });
 
 });
@@ -589,7 +601,6 @@ describe('ScenarioChartView', function() {
         var url = server.requests[0].url;
         expect(url).to.have.string(App.URL + '/datapoints?');
         var url_param = App.testing.url_param;
-        expect(url_param(url, 'columns')).to.equal('ref-area,value');
         expect(url_param(url, 'indicator')).to.equal('asdf');
         expect(url_param(url, 'time-period')).to.equal('2002');
     });
@@ -597,8 +608,8 @@ describe('ScenarioChartView', function() {
     it('should render chart with the data received', function() {
         setup_scenario.apply(this);
         var server = this.sandbox.server;
-        var ajax_data = [{'ref-area': 'AU','ref-area-label': "Austria", 'value': 0.18},
-                         {'ref-area': 'BE','ref-area-label': "Belgium", 'value': 0.14}];
+        var ajax_data = [{'ref-area': {'notation': 'AU', 'label': "Austria"}, 'value': 0.18},
+                         {'ref-area': {'notation': 'BE', 'label': "Belgium"}, 'value': 0.14}];
 
         App.respond_json(server.requests[0], {'datapoints': ajax_data});
         App.respond_json(server.requests[1],
@@ -606,9 +617,7 @@ describe('ScenarioChartView', function() {
         expect(this.scenario_chart.calledOnce).to.equal(true);
         var call_args = this.scenario_chart.getCall(0).args;
         expect(call_args[0]).to.equal(this.chart.el);
-        var expected_data = [{'code': 'AU', 'label': "Austria", 'value': 0.18},
-                             {'code': 'BE', 'label': "Belgium", 'value': 0.14}];
-        expect(call_args[1]['series'][0]['data']).to.deep.equal(expected_data);
+        expect(call_args[1]['series'][0]['data']).to.deep.equal(ajax_data);
     });
 
     it('should make a single data query and then filter in JS', function() {
@@ -636,12 +645,11 @@ describe('ScenarioChartView', function() {
         expect(requests.length).to.equal(1);
         expect(url0).to.have.string('/datapoints?');
         expect(App.testing.url_param(url0, 'dim3')).to.equal(null);
-        expect(App.testing.url_param(url0, 'columns')).to.equal('dim3,dim4');
 
         App.respond_json(requests[0], {datapoints: [
-            {dim3: 'f3a', lbl: 'a', value: 13},
-            {dim3: 'f3b', lbl: 'b', value: 22},
-            {dim3: 'f3c', lbl: 'c', value: 10}
+            {dim3: {'notation': 'f3a', lbl: 'a'}, value: 13},
+            {dim3: {'notation': 'f3b', lbl: 'b'}, value: 22},
+            {dim3: {'notation': 'f3c', lbl: 'c'}, value: 10}
         ]});
 
         var series = scenario_chart.getCall(0).args[1]['series'];

@@ -8,7 +8,8 @@
 App.chart_library['lines'] = function(container, options) {
     var sort = _.object(["sort_by", "order"],['label', 1]);
     var percent = options['unit_is_pc'];
-    var series = App.format_series(options['series'], sort, '', percent);
+    var category = options['category_facet'];
+    var series = App.format_series(options['series'], sort, '', percent, category);
 	_.map(series, function(elem) {
         _(_.last(elem.data)).extend({
             dataLabels: {

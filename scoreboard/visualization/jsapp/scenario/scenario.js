@@ -17,7 +17,6 @@ App.ScenarioChartView = Backbone.View.extend({
         this.loadstate.on('change', this.load_chart, this);
         this.schema = options['schema'];
         this.scenario_chart = options['scenario_chart'];
-        this.columns = [];
         this.multidim_value = [];
         this.dimensions_mapping = {};
         this.multiple_series = options['schema']['multiple_series'];
@@ -26,15 +25,11 @@ App.ScenarioChartView = Backbone.View.extend({
             this.dimensions_mapping[facet['name']] = facet['dimension'];
             if(facet['name'] == this.schema['category_facet']) {
                 this.client_filter = facet['name'];
-                this.columns.push(facet['dimension']);
             }
         }, this);
         _(options.values_schema).forEach(function(facet) {
             if(facet['multidim_value']) {
                 this.multidim_value.push(facet['dimension']);
-            }
-            else {
-                this.columns.push(facet['dimension']);
             }
         }, this);
         this.requests_in_flight = [];
@@ -100,15 +95,9 @@ App.ScenarioChartView = Backbone.View.extend({
             return;
         }
         this.$el.html('-- loading --');
-        args['columns'] = this.columns.join(',');
-        if(this.schema['multidim'] == 3) {
-            args['xyz_columns'] = this.multidim_value.join(',');
-        }
-        else if(this.schema['multidim'] == 2) {
-            args['xy_columns'] = this.multidim_value.join(',');
-        }
         var unit_is_pc = [];
         if(this.schema['multidim'] == 3){
+            args['join_by'] = this.schema.category_facet;
             var units = [this.model.get('x-unit-measure') || '',
                          this.model.get('y-unit-measure') || '',
                          this.model.get('z-unit-measure') || '']
@@ -121,6 +110,7 @@ App.ScenarioChartView = Backbone.View.extend({
             });
         }
         else if(this.schema['multidim'] == 2){
+            args['join_by'] = this.schema.category_facet;
             var units = [this.model.get('x-unit-measure') || '',
                          this.model.get('y-unit-measure') || '']
             _(units).each(function(unit){
@@ -165,7 +155,9 @@ App.ScenarioChartView = Backbone.View.extend({
             'plotlines': this.schema['plotlines'] || false,
             'animation': this.schema['animation'] || false,
             'legend': this.schema['legend'] || false,
-            'multiseries': this.multiple_series
+            'multiseries': this.multiple_series,
+            'category_facet': this.schema['category_facet'],
+            'subtype': this.schema.chart_subtype
         };
 
         var multiseries_values = null;
@@ -175,6 +167,10 @@ App.ScenarioChartView = Backbone.View.extend({
         }
         else if (this.schema['multidim'] == 2) {
             data_method = '/datapoints_xy';
+        }
+        else if(this.schema['chart_type'] === 'country_profile'){
+            args.subtype = this.schema['chart_subtype'];
+            data_method = '/datapoints_cp';
         }
         else {
             data_method = '/datapoints';
@@ -226,7 +222,6 @@ App.ScenarioChartView = Backbone.View.extend({
             chart_data['subtype'] = this.schema.chart_subtype;
             var new_args = $.extend({}, args);
             delete new_args['ref-area'];
-            new_args['columns'] = 'ref-area,' + new_args['columns'];
             requests.push(this.request_datapoints(datapoints_url, new_args));
 
             // Also request list of EU countries
@@ -250,11 +245,6 @@ App.ScenarioChartView = Backbone.View.extend({
             var responses = _(arguments).toArray();
             if(requests.length < 2) { responses = [responses]; }
 
-            if(this.schema.chart_type === 'country_profile'){
-                chart_data['all_series'] = responses.length > 1 ? responses[1][0] : {};
-                chart_data['EU'] = responses.length > 2 ? responses[2][0]: {};
-            }
-
             chart_data['series'] = _(multiseries_values).map(function(value, n) {
                 //TODO resp should always have the same keys
                 var resp = responses[n];
@@ -262,31 +252,13 @@ App.ScenarioChartView = Backbone.View.extend({
                 if(this.client_filter) {
                     var dimension = this.dimensions_mapping[this.client_filter];
                     datapoints = _(datapoints).filter(function(item) {
-                        return _(client_filter_options).contains(item[dimension]);
+                        return _(client_filter_options).contains(
+                            item[dimension]['notation']);
                     }, this);
                 }
                 return {
                     'label': chart_data['group_labels'][value],
-                    'data': _(datapoints).map(function(item){
-                        var keys = _(item).keys().sort();
-                        var mapping = {
-                            'ref-area': 'code',
-                            'time-period': 'code',
-                            'ref-area-label': 'label',
-                            'time-period-label': 'label',
-                            'indicator': 'code',
-                            //'indicator-label': 'label',
-                            'indicator-short-label': 'label',
-                            'value': 'value'
-                        };
-                        var item_out = _.object();
-                        _(keys).each(function(key){
-                            item_out = _(item_out).extend(
-                                _.object([[mapping[key], item[key]]])
-                            );
-                        });
-                        return item_out;
-                    })
+                    'data': datapoints
                 };
             }, this);
             this.data = chart_data;
@@ -506,41 +478,6 @@ App.AnnotationsView = Backbone.View.extend({
         }, this));
     }
 
-});
-
-App.CountryProfileView = Backbone.View.extend({
-
-    template: App.get_template('scenario/country_profile.html'),
-
-    initialize: function(options) {
-        this.options = $.extend({}, options);
-        this.render();
-    },
-
-    table: function(){
-        var table = [];
-        var self = this;
-        _(this.options.data).forEach(function(item){
-            var row = {};
-            row.name = item.name;
-            row.eu = self.options.x_formatter(item.eu);
-            row.rank = item.rank;
-            row.value = self.options.x_formatter(item.old_y);
-            table.push(row);
-        });
-        return table;
-    },
-
-    render: function(){
-        this.$el.html(
-            this.template({
-                'ref-area': this.options.meta_data['ref-area'],
-                'time-period': this.options.meta_data['time-period'],
-                'credits': this.options.credits,
-                'table': this.table()
-            })
-        );
-    }
 });
 
 App.ShareOptionsView = Backbone.View.extend({

@@ -11,7 +11,8 @@ App.chart_library['scatter'] = function(container, options) {
     $(container).addClass('scatter-chart');
 
     var percent = options['unit_is_pc'];
-    var series = App.format_series(options['series'], false, 'xy', percent);
+    var category = options['category_facet'];
+    var series = App.format_series(options['series'], false, 'xy', percent, category);
 
     var chartOptions = {
         chart: {
