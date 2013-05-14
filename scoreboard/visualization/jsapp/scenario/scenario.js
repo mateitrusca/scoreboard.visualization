@@ -95,9 +95,9 @@ App.ScenarioChartView = Backbone.View.extend({
             return;
         }
         this.$el.html('-- loading --');
-        args['join_by'] = this.schema.category_facet;
         var unit_is_pc = [];
         if(this.schema['multidim'] == 3){
+            args['join_by'] = this.schema.category_facet;
             var units = [this.model.get('x-unit-measure') || '',
                          this.model.get('y-unit-measure') || '',
                          this.model.get('z-unit-measure') || '']
@@ -110,6 +110,7 @@ App.ScenarioChartView = Backbone.View.extend({
             });
         }
         else if(this.schema['multidim'] == 2){
+            args['join_by'] = this.schema.category_facet;
             var units = [this.model.get('x-unit-measure') || '',
                          this.model.get('y-unit-measure') || '']
             _(units).each(function(unit){
