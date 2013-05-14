@@ -55,7 +55,7 @@ App.format_series = function (data, sort, type, percent, category){
 
         var series = _.chain(data).map(function(serie){
             return _(serie['data']).map(function(datapoint) {
-                var code = datapoint['code'];
+                var code = datapoint[category]['notation'];
                 var data = [{
                     'name': code,
                     'x': datapoint['value']['x'] * multiplicators[0],
