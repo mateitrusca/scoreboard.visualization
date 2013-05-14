@@ -21,9 +21,9 @@ App.chart_library['scatter'] = function(container, options) {
             zoomType: 'xy',
             marginLeft: 100,
             marginRight: 150,
-            marginTop: 50,
+            marginTop: 70,
             marginBottom: 100,
-            height: 650,
+            height: 670,
             width: 750
         },
         credits: {
@@ -42,7 +42,8 @@ App.chart_library['scatter'] = function(container, options) {
             style: {
                 color: '#000000',
                 fontWeight: 'bold',
-                fontSize:'1.2em'
+                fontSize:'1.2em',
+                width: '600'
             }
 
         },
@@ -68,7 +69,7 @@ App.chart_library['scatter'] = function(container, options) {
         },{
             opposite:true,
             title: {
-                text: 'Year 2011',
+                text: options.meta_data['period_label'],
                 style: {
                     color: '#000000',
                     fontWeight: 'bold'

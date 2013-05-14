@@ -120,8 +120,8 @@ App.chart_library['country_profile'] = function(container, options) {
                 defaultSeriesType: 'bar',
                 marginTop: 60,
                 marginBottom: 100,
-                marginLeft: 200,
-                marginRight: 200,
+                marginLeft: 300,
+                marginRight: 50,
                 height: 200 + series[0].data.length * 75,
                 width: 850,
             },
@@ -193,11 +193,11 @@ App.chart_library['country_profile'] = function(container, options) {
             }],
             legend: {
                 enabled: true,
-                layout: 'vertical',
+                layout: 'horizontal',
                 align: 'right',
-                verticalAlign: 'top',
-                x: 10,
-                y: 30,
+                verticalAlign: 'bottom',
+                x: 0,
+                y: -30,
                 borderWidth: 0
             },
             tooltip: {
