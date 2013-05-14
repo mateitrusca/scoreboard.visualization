@@ -58,6 +58,7 @@ App.format_series = function (data, sort, type, percent, category){
                 var code = datapoint[category]['notation'];
                 var data = [{
                     'name': code,
+                    'attributes': _(datapoint).omit('value'),
                     'x': datapoint['value']['x'] * multiplicators[0],
                     'y': datapoint['value']['y'] * multiplicators[1]
                 }]
