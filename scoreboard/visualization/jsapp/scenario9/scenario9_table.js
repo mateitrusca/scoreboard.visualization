@@ -32,6 +32,8 @@ App.scenario9_table_filters_schema = {
       name: "time-period",
       label: "Year",
       dimension: "time-period",
+      sortBy: 'label',
+      sortOrder: 'reverse',
       constraints: {
         "indicator-group": "indicator-group",
         "ref-area": "ref-area",

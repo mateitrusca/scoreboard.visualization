@@ -30,6 +30,8 @@ App.SelectFilter = Backbone.View.extend({
         this.dimension = options['dimension'];
         this.chart_type = options['chart_type'];
         this.chart_subtype = options['chart_subtype'];
+        this.sortBy = options['sortBy'] || 'notation';
+        this.sortOrder = options['sortOrder'];
         this.multidim = options['multidim'];
         this.constraints = options['constraints'] || [];
         this.dimension_options = [];
@@ -93,9 +95,21 @@ App.SelectFilter = Backbone.View.extend({
                     ]
                 ));
             }
-            this.dimension_options = _(data['options']).sortBy(function(item){
-                return item['notation']
-            });
+
+            // Sort items
+            var sortBy = this.sortBy;
+            if(this.sortOrder === 'reverse'){
+                this.dimension_options = _(data['options']).sortBy(function(item){
+                    return item[sortBy];
+                }).reverse();
+            }else if(this.sortOrder === 'nosort'){
+                this.dimension_options = data[options];
+            }else{
+                this.dimension_options = _(data['options']).sortBy(function(item){
+                    return item[sortBy];
+                });
+            }
+
             this.options_labels = {};
             _(this.dimension_options).each(function(opt){
                   if (opt['notation'] != 'any'){
@@ -264,6 +278,8 @@ App.FiltersBox = Backbone.View.extend({
                 data_revision: this.data_revision,
                 chart_type: schema['chart_type'],
                 chart_subtype: schema['chart_subtype'],
+                sortBy: item['sortBy'],
+                sortOrder: item['sortOrder'],
                 multidim: item['multidim_common'] ? options['multidim'] : null,
                 name: item['name'],
                 label: item['label'],
