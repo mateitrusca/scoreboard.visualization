@@ -534,30 +534,43 @@ describe('AxesEditor', function() {
 
 describe('FormatEditor', function() {
 
-    it('should set title in model', function() {
+    it('should set title and subtitle in model', function() {
         var model = new Backbone.Model({
             facets: [{name: 'dim1', type: 'select'},
-                     {name: 'dim2', type: 'select'}]
+                     {name: 'dim2', type: 'select'},
+                     {name: 'dim3', type: 'select'}]
         });
         var view = new App.FormatEditor({model: model});
         var $title_el = view.$el.find('[data-label="title"]');
         $title_el.find('[name="facet"]').val('dim2').change();
         $title_el.find('[name="field"]').val('short_label').change();
+        var $subtitle_el = view.$el.find('[data-label="subtitle"]');
+        $subtitle_el.find('[name="facet"]').val('dim3').change();
+        $subtitle_el.find('[name="field"]').val('short_label').change();
         var title_label = model.get('labels')['title'];
         expect(title_label['facet']).to.equal('dim2');
         expect(title_label['field']).to.equal('short_label');
+        var subtitle_label = model.get('labels')['subtitle'];
+        expect(subtitle_label['facet']).to.equal('dim3');
+        expect(subtitle_label['field']).to.equal('short_label');
     });
 
-    it('should display current title values', function() {
+    it('should display current title and subtitle values', function() {
         var model = new Backbone.Model({
             facets: [{name: 'dim1', type: 'select'},
-                     {name: 'dim2', type: 'select'}],
-            labels: {title: {facet: 'dim2', field: 'short_label'}}
+                     {name: 'dim2', type: 'select'},
+                     {name: 'dim3', type: 'select'}],
+            labels: {title: {facet: 'dim2', field: 'short_label'},
+                     subtitle: {facet: 'dim3', field: 'short_label'}}
         });
         var view = new App.FormatEditor({model: model});
         var $title_el = view.$el.find('[data-label="title"]');
         expect($title_el.find('[name="facet"]').val()).to.equal('dim2');
         expect($title_el.find('[name="field"]').val())
+            .to.equal('short_label');
+        var $subtitle_el = view.$el.find('[data-label="subtitle"]');
+        expect($subtitle_el.find('[name="facet"]').val()).to.equal('dim3');
+        expect($subtitle_el.find('[name="field"]').val())
             .to.equal('short_label');
     });
 

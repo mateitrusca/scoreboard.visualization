@@ -64,15 +64,15 @@ App.FormatEditor = Backbone.View.extend({
 
     initialize: function(options) {
         this.facets = new Backbone.Collection(this.model.get('facets'));
-        var update_title_facets = _.bind(function() {
+        var update_facets = _.bind(function() {
             this.facets.reset(_(_(this.model.get('facets'))
                                 .where({type: 'select'}))
                               .map(function(facet) {
                 return {value: facet['name'], label: facet['label']};
             }));
         }, this);
-        update_title_facets();
-        this.model.on('change:facets', update_title_facets);
+        update_facets();
+        this.model.on('change:facets', update_facets);
 
         this.title_label = new App.LabelEditor({
             name: 'title',
@@ -92,6 +92,26 @@ App.FormatEditor = Backbone.View.extend({
             }
             this.model.set('labels', labels);
         }, this);
+
+        this.subtitle_label = new App.LabelEditor({
+            name: 'subtitle',
+            title: "Subtitle",
+            facets: this.facets,
+            model: new Backbone.Model(
+                (this.model.get('labels') || {})['subtitle'])
+        });
+        this.subtitle_label.model.on('change', function() {
+            var labels = _({}).extend(this.model.get('labels'));
+            var subtitle = this.subtitle_label.model.toJSON();
+            if(subtitle['facet']) {
+                labels['subtitle'] = subtitle;
+            }
+            else {
+                delete labels['subtitle'];
+            }
+            this.model.set('labels', labels);
+        }, this);
+
         this.render();
     },
 
@@ -101,6 +121,10 @@ App.FormatEditor = Backbone.View.extend({
         this.$el.find('[data-marker="title-label"]').replaceWith(
             this.title_label.el);
         this.title_label.delegateEvents();
+        this.subtitle_label.render();
+        this.$el.find('[data-marker="subtitle-label"]').replaceWith(
+            this.subtitle_label.el);
+        this.subtitle_label.delegateEvents();
     }
 
 });
