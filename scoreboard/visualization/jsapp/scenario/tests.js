@@ -410,21 +410,6 @@ describe('ScenarioChartViewParameters', function() {
         expect(url).to.have.string('value=dim1');
     });
 
-    it('should compute columns based on facets', function() {
-        var server = this.sandbox.server;
-        var chart = new App.ScenarioChartView({
-            model: this.model,
-            schema: {},
-            values_schema: [
-                {type: 'all-values', dimension: 'dim1'},
-                {type: 'all-values', dimension: 'dim2'}
-            ],
-            scenario_chart: this.scenario_chart
-        });
-        var url = server.requests[0].url;
-        expect(App.testing.url_param(url, 'columns')).to.equal('dim1,dim2');
-    });
-
     it('should render the chart passed as parameter', function() {
         var server = this.sandbox.server;
         var scenario_chart = sinon.spy();
@@ -509,7 +494,6 @@ describe('ScenarioChartViewParameters', function() {
         var url = server.requests[0].url;
         var url_param = App.testing.url_param;
         expect(url_param(url, 'indicator')).to.equal('ind1');
-        expect(url_param(url, 'columns')).to.equal('dimension1,value1');
         expect(url_param(url, 'ref-area')).to.equal('BE');
     });
 
@@ -543,9 +527,7 @@ describe('ScenarioChartViewParameters', function() {
         expect(url_param(requests[0].url, 'dimension')).to.equal('ref-area');
         App.respond_json(requests[0], {'options': country_options});
         expect(url_param(requests[1].url, 'ref-area')).to.equal('area1');
-        expect(url_param(requests[1].url, 'columns')).to.equal('value');
         expect(url_param(requests[2].url, 'ref-area')).to.equal('area2');
-        expect(url_param(requests[2].url, 'columns')).to.equal('value');
     });
 
 });
@@ -619,7 +601,6 @@ describe('ScenarioChartView', function() {
         var url = server.requests[0].url;
         expect(url).to.have.string(App.URL + '/datapoints?');
         var url_param = App.testing.url_param;
-        expect(url_param(url, 'columns')).to.equal('ref-area,value');
         expect(url_param(url, 'indicator')).to.equal('asdf');
         expect(url_param(url, 'time-period')).to.equal('2002');
     });
@@ -664,7 +645,6 @@ describe('ScenarioChartView', function() {
         expect(requests.length).to.equal(1);
         expect(url0).to.have.string('/datapoints?');
         expect(App.testing.url_param(url0, 'dim3')).to.equal(null);
-        expect(App.testing.url_param(url0, 'columns')).to.equal('dim3,dim4');
 
         App.respond_json(requests[0], {datapoints: [
             {dim3: {'notation': 'f3a', lbl: 'a'}, value: 13},

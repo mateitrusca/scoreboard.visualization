@@ -17,7 +17,6 @@ App.ScenarioChartView = Backbone.View.extend({
         this.loadstate.on('change', this.load_chart, this);
         this.schema = options['schema'];
         this.scenario_chart = options['scenario_chart'];
-        this.columns = [];
         this.multidim_value = [];
         this.dimensions_mapping = {};
         this.multiple_series = options['schema']['multiple_series'];
@@ -26,15 +25,11 @@ App.ScenarioChartView = Backbone.View.extend({
             this.dimensions_mapping[facet['name']] = facet['dimension'];
             if(facet['name'] == this.schema['category_facet']) {
                 this.client_filter = facet['name'];
-                this.columns.push(facet['dimension']);
             }
         }, this);
         _(options.values_schema).forEach(function(facet) {
             if(facet['multidim_value']) {
                 this.multidim_value.push(facet['dimension']);
-            }
-            else {
-                this.columns.push(facet['dimension']);
             }
         }, this);
         this.requests_in_flight = [];
@@ -100,13 +95,7 @@ App.ScenarioChartView = Backbone.View.extend({
             return;
         }
         this.$el.html('-- loading --');
-        args['columns'] = this.columns.join(',');
-        if(this.schema['multidim'] == 3) {
-            args['xyz_columns'] = this.multidim_value.join(',');
-        }
-        else if(this.schema['multidim'] == 2) {
-            args['xy_columns'] = this.multidim_value.join(',');
-        }
+        args['join_by'] = this.schema.category_facet;
         var unit_is_pc = [];
         if(this.schema['multidim'] == 3){
             var units = [this.model.get('x-unit-measure') || '',
@@ -225,6 +214,17 @@ App.ScenarioChartView = Backbone.View.extend({
         else {
             multiseries_values = [null];
             requests.push(this.request_datapoints(datapoints_url, args));
+        }
+
+        if(this.schema.chart_type === 'country_profile'){
+            chart_data['subtype'] = this.schema.chart_subtype;
+            var new_args = $.extend({}, args);
+            delete new_args['ref-area'];
+            requests.push(this.request_datapoints(datapoints_url, new_args));
+
+            // Also request list of EU countries
+            var eurl = this.cube_url + '/european-union.json';
+            requests.push($.getJSON(eurl, {}));
         }
 
         var client_filter_options = [];
