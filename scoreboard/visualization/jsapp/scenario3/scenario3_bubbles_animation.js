@@ -116,6 +116,8 @@ App.scenario3_bubbles_animation_filters_schema = {
         {type: 'all-values',
          multidim_common: true,
          name: 'time-period',
+         sortBy: 'label',
+         sortOrder: 'reverse', 
          dimension: 'time-period',
          constraints: {
              'x-indicator':    'x-indicator',

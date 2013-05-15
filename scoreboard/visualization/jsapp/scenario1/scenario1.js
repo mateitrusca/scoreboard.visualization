@@ -23,7 +23,9 @@ App.scenario1_filters_schema = {
         {type: 'select',
          name: 'time-period',
          label: 'Period',
-         dimension: 'time-period',
+         sortBy: 'label',
+         sortOrder: 'reverse', 
+      dimension: 'time-period',
          constraints: {
              'indicator-group': 'indicator-group',
              'indicator': 'indicator'

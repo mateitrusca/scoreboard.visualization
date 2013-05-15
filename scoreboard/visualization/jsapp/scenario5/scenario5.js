@@ -21,7 +21,9 @@ App.scenario5_filters_schema = {
          }},
         {type: 'select',
          name: 'time-period',
-         label: 'Period',
+         label: 'Year',
+         sortBy: 'label',
+         sortOrder: 'reverse', 
          dimension: 'time-period',
          constraints: {
              'indicator-group': 'indicator-group',

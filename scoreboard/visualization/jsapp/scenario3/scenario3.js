@@ -81,6 +81,8 @@ App.scenario3_filters_schema = {
         {type: 'select',
          multidim_common: true,
          name: 'time-period',
+         sortBy: 'label',
+         sortOrder: 'reverse', 
          label: "Year",
          dimension: 'time-period',
          constraints: {

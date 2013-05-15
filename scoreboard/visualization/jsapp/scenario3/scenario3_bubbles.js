@@ -117,6 +117,8 @@ App.scenario3_bubbles_filters_schema = {
          multidim_common: true,
          name: 'time-period',
          label: "Year",
+         sortBy: 'label',
+         sortOrder: 'reverse', 
          dimension: 'time-period',
          constraints: {
              'x-indicator':    'x-indicator',
@@ -167,6 +169,7 @@ App.scenario3_bubbles_filters_schema = {
                   {name: 'z-unit-measure'}]
     },
     chart_type: 'bubbles',
+    legend: true, 
     multidim: 3,
     plotlines: {x: 'values', y: 'values'},
     labels: {
@@ -175,6 +178,9 @@ App.scenario3_bubbles_filters_schema = {
          field: 'short_label'},
         title_y: {
          facet: 'y-indicator',
+         field: 'short_label'},
+        title_z: {
+         facet: 'z-indicator',
          field: 'short_label'},
         period_label: {
          facet: 'time-period',
