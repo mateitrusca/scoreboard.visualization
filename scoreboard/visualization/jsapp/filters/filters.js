@@ -270,7 +270,7 @@ App.FiltersBox = Backbone.View.extend({
         var schema = options['schema'];
         _(options['filters_schema']).forEach(function(item) {
             var cls = this.filter_types[item['type']];
-            var default_all = (item['name'] == schema['category_facet']);
+            var default_all = (item['name'] == schema['category_facet']) && !item['default_value'];
             var filter = new cls({
                 model: this.model,
                 loadstate: this.loadstate,
