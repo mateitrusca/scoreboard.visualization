@@ -24,7 +24,7 @@ App.chart_library['map'] = function(container, options) {
     var map_div = $('<div class="map-chart">');
     $(container).empty().append(map_div);
     var percent = options['unit_is_pc'];
-    var series = App.format_series(options['series'], false, '', percent);
+    var series = App.format_series(options['series'], false, '', percent, options['category_facet']);
     var max_value = _.chain(series).pluck('data').
                       first().pluck('y').max().value();
     var colorscale = new chroma.ColorScale({
