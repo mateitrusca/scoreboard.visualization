@@ -32,10 +32,11 @@ App.SeriesEditor = Backbone.View.extend({
             if(dimension['type_label'] == 'attribute') {
                 tooltips.push({
                     label: dimension['label'],
-                    value: dimension['notation']
+                    value: dimension['notation'],
+                    checked: this.tooltips_model.get(dimension['notation'])
                 });
             }
-        });
+        }, this);
         var context = {
             tooltips: tooltips
         };

@@ -29,7 +29,8 @@
 {{# tooltips }}
   <li>
     <label>
-      <input type="checkbox" name="tooltip" value="{{ value }}">
+      <input type="checkbox" name="tooltip" value="{{ value }}"
+             {{# if checked }}checked{{/ if }}>
       {{ label }}
     </label>
   </li>

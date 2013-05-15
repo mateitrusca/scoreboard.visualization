@@ -463,21 +463,28 @@ describe('SeriesEditor', function() {
     beforeEach(function() {
         this.model = new App.EditorConfiguration({}, {
             dimensions: all_dimensions});
-        this.view = new App.SeriesEditor({model: this.model});
     });
 
     it('should display checkboxes for relevant dimensions', function() {
-        var $el = this.view.$el;
-        expect($el.find('[value="flag"]').length).to.equal(1);
-        expect($el.find('[value="note"]').length).to.equal(1);
-        expect($el.find('[value="unit-measure"]').length).to.equal(1);
-        expect($el.find('[value="breakdown"]').length).to.equal(0);
-        expect($el.find('[value="breakdown-group"]').length).to.equal(0);
+        var view = new App.SeriesEditor({model: this.model});
+        expect(view.$el.find('[value="flag"]').length).to.equal(1);
+        expect(view.$el.find('[value="note"]').length).to.equal(1);
+        expect(view.$el.find('[value="unit-measure"]').length).to.equal(1);
+        expect(view.$el.find('[value="breakdown"]').length).to.equal(0);
+        expect(view.$el.find('[value="breakdown-group"]').length).to.equal(0);
     });
 
     it('should save value from checkboxes', function() {
-        this.view.$el.find('[value="note"]').click().change();
+        var view = new App.SeriesEditor({model: this.model});
+        view.$el.find('[value="note"]').click().change();
         expect(this.model.get('tooltips')['note']).to.be.true;
+    });
+
+    it('should precheck checkboxes', function() {
+        this.model.set('tooltips', {note: true});
+        var view = new App.SeriesEditor({model: this.model});
+        expect(view.$el.find('[value="note"]').is(':checked')).to.be.true;
+        expect(view.$el.find('[value="flag"]').is(':checked')).to.be.false;
     });
 
 });
