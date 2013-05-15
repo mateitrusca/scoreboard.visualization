@@ -20,11 +20,10 @@ App.ChartTypeEditor = Backbone.View.extend({
     chart_types: [
         {label: "Line", value: 'lines'},
         {label: "Column", value: 'columns'},
-        {label: "Column animation", value: 'evolution_columns'},
+        {label: "Column + animation", value: 'evolution_columns'},
         {label: "Scatterplot", value: 'scatter', multidim: 2},
-        {label: "Scatterplot with bubbles", value: 'bubbles', multidim: 3},
-        {label: "Map", value: 'map'},
-        {label: "Country Profile", value: 'country_profile'}
+        {label: "Bubble chart", value: 'bubbles', multidim: 3},
+        {label: "Map", value: 'map'}
     ],
 
     initialize: function(options) {
@@ -46,6 +45,7 @@ App.ChartTypeEditor = Backbone.View.extend({
         // XXX Handle this when evolution_columns is merged with columns
         if(chart_type === 'evolution_columns'){
             this.model.set({
+                chart_type: 'columns',
                 animation: true
             });
         }else{
