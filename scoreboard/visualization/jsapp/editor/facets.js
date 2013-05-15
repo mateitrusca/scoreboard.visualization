@@ -200,7 +200,7 @@ App.FacetsEditor = Backbone.View.extend({
 
     load_value: function() {
         this.facets = new App.FacetsCollection(this.model.get('facets'));
-        this.facet_views = {};
+        var facets_to_keep = {};
         var add_model = _.bind(function(name, defaults) {
             var facet_model = this.facets.findWhere({name: name});
             if(! facet_model) {
@@ -222,11 +222,7 @@ App.FacetsEditor = Backbone.View.extend({
                 }
             }
             this.facets.add(facet_model);
-            var facet_view = new App.FacetEditorField({
-                model: facet_model,
-                facets_editor: this
-            });
-            this.facet_views[facet_model.cid] = facet_view;
+            facets_to_keep[facet_model.cid] = true;
         }, this);
         _(this.dimensions).forEach(function(dimension) {
             if(dimension['type_label'] != 'dimension' &&
@@ -241,11 +237,18 @@ App.FacetsEditor = Backbone.View.extend({
         }, this);
         var to_remove = [];
         this.facets.forEach(function(facet) {
-            if(! this.facet_views[facet.cid]) {
+            if(! facets_to_keep[facet.cid]) {
                 to_remove.push(facet);
             }
         }, this);
         this.facets.remove(to_remove);
+        this.facet_views = _.object(this.facets.map(function(facet_model) {
+            var facet_view = new App.FacetEditorField({
+                model: facet_model,
+                facets_editor: this
+            });
+            return [facet_model.cid, facet_view];
+        }, this));
         this.facets.on('change sort', this.apply_changes, this);
         this.apply_changes();
     },
