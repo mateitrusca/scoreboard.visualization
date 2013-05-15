@@ -76,8 +76,7 @@ App.scenario6_filters_schema = {
     },
     labels: {
         title: {facet: 'indicator', field: 'short_label'},
-        ordinate: {facet: 'unit-measure', field: 'short_label'},
-        unit: {facet: 'unit-measure', field: 'short_label'}
+        ordinate: {facet: 'unit-measure', field: 'short_label'}
     }
 };
 
