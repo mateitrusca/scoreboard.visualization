@@ -17,10 +17,12 @@ App.chart_library['bubbles'] = function(container, options) {
             type: 'bubble',
             renderTo: container,
             zoomType: 'xy',
-            marginRight: 25,
-            marginBottom: 150,
-            marginTop: 100
-
+            marginLeft: 100,
+            marginRight: 150,
+            marginTop: 70,
+            marginBottom: 100,
+            height: 670,
+            width: 750
         },
         credits: {
             href: options['credits']['href'],
@@ -34,11 +36,13 @@ App.chart_library['bubbles'] = function(container, options) {
         },
         title: {
             text: (options.meta_data['title_x'] + ' vs. ' +
-                   options.meta_data['title_y']),
+                   options.meta_data['title_y'] + ' vs. ' +
+                   options.meta_data['title_z']),
             style: {
                 color: '#000000',
                 fontWeight: 'bold',
-                fontSize:'1.2em'
+                fontSize:'1.2em',
+                width: '600'
             }
 
         },
@@ -88,11 +92,11 @@ App.chart_library['bubbles'] = function(container, options) {
             formatter: options['tooltip_formatter']
         },
         legend: {
-            layout: 'horizontal',
-            align: 'center',
-            verticalAlign: 'bottom',
-            x: 0,
-            y: -20,
+            layout: 'vertical',
+            align: 'right',
+            verticalAlign: 'top',
+            x: 10,
+            y: 30,
             borderWidth: 0
         },
         plotOptions: {
