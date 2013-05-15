@@ -9,6 +9,7 @@
     $$(document).ready(function() {
       var form = $('form.daviz-view-form')[0];
       var view_url = ${view/object_url_json};
+      App.CUBE_DIMENSIONS = ${view/cube_dimensions_json};
       App.create_editor(form, view_url);
     });
   })(App.jQuery);
