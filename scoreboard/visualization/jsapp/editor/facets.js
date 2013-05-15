@@ -92,7 +92,7 @@ App.FacetEditorField = Backbone.View.extend({
 });
 
 
-App.FacetsCollection = Backbone.Collection.extend({
+App.FacetCollection = Backbone.Collection.extend({
 
     constructor: function(value, dimensions) {
         Backbone.Collection.apply(this, [value]);
@@ -246,8 +246,8 @@ App.FacetsEditor = Backbone.View.extend({
     },
 
     load_value: function() {
-        this.facets = new App.FacetsCollection(this.model.get('facets'),
-                                               this.dimensions);
+        this.facets = new App.FacetCollection(this.model.get('facets'),
+                                              this.dimensions);
         this.facet_views = _.object(this.facets.map(function(facet_model) {
             var facet_view = new App.FacetEditorField({
                 model: facet_model,
