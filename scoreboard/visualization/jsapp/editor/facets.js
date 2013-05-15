@@ -92,39 +92,16 @@ App.FacetEditorField = Backbone.View.extend({
 });
 
 
-App.FacetsEditor = Backbone.View.extend({
+App.FacetCollection = Backbone.Collection.extend({
 
-    template: App.get_template('editor/facets.html'),
+    constructor: function(value, dimensions) {
+        Backbone.Collection.apply(this, [value]);
 
-    title: "Facets",
-
-    events: {
-        'change [name="multiple_series"]': 'on_multiple_series_change'
-    },
-
-    initialize: function(options) {
-        if(! this.model.has('multiple_series')) {
-            this.model.set('multiple_series', null);
-        }
-        this.render();
-        this.get_dimensions();
-    },
-
-    get_dimensions: function() {
-        var dimensions_url = this.options.cube_url + '/dimensions?flat=on';
-        $.get(dimensions_url).done(_.bind(function(dimensions) {
-            this.dimensions = dimensions;
-            this.load_value();
-        }, this));
-    },
-
-    load_value: function() {
-        this.facets = new Backbone.Collection(this.model.get('facets'));
-        this.facet_views = {};
+        var facets_to_keep = {};
         var add_model = _.bind(function(name, defaults) {
-            var facet_model = this.facets.findWhere({name: name});
+            var facet_model = this.findWhere({name: name});
             if(! facet_model) {
-                var facet_model = this.facets.findWhere({name: 'x-' + name});
+                var facet_model = this.findWhere({name: 'x-' + name});
                 if(facet_model) { // hey, it's a multidim facet
                     var label = facet_model.get('label') || defaults['label'];
                     if(label.substr(0, 4) == '(X) ') {
@@ -141,14 +118,10 @@ App.FacetsEditor = Backbone.View.extend({
                     facet_model.set(defaults);
                 }
             }
-            this.facets.add(facet_model);
-            var facet_view = new App.FacetEditorField({
-                model: facet_model,
-                facets_editor: this
-            });
-            this.facet_views[facet_model.cid] = facet_view;
+            this.add(facet_model);
+            facets_to_keep[facet_model.cid] = true;
         }, this);
-        _(this.dimensions).forEach(function(dimension) {
+        _(dimensions).forEach(function(dimension) {
             if(dimension['type_label'] != 'dimension' &&
                dimension['type_label'] != 'dimension group') {
                 return;
@@ -158,14 +131,117 @@ App.FacetsEditor = Backbone.View.extend({
                 'dimension': name,
                 'label': dimension['label']
             });
-        }, this);
+        });
         var to_remove = [];
-        this.facets.forEach(function(facet) {
-            if(! this.facet_views[facet.cid]) {
+        this.forEach(function(facet) {
+            if(! facets_to_keep[facet.cid]) {
                 to_remove.push(facet);
             }
-        }, this);
-        this.facets.remove(to_remove);
+        });
+        this.remove(to_remove);
+    },
+
+    get_value: function(chart_multidim) {
+        var multidim_facets = {};
+        var all_multidim = _.range(chart_multidim);
+        var facets_by_axis = {'all': []};
+        _(all_multidim).forEach(function(n) {
+            var letter = 'xyz'[n];
+            facets_by_axis[letter] = [];
+        });
+        var facets_above = [];
+        this.forEach(function(facet_model) {
+            var facet = facet_model.toJSON();
+            var multidim = facet['multidim'];
+            delete facet['multidim'];
+            if(multidim) {
+                multidim_facets[facet['name']] = true;
+                _(all_multidim).forEach(function(n) {
+                    var letter = 'xyz'[n];
+                    var prefix = letter + '-';
+                    var constraints = {};
+                    _(facets_above).forEach(function(name) {
+                        constraints[name] = prefix + name;
+                    });
+                    var label = '(' + letter.toUpperCase() + ') '
+                              + facet['label'];
+                    facets_by_axis[letter].push(_({
+                        name: prefix + facet['name'],
+                        label: label,
+                        constraints: constraints
+                    }).defaults(facet));
+                });
+            }
+            else {
+                var constraints = {};
+                _(facets_above).forEach(function(name) {
+                    if(multidim_facets[name]) {
+                        _(all_multidim).forEach(function(n) {
+                            var letter = 'xyz'[n];
+                            var prefix = letter + '-';
+                            constraints[prefix + name] = prefix + name;
+                        });
+                    }
+                    else {
+                        constraints[name] = name;
+                    }
+                });
+                facet['constraints'] = constraints;
+                if(chart_multidim) {
+                    facet['multidim_common'] = true;
+                } else {
+                    delete facet['multidim_common'];
+                }
+                facets_by_axis['all'].push(facet);
+            }
+            if(facet['type'] == 'select') {
+                facets_above.push(facet['name']);
+            }
+        });
+        var value = [];
+        _(all_multidim).forEach(function(n) {
+            var letter = 'xyz'[n];
+            value = value.concat(facets_by_axis[letter]);
+        });
+        value = value.concat(facets_by_axis['all']);
+        var value_facet = {
+            name: 'value',
+            type: 'all-values',
+            dimension: 'value'
+        };
+        if(chart_multidim) {
+            value_facet['multidim_value'] = true;
+        }
+        value.push(value_facet);
+        return value;
+    }
+
+});
+
+
+App.FacetsEditor = Backbone.View.extend({
+
+    template: App.get_template('editor/facets.html'),
+
+    title: "Facets",
+
+    events: {
+        'change [name="multiple_series"]': 'on_multiple_series_change'
+    },
+
+    initialize: function(options) {
+        if(! this.model.has('multiple_series')) {
+            this.model.set('multiple_series', null);
+        }
+        this.facets = new App.FacetCollection(this.model.get('facets'),
+                                              options['dimensions']);
+        this.facet_views = _.object(this.facets.map(function(facet_model) {
+            var facet_view = new App.FacetEditorField({
+                model: facet_model,
+                facets_editor: this
+            });
+            return [facet_model.cid, facet_view];
+        }, this));
         this.facets.on('change sort', this.apply_changes, this);
         this.apply_changes();
     },
@@ -204,10 +280,6 @@ App.FacetsEditor = Backbone.View.extend({
     },
 
     render: function() {
-        if(! this.dimensions) {
-            this.$el.html('loading...');
-            return;
-        }
         var context = {
             series_options: this.facet_roles.series_options,
             err_too_few: this.facet_roles.err_too_few,
@@ -225,77 +297,7 @@ App.FacetsEditor = Backbone.View.extend({
     },
 
     save_value: function() {
-        var multidim_facets = {};
-        var all_multidim = _.range(this.model.get('multidim'));
-        var facets_by_axis = {'all': []};
-        _(all_multidim).forEach(function(n) {
-            var letter = 'xyz'[n];
-            facets_by_axis[letter] = [];
-        });
-        var facets_above = [];
-        this.facets.forEach(function(facet_model) {
-            var facet = facet_model.toJSON();
-            var multidim = facet['multidim'];
-            delete facet['multidim'];
-            if(multidim) {
-                multidim_facets[facet['name']] = true;
-                _(all_multidim).forEach(function(n) {
-                    var letter = 'xyz'[n];
-                    var prefix = letter + '-';
-                    var constraints = {};
-                    _(facets_above).forEach(function(name) {
-                        constraints[name] = prefix + name;
-                    });
-                    var label = '(' + letter.toUpperCase() + ') '
-                              + facet['label'];
-                    facets_by_axis[letter].push(_({
-                        name: prefix + facet['name'],
-                        label: label,
-                        constraints: constraints
-                    }).defaults(facet));
-                });
-            }
-            else {
-                var constraints = {};
-                _(facets_above).forEach(function(name) {
-                    if(multidim_facets[name]) {
-                        _(all_multidim).forEach(function(n) {
-                            var letter = 'xyz'[n];
-                            var prefix = letter + '-';
-                            constraints[prefix + name] = prefix + name;
-                        });
-                    }
-                    else {
-                        constraints[name] = name;
-                    }
-                });
-                facet['constraints'] = constraints;
-                if(this.chart_is_multidim()) {
-                    facet['multidim_common'] = true;
-                } else {
-                    delete facet['multidim_common'];
-                }
-                facets_by_axis['all'].push(facet);
-            }
-            if(facet['type'] == 'select') {
-                facets_above.push(facet['name']);
-            }
-        }, this);
-        var value = [];
-        _(all_multidim).forEach(function(n) {
-            var letter = 'xyz'[n];
-            value = value.concat(facets_by_axis[letter]);
-        });
-        value = value.concat(facets_by_axis['all']);
-        var value_facet = {
-            name: 'value',
-            type: 'all-values',
-            dimension: 'value'
-        };
-        if(this.chart_is_multidim()) {
-            value_facet['multidim_value'] = true;
-        }
-        value.push(value_facet);
+        var value = this.facets.get_value(this.model.get('multidim'));
         this.model.set('facets', value);
         var category_facet = this.facet_roles.category_facet;
         if(category_facet) {
