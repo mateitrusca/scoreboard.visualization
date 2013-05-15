@@ -233,16 +233,13 @@ App.FacetsEditor = Backbone.View.extend({
         if(! this.model.has('multiple_series')) {
             this.model.set('multiple_series', null);
         }
-        this.facets = new App.FacetCollection(this.model.get('facets'),
-                                              options['dimensions']);
-        this.facet_views = _.object(this.facets.map(function(facet_model) {
+        this.facet_views = _.object(this.model.facets.map(function(facet_model) {
             var facet_view = new App.FacetEditorField({
                 model: facet_model,
                 facets_editor: this
             });
             return [facet_model.cid, facet_view];
         }, this));
-        this.facets.on('change sort', this.apply_changes, this);
         this.apply_changes();
     },
 
@@ -250,7 +247,7 @@ App.FacetsEditor = Backbone.View.extend({
         var series_options = [];
         var no_multiple_series = true;
         var free_dimensions = [];
-        this.facets.forEach(function(facet_model) {
+        this.model.facets.forEach(function(facet_model) {
             var facet = facet_model.toJSON();
             var name = facet['name'];
             if(facet['type'] == 'multiple_select' ||
@@ -269,13 +266,17 @@ App.FacetsEditor = Backbone.View.extend({
         if(no_multiple_series) {
             this.model.set('multiple_series', null);
         }
+        var category_facet = (free_dimensions.length == 1
+                             ? free_dimensions[0]
+                             : null);
+        if(category_facet) {
+            this.model.set('category_facet', category_facet['name']);
+        }
         this.facet_roles = {
             series_options: series_options,
             err_too_few: (free_dimensions.length < 1),
             err_too_many: (free_dimensions.length > 1),
-            category_facet: (free_dimensions.length == 1
-                             ? free_dimensions[0]
-                             : null)
+            category_facet: category_facet
         }
     },
 
@@ -288,7 +289,7 @@ App.FacetsEditor = Backbone.View.extend({
             chart_is_multidim: this.chart_is_multidim()
         };
         this.$el.html(this.template(context));
-        this.facets.forEach(function(facet_model) {
+        this.model.facets.forEach(function(facet_model) {
             var facet_view = this.facet_views[facet_model.cid];
             facet_view.render();
             this.$el.find('tbody').append(facet_view.el);
@@ -297,12 +298,8 @@ App.FacetsEditor = Backbone.View.extend({
     },
 
     save_value: function() {
-        var value = this.facets.get_value(this.model.get('multidim'));
+        var value = this.model.facets.get_value(this.model.get('multidim'));
         this.model.set('facets', value);
-        var category_facet = this.facet_roles.category_facet;
-        if(category_facet) {
-            this.model.set('category_facet', category_facet['name']);
-        }
     },
 
     chart_is_multidim: function() {
