@@ -41,6 +41,7 @@ App.scenario6_filters_schema = {
          name: 'ref-area',
          label: 'Countries',
          dimension: 'ref-area',
+         default_value: ['BE', 'BG', 'CZ', 'DK', 'DE', 'EE', 'IE', 'EL', 'ES', 'FR', 'IT', 'CY', 'LV', 'LT', 'LU', 'HU', 'MT', 'NL', 'AT', 'PL', 'PT', 'RO', 'SI', 'SK', 'FI', 'SE', 'UK'],
          constraints: {
              'indicator-group': 'indicator-group',
              'indicator': 'indicator',

@@ -36,16 +36,17 @@ App.scenario8_filters_schema = {
              'indicator-group': 'indicator-group',
              'indicator': 'indicator'
          }},
-         {type: 'select',
-          name: 'ref-area',
-          label: 'Country',
-          dimension: 'ref-area',
-          constraints: {
-             'unit-measure': 'unit-measure',
-             'breakdown-group': 'breakdown-group',
-             'indicator-group': 'indicator-group',
-             'indicator': 'indicator'
-          }},
+        {type: 'select',
+         name: 'ref-area',
+         label: 'Country',
+         dimension: 'ref-area',
+         default_value: ['BE', 'BG', 'CZ', 'DK', 'DE', 'EE', 'IE', 'EL', 'ES', 'FR', 'IT', 'CY', 'LV', 'LT', 'LU', 'HU', 'MT', 'NL', 'AT', 'PL', 'PT', 'RO', 'SI', 'SK', 'FI', 'SE', 'UK'],
+         constraints: {
+            'unit-measure': 'unit-measure',
+            'breakdown-group': 'breakdown-group',
+            'indicator-group': 'indicator-group',
+            'indicator': 'indicator'
+         }},
          {type: 'all-values',
           dimension: 'breakdown',
           label: 'Breakdown',
