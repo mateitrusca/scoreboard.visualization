@@ -19,7 +19,7 @@ App.scenario3_bubbles_filters_schema = {
          constraints: {
              'indicator-group': 'x-indicator-group'
          }},
-        {type: 'select',
+        {type: 'ignore',
          name: 'x-breakdown-group',
          label: "(X) breakdown group",
          dimension: 'breakdown-group',
@@ -31,8 +31,7 @@ App.scenario3_bubbles_filters_schema = {
          label: "(X) breakdown",
          dimension: 'breakdown',
          constraints: {
-             'indicator':       'x-indicator',
-             'breakdown-group': 'x-breakdown-group'
+             'indicator':       'x-indicator'
          }},
         {type: 'select',
          name: 'x-unit-measure',
@@ -55,7 +54,7 @@ App.scenario3_bubbles_filters_schema = {
          constraints: {
              'indicator-group': 'y-indicator-group'
          }},
-        {type: 'select',
+        {type: 'ignore',
          name: 'y-breakdown-group',
          label: "(Y) breakdown group",
          dimension: 'breakdown-group',
@@ -67,8 +66,7 @@ App.scenario3_bubbles_filters_schema = {
          label: "(Y) breakdown",
          dimension: 'breakdown',
          constraints: {
-             'indicator':       'y-indicator',
-             'breakdown-group': 'y-breakdown-group'
+             'indicator':       'y-indicator'
          }},
         {type: 'select',
          name: 'y-unit-measure',
@@ -90,7 +88,7 @@ App.scenario3_bubbles_filters_schema = {
          constraints: {
              'indicator-group': 'z-indicator-group'
          }},
-        {type: 'select',
+        {type: 'ignore',
          name: 'z-breakdown-group',
          label: "(Z) breakdown group",
          dimension: 'breakdown-group',
@@ -102,8 +100,7 @@ App.scenario3_bubbles_filters_schema = {
          label: "(Z) breakdown",
          dimension: 'breakdown',
          constraints: {
-             'indicator':       'z-indicator',
-             'breakdown-group': 'z-breakdown-group'
+             'indicator':       'z-indicator'
          }},
         {type: 'select',
          name: 'z-unit-measure',
@@ -156,15 +153,12 @@ App.scenario3_bubbles_filters_schema = {
     category_facet: 'ref-area',
     annotations: {
         filters: [{name: 'x-indicator'},
-                  {name: 'x-breakdown-group'},
                   {name: 'x-breakdown'},
                   {name: 'x-unit-measure'},
                   {name: 'y-indicator'},
-                  {name: 'y-breakdown-group'},
                   {name: 'y-breakdown'},
                   {name: 'y-unit-measure'},
                   {name: 'z-indicator'},
-                  {name: 'z-breakdown-group'},
                   {name: 'z-breakdown'},
                   {name: 'z-unit-measure'}]
     },
@@ -184,16 +178,7 @@ App.scenario3_bubbles_filters_schema = {
          field: 'short_label'},
         period_label: {
          facet: 'time-period',
-         field: 'label'},
-        x_unit_label: {
-         facet: 'x-unit-measure',
-         field: 'short_label'},
-        y_unit_label: {
-         facet: 'y-unit-measure',
-         field: 'short_label'},
-        z_unit_label: {
-         facet: 'z-unit-measure',
-         field: 'short_label'}
+         field: 'label'}
     }
 };
 

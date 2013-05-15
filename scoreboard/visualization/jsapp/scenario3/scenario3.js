@@ -128,9 +128,7 @@ App.scenario3_filters_schema = {
     labels: {
         title_x: {facet: 'x-indicator', field: 'short_label'},
         title_y: {facet: 'y-indicator', field: 'short_label'},
-        period_label: {facet: 'time-period', field: 'label'},
-        x_unit_label: {facet: 'x-unit-measure', field: 'short_label'},
-        y_unit_label: {facet: 'y-unit-measure', field: 'short_label'}
+        period_label: {facet: 'time-period', field: 'label'}
     }
 };
 

@@ -20,21 +20,10 @@ App.scenario7_filters_schema = {
              'indicator-group': 'indicator-group'
          }},
         {type: 'select',
-         name: 'time-period',
-         label: 'Period',
-         sortBy: 'label',
-         sortOrder: 'reverse', 
-         dimension: 'time-period',
-         constraints: {
-             'indicator-group': 'indicator-group',
-             'indicator': 'indicator'
-         }},
-        {type: 'select',
          name: 'breakdown-group',
          label: 'Breakdown group',
          dimension: 'breakdown-group',
          constraints: {
-             'time-period': 'time-period',
              'indicator-group': 'indicator-group',
              'indicator': 'indicator'
          }},
@@ -43,10 +32,21 @@ App.scenario7_filters_schema = {
          label: 'Unit of measure',
          dimension: 'unit-measure',
          constraints: {
-             'breakdown-group': 'breakdown-group',
-             'time-period': 'time-period',
              'indicator-group': 'indicator-group',
-             'indicator': 'indicator'
+             'indicator': 'indicator',
+             'breakdown-group': 'breakdown-group'
+         }},
+        {type: 'select',
+         name: 'time-period',
+         label: 'Period',
+         sortBy: 'label',
+         sortOrder: 'reverse', 
+         dimension: 'time-period',
+         constraints: {
+             'indicator-group': 'indicator-group',
+             'indicator': 'indicator',
+             'breakdown-group': 'breakdown-group',
+             'unit-measure': 'unit-measure'
          }},
         {type: 'multiple_select',
          name: 'ref-area',
@@ -90,7 +90,6 @@ App.scenario7_filters_schema = {
     labels: {
         title: {facet: 'indicator', field: 'short_label'},
         ordinate: {facet: 'unit-measure', field: 'short_label'},
-        unit: {facet: 'unit-measure', field: 'short_label'},
         subtitle: {facet: 'time-period', field: 'label'}
     }
 };
