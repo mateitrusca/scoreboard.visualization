@@ -10,7 +10,7 @@ App.chart_library['bubbles'] = function(container, options) {
     $(container).addClass('normal-chart');
 
     var percent = options['unit_is_pc'];
-    var series = App.format_series(options['series'], false, 'xyz', percent);
+    var series = App.format_series(options['series'], false, 'xyz', percent, options['category_facet']);
 
     var chartOptions = {
         chart: {
@@ -85,12 +85,7 @@ App.chart_library['bubbles'] = function(container, options) {
             }
         },
         tooltip: {
-            formatter: function() {
-            return ('<b>'+ this.series.name +'</b><br/>x: '+
-                Math.round(this.x*10)/10 + ' ' + options.meta_data['x_unit_label'] + '<br>y: '+
-                Math.round(this.y*10)/10 + ' ' + options.meta_data['y_unit_label'] + '<br>z: '+
-                Math.round(this.point.z*10)/10 + ' ' + options.meta_data['z_unit_label']
-            )}
+            formatter: options['tooltip_formatter']
         },
         legend: {
             layout: 'horizontal',

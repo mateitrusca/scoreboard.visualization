@@ -92,11 +92,7 @@ App.chart_library['scatter'] = function(container, options) {
             }
         },
         tooltip: {
-            formatter: function() {
-            return ('<b>'+ this.series.name +'</b><br/>x: '+
-                Math.round(this.x*10)/10 + ' ' + options.meta_data['x_unit_label'] + '<br>y: '+
-                Math.round(this.y*10)/10 + ' ' + options.meta_data['y_unit_label']
-            )}
+            formatter: options['tooltip_formatter']
         },
         legend: {
             layout: 'vertical',

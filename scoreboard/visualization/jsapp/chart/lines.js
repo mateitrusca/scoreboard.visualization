@@ -79,10 +79,7 @@ App.chart_library['lines'] = function(container, options) {
             min: 0
         },
         tooltip: {
-            formatter: function() {
-            return '<b>'+ this.series.name +'</b><br/>'+
-                            this.x +': '+ Math.round(this.y*10)/10 + options.meta_data['unit'];
-            }
+            formatter: options['tooltip_formatter']
         },
         legend: {
             layout: 'vertical',

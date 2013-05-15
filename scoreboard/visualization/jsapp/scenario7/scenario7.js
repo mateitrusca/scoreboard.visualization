@@ -22,6 +22,8 @@ App.scenario7_filters_schema = {
         {type: 'select',
          name: 'time-period',
          label: 'Period',
+         sortBy: 'label',
+         sortOrder: 'reverse', 
          dimension: 'time-period',
          constraints: {
              'indicator-group': 'indicator-group',
@@ -74,7 +76,6 @@ App.scenario7_filters_schema = {
     multiple_series: 'breakdown',
     annotations: {
         filters: [{name: 'indicator'},
-                  {name: 'breakdown-group'},
                   {name: 'breakdown'},
                   {name: 'unit-measure'}]
     },

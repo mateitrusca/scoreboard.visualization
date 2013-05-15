@@ -127,16 +127,76 @@ App.ScenarioChartView = Backbone.View.extend({
                 unit_is_pc.push(true);
             }
         }
-        var tooltip_with_breakdown = (this.multiple_series == 'breakdown');
-        var breakdowns = this.model.get(this.multiple_series);
+        // TODO: get this list from chart configurator
+        var tooltip_attributes = ['value', 'unit-measure', 'flag', 'note'];
+        var category_facet = this.schema.category_facet;
+        if (this.multiple_series) {
+            tooltip_attributes.push(this.multiple_series);
+        }
+        var multidim = this.schema['multidim'];
         var chart_data = {
             'tooltip_formatter': function() {
-                var tooltip_label = chart_data.meta_data['unit'];
-                var out = '<b>'+ this.point.name +'</b><br>: ' +
-                       Math.round(this.y*10)/10 + ' ' + tooltip_label;
-                if (tooltip_with_breakdown){
-                    out+='<br>breakdown: '+breakdowns[this.series.index];
+                var attrs = this.point.attributes;
+                var out = '<b>' + attrs[category_facet].label + '</b>';
+                // point value(s) and unit-measure
+                if (_.contains(tooltip_attributes, 'value')) {
+                    if ( multidim ) {
+                        out += '<br><b>x</b>: ' + Math.round(this.x*10)/10 + ' ';
+                        if (_.contains(tooltip_attributes, 'unit-measure')) {
+                            out += attrs['unit-measure']['x'].label;
+                        }
+                    }
+                    out += '<br><b>y</b>: ' + Math.round(this.y*10)/10 + ' ';
+                    if (_.contains(tooltip_attributes, 'unit-measure')) {
+                        if ( multidim ) {
+                            out += attrs['unit-measure']['y'].label;
+                        } else {
+                            out += attrs['unit-measure'].label;
+                        }
+                    }
+                    if ( multidim == 3 ) {
+                        out += '<br><b>z</b>: ' + Math.round(this.point.z*10)/10 + ' ';
+                        if (_.contains(tooltip_attributes, 'unit-measure')) {
+                            out += attrs['unit-measure']['z'].label;
+                        }
+                    }
                 }
+                // additional attributes
+                _(_.without(tooltip_attributes, 'value', 'unit-measure')).each(function(attr) {
+                    if ( multidim ) {
+                        var dims = ['x', 'y'];
+                        if ( multidim == 3 ) {
+                            dims.push('z');
+                        }
+                        _.each(dims, function(dim) {
+                            if ( attrs[attr] && typeof attrs[attr][dim] != "undefined" && attrs[attr][dim]) {
+                                // values per dim
+                                if ( typeof attrs[attr][dim].label != "undefined" && attrs[attr][dim].label ) {
+                                    out += '<br><b>' + attr + '-' + dim + '</b>: ' + attrs[attr][dim].label;
+                                } else {
+                                    out += '<br><b>' + attr + '-' + dim + '</b>: ' + attrs[attr][dim];
+                                }
+                            } else if ( attrs[attr] && typeof attrs[attr][dim] == "undefined" ) {
+                                // common values for all dims
+                                if ( dim === dims[0] && typeof attrs[attr].label != "undefined" && attrs[attr].label ) {
+                                        out += '<br><b>' + attr + '</b>: ' + attrs[attr].label;
+                                }
+                                return;
+                            }
+                        });
+                    } else {
+                        if ( attrs[attr] && typeof attrs[attr].label != "undefined" ) {
+                            if ( attrs[attr].label != null ) {
+                                out += '<br><b>' + attr + '</b>: ' + attrs[attr].label;
+                            }
+                        } else if ( attrs[attr] ) {
+                            if ( attrs[attr] != null ) {
+                                out += '<br><b>' + attr + '</b>: ' + attrs[attr];
+                            }
+                        }
+                    }
+                });                
+                
                 return out;
             },
             'credits': {
