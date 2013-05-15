@@ -151,23 +151,6 @@ describe('FacetsEditor', function() {
             expect(select.val()).to.equal('multiple_select');
         });
 
-        it('should reload from model on demand', function() {
-            var model = new Backbone.Model({
-                facets: [{name: 'time-period', type: 'multiple_select'}]
-            });
-            var view = new App.FacetsEditor({
-                model: model,
-                dimensions: [{type_label: 'dimension', notation: 'time-period'}]
-            });
-            var read_current_selection = function() {
-                return view.$el.find('select[name="type"]').val();
-            };
-            expect(read_current_selection()).to.equal('multiple_select');
-            model.set('facets', [{name: 'time-period', type: 'all-values'}]);
-            view.load_value();
-            expect(read_current_selection()).to.equal('all-values');
-        });
-
     });
 
     describe('multiple series', function() {
