@@ -444,6 +444,40 @@ describe('AxesEditor', function() {
 });
 
 
+describe('SeriesEditor', function() {
+
+    var all_dimensions = [
+        {type_label: 'measure', notation: null},
+        {type_label: 'attribute', notation: 'unit-measure'},
+        {type_label: 'attribute', notation: 'flag'},
+        {type_label: 'attribute', notation: 'note'},
+        {type_label: 'dimension group', notation: 'indicator-group'},
+        {type_label: 'dimension', notation: 'indicator'},
+        {type_label: 'dimension group', notation: 'breakdown-group'},
+        {type_label: 'dimension', notation: 'breakdown'},
+        {type_label: 'dimension', notation: 'unit-measure'},
+        {type_label: 'dimension', notation: 'ref-area'},
+        {type_label: 'dimension', notation: 'time-period'}
+    ];
+
+    beforeEach(function() {
+        this.model = new App.EditorConfiguration({}, {
+            dimensions: all_dimensions});
+        this.view = new App.SeriesEditor({model: this.model});
+    });
+
+    it('should display checkboxes for relevant dimensions', function() {
+        var $el = this.view.$el;
+        expect($el.find('[value="flag"]').length).to.equal(1);
+        expect($el.find('[value="note"]').length).to.equal(1);
+        expect($el.find('[value="unit-measure"]').length).to.equal(1);
+        expect($el.find('[value="breakdown"]').length).to.equal(0);
+        expect($el.find('[value="breakdown-group"]').length).to.equal(0);
+    });
+
+});
+
+
 describe('FormatEditor', function() {
 
     it('should set title and subtitle in model', function() {

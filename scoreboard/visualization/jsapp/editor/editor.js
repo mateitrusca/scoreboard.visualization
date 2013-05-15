@@ -113,8 +113,9 @@ App.Editor = Backbone.View.extend({
 App.EditorConfiguration = Backbone.Model.extend({
 
     initialize: function(models, options) {
+        this.dimensions = options['dimensions'];
         this.facets = new App.FacetCollection(this.get('facets'),
-                                              options['dimensions']);
+                                              this.dimensions);
         this.facets.on('change sort', this.save_facets, this);
     },
 

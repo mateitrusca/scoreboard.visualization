@@ -15,7 +15,23 @@ App.SeriesEditor = Backbone.View.extend({
     title: "Series",
 
     initialize: function(options) {
-        this.$el.html(this.template());
+        this.render();
+    },
+
+    render: function() {
+        var tooltips = [];
+        _(this.model.dimensions).forEach(function(dimension) {
+            if(dimension['type_label'] == 'attribute') {
+                tooltips.push({
+                    label: dimension['label'],
+                    value: dimension['notation']
+                });
+            }
+        });
+        var context = {
+            tooltips: tooltips
+        };
+        this.$el.html(this.template(context));
     }
 
 });
