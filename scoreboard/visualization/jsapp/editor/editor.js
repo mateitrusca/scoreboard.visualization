@@ -74,7 +74,7 @@ App.Editor = Backbone.View.extend({
             var Cls = App[name];
             var step = new Cls({
                 model: this.model,
-                cube_url: options['cube_url']
+                dimensions: options['dimensions']
             });
             this.step_views[name] = step;
             step.$el.addClass('editor-current-step');
@@ -135,7 +135,7 @@ App.create_editor = function(form, object_url) {
     var create_editor_view = function() {
         App.editor = new App.Editor({
             model: configuration,
-            cube_url: App.URL
+            dimensions: App.CUBE_DIMENSIONS
         });
         App.editor.$el.insertBefore(form);
 

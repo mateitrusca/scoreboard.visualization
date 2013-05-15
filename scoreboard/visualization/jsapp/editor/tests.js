@@ -38,12 +38,7 @@ describe('FacetsEditor', function() {
 
     var $ = App.jQuery;
 
-    var NoAjaxFacetsEditor = App.FacetsEditor.extend({
-        get_dimensions: function() {
-            this.dimensions = this.options.dimensions || [];
-            this.load_value();
-        }
-    });
+    var NoAjaxFacetsEditor = App.FacetsEditor;
 
     beforeEach(function() {
         this.sandbox = sinon.sandbox.create();
@@ -60,18 +55,6 @@ describe('FacetsEditor', function() {
         {type_label: 'dimension', notation: 'dim4', label: "Dim 4"}];
 
     describe('facet list', function() {
-
-        it('should load dimensions via ajax', function() {
-            this.sandbox.useFakeServer();
-            var model = new Backbone.Model();
-            var view = new App.FacetsEditor({model: model});
-            var dimensions = [
-                {type_label: 'dimension', notation: 'ref-area'},
-                {type_label: 'dimension', notation: 'time-period'}
-            ];
-            App.respond_json(this.sandbox.server.requests[0], dimensions);
-            expect(view.dimensions).to.deep.equal(dimensions);
-        });
 
         it('should prefill dimensions', function() {
             var model = new Backbone.Model();

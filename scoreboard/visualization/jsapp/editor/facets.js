@@ -234,15 +234,8 @@ App.FacetsEditor = Backbone.View.extend({
             this.model.set('multiple_series', null);
         }
         this.render();
-        this.get_dimensions();
-    },
-
-    get_dimensions: function() {
-        var dimensions_url = this.options.cube_url + '/dimensions?flat=on';
-        $.get(dimensions_url).done(_.bind(function(dimensions) {
-            this.dimensions = dimensions;
-            this.load_value();
-        }, this));
+        this.dimensions = options['dimensions'];
+        this.load_value();
     },
 
     load_value: function() {
