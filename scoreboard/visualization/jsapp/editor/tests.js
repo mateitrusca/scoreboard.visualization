@@ -38,8 +38,6 @@ describe('FacetsEditor', function() {
 
     var $ = App.jQuery;
 
-    var NoAjaxFacetsEditor = App.FacetsEditor;
-
     beforeEach(function() {
         this.sandbox = sinon.sandbox.create();
     });
@@ -58,7 +56,7 @@ describe('FacetsEditor', function() {
 
         it('should prefill dimensions', function() {
             var model = new Backbone.Model();
-            var view = new NoAjaxFacetsEditor({
+            var view = new App.FacetsEditor({
                 model: model,
                 dimensions: [
                     {type_label: 'measure', notation: 'ignore me'},
@@ -81,7 +79,7 @@ describe('FacetsEditor', function() {
 
         it('should save filter name same as dimension', function() {
             var model = new Backbone.Model();
-            var view = new NoAjaxFacetsEditor({
+            var view = new App.FacetsEditor({
                 model: model,
                 dimensions: [{type_label: 'dimension', notation: 'time-period'}]
             });
@@ -91,7 +89,7 @@ describe('FacetsEditor', function() {
 
         it('should save filter type', function() {
             var model = new Backbone.Model();
-            var view = new NoAjaxFacetsEditor({
+            var view = new App.FacetsEditor({
                 model: model,
                 dimensions: [{type_label: 'dimension', notation: 'time-period'}]
             });
@@ -105,7 +103,7 @@ describe('FacetsEditor', function() {
                           dimension: 'time-period',
                           type: 'multiple_select'}]
             });
-            var view = new NoAjaxFacetsEditor({
+            var view = new App.FacetsEditor({
                 model: model,
                 dimensions: [
                     {type_label: 'dimension', notation: 'indicator'},
@@ -120,7 +118,7 @@ describe('FacetsEditor', function() {
             var model = new Backbone.Model({
                 facets: [{name: 'time-period', type: 'multiple_select'}]
             });
-            var view = new NoAjaxFacetsEditor({
+            var view = new App.FacetsEditor({
                 model: model,
                 dimensions: []
             });
@@ -133,7 +131,7 @@ describe('FacetsEditor', function() {
     describe('facet type', function() {
 
         it('should default to "select"', function() {
-            var view = new NoAjaxFacetsEditor({
+            var view = new App.FacetsEditor({
                 model: new Backbone.Model(),
                 dimensions: [{type_label: 'dimension', notation: 'dim1'}]
             });
@@ -145,7 +143,7 @@ describe('FacetsEditor', function() {
             var model = new Backbone.Model({
                 facets: [{name: 'time-period', type: 'multiple_select'}]
             });
-            var view = new NoAjaxFacetsEditor({
+            var view = new App.FacetsEditor({
                 model: model,
                 dimensions: [{type_label: 'dimension', notation: 'time-period'}]
             });
@@ -157,7 +155,7 @@ describe('FacetsEditor', function() {
             var model = new Backbone.Model({
                 facets: [{name: 'time-period', type: 'multiple_select'}]
             });
-            var view = new NoAjaxFacetsEditor({
+            var view = new App.FacetsEditor({
                 model: model,
                 dimensions: [{type_label: 'dimension', notation: 'time-period'}]
             });
@@ -175,7 +173,7 @@ describe('FacetsEditor', function() {
     describe('multiple series', function() {
 
         it('should display list of series options', function() {
-            var view = new NoAjaxFacetsEditor({
+            var view = new App.FacetsEditor({
                 model: new Backbone.Model({
                     facets: [
                         {name: 'dim3', type: 'all-values'},
@@ -198,7 +196,7 @@ describe('FacetsEditor', function() {
                     {name: 'dim4', type: 'all-values'}
                 ]
             });
-            var view = new NoAjaxFacetsEditor({
+            var view = new App.FacetsEditor({
                 model: model,
                 dimensions: four_dimensions
             });
@@ -215,7 +213,7 @@ describe('FacetsEditor', function() {
                 ],
                 multiple_series: 'dim3'
             });
-            var view = new NoAjaxFacetsEditor({
+            var view = new App.FacetsEditor({
                 model: model,
                 dimensions: four_dimensions
             });
@@ -231,7 +229,7 @@ describe('FacetsEditor', function() {
             var model = new Backbone.Model({
                 'facets': [{name: 'dim2', type: 'ignore'}]
             });
-            var view = new NoAjaxFacetsEditor({
+            var view = new App.FacetsEditor({
                 model: model,
                 dimensions: four_dimensions
             });
@@ -247,7 +245,7 @@ describe('FacetsEditor', function() {
             var model = new Backbone.Model({
                 facets: [{name: 'dim3', type: 'all-values'}]
             });
-            var view = new NoAjaxFacetsEditor({
+            var view = new App.FacetsEditor({
                 model: model,
                 dimensions: four_dimensions
             });
@@ -264,7 +262,7 @@ describe('FacetsEditor', function() {
                 ],
                 multiple_series: 'dim3'
             });
-            var view = new NoAjaxFacetsEditor({
+            var view = new App.FacetsEditor({
                 model: model,
                 dimensions: four_dimensions
             });
@@ -281,7 +279,7 @@ describe('FacetsEditor', function() {
                 ],
                 multiple_series: 'dim3'
             });
-            var view = new NoAjaxFacetsEditor({
+            var view = new App.FacetsEditor({
                 model: model,
                 dimensions: four_dimensions
             });
@@ -296,7 +294,7 @@ describe('FacetsEditor', function() {
                 ],
                 multiple_series: 'dim3'
             });
-            var view = new NoAjaxFacetsEditor({
+            var view = new App.FacetsEditor({
                 model: model,
                 dimensions: four_dimensions
             });
@@ -308,7 +306,7 @@ describe('FacetsEditor', function() {
     describe('constraints between filters', function() {
 
         it('should generate no constraints for first filter', function() {
-            var view = new NoAjaxFacetsEditor({
+            var view = new App.FacetsEditor({
                 model: new Backbone.Model(),
                 dimensions: four_dimensions
             });
@@ -317,7 +315,7 @@ describe('FacetsEditor', function() {
         });
 
         it('should generate 3 constraints for 4th filter', function() {
-            var view = new NoAjaxFacetsEditor({
+            var view = new App.FacetsEditor({
                 model: new Backbone.Model(),
                 dimensions: four_dimensions
             });
@@ -330,7 +328,7 @@ describe('FacetsEditor', function() {
         });
 
         it('should generate no constraints with multiple_select', function() {
-            var view = new NoAjaxFacetsEditor({
+            var view = new App.FacetsEditor({
                 model: new Backbone.Model({
                     facets: [{name: 'dim2', type: 'multiple_select'}]
                 }),
@@ -341,7 +339,7 @@ describe('FacetsEditor', function() {
         });
 
         it('should generate no constraints with all-values', function() {
-            var view = new NoAjaxFacetsEditor({
+            var view = new App.FacetsEditor({
                 model: new Backbone.Model({
                     facets: [{name: 'dim2', type: 'all-values'}]
                 }),
@@ -356,7 +354,7 @@ describe('FacetsEditor', function() {
     describe('include_wildcard option', function() {
 
         it('should be controlled by checkbox', function() {
-            var view = new NoAjaxFacetsEditor({
+            var view = new App.FacetsEditor({
                 model: new Backbone.Model(),
                 dimensions: four_dimensions
             });
@@ -371,7 +369,7 @@ describe('FacetsEditor', function() {
             var model = new Backbone.Model({
                 facets: [{name: 'dim2', type: 'select', include_wildcard: true}]
             });
-            var view = new NoAjaxFacetsEditor({
+            var view = new App.FacetsEditor({
                 model: model,
                 dimensions: four_dimensions
             });
@@ -391,7 +389,7 @@ describe('FacetsEditor', function() {
 
         it('should generate double facets if multidim=2', function() {
             var model = new Backbone.Model({multidim: 2});
-            var view = new NoAjaxFacetsEditor({
+            var view = new App.FacetsEditor({
                 model: model,
                 dimensions: four_dimensions
             });
@@ -403,7 +401,7 @@ describe('FacetsEditor', function() {
 
         it('multidim dimensions should depend on their axis only', function() {
             var model = new Backbone.Model({multidim: 2});
-            var view = new NoAjaxFacetsEditor({
+            var view = new App.FacetsEditor({
                 model: model,
                 dimensions: four_dimensions
             });
@@ -419,7 +417,7 @@ describe('FacetsEditor', function() {
 
         it('subsequent dimensions depend on all multidim axes', function() {
             var model = new Backbone.Model({multidim: 2});
-            var view = new NoAjaxFacetsEditor({
+            var view = new App.FacetsEditor({
                 model: model,
                 dimensions: four_dimensions
             });
@@ -437,7 +435,7 @@ describe('FacetsEditor', function() {
 
         it('should set multidim_common on non-multidim facets', function() {
             var model = new Backbone.Model({multidim: 2});
-            var view = new NoAjaxFacetsEditor({
+            var view = new App.FacetsEditor({
                 model: model,
                 dimensions: four_dimensions
             });
@@ -449,7 +447,7 @@ describe('FacetsEditor', function() {
 
         it('should set multidim_value on value facet', function() {
             var model = new Backbone.Model({multidim: 2});
-            var view = new NoAjaxFacetsEditor({
+            var view = new App.FacetsEditor({
                 model: model,
                 dimensions: four_dimensions
             });
@@ -469,7 +467,7 @@ describe('FacetsEditor', function() {
                     {name: 'dim4', label: 'blah dim4'}
                 ]
             });
-            var view = new NoAjaxFacetsEditor({
+            var view = new App.FacetsEditor({
                 model: model,
                 dimensions: four_dimensions
             });
@@ -484,7 +482,7 @@ describe('FacetsEditor', function() {
 
         it('should order multidim facets grouped by axis', function() {
             var model = new Backbone.Model({multidim: 2});
-            var view = new NoAjaxFacetsEditor({
+            var view = new App.FacetsEditor({
                 model: model,
                 dimensions: four_dimensions
             });
