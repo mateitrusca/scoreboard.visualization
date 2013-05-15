@@ -94,6 +94,53 @@ App.FacetEditorField = Backbone.View.extend({
 
 App.FacetsCollection = Backbone.Collection.extend({
 
+    constructor: function(value, dimensions) {
+        Backbone.Collection.apply(this, [value]);
+
+        var facets_to_keep = {};
+        var add_model = _.bind(function(name, defaults) {
+            var facet_model = this.findWhere({name: name});
+            if(! facet_model) {
+                var facet_model = this.findWhere({name: 'x-' + name});
+                if(facet_model) { // hey, it's a multidim facet
+                    var label = facet_model.get('label') || defaults['label'];
+                    if(label.substr(0, 4) == '(X) ') {
+                        label = label.substr(4);
+                    }
+                    facet_model.set({
+                        name: name,
+                        multidim: true,
+                        label: label
+                    });
+                }
+                else {
+                    facet_model = new Backbone.Model({'name': name});
+                    facet_model.set(defaults);
+                }
+            }
+            this.add(facet_model);
+            facets_to_keep[facet_model.cid] = true;
+        }, this);
+        _(dimensions).forEach(function(dimension) {
+            if(dimension['type_label'] != 'dimension' &&
+               dimension['type_label'] != 'dimension group') {
+                return;
+            }
+            var name = dimension['notation'];
+            add_model(name, {
+                'dimension': name,
+                'label': dimension['label']
+            });
+        });
+        var to_remove = [];
+        this.forEach(function(facet) {
+            if(! facets_to_keep[facet.cid]) {
+                to_remove.push(facet);
+            }
+        });
+        this.remove(to_remove);
+    },
+
     get_value: function(chart_multidim) {
         var multidim_facets = {};
         var all_multidim = _.range(chart_multidim);
@@ -199,49 +246,8 @@ App.FacetsEditor = Backbone.View.extend({
     },
 
     load_value: function() {
-        this.facets = new App.FacetsCollection(this.model.get('facets'));
-        var facets_to_keep = {};
-        var add_model = _.bind(function(name, defaults) {
-            var facet_model = this.facets.findWhere({name: name});
-            if(! facet_model) {
-                var facet_model = this.facets.findWhere({name: 'x-' + name});
-                if(facet_model) { // hey, it's a multidim facet
-                    var label = facet_model.get('label') || defaults['label'];
-                    if(label.substr(0, 4) == '(X) ') {
-                        label = label.substr(4);
-                    }
-                    facet_model.set({
-                        name: name,
-                        multidim: true,
-                        label: label
-                    });
-                }
-                else {
-                    facet_model = new Backbone.Model({'name': name});
-                    facet_model.set(defaults);
-                }
-            }
-            this.facets.add(facet_model);
-            facets_to_keep[facet_model.cid] = true;
-        }, this);
-        _(this.dimensions).forEach(function(dimension) {
-            if(dimension['type_label'] != 'dimension' &&
-               dimension['type_label'] != 'dimension group') {
-                return;
-            }
-            var name = dimension['notation'];
-            add_model(name, {
-                'dimension': name,
-                'label': dimension['label']
-            });
-        }, this);
-        var to_remove = [];
-        this.facets.forEach(function(facet) {
-            if(! facets_to_keep[facet.cid]) {
-                to_remove.push(facet);
-            }
-        }, this);
-        this.facets.remove(to_remove);
+        this.facets = new App.FacetsCollection(this.model.get('facets'),
+                                               this.dimensions);
         this.facet_views = _.object(this.facets.map(function(facet_model) {
             var facet_view = new App.FacetEditorField({
                 model: facet_model,
