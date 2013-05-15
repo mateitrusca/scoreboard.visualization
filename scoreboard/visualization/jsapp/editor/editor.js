@@ -22,7 +22,8 @@ App.EditForm = Backbone.View.extend({
     },
 
     update_form: function() {
-        this.input.val(JSON.stringify(this.model, null, 2));  // indent 2 spaces
+        var value = this.model.get_value();
+        this.input.val(JSON.stringify(value, null, 2));  // indent 2 spaces
     },
 
     on_submit: function(evt) {
@@ -113,8 +114,18 @@ App.Editor = Backbone.View.extend({
 });
 
 
+App.EditorConfiguration = Backbone.Model.extend({
+
+    get_value: function() {
+        var value = this.toJSON();
+        return value;
+    }
+
+});
+
+
 App.create_editor = function(form, object_url) {
-    var configuration = new Backbone.Model();
+    var configuration = new App.EditorConfiguration();
     App.editor_form = new App.EditForm({
         model: configuration,
         el: form,
