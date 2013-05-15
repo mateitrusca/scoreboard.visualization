@@ -4,7 +4,7 @@ import simplejson as json
 from zope.formlib.form import Fields
 from scoreboard.visualization.views.scoreboard.interfaces import IScoreboardEdit
 from eea.app.visualization.views.edit import EditForm
-from .view import jsapp_html_for_visualization
+from .view import jsapp_html_for_visualization, get_source
 
 
 class Edit(EditForm):
@@ -21,6 +21,11 @@ class Edit(EditForm):
     @property
     def object_url_json(self):
         return json.dumps(self.context.absolute_url())
+
+    @property
+    def cube_dimensions_json(self):
+        cube = get_source(self.context).get_cube()
+        return json.dumps(cube.get_dimensions(flat=True))
 
     def jsapp_html(self):
         return jsapp_html_for_visualization(self.context)
