@@ -269,13 +269,17 @@ App.FacetsEditor = Backbone.View.extend({
         if(no_multiple_series) {
             this.model.set('multiple_series', null);
         }
+        var category_facet = (free_dimensions.length == 1
+                             ? free_dimensions[0]
+                             : null);
+        if(category_facet) {
+            this.model.set('category_facet', category_facet['name']);
+        }
         this.facet_roles = {
             series_options: series_options,
             err_too_few: (free_dimensions.length < 1),
             err_too_many: (free_dimensions.length > 1),
-            category_facet: (free_dimensions.length == 1
-                             ? free_dimensions[0]
-                             : null)
+            category_facet: category_facet
         }
     },
 
@@ -299,10 +303,6 @@ App.FacetsEditor = Backbone.View.extend({
     save_value: function() {
         var value = this.facets.get_value(this.model.get('multidim'));
         this.model.set('facets', value);
-        var category_facet = this.facet_roles.category_facet;
-        if(category_facet) {
-            this.model.set('category_facet', category_facet['name']);
-        }
     },
 
     chart_is_multidim: function() {
