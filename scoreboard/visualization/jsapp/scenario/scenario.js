@@ -343,33 +343,23 @@ App.GraphControlsView = Backbone.View.extend({
     },
 
     update_chart: function(){
-        var data = this.snapshots_data[this.model.get('value')];
-        if (this.multiseries){
-            _(this.chart.series).each(function(serie, serie_idx){
-                _(serie['data']).each(function(point, idx){
-                    console.log(serie);
-                    var color = App.bar_colors['bar_color'];
-                    var point_data = data[serie_idx]['data'][0];
-                    serie['data'][0].update(
-                        point_data,
-                        false,
-                        {duration: 950, easing: 'linear'});
-                }, this);
+        var new_data = this.snapshots_data[this.model.get('value')];
+        _(this.chart.series).each(function(serie, serie_idx){
+            _(serie['data']).each(function(item, item_idx){
+                var point_data = null;
+                if (this.multiseries) {
+                    point_data = new_data[serie_idx]['data'][item_idx];
+                }
+                else {
+                    point_data = new_data['data'][item_idx];
+                }
+                item.update(point_data,
+                            false,
+                            {duration: 950, easing: 'linear'});
             }, this);
-            this.chart.redraw();
-        }
-        else{
-            _(this.chart.series[0]['data']).each(function(item, idx){
-                var color = App.bar_colors['bar_color'];
-                var point_data = data['data'][idx];
-                this.chart.series[0]['data'][idx].update(
-                    point_data,
-                    false,
-                    {duration: 950, easing: 'linear'});
-            }, this);
-            this.chart.redraw();
-        }
-        this.chart.setTitle(null, {text: data['name']});
+        }, this);
+        this.chart.redraw();
+        this.chart.setTitle(null, {text: new_data['name']});
     },
 
     on_next: function(){
