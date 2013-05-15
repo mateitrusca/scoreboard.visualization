@@ -92,6 +92,10 @@ App.FacetEditorField = Backbone.View.extend({
 });
 
 
+App.FacetsCollection = Backbone.Collection.extend({
+});
+
+
 App.FacetsEditor = Backbone.View.extend({
 
     template: App.get_template('editor/facets.html'),
@@ -119,7 +123,7 @@ App.FacetsEditor = Backbone.View.extend({
     },
 
     load_value: function() {
-        this.facets = new Backbone.Collection(this.model.get('facets'));
+        this.facets = new App.FacetsCollection(this.model.get('facets'));
         this.facet_views = {};
         var add_model = _.bind(function(name, defaults) {
             var facet_model = this.facets.findWhere({name: name});
