@@ -475,6 +475,11 @@ describe('SeriesEditor', function() {
         expect($el.find('[value="breakdown-group"]').length).to.equal(0);
     });
 
+    it('should save value from checkboxes', function() {
+        this.view.$el.find('[value="note"]').click().change();
+        expect(this.model.get('tooltips')['note']).to.be.true;
+    });
+
 });
 
 

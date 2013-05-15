@@ -14,7 +14,15 @@ App.SeriesEditor = Backbone.View.extend({
 
     title: "Series",
 
+    events: {
+        'change [name="tooltip"]': 'on_tooltip_change'
+    },
+
     initialize: function(options) {
+        this.tooltips_model = new Backbone.Model(this.model.get('tooltips'));
+        this.tooltips_model.on('change', function() {
+            this.model.set('tooltips', this.tooltips_model.toJSON());
+        }, this);
         this.render();
     },
 
@@ -32,6 +40,18 @@ App.SeriesEditor = Backbone.View.extend({
             tooltips: tooltips
         };
         this.$el.html(this.template(context));
+    },
+
+    on_tooltip_change: function() {
+        _(this.$el.find('[name="tooltip"]')).forEach(function(checkbox) {
+            var tooltip = $(checkbox).val();
+            if($(checkbox).is(':checked')) {
+                this.tooltips_model.set(tooltip, true);
+            }
+            else {
+                this.tooltips_model.unset(tooltip);
+            }
+        }, this);
     }
 
 });
