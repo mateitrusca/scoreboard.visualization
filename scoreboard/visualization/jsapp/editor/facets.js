@@ -233,8 +233,7 @@ App.FacetsEditor = Backbone.View.extend({
         if(! this.model.has('multiple_series')) {
             this.model.set('multiple_series', null);
         }
-        this.facets = new App.FacetCollection(this.model.get('facets'),
-                                              options['dimensions']);
+        this.facets = this.model.facets;
         this.facet_views = _.object(this.facets.map(function(facet_model) {
             var facet_view = new App.FacetEditorField({
                 model: facet_model,
@@ -242,7 +241,6 @@ App.FacetsEditor = Backbone.View.extend({
             });
             return [facet_model.cid, facet_view];
         }, this));
-        this.facets.on('change sort', this.apply_changes, this);
         this.apply_changes();
     },
 

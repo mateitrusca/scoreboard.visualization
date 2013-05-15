@@ -55,9 +55,7 @@ describe('FacetsEditor', function() {
     describe('facet list', function() {
 
         it('should prefill dimensions', function() {
-            var model = new Backbone.Model();
-            var view = new App.FacetsEditor({
-                model: model,
+            var model = new App.EditorConfiguration({}, {
                 dimensions: [
                     {type_label: 'measure', notation: 'ignore me'},
                     {type_label: 'attribute', notation: 'ignore me too'},
@@ -70,6 +68,7 @@ describe('FacetsEditor', function() {
                     {type_label: 'dimension', notation: 'time-period'}
                 ]
             });
+            var view = new App.FacetsEditor({model: model});
 
             expect(_(model.get('facets')).pluck('dimension')).to.deep.equal([
                 'indicator-group', 'indicator', 'breakdown-group', 'breakdown',
@@ -78,50 +77,44 @@ describe('FacetsEditor', function() {
         });
 
         it('should save filter name same as dimension', function() {
-            var model = new Backbone.Model();
-            var view = new App.FacetsEditor({
-                model: model,
+            var model = new App.EditorConfiguration({}, {
                 dimensions: [{type_label: 'dimension', notation: 'time-period'}]
             });
+            var view = new App.FacetsEditor({model: model});
             expect(model.get('facets')[0]['name']).to.equal('time-period');
             expect(model.get('facets')[0]['dimension']).to.equal('time-period');
         });
 
         it('should save filter type', function() {
-            var model = new Backbone.Model();
-            var view = new App.FacetsEditor({
-                model: model,
+            var model = new App.EditorConfiguration({}, {
                 dimensions: [{type_label: 'dimension', notation: 'time-period'}]
             });
+            var view = new App.FacetsEditor({model: model});
             view.$el.find('select[name="type"]').val('multiple_select').change();
             expect(model.get('facets')[0]['type']).to.equal('multiple_select');
         });
 
         it('should create missing facets when loading config', function() {
-            var model = new Backbone.Model({
+            var model = new App.EditorConfiguration({
                 facets: [{name: 'time-period',
                           dimension: 'time-period',
                           type: 'multiple_select'}]
-            });
-            var view = new App.FacetsEditor({
-                model: model,
+            }, {
                 dimensions: [
                     {type_label: 'dimension', notation: 'indicator'},
                     {type_label: 'dimension', notation: 'time-period'}
                 ]
             });
+            var view = new App.FacetsEditor({model: model});
             expect(_(model.get('facets')).pluck('dimension')).to.deep.equal(
                 ['time-period', 'indicator', 'value']);
         });
 
         it('should remove facets with no corresponding dimension', function() {
-            var model = new Backbone.Model({
+            var model = new App.EditorConfiguration({
                 facets: [{name: 'time-period', type: 'multiple_select'}]
-            });
-            var view = new App.FacetsEditor({
-                model: model,
-                dimensions: []
-            });
+            }, {dimensions: []});
+            var view = new App.FacetsEditor({model: model});
             expect(_(model.get('facets')).pluck('dimension')).to.deep.equal(
                 ['value']);
         });
@@ -132,21 +125,21 @@ describe('FacetsEditor', function() {
 
         it('should default to "select"', function() {
             var view = new App.FacetsEditor({
-                model: new Backbone.Model(),
-                dimensions: [{type_label: 'dimension', notation: 'dim1'}]
+                model: new App.EditorConfiguration({}, {
+                    dimensions: [{type_label: 'dimension', notation: 'dim1'}]
+                })
             });
             var facet0 = view.model.toJSON()['facets'][0];
             expect(facet0['type']).to.equal('select');
         });
 
         it('should select existing filter type', function() {
-            var model = new Backbone.Model({
+            var model = new App.EditorConfiguration({
                 facets: [{name: 'time-period', type: 'multiple_select'}]
-            });
-            var view = new App.FacetsEditor({
-                model: model,
+            }, {
                 dimensions: [{type_label: 'dimension', notation: 'time-period'}]
             });
+            var view = new App.FacetsEditor({model: model});
             var select = view.$el.find('select[name="type"]');
             expect(select.val()).to.equal('multiple_select');
         });
@@ -157,13 +150,12 @@ describe('FacetsEditor', function() {
 
         it('should display list of series options', function() {
             var view = new App.FacetsEditor({
-                model: new Backbone.Model({
+                model: new App.EditorConfiguration({
                     facets: [
                         {name: 'dim3', type: 'all-values'},
                         {name: 'dim4', type: 'all-values'}
                     ]
-                }),
-                dimensions: four_dimensions
+                }, {dimensions: four_dimensions}),
             });
             var options = view.$el.find('[name="multiple_series"] option');
             var series_options = _(options).map(function(opt) {
@@ -173,33 +165,27 @@ describe('FacetsEditor', function() {
         });
 
         it('should update model with selection', function() {
-            var model = new Backbone.Model({
+            var model = new App.EditorConfiguration({
                 facets: [
                     {name: 'dim3', type: 'all-values'},
                     {name: 'dim4', type: 'all-values'}
                 ]
-            });
-            var view = new App.FacetsEditor({
-                model: model,
-                dimensions: four_dimensions
-            });
+            }, {dimensions: four_dimensions});
+            var view = new App.FacetsEditor({model: model});
             expect(model.get('multiple_series')).to.be.null;
             view.$el.find('[name="multiple_series"]').val('dim3').change();
             expect(model.get('multiple_series')).to.equal('dim3');
         });
 
         it('should render multiple_series with selected value', function() {
-            var model = new Backbone.Model({
+            var model = new App.EditorConfiguration({
                 facets: [
                     {name: 'dim3', type: 'all-values'},
                     {name: 'dim4', type: 'all-values'}
                 ],
                 multiple_series: 'dim3'
-            });
-            var view = new App.FacetsEditor({
-                model: model,
-                dimensions: four_dimensions
-            });
+            }, {dimensions: four_dimensions});
+            var view = new App.FacetsEditor({model: model});
             var select = view.$el.find('[name="multiple_series"]');
             expect(select.val()).to.equal('dim3');
         });
@@ -209,13 +195,10 @@ describe('FacetsEditor', function() {
     describe('hidden facet', function() {
 
         it('should not include ignore facet in constraints', function() {
-            var model = new Backbone.Model({
+            var model = new App.EditorConfiguration({
                 'facets': [{name: 'dim2', type: 'ignore'}]
-            });
-            var view = new App.FacetsEditor({
-                model: model,
-                dimensions: four_dimensions
-            });
+            }, {dimensions: four_dimensions});
+            var view = new App.FacetsEditor({model: model});
             expect(model.get('facets')[3]['constraints']).to.deep.equal(
                 {'dim1': 'dim1', 'dim3': 'dim3'});
         });
@@ -225,62 +208,50 @@ describe('FacetsEditor', function() {
     describe('facet verification', function() {
 
         it('should warn if there is no category facet', function() {
-            var model = new Backbone.Model({
+            var model = new App.EditorConfiguration({
                 facets: [{name: 'dim3', type: 'all-values'}]
-            });
-            var view = new App.FacetsEditor({
-                model: model,
-                dimensions: four_dimensions
-            });
+            }, {dimensions: four_dimensions});
+            var view = new App.FacetsEditor({model: model});
             expect(view.facet_roles.err_too_few).to.be.false;
             view.$el.find('[name="multiple_series"]').val('dim3').change();
             expect(view.facet_roles.err_too_few).to.be.true;
         });
 
         it('should warn if there is more than one category', function() {
-            var model = new Backbone.Model({
+            var model = new App.EditorConfiguration({
                 facets: [
                     {name: 'dim3', type: 'all-values'},
                     {name: 'dim4', type: 'all-values'}
                 ],
                 multiple_series: 'dim3'
-            });
-            var view = new App.FacetsEditor({
-                model: model,
-                dimensions: four_dimensions
-            });
+            }, {dimensions: four_dimensions});
+            var view = new App.FacetsEditor({model: model});
             expect(view.facet_roles.err_too_many).to.be.false;
             view.$el.find('[name="multiple_series"]').val('').change();
             expect(view.facet_roles.err_too_many).to.be.true;
         });
 
         it('should mark remaining dimension as category', function() {
-            var model = new Backbone.Model({
+            var model = new App.EditorConfiguration({
                 facets: [
                     {name: 'dim3', type: 'all-values'},
                     {name: 'dim4', type: 'all-values'}
                 ],
                 multiple_series: 'dim3'
-            });
-            var view = new App.FacetsEditor({
-                model: model,
-                dimensions: four_dimensions
-            });
+            }, {dimensions: four_dimensions});
+            var view = new App.FacetsEditor({model: model});
             expect(view.facet_roles.category_facet['name']).to.equal('dim4');
         });
 
         it('should write category facet on model', function() {
-            var model = new Backbone.Model({
+            var model = new App.EditorConfiguration({
                 facets: [
                     {name: 'dim3', type: 'all-values'},
                     {name: 'dim4', type: 'all-values'}
                 ],
                 multiple_series: 'dim3'
-            });
-            var view = new App.FacetsEditor({
-                model: model,
-                dimensions: four_dimensions
-            });
+            }, {dimensions: four_dimensions});
+            var view = new App.FacetsEditor({model: model});
             expect(model.get('category_facet')).to.equal('dim4');
         });
 
@@ -290,18 +261,16 @@ describe('FacetsEditor', function() {
 
         it('should generate no constraints for first filter', function() {
             var view = new App.FacetsEditor({
-                model: new Backbone.Model(),
-                dimensions: four_dimensions
-            });
+                model: new App.EditorConfiguration({}, {
+                    dimensions: four_dimensions})});
             var constr0 = view.model.toJSON()['facets'][0]['constraints'];
             expect(constr0).to.deep.equal({});
         });
 
         it('should generate 3 constraints for 4th filter', function() {
             var view = new App.FacetsEditor({
-                model: new Backbone.Model(),
-                dimensions: four_dimensions
-            });
+                model: new App.EditorConfiguration({}, {
+                    dimensions: four_dimensions})});
             var constr3 = view.model.toJSON()['facets'][3]['constraints'];
             expect(constr3).to.deep.equal({
                 'dim1': 'dim1',
@@ -312,10 +281,9 @@ describe('FacetsEditor', function() {
 
         it('should generate no constraints with multiple_select', function() {
             var view = new App.FacetsEditor({
-                model: new Backbone.Model({
+                model: new App.EditorConfiguration({
                     facets: [{name: 'dim2', type: 'multiple_select'}]
-                }),
-                dimensions: four_dimensions
+                }, {dimensions: four_dimensions})
             });
             var constr3 = view.model.toJSON()['facets'][3]['constraints'];
             expect(constr3).to.deep.equal({'dim1': 'dim1', 'dim3': 'dim3'});
@@ -323,10 +291,9 @@ describe('FacetsEditor', function() {
 
         it('should generate no constraints with all-values', function() {
             var view = new App.FacetsEditor({
-                model: new Backbone.Model({
+                model: new App.EditorConfiguration({
                     facets: [{name: 'dim2', type: 'all-values'}]
-                }),
-                dimensions: four_dimensions
+                }, {dimensions: four_dimensions})
             });
             var constr3 = view.model.toJSON()['facets'][3]['constraints'];
             expect(constr3).to.deep.equal({'dim1': 'dim1', 'dim3': 'dim3'});
@@ -338,9 +305,8 @@ describe('FacetsEditor', function() {
 
         it('should be controlled by checkbox', function() {
             var view = new App.FacetsEditor({
-                model: new Backbone.Model(),
-                dimensions: four_dimensions
-            });
+                model: new App.EditorConfiguration({}, {
+                    dimensions: four_dimensions})});
             var facet0 = function() { return view.model.get('facets')[0]; };
             view.$el.find('[name="include_wildcard"]').click().change();
             expect(facet0()['include_wildcard']).to.be.true;
@@ -349,13 +315,10 @@ describe('FacetsEditor', function() {
         });
 
         it('should be removed if facet is not single select', function() {
-            var model = new Backbone.Model({
+            var model = new App.EditorConfiguration({
                 facets: [{name: 'dim2', type: 'select', include_wildcard: true}]
-            });
-            var view = new App.FacetsEditor({
-                model: model,
-                dimensions: four_dimensions
-            });
+            }, {dimensions: four_dimensions});
+            var view = new App.FacetsEditor({model: model});
             view.$el.find('[name="type"]').val('multiple_select').change();
             expect(model.get('facets')[0]['include_wildcard']).to.be.undefined;
         });
@@ -371,11 +334,9 @@ describe('FacetsEditor', function() {
         };
 
         it('should generate double facets if multidim=2', function() {
-            var model = new Backbone.Model({multidim: 2});
-            var view = new App.FacetsEditor({
-                model: model,
-                dimensions: four_dimensions
-            });
+            var model = new App.EditorConfiguration({multidim: 2}, {
+                dimensions: four_dimensions});
+            var view = new App.FacetsEditor({model: model});
             view.$el.find('[data-name="dim1"] [name="multidim"]').click().change();
             expect(model.get('facets')[0]['name']).to.equal('x-dim1');
             expect(model.get('facets')[1]['name']).to.equal('y-dim1');
@@ -383,11 +344,9 @@ describe('FacetsEditor', function() {
         });
 
         it('multidim dimensions should depend on their axis only', function() {
-            var model = new Backbone.Model({multidim: 2});
-            var view = new App.FacetsEditor({
-                model: model,
-                dimensions: four_dimensions
-            });
+            var model = new App.EditorConfiguration({multidim: 2}, {
+                dimensions: four_dimensions});
+            var view = new App.FacetsEditor({model: model});
             view.$el.find('[data-name="dim1"] [name="multidim"]').click().change();
             view.$el.find('[data-name="dim2"] [name="multidim"]').click().change();
             view.$el.find('[data-name="dim3"] [name="multidim"]').click().change();
@@ -399,11 +358,9 @@ describe('FacetsEditor', function() {
         });
 
         it('subsequent dimensions depend on all multidim axes', function() {
-            var model = new Backbone.Model({multidim: 2});
-            var view = new App.FacetsEditor({
-                model: model,
-                dimensions: four_dimensions
-            });
+            var model = new App.EditorConfiguration({multidim: 2}, {
+                dimensions: four_dimensions});
+            var view = new App.FacetsEditor({model: model});
             view.$el.find('[data-name="dim1"] [name="multidim"]').click().change();
             view.$el.find('[data-name="dim2"] [name="multidim"]').click().change();
             var facets = facets_by_name(model.get('facets'));
@@ -417,11 +374,9 @@ describe('FacetsEditor', function() {
         });
 
         it('should set multidim_common on non-multidim facets', function() {
-            var model = new Backbone.Model({multidim: 2});
-            var view = new App.FacetsEditor({
-                model: model,
-                dimensions: four_dimensions
-            });
+            var model = new App.EditorConfiguration({multidim: 2}, {
+                dimensions: four_dimensions});
+            var view = new App.FacetsEditor({model: model});
             view.$el.find('[data-name="dim1"] [name="multidim"]').click().change();
             var facets = facets_by_name(model.get('facets'));
             expect(facets['x-dim1']['multidim_common']).to.be.undefined;
@@ -429,17 +384,15 @@ describe('FacetsEditor', function() {
         });
 
         it('should set multidim_value on value facet', function() {
-            var model = new Backbone.Model({multidim: 2});
-            var view = new App.FacetsEditor({
-                model: model,
-                dimensions: four_dimensions
-            });
+            var model = new App.EditorConfiguration({multidim: 2}, {
+                dimensions: four_dimensions});
+            var view = new App.FacetsEditor({model: model});
             var facets = facets_by_name(model.get('facets'));
             expect(facets['value']['multidim_value']).to.be.true;
         });
 
         it('should parse multidim facets and preserve labels', function() {
-            var model = new Backbone.Model({
+            var model = new App.EditorConfiguration({
                 multidim: 2,
                 facets: [
                     {name: 'x-dim1', label: '(X) blah dim1'},
@@ -449,11 +402,8 @@ describe('FacetsEditor', function() {
                     {name: 'dim3', label: 'blah dim3'},
                     {name: 'dim4', label: 'blah dim4'}
                 ]
-            });
-            var view = new App.FacetsEditor({
-                model: model,
-                dimensions: four_dimensions
-            });
+            }, {dimensions: four_dimensions});
+            var view = new App.FacetsEditor({model: model});
             var facets = facets_by_name(model.get('facets'));
             expect(facets['x-dim1'].label).to.equal('(X) blah dim1');
             expect(facets['y-dim1'].label).to.equal('(Y) blah dim1');
@@ -464,11 +414,9 @@ describe('FacetsEditor', function() {
         });
 
         it('should order multidim facets grouped by axis', function() {
-            var model = new Backbone.Model({multidim: 2});
-            var view = new App.FacetsEditor({
-                model: model,
-                dimensions: four_dimensions
-            });
+            var model = new App.EditorConfiguration({multidim: 2}, {
+                dimensions: four_dimensions});
+            var view = new App.FacetsEditor({model: model});
             view.$el.find('[data-name="dim1"] [name="multidim"]').click().change();
             view.$el.find('[data-name="dim2"] [name="multidim"]').click().change();
             expect(_(model.get('facets')).pluck('name')).to.deep.equal(
