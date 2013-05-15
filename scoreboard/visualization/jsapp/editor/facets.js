@@ -233,8 +233,7 @@ App.FacetsEditor = Backbone.View.extend({
         if(! this.model.has('multiple_series')) {
             this.model.set('multiple_series', null);
         }
-        this.facets = this.model.facets;
-        this.facet_views = _.object(this.facets.map(function(facet_model) {
+        this.facet_views = _.object(this.model.facets.map(function(facet_model) {
             var facet_view = new App.FacetEditorField({
                 model: facet_model,
                 facets_editor: this
@@ -248,7 +247,7 @@ App.FacetsEditor = Backbone.View.extend({
         var series_options = [];
         var no_multiple_series = true;
         var free_dimensions = [];
-        this.facets.forEach(function(facet_model) {
+        this.model.facets.forEach(function(facet_model) {
             var facet = facet_model.toJSON();
             var name = facet['name'];
             if(facet['type'] == 'multiple_select' ||
@@ -290,7 +289,7 @@ App.FacetsEditor = Backbone.View.extend({
             chart_is_multidim: this.chart_is_multidim()
         };
         this.$el.html(this.template(context));
-        this.facets.forEach(function(facet_model) {
+        this.model.facets.forEach(function(facet_model) {
             var facet_view = this.facet_views[facet_model.cid];
             facet_view.render();
             this.$el.find('tbody').append(facet_view.el);
@@ -299,7 +298,7 @@ App.FacetsEditor = Backbone.View.extend({
     },
 
     save_value: function() {
-        var value = this.facets.get_value(this.model.get('multidim'));
+        var value = this.model.facets.get_value(this.model.get('multidim'));
         this.model.set('facets', value);
     },
 
