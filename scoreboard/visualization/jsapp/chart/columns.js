@@ -10,6 +10,10 @@ App.chart_library['columns'] = function(container, options) {
     var percent = options['unit_is_pc'];
     var category = options['category_facet'];
     var series = App.format_series(options['series'], sort, '', percent, category);
+    var init_serie = series;
+    if (options['animation']){
+        init_serie = [series[0]];
+    }
 
     var chartOptions = {
         chart: {
@@ -81,7 +85,7 @@ App.chart_library['columns'] = function(container, options) {
         tooltip: {
             formatter: options['tooltip_formatter']
         },
-        series: series
+        series: init_serie
     };
 
     if (!options['legend']){
@@ -89,6 +93,21 @@ App.chart_library['columns'] = function(container, options) {
     }
 
     var chart = new Highcharts.Chart(chartOptions);
+
+    if (options['animation']){
+        if(!App.chart_controls){
+            App.chart_controls = new App.GraphControlsView({
+                model: new Backbone.Model(),
+                chart: chart,
+                snapshots_data: series,
+                interval: window.interval_set,
+            });
+            App.chart_controls.$el.insertAfter(container);
+        }else{
+            App.chart_controls.chart = chart;
+            App.chart_controls.snapshots_data = series;
+        };
+    }
 };
 
 })();

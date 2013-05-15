@@ -67,7 +67,7 @@ App.scenario6_filters_schema = {
                   {name: 'breakdown'},
                   {name: 'unit-measure'}]
     },
-    chart_type: 'evolution_columns',
+    chart_type: 'columns',
     labels: {
         title: {facet: 'indicator', field: 'short_label'},
         ordinate: {facet: 'unit-measure', field: 'short_label'},
