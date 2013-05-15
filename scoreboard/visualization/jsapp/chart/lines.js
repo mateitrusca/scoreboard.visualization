@@ -79,7 +79,10 @@ App.chart_library['lines'] = function(container, options) {
             min: 0
         },
         tooltip: {
-            formatter: options['tooltip_formatter']
+            formatter: options['tooltip_formatter'],
+            style: {
+                width:400
+            }
         },
         legend: {
             layout: 'vertical',
@@ -94,7 +97,7 @@ App.chart_library['lines'] = function(container, options) {
         },
         plotOptions: {
             series: {
-			    connectNulls: true,
+                connectNulls: true,
                 dataLabels: {
                     enabled: true,
                     formatter: function() {

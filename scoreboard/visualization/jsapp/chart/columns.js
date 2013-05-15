@@ -83,7 +83,10 @@ App.chart_library['columns'] = function(container, options) {
             },
         },
         tooltip: {
-            formatter: options['tooltip_formatter']
+            formatter: options['tooltip_formatter'],
+            style: {
+                width:400
+            }
         },
         series: init_serie
     };

@@ -81,6 +81,11 @@ App.scenario7_filters_schema = {
                   {name: 'unit-measure'}]
     },
     chart_type: 'columns',
+    tooltips: {
+        'unit-measure': true,
+        'flag': true,
+        'note': true
+    },
     legend: true,
     labels: {
         title: {facet: 'indicator', field: 'short_label'},

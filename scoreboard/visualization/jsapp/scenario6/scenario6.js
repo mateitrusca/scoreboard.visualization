@@ -69,6 +69,11 @@ App.scenario6_filters_schema = {
                   {name: 'unit-measure'}]
     },
     chart_type: 'columns',
+    tooltips: {
+        'unit-measure': true,
+        'flag': true,
+        'note': true
+    },
     labels: {
         title: {facet: 'indicator', field: 'short_label'},
         ordinate: {facet: 'unit-measure', field: 'short_label'},

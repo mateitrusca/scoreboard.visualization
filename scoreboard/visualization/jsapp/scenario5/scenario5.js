@@ -82,6 +82,11 @@ App.scenario5_filters_schema = {
                   {name: 'unit-measure'}]
     },
     chart_type: 'map',
+    tooltips: {
+        'unit-measure': true,
+        'flag': true,
+        'note': true
+    },
     labels: {
         title: {facet: 'indicator', field: 'short_label'},
         ordinate: {facet: 'unit-measure', field: 'short_label'},

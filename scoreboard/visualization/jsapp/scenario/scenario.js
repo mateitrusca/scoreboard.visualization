@@ -127,8 +127,11 @@ App.ScenarioChartView = Backbone.View.extend({
                 unit_is_pc.push(true);
             }
         }
-        // TODO: get this list from chart configurator
-        var tooltip_attributes = ['value', 'unit-measure', 'flag', 'note'];
+        // category_facet, value and unit-measure always in tooltip
+        var tooltip_attributes = ['value', 'unit-measure'];;
+        if ( this.schema['tooltips'] ) {
+            tooltip_attributes = tooltip_attributes.concat(_.keys(this.schema['tooltips']));
+        }
         var category_facet = this.schema.category_facet;
         if (this.multiple_series) {
             tooltip_attributes.push(this.multiple_series);

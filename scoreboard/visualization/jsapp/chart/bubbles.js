@@ -89,7 +89,10 @@ App.chart_library['bubbles'] = function(container, options) {
             }
         },
         tooltip: {
-            formatter: options['tooltip_formatter']
+            formatter: options['tooltip_formatter'],
+            style: {
+                width:400
+            }
         },
         legend: {
             layout: 'vertical',
