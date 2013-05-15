@@ -93,6 +93,82 @@ App.FacetEditorField = Backbone.View.extend({
 
 
 App.FacetsCollection = Backbone.Collection.extend({
+
+    get_value: function(chart_multidim) {
+        var multidim_facets = {};
+        var all_multidim = _.range(chart_multidim);
+        var facets_by_axis = {'all': []};
+        _(all_multidim).forEach(function(n) {
+            var letter = 'xyz'[n];
+            facets_by_axis[letter] = [];
+        });
+        var facets_above = [];
+        this.forEach(function(facet_model) {
+            var facet = facet_model.toJSON();
+            var multidim = facet['multidim'];
+            delete facet['multidim'];
+            if(multidim) {
+                multidim_facets[facet['name']] = true;
+                _(all_multidim).forEach(function(n) {
+                    var letter = 'xyz'[n];
+                    var prefix = letter + '-';
+                    var constraints = {};
+                    _(facets_above).forEach(function(name) {
+                        constraints[name] = prefix + name;
+                    });
+                    var label = '(' + letter.toUpperCase() + ') '
+                              + facet['label'];
+                    facets_by_axis[letter].push(_({
+                        name: prefix + facet['name'],
+                        label: label,
+                        constraints: constraints
+                    }).defaults(facet));
+                });
+            }
+            else {
+                var constraints = {};
+                _(facets_above).forEach(function(name) {
+                    if(multidim_facets[name]) {
+                        _(all_multidim).forEach(function(n) {
+                            var letter = 'xyz'[n];
+                            var prefix = letter + '-';
+                            constraints[prefix + name] = prefix + name;
+                        });
+                    }
+                    else {
+                        constraints[name] = name;
+                    }
+                });
+                facet['constraints'] = constraints;
+                if(chart_multidim) {
+                    facet['multidim_common'] = true;
+                } else {
+                    delete facet['multidim_common'];
+                }
+                facets_by_axis['all'].push(facet);
+            }
+            if(facet['type'] == 'select') {
+                facets_above.push(facet['name']);
+            }
+        });
+        var value = [];
+        _(all_multidim).forEach(function(n) {
+            var letter = 'xyz'[n];
+            value = value.concat(facets_by_axis[letter]);
+        });
+        value = value.concat(facets_by_axis['all']);
+        var value_facet = {
+            name: 'value',
+            type: 'all-values',
+            dimension: 'value'
+        };
+        if(chart_multidim) {
+            value_facet['multidim_value'] = true;
+        }
+        value.push(value_facet);
+        return value;
+    }
+
 });
 
 
@@ -229,77 +305,7 @@ App.FacetsEditor = Backbone.View.extend({
     },
 
     save_value: function() {
-        var multidim_facets = {};
-        var all_multidim = _.range(this.model.get('multidim'));
-        var facets_by_axis = {'all': []};
-        _(all_multidim).forEach(function(n) {
-            var letter = 'xyz'[n];
-            facets_by_axis[letter] = [];
-        });
-        var facets_above = [];
-        this.facets.forEach(function(facet_model) {
-            var facet = facet_model.toJSON();
-            var multidim = facet['multidim'];
-            delete facet['multidim'];
-            if(multidim) {
-                multidim_facets[facet['name']] = true;
-                _(all_multidim).forEach(function(n) {
-                    var letter = 'xyz'[n];
-                    var prefix = letter + '-';
-                    var constraints = {};
-                    _(facets_above).forEach(function(name) {
-                        constraints[name] = prefix + name;
-                    });
-                    var label = '(' + letter.toUpperCase() + ') '
-                              + facet['label'];
-                    facets_by_axis[letter].push(_({
-                        name: prefix + facet['name'],
-                        label: label,
-                        constraints: constraints
-                    }).defaults(facet));
-                });
-            }
-            else {
-                var constraints = {};
-                _(facets_above).forEach(function(name) {
-                    if(multidim_facets[name]) {
-                        _(all_multidim).forEach(function(n) {
-                            var letter = 'xyz'[n];
-                            var prefix = letter + '-';
-                            constraints[prefix + name] = prefix + name;
-                        });
-                    }
-                    else {
-                        constraints[name] = name;
-                    }
-                });
-                facet['constraints'] = constraints;
-                if(this.chart_is_multidim()) {
-                    facet['multidim_common'] = true;
-                } else {
-                    delete facet['multidim_common'];
-                }
-                facets_by_axis['all'].push(facet);
-            }
-            if(facet['type'] == 'select') {
-                facets_above.push(facet['name']);
-            }
-        }, this);
-        var value = [];
-        _(all_multidim).forEach(function(n) {
-            var letter = 'xyz'[n];
-            value = value.concat(facets_by_axis[letter]);
-        });
-        value = value.concat(facets_by_axis['all']);
-        var value_facet = {
-            name: 'value',
-            type: 'all-values',
-            dimension: 'value'
-        };
-        if(this.chart_is_multidim()) {
-            value_facet['multidim_value'] = true;
-        }
-        value.push(value_facet);
+        var value = this.facets.get_value(this.model.get('multidim'));
         this.model.set('facets', value);
         var category_facet = this.facet_roles.category_facet;
         if(category_facet) {
