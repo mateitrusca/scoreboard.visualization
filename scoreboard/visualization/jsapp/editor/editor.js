@@ -16,7 +16,6 @@ App.EditForm = Backbone.View.extend({
 
     initialize: function(options) {
         this.input = this.$el.find('input[name=configuration]');
-        this.model.set(JSON.parse(this.input.val()));
         this.model.on('change', this.update_form, this);
         this.$el.append(this.template());
     },
@@ -125,16 +124,18 @@ App.EditorConfiguration = Backbone.Model.extend({
 
 
 App.create_editor = function(form, object_url) {
-    var configuration = new App.EditorConfiguration();
+    var initial_value = JSON.parse($(form).find('[name=configuration]').val());
+    App.editor_configuration = new App.EditorConfiguration(initial_value);
+
     App.editor_form = new App.EditForm({
-        model: configuration,
+        model: App.editor_configuration,
         el: form,
         object_url: object_url
     });
 
     var create_editor_view = function() {
         App.editor = new App.Editor({
-            model: configuration,
+            model: App.editor_configuration,
             dimensions: App.CUBE_DIMENSIONS
         });
         App.editor.$el.insertBefore(form);
