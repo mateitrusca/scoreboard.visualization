@@ -15,12 +15,18 @@ App.AxesEditor = Backbone.View.extend({
     title: "Axes",
 
     events: {
-        'change [name="axis-sort-by"]': 'on_change_sort'
+        'change [name="axis-sort-by"]': 'on_change_sort',
+        'change [name="axis-sort-order"]': 'on_change_sort'
     },
 
     sort_by_options: [
         {value: 'value', label: "Value"},
         {value: 'category', label: "Category"}
+    ],
+
+    sort_order_options: [
+        {value: 'asc', label: "Ascending"},
+        {value: 'desc', label: "Descending"}
     ],
 
     initialize: function(options) {
@@ -50,6 +56,13 @@ App.AxesEditor = Backbone.View.extend({
                     item['checked'] = true;
                 }
                 return item;
+            }, this),
+            sort_order_options: _(this.sort_order_options).map(function(spec) {
+                var item = _({}).extend(spec);
+                if(spec['value'] == this.model.get('axis-sort-order')) {
+                    item['checked'] = true;
+                }
+                return item;
             }, this)
         };
         this.$el.html(this.template(context));
@@ -57,7 +70,8 @@ App.AxesEditor = Backbone.View.extend({
 
     on_change_sort: function() {
         this.model.set({
-            'axis-sort-by': this.$el.find('[name="axis-sort-by"]:checked').val()
+            'axis-sort-by': this.$el.find('[name="axis-sort-by"]:checked').val(),
+            'axis-sort-order': this.$el.find('[name="axis-sort-order"]:checked').val()
         });
     }
 

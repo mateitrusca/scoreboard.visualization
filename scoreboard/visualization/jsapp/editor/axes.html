@@ -43,12 +43,13 @@
   {{/ sort_by_options }}
 
   <br>
+
+  {{# sort_order_options }}
   <label>
-    <input type="radio" name="editor-axes-sort-direction">
-    Ascending
+    <input type="radio" name="axis-sort-order"
+           value="{{ value }}"
+           {{# if checked }}checked{{/ if }}>
+    {{ label }}
   </label>
-  <label>
-    <input type="radio" name="editor-axes-sort-direction">
-    Descending
-  </label>
+  {{/ sort_order_options }}
 </fieldset>

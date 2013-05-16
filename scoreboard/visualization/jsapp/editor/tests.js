@@ -454,6 +454,19 @@ describe('AxesEditor', function() {
             ).to.equal('category');
     });
 
+    it('should save axes sort order choice', function() {
+        var view = new App.AxesEditor({model: new Backbone.Model()});
+        view.$el.find('[name="axis-sort-order"][value="desc"]').click().change();
+        expect(view.model.get('axis-sort-order')).to.equal('desc');
+    });
+
+    it('should show existing axes sort order choice', function() {
+        var model = new Backbone.Model({'axis-sort-order': 'desc'});
+        var view = new App.AxesEditor({model: model});
+        expect(view.$el.find('[name="axis-sort-order"]:checked').val()
+            ).to.equal('desc');
+    });
+
 });
 
 
