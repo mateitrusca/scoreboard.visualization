@@ -342,6 +342,23 @@ App.GraphControlsView = Backbone.View.extend({
         this.multiseries = options['multiseries'] || false;
     },
 
+    update_plotlines: function(new_data){
+        _.chain([this.chart.xAxis, this.chart.yAxis])
+         .each(function(item){
+             _(item).each(function(axis){
+                if (_.chain(axis.plotLinesAndBands).pluck('id').contains('median').value()){
+                    var out = axis.removePlotLine('median');
+                    axis.addPlotLine({
+                        value: App.compute_plotLines(axis.xOrY, new_data, 'values'),
+                        width: 2,
+                        color: 'red',
+                        id: 'median'
+                    });
+                }
+             });
+         })
+    },
+
     update_chart: function(){
         var new_data = this.snapshots_data[this.model.get('value')];
         _(this.chart.series).each(function(serie, serie_idx){
@@ -358,20 +375,7 @@ App.GraphControlsView = Backbone.View.extend({
                             {duration: 950, easing: 'linear'});
             }, this);
         }, this);
-        _.chain([this.chart.xAxis, this.chart.yAxis])
-         .each(function(item){
-             _(item).each(function(axis){
-                if (_.chain(axis.plotLinesAndBands).pluck('id').contains('median').value()){
-                    var out = axis.removePlotLine('median');
-                    axis.addPlotLine({
-                        value: App.compute_plotLines(axis.xOrY, new_data, 'values'),
-                        width: 2,
-                        color: 'red',
-                        id: 'median'
-                    });
-                }
-             });
-         })
+        this.update_plotlines(new_data);
         this.chart.redraw();
         this.chart.setTitle(null, {text: new_data['name']});
     },
