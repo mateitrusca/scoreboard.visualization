@@ -120,7 +120,7 @@ App.chart_library['scatter'] = function(container, options) {
     };
 
     if (options['plotlines']){
-        chartOptions = App.add_plotLines(chartOptions, series, options['plotlines']);
+        chartOptions = App.add_plotLines(chartOptions, series[0], options['plotlines']);
     }
 
     if (!options['legend']){
