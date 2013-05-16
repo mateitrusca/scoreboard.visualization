@@ -341,10 +341,11 @@ App.GraphControlsView = Backbone.View.extend({
         this.model.set({'value': 0, 'auto': false});
         this.multiseries = options['multiseries'] || false;
         this.plotlines = options['plotlines'] || false;
+        this.chart_type = options['chart_type'];
     },
 
     update_plotlines: function(new_data){
-         App.add_plotLines(this.chart, new_data);
+         App.add_plotLines(this.chart, new_data, this.chart_type);
     },
 
     update_chart: function(){
