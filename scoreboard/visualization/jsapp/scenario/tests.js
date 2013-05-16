@@ -263,15 +263,10 @@ describe('ChartSeriesPreparation', function() {
             }
         ];
         var chart_type = {x: 'categories', y: 'values'};
-        var chartOptions = {
-            xAxis: {
-            },
-            yAxis: {
-            }
-        }
-        var plotlines = App.add_plotLines(chartOptions, series, chart_type);
-        expect(plotlines.xAxis.plotLines[0].value).to.equal(1);
-        expect(plotlines.yAxis.plotLines[0].value).to.equal(0.5);
+        var x_plotline = App.compute_plotLines('x', series, chart_type['x']);
+        expect(x_plotline).to.equal(1);
+        var y_plotline = App.compute_plotLines('y', series, chart_type['y']);
+        expect(y_plotline).to.equal(0.5);
 
         // ODD SERIES
         _(series[0]['data']).push(
@@ -279,8 +274,8 @@ describe('ChartSeriesPreparation', function() {
            'code': 'BG',
            'y': 2});
         var chart_type = {x: 'categories', y: 'values'};
-        var plotlines = App.add_plotLines(chartOptions, series, chart_type);
-        expect(plotlines.xAxis.plotLines[0].value).to.equal(1);
+        var x_plotlines = App.add_plotLines('x', series, chart_type['x']);
+        expect(x_plotline).to.equal(1);
     });
 
     it('should compute the values for plot lines (two dimensions)', function(){
@@ -312,8 +307,8 @@ describe('ChartSeriesPreparation', function() {
             }
         }
         var chart_type = {x: 'values', y: 'values'};
-        var plotlines = App.add_plotLines(chartOptions, series, chart_type);
-        expect(plotlines.xAxis.plotLines[0].value).to.equal(1.5);
+        var x_plotline = App.compute_plotLines('x', series, chart_type['x']);
+        expect(x_plotline).to.equal(1.5);
         // ODD SERIES
         _(series).push(
          { 'name': 'Bulgaria',
@@ -326,9 +321,10 @@ describe('ChartSeriesPreparation', function() {
             ]
          });
         var chart_type = {x: 'values', y: 'values'};
-        plotlines = App.add_plotLines(chartOptions, series, chart_type);
-        expect(plotlines.xAxis.plotLines[0].value).to.equal(2);
-        expect(plotlines.yAxis.plotLines[0].value).to.equal(2);
+        var x_plotline = App.compute_plotLines('x', series, chart_type['x']);
+        expect(x_plotline).to.equal(2);
+        var y_plotline = App.compute_plotLines('y', series, chart_type['y']);
+        expect(y_plotline).to.equal(2);
 
         var chartOptions = {
             xAxis: {
@@ -338,9 +334,10 @@ describe('ChartSeriesPreparation', function() {
         }
 
         var chart_type = {x: 'values'};
-        plotlines = App.add_plotLines(chartOptions, series, chart_type);
-        expect(plotlines.xAxis.plotLines[0].value).to.equal(2);
-        expect(plotlines.yAxis.plotLines).to.equal(undefined);
+        var x_plotline = App.compute_plotLines('x', series, chart_type['x']);
+        expect(x_plotline).to.equal(2);
+        var y_plotline = App.compute_plotLines('y', series, chart_type['y']);
+        expect(y_plotline).to.equal(2);
     });
 });
 
@@ -356,79 +353,6 @@ describe('ScenarioChartViewParameters', function() {
 
     afterEach(function () {
         this.sandbox.restore();
-    });
-
-    it('should add plotlines to the chart', function() {
-        var server = this.sandbox.server;
-        var chart = new App.ScenarioChartView({
-            model: this.model,
-            schema: {
-                facets: [],
-                plotlines: {x: 'categories', y: 'values'}
-            },
-            scenario_chart: this.scenario_chart
-        });
-        App.respond_json(server.requests[0], {'datapoints': []});
-        expect(this.scenario_chart.args[0][1]['plotlines']).to.deep.equal(
-            {x: 'categories', y: 'values'}
-        );
-
-        var series = [
-            {data:
-                [
-                 { 'name': 'Austria',
-                   'code': 'AT',
-                   'y': 1},
-                 { 'name': 'Belgium',
-                   'code': 'BE',
-                   'y': 0}],
-             name: 'serie_name'
-            }
-        ];
-
-        var chart_type = {x: 'categories', y: 'values'};
-
-        var chartOptions = {
-            xAxis: { },
-            yAxis: { }
-        }
-
-        chartOptions = App.add_plotLines(chartOptions, series, chart_type);
-        expect(chartOptions.xAxis.plotLines).to.deep.equal(
-            [{
-                color: '#FF0000',
-                width: 2,
-                value: 1,
-            }]
-        );
-        expect(chartOptions.yAxis.plotLines).to.deep.equal(
-            [{
-                color: '#FF0000',
-                width: 2,
-                value: 0.5,
-            }]
-        );
-
-        var chartOptions = {
-            xAxis: [{ }, { }],
-            yAxis: [{ }, { }]
-        }
-
-        chartOptions = App.add_plotLines(chartOptions, series, chart_type);
-        expect(chartOptions.xAxis[1].plotLines).to.deep.equal(
-            [{
-                color: '#FF0000',
-                width: 2,
-                value: 1,
-            }]
-        );
-        expect(chartOptions.yAxis[1].plotLines).to.deep.equal(
-            [{
-                color: '#FF0000',
-                width: 2,
-                value: 0.5,
-            }]
-        );
     });
 
     it('should add a legend', function() {

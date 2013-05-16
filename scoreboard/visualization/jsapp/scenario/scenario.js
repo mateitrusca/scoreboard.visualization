@@ -340,6 +340,15 @@ App.GraphControlsView = Backbone.View.extend({
         this.model.on('change', this.render, this);
         this.model.set({'value': 0, 'auto': false});
         this.multiseries = options['multiseries'] || false;
+        this.plotlines = options['plotlines'] || false;
+        this.chart_type = options['chart_type'];
+    },
+
+    update_plotlines: function(new_data){
+         if (! this.multiseries){
+             new_data = [new_data];
+         }
+         App.add_plotLines(this.chart, new_data, this.chart_type);
     },
 
     update_chart: function(){
@@ -358,6 +367,9 @@ App.GraphControlsView = Backbone.View.extend({
                             {duration: 950, easing: 'linear'});
             }, this);
         }, this);
+        if (this.plotlines){
+            this.update_plotlines(new_data);
+        }
         this.chart.redraw();
         this.chart.setTitle(null, {text: new_data['name']});
     },

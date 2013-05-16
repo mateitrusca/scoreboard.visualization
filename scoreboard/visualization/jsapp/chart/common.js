@@ -166,7 +166,7 @@ App.format_series = function (data, sort, type, percent, category){
 
 }
 
-function compute_plotLines(coord, series, axis_type){
+App.compute_plotLines = function compute_plotLines(coord, series, axis_type){
     var values = _.chain(series);
     var map_stage = function(serie){
         if (axis_type == 'categories'){
@@ -203,39 +203,20 @@ function compute_plotLines(coord, series, axis_type){
     return (values.min + values.max)/2;
 }
 
-function format_plotline(axis, value){
-    if (_(axis).isArray()){
-        _(axis).each(function(item){
-            _(item).extend({
-                plotLines: [{
-                    color: '#FF0000',
+App.add_plotLines = function(chart, series, chart_type){
+    _.chain([chart.xAxis, chart.yAxis]).each(function(item){
+        _(item).each(function(axis){
+            if (_.chain(chart_type).keys().contains(axis.xOrY).value()){
+                axis.removePlotLine('median');
+                axis.addPlotLine({
+                    value: App.compute_plotLines(axis.xOrY, series, chart_type[axis.xOrY]),
                     width: 2,
-                    value: value
-                }]
-            });
+                    color: 'red',
+                    id: 'median'
+                });
+            }
         });
-    }
-    else{
-        _(axis).extend({
-            plotLines: [{
-                color: '#FF0000',
-                width: 2,
-                value: value
-            }]
-        });
-    }
-}
-
-App.add_plotLines = function(chartOptions, series, chart_type){
-    if (_(chart_type).has('x')){
-        var value = compute_plotLines('x', series, chart_type['x']);
-        format_plotline(chartOptions.xAxis, value);
-    }
-    if (_(chart_type).has('y')){
-        var value = compute_plotLines('y', series, chart_type['y']);
-        format_plotline(chartOptions.yAxis, value);
-    }
-    return chartOptions;
+    });
 }
 
 App.disable_legend = function(chartOptions, legend_options){

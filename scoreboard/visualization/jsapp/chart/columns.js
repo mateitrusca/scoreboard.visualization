@@ -97,6 +97,10 @@ App.chart_library['columns'] = function(container, options) {
 
     var chart = new Highcharts.Chart(chartOptions);
 
+    if (options['plotlines']){
+        App.add_plotLines(chart, init_serie, options['plotlines']);
+    }
+
     if (options['animation']){
         if(!App.chart_controls){
             App.chart_controls = new App.GraphControlsView({
@@ -104,6 +108,8 @@ App.chart_library['columns'] = function(container, options) {
                 chart: chart,
                 snapshots_data: series,
                 interval: window.interval_set,
+                plotlines: options['plotlines'],
+                chart_type: options['plotlines']
             });
             App.chart_controls.$el.insertAfter(container);
         }else{
