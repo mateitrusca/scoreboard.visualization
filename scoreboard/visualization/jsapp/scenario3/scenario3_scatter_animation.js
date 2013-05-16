@@ -123,6 +123,7 @@ App.scenario3_scatter_animation_filters_schema = {
     chart_type: 'scatter',
     multidim: 2,
     legend: true,
+    plotlines: {x: 'values', y: 'values'},
     animation: true,
     labels: {
         title_x: {facet: 'x-indicator', field: 'short_label'},
