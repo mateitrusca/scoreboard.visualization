@@ -166,7 +166,7 @@ App.format_series = function (data, sort, type, percent, category){
 
 }
 
-function compute_plotLines(coord, series, axis_type){
+App.compute_plotLines = function compute_plotLines(coord, series, axis_type){
     var values = _.chain(series);
     var map_stage = function(serie){
         if (axis_type == 'categories'){
@@ -210,7 +210,8 @@ function format_plotline(axis, value){
                 plotLines: [{
                     color: '#FF0000',
                     width: 2,
-                    value: value
+                    value: value,
+                    id: 'median'
                 }]
             });
         });
@@ -220,7 +221,8 @@ function format_plotline(axis, value){
             plotLines: [{
                 color: '#FF0000',
                 width: 2,
-                value: value
+                value: value,
+                id: 'median'
             }]
         });
     }
@@ -228,11 +230,11 @@ function format_plotline(axis, value){
 
 App.add_plotLines = function(chartOptions, series, chart_type){
     if (_(chart_type).has('x')){
-        var value = compute_plotLines('x', series, chart_type['x']);
+        var value = App.compute_plotLines('x', series, chart_type['x']);
         format_plotline(chartOptions.xAxis, value);
     }
     if (_(chart_type).has('y')){
-        var value = compute_plotLines('y', series, chart_type['y']);
+        var value = App.compute_plotLines('y', series, chart_type['y']);
         format_plotline(chartOptions.yAxis, value);
     }
     return chartOptions;

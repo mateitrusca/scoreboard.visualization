@@ -397,6 +397,7 @@ describe('ScenarioChartViewParameters', function() {
         expect(chartOptions.xAxis.plotLines).to.deep.equal(
             [{
                 color: '#FF0000',
+                id: 'median',
                 width: 2,
                 value: 1,
             }]
@@ -404,6 +405,7 @@ describe('ScenarioChartViewParameters', function() {
         expect(chartOptions.yAxis.plotLines).to.deep.equal(
             [{
                 color: '#FF0000',
+                id: 'median',
                 width: 2,
                 value: 0.5,
             }]
@@ -418,6 +420,7 @@ describe('ScenarioChartViewParameters', function() {
         expect(chartOptions.xAxis[1].plotLines).to.deep.equal(
             [{
                 color: '#FF0000',
+                id: 'median',
                 width: 2,
                 value: 1,
             }]
@@ -425,6 +428,7 @@ describe('ScenarioChartViewParameters', function() {
         expect(chartOptions.yAxis[1].plotLines).to.deep.equal(
             [{
                 color: '#FF0000',
+                id: 'median',
                 width: 2,
                 value: 0.5,
             }]
