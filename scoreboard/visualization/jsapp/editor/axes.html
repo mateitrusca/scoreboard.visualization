@@ -33,14 +33,14 @@
 <fieldset>
   <legend>Sort</legend>
 
+  {{# sort_by_options }}
   <label>
-    <input type="radio" name="editor-axes-sort-criterion">
-    Value
+    <input type="radio" name="axis-sort-by"
+           value="{{ value }}"
+           {{# if checked }}checked{{/ if }}>
+    {{ label }}
   </label>
-  <label>
-    <input type="radio" name="editor-axes-sort-criterion">
-    Category
-  </label>
+  {{/ sort_by_options }}
 
   <br>
   <label>

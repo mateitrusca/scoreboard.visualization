@@ -14,6 +14,15 @@ App.AxesEditor = Backbone.View.extend({
 
     title: "Axes",
 
+    events: {
+        'change [name="axis-sort-by"]': 'on_change_sort'
+    },
+
+    sort_by_options: [
+        {value: 'value', label: "Value"},
+        {value: 'category', label: "Category"}
+    ],
+
     initialize: function(options) {
         this.render();
         this.set_axis_labels();
@@ -34,7 +43,22 @@ App.AxesEditor = Backbone.View.extend({
     },
 
     render: function() {
-        this.$el.html(this.template());
+        var context = {
+            sort_by_options: _(this.sort_by_options).map(function(spec) {
+                var item = _({}).extend(spec);
+                if(spec['value'] == this.model.get('axis-sort-by')) {
+                    item['checked'] = true;
+                }
+                return item;
+            }, this)
+        };
+        this.$el.html(this.template(context));
+    },
+
+    on_change_sort: function() {
+        this.model.set({
+            'axis-sort-by': this.$el.find('[name="axis-sort-by"]:checked').val()
+        });
     }
 
 });

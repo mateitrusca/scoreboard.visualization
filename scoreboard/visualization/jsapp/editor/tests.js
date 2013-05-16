@@ -441,6 +441,19 @@ describe('AxesEditor', function() {
         expect(ordinate_label['field']).to.equal('short_label');
     });
 
+    it('should save axes sort criteria choice', function() {
+        var view = new App.AxesEditor({model: new Backbone.Model()});
+        view.$el.find('[name="axis-sort-by"][value="category"]').click().change();
+        expect(view.model.get('axis-sort-by')).to.equal('category');
+    });
+
+    it('should show existing axes sort criteria choice', function() {
+        var model = new Backbone.Model({'axis-sort-by': 'category'});
+        var view = new App.AxesEditor({model: model});
+        expect(view.$el.find('[name="axis-sort-by"]:checked').val()
+            ).to.equal('category');
+    });
+
 });
 
 
