@@ -18,6 +18,7 @@ App.AxesEditor = Backbone.View.extend({
         'change [name="axis-sort-by"]': 'on_change',
         'change [name="axis-sort-order"]': 'on_change',
         'change [name="axis-horizontal-title"]': 'on_change',
+        'change [name="axis-horizontal-rotated"]': 'on_change',
         'change [name="axis-vertical-title"]': 'on_change'
     },
 
@@ -80,6 +81,7 @@ App.AxesEditor = Backbone.View.extend({
                 }
                 return item;
             }, this),
+            horizontal_rotated: this.model.get('axis-horizontal-rotated'),
             vertical_title_options: _(this.axis_title_options).map(
                                        function(spec) {
                 var item = _({}).extend(spec);
@@ -98,6 +100,8 @@ App.AxesEditor = Backbone.View.extend({
             'axis-sort-by': val('[name="axis-sort-by"]:checked'),
             'axis-sort-order': val('[name="axis-sort-order"]:checked'),
             'axis-horizontal-title': val('[name="axis-horizontal-title"]'),
+            'axis-horizontal-rotated':
+                this.$el.find('[name="axis-horizontal-rotated"]').is(':checked'),
             'axis-vertical-title': val('[name="axis-vertical-title"]')
         });
     }

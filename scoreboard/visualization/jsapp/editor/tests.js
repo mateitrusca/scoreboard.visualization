@@ -480,6 +480,19 @@ describe('AxesEditor', function() {
             ).to.equal('short');
     });
 
+    it('should save axes horizontal rotated choice', function() {
+        var view = new App.AxesEditor({model: new Backbone.Model()});
+        view.$el.find('[name="axis-horizontal-rotated"]').click().change();
+        expect(view.model.get('axis-horizontal-rotated')).to.be.true;
+    });
+
+    it('should show existing axes horizontal rotated choice', function() {
+        var model = new Backbone.Model({'axis-horizontal-rotated': true});
+        var view = new App.AxesEditor({model: model});
+        expect(view.$el.find('[name="axis-horizontal-rotated"]').is(':checked')
+            ).to.be.true;
+    });
+
     it('should save axes vertical title choice', function() {
         var view = new App.AxesEditor({model: new Backbone.Model()});
         view.$el.find('[name="axis-vertical-title"]').val('short').change();
