@@ -480,6 +480,19 @@ describe('AxesEditor', function() {
             ).to.equal('short');
     });
 
+    it('should save axes vertical title choice', function() {
+        var view = new App.AxesEditor({model: new Backbone.Model()});
+        view.$el.find('[name="axis-vertical-title"]').val('short').change();
+        expect(view.model.get('axis-vertical-title')).to.equal('short');
+    });
+
+    it('should show existing axes vertical title choice', function() {
+        var model = new Backbone.Model({'axis-vertical-title': 'short'});
+        var view = new App.AxesEditor({model: model});
+        expect(view.$el.find('[name="axis-vertical-title"]').val()
+            ).to.equal('short');
+    });
+
 });
 
 

@@ -19,12 +19,12 @@
   <legend>Vertical</legend>
 
   <label>Title</label>
-  <select class="span3">
-    <option>Unit of measure</option>
-  </select>
-  <select class="span2">
-    <option>Long labels</option>
-    <option selected>Short labels</option>
+  <select class="span2" name="axis-vertical-title">
+  {{# vertical_title_options }}
+    <option value="{{ value }}"
+      {{# if selected }}selected{{/ if }}
+      >{{ label }}</option>
+  {{/ vertical_title_options }}
   </select>
 </fieldset>
 

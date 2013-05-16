@@ -17,7 +17,8 @@ App.AxesEditor = Backbone.View.extend({
     events: {
         'change [name="axis-sort-by"]': 'on_change',
         'change [name="axis-sort-order"]': 'on_change',
-        'change [name="axis-horizontal-title"]': 'on_change'
+        'change [name="axis-horizontal-title"]': 'on_change',
+        'change [name="axis-vertical-title"]': 'on_change'
     },
 
     sort_by_options: [
@@ -30,7 +31,7 @@ App.AxesEditor = Backbone.View.extend({
         {value: 'desc', label: "Descending"}
     ],
 
-    horizontal_title_options: [
+    axis_title_options: [
         {value: 'none', label: "none"},
         {value: 'short', label: "Short label"},
         {value: 'long', label: "Long label"}
@@ -71,10 +72,18 @@ App.AxesEditor = Backbone.View.extend({
                 }
                 return item;
             }, this),
-            horizontal_title_options: _(this.horizontal_title_options).map(
+            horizontal_title_options: _(this.axis_title_options).map(
                                        function(spec) {
                 var item = _({}).extend(spec);
                 if(spec['value'] == this.model.get('axis-horizontal-title')) {
+                    item['selected'] = true;
+                }
+                return item;
+            }, this),
+            vertical_title_options: _(this.axis_title_options).map(
+                                       function(spec) {
+                var item = _({}).extend(spec);
+                if(spec['value'] == this.model.get('axis-vertical-title')) {
                     item['selected'] = true;
                 }
                 return item;
@@ -88,7 +97,8 @@ App.AxesEditor = Backbone.View.extend({
         this.model.set({
             'axis-sort-by': val('[name="axis-sort-by"]:checked'),
             'axis-sort-order': val('[name="axis-sort-order"]:checked'),
-            'axis-horizontal-title': val('[name="axis-horizontal-title"]')
+            'axis-horizontal-title': val('[name="axis-horizontal-title"]'),
+            'axis-vertical-title': val('[name="axis-vertical-title"]')
         });
     }
 
