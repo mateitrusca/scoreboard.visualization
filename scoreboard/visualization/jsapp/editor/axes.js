@@ -14,6 +14,29 @@ App.AxesEditor = Backbone.View.extend({
 
     title: "Axes",
 
+    events: {
+        'change [name="axis-sort-by"]': 'on_change',
+        'change [name="axis-sort-order"]': 'on_change',
+        'change [name="axis-horizontal-title"]': 'on_change',
+        'change [name="axis-vertical-title"]': 'on_change'
+    },
+
+    sort_by_options: [
+        {value: 'value', label: "Value"},
+        {value: 'category', label: "Category"}
+    ],
+
+    sort_order_options: [
+        {value: 'asc', label: "Ascending"},
+        {value: 'desc', label: "Descending"}
+    ],
+
+    axis_title_options: [
+        {value: 'none', label: "none"},
+        {value: 'short', label: "Short label"},
+        {value: 'long', label: "Long label"}
+    ],
+
     initialize: function(options) {
         this.render();
         this.set_axis_labels();
@@ -34,7 +57,49 @@ App.AxesEditor = Backbone.View.extend({
     },
 
     render: function() {
-        this.$el.html(this.template());
+        var context = {
+            sort_by_options: _(this.sort_by_options).map(function(spec) {
+                var item = _({}).extend(spec);
+                if(spec['value'] == this.model.get('axis-sort-by')) {
+                    item['checked'] = true;
+                }
+                return item;
+            }, this),
+            sort_order_options: _(this.sort_order_options).map(function(spec) {
+                var item = _({}).extend(spec);
+                if(spec['value'] == this.model.get('axis-sort-order')) {
+                    item['checked'] = true;
+                }
+                return item;
+            }, this),
+            horizontal_title_options: _(this.axis_title_options).map(
+                                       function(spec) {
+                var item = _({}).extend(spec);
+                if(spec['value'] == this.model.get('axis-horizontal-title')) {
+                    item['selected'] = true;
+                }
+                return item;
+            }, this),
+            vertical_title_options: _(this.axis_title_options).map(
+                                       function(spec) {
+                var item = _({}).extend(spec);
+                if(spec['value'] == this.model.get('axis-vertical-title')) {
+                    item['selected'] = true;
+                }
+                return item;
+            }, this)
+        };
+        this.$el.html(this.template(context));
+    },
+
+    on_change: function() {
+        var val = _.bind(function(sel){return this.$el.find(sel).val()}, this);
+        this.model.set({
+            'axis-sort-by': val('[name="axis-sort-by"]:checked'),
+            'axis-sort-order': val('[name="axis-sort-order"]:checked'),
+            'axis-horizontal-title': val('[name="axis-horizontal-title"]'),
+            'axis-vertical-title': val('[name="axis-vertical-title"]')
+        });
     }
 
 });

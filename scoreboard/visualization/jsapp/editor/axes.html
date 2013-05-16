@@ -2,13 +2,12 @@
   <legend>Horizontal</legend>
 
   <label>Title</label>
-  <select class="span3">
-    <option>None</option>
-    <option>Year</option>
-  </select>
-  <select class="span2">
-    <option>Long labels</option>
-    <option>Short labels</option>
+  <select class="span2" name="axis-horizontal-title">
+  {{# horizontal_title_options }}
+    <option value="{{ value }}"
+      {{# if selected }}selected{{/ if }}
+      >{{ label }}</option>
+  {{/ horizontal_title_options }}
   </select>
 
   <br>color: <tt>#000000</tt>
@@ -20,12 +19,12 @@
   <legend>Vertical</legend>
 
   <label>Title</label>
-  <select class="span3">
-    <option>Unit of measure</option>
-  </select>
-  <select class="span2">
-    <option>Long labels</option>
-    <option selected>Short labels</option>
+  <select class="span2" name="axis-vertical-title">
+  {{# vertical_title_options }}
+    <option value="{{ value }}"
+      {{# if selected }}selected{{/ if }}
+      >{{ label }}</option>
+  {{/ vertical_title_options }}
   </select>
 </fieldset>
 
@@ -33,22 +32,23 @@
 <fieldset>
   <legend>Sort</legend>
 
+  {{# sort_by_options }}
   <label>
-    <input type="radio" name="editor-axes-sort-criterion">
-    Value
+    <input type="radio" name="axis-sort-by"
+           value="{{ value }}"
+           {{# if checked }}checked{{/ if }}>
+    {{ label }}
   </label>
-  <label>
-    <input type="radio" name="editor-axes-sort-criterion">
-    Category
-  </label>
+  {{/ sort_by_options }}
 
   <br>
+
+  {{# sort_order_options }}
   <label>
-    <input type="radio" name="editor-axes-sort-direction">
-    Ascending
+    <input type="radio" name="axis-sort-order"
+           value="{{ value }}"
+           {{# if checked }}checked{{/ if }}>
+    {{ label }}
   </label>
-  <label>
-    <input type="radio" name="editor-axes-sort-direction">
-    Descending
-  </label>
+  {{/ sort_order_options }}
 </fieldset>

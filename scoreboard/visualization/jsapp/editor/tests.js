@@ -441,6 +441,58 @@ describe('AxesEditor', function() {
         expect(ordinate_label['field']).to.equal('short_label');
     });
 
+    it('should save axes sort criteria choice', function() {
+        var view = new App.AxesEditor({model: new Backbone.Model()});
+        view.$el.find('[name="axis-sort-by"][value="category"]').click().change();
+        expect(view.model.get('axis-sort-by')).to.equal('category');
+    });
+
+    it('should show existing axes sort criteria choice', function() {
+        var model = new Backbone.Model({'axis-sort-by': 'category'});
+        var view = new App.AxesEditor({model: model});
+        expect(view.$el.find('[name="axis-sort-by"]:checked').val()
+            ).to.equal('category');
+    });
+
+    it('should save axes sort order choice', function() {
+        var view = new App.AxesEditor({model: new Backbone.Model()});
+        view.$el.find('[name="axis-sort-order"][value="desc"]').click().change();
+        expect(view.model.get('axis-sort-order')).to.equal('desc');
+    });
+
+    it('should show existing axes sort order choice', function() {
+        var model = new Backbone.Model({'axis-sort-order': 'desc'});
+        var view = new App.AxesEditor({model: model});
+        expect(view.$el.find('[name="axis-sort-order"]:checked').val()
+            ).to.equal('desc');
+    });
+
+    it('should save axes horizontal title choice', function() {
+        var view = new App.AxesEditor({model: new Backbone.Model()});
+        view.$el.find('[name="axis-horizontal-title"]').val('short').change();
+        expect(view.model.get('axis-horizontal-title')).to.equal('short');
+    });
+
+    it('should show existing axes horizontal title choice', function() {
+        var model = new Backbone.Model({'axis-horizontal-title': 'short'});
+        var view = new App.AxesEditor({model: model});
+        expect(view.$el.find('[name="axis-horizontal-title"]').val()
+            ).to.equal('short');
+    });
+
+    it('should save axes vertical title choice', function() {
+        var view = new App.AxesEditor({model: new Backbone.Model()});
+        view.$el.find('[name="axis-vertical-title"]').val('short').change();
+        expect(view.model.get('axis-vertical-title')).to.equal('short');
+    });
+
+    it('should show existing axes vertical title choice', function() {
+        var model = new Backbone.Model({'axis-vertical-title': 'short'});
+        var view = new App.AxesEditor({model: model});
+        expect(view.$el.find('[name="axis-vertical-title"]').val()
+            ).to.equal('short');
+    });
+
 });
 
 
