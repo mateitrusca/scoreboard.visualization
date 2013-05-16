@@ -203,41 +203,18 @@ App.compute_plotLines = function compute_plotLines(coord, series, axis_type){
     return (values.min + values.max)/2;
 }
 
-function format_plotline(axis, value){
-    if (_(axis).isArray()){
-        _(axis).each(function(item){
-            _(item).extend({
-                plotLines: [{
-                    color: '#FF0000',
-                    width: 2,
-                    value: value,
-                    id: 'median'
-                }]
+App.add_plotLines = function(chart, series, chart_type){
+    _.chain([chart.xAxis, chart.yAxis]).each(function(item){
+        _(item).each(function(axis){
+            var out = axis.removePlotLine('median');
+            axis.addPlotLine({
+                value: App.compute_plotLines(axis.xOrY, series, 'values'),
+                width: 2,
+                color: 'red',
+                id: 'median'
             });
         });
-    }
-    else{
-        _(axis).extend({
-            plotLines: [{
-                color: '#FF0000',
-                width: 2,
-                value: value,
-                id: 'median'
-            }]
-        });
-    }
-}
-
-App.add_plotLines = function(chartOptions, series, chart_type){
-    if (_(chart_type).has('x')){
-        var value = App.compute_plotLines('x', series, chart_type['x']);
-        format_plotline(chartOptions.xAxis, value);
-    }
-    if (_(chart_type).has('y')){
-        var value = App.compute_plotLines('y', series, chart_type['y']);
-        format_plotline(chartOptions.yAxis, value);
-    }
-    return chartOptions;
+    });
 }
 
 App.disable_legend = function(chartOptions, legend_options){
