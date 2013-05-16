@@ -345,6 +345,9 @@ App.GraphControlsView = Backbone.View.extend({
     },
 
     update_plotlines: function(new_data){
+         if (! this.multiseries){
+             new_data = [new_data];
+         }
          App.add_plotLines(this.chart, new_data, this.chart_type);
     },
 
