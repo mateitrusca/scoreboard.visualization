@@ -206,9 +206,9 @@ App.compute_plotLines = function compute_plotLines(coord, series, axis_type){
 App.add_plotLines = function(chart, series, chart_type){
     _.chain([chart.xAxis, chart.yAxis]).each(function(item){
         _(item).each(function(axis){
-            var out = axis.removePlotLine('median');
+            axis.removePlotLine('median');
             axis.addPlotLine({
-                value: App.compute_plotLines(axis.xOrY, series, 'values'),
+                value: App.compute_plotLines(axis.xOrY, series, chart_type[axis.xOrY]),
                 width: 2,
                 color: 'red',
                 id: 'median'
