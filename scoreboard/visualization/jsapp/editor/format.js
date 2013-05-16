@@ -63,7 +63,9 @@ App.FormatEditor = Backbone.View.extend({
     title: "Format",
 
     events: {
-        'change [name="height"]': 'on_change_height'
+        'change [name="height"]': 'on_change_height',
+        'change [name="credits-text"]': 'on_change_credits',
+        'change [name="credits-link"]': 'on_change_credits'
     },
 
     initialize: function(options) {
@@ -136,6 +138,13 @@ App.FormatEditor = Backbone.View.extend({
 
     on_change_height: function() {
         this.model.set('height', this.$el.find('[name="height"]').val());
+    },
+
+    on_change_credits: function() {
+        this.model.set('credits', {
+            text: this.$el.find('[name="credits-text"]').val(),
+            link: this.$el.find('[name="credits-link"]').val()
+        });
     }
 
 });

@@ -545,6 +545,15 @@ describe('FormatEditor', function() {
         expect(view.$el.find('[name="height"]').val()).to.equal('123');
     });
 
+    it('should save chart credits', function() {
+        var view = new App.FormatEditor({model: new Backbone.Model()});
+        view.$el.find('[name="credits-text"]').val('blah one').change();
+        view.$el.find('[name="credits-link"]').val('blah two').change();
+        var credits = view.model.get('credits');
+        expect(credits['text']).to.equal('blah one');
+        expect(credits['link']).to.equal('blah two');
+    });
+
 });
 
 
