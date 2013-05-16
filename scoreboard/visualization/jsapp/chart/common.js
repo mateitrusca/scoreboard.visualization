@@ -53,11 +53,12 @@ App.format_series = function (data, sort, type, percent, category){
             return this.point.name;
         };
 
+        var all_collection = {}
         var series = _.chain(data).map(function(serie){
-            return _(serie['data']).map(function(datapoint) {
-                var code = datapoint[category]['notation'];
+            return _.chain(serie['data']).map(function(datapoint) {
+                var notation = datapoint[category]['notation'];
                 var data = [{
-                    'name': code,
+                    'name': notation,
                     'attributes': _(datapoint).omit('value'),
                     'x': datapoint['value']['x'] * multiplicators[0],
                     'y': datapoint['value']['y'] * multiplicators[1]
@@ -66,8 +67,9 @@ App.format_series = function (data, sort, type, percent, category){
                     data[0]['z'] = datapoint['value']['z'] * multiplicators[1]
                 }
                 var output = {
-                    'name': App.COUNTRY_NAME[code],
-                    'color': countrycolor(code),
+                    'name': App.COUNTRY_NAME[notation],
+                    'code': notation,
+                    'color': countrycolor(notation),
                     'data': data,
                     'marker': {
                         'radius': 5,
@@ -83,8 +85,25 @@ App.format_series = function (data, sort, type, percent, category){
                         'formatter': label_formatter
                     }
                 }
+                _.chain(data).
+                  each(function(item){
+                      var new_serie = _(output).omit('data');
+                      new_serie['data'] = [_(data[0]).omit(['x', 'y', 'z'])];
+                      _(all_collection).extend(
+                        _.object([[item['name'], new_serie]])
+                      )
+                  }).
+                  uniq(all_collection);
                 return output
-            });
+            }).value();
+        }).map(function(serie){
+            var all_codes = _(all_collection).keys();
+            _.chain(all_codes)
+             .difference(_(serie).pluck('code'))
+             .each(function(diff_code){
+                serie.push(all_collection[diff_code]);
+             });
+            return _(serie).sortBy('name');
         }).value();
     }else{
         var first_serie = false;

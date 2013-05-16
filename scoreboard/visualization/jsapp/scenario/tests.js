@@ -4,6 +4,70 @@
 describe('ChartSeriesPreparation', function() {
     "use strict";
 
+    describe('Case: multidimension', function(){
+
+        it('should append missing series', function(){
+            var series = [
+                {data: [
+                        {
+                            "ref-area": {
+                                "notation": "BE",
+                                "label": "Belgium",
+                            },
+                            "value": 0.3
+                        },
+                       ],
+                 label:'Belgium'},
+                {data: [
+                        {
+                            "ref-area": {
+                                "notation": "AT",
+                                "label": "Austria",
+                            },
+                            "value": 0.4808
+                        },
+
+                       ],
+                 label:'Austria'},
+            ];
+
+            var result = App.format_series(series, null, 'xy', null, 'ref-area');
+            expect(result[0][0].name).to.equal('Austria');
+            expect(result[0][0].data.length).to.equal(1);
+        })
+
+        it('should sort series by label', function(){
+            var series = [
+                {data: [
+                        {
+                            "ref-area": {
+                                "notation": "BE",
+                                "label": "Belgium",
+                            },
+                            "value": 0.3
+                        },
+                       ],
+                 label:'Belgium'},
+                {data: [
+                        {
+                            "ref-area": {
+                                "notation": "AT",
+                                "label": "Austria",
+                            },
+                            "value": 0.4808
+                        },
+
+                       ],
+                 label:'Austria'},
+            ];
+            var result = App.format_series(series, null, 'xy', null, 'ref-area');
+            expect(result.length).to.equal(2);
+            expect(result[0].length).to.equal(2);
+            expect(result[1].length).to.equal(2);
+            expect(result[0][0]['name']).equal('Austria');
+        });
+    });
+
     it('should return an array of snapshots', function(){
         var series = [
             {data: [],
