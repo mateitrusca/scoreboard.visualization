@@ -15,10 +15,17 @@ App.AnnotationsEditor = Backbone.View.extend({
     title: "Annotations",
 
     events: {
-        'change [name="annotation"]': 'on_change_annotation'
+        'change [name="annotation"]': 'on_change_annotation',
+        'change [name="title"]': 'on_change_texts',
+        'change [name="notes"]': 'on_change_texts'
     },
 
     initialize: function(options) {
+        this.annotations_model = new Backbone.Model(
+            this.model.get('annotations'));
+        this.annotations_model.on('change', function() {
+            this.model.set('annotations', this.annotations_model.toJSON());
+        }, this);
         this.render();
     },
 
@@ -40,7 +47,10 @@ App.AnnotationsEditor = Backbone.View.extend({
             facets.push(item);
         });
         this.$el.html(this.template({
-            facets: facets
+            facets: facets,
+            title: (this.annotations_model.get('title')
+                    || "Definitions and scopes"),
+            notes: this.annotations_model.get('notes')
         }));
     },
 
@@ -49,7 +59,12 @@ App.AnnotationsEditor = Backbone.View.extend({
         var value = _(checked).map(function(checkbox) {
             return {name: $(checkbox).val()};
         });
-        this.model.set('annotations', {filters: value});
+        this.annotations_model.set('filters', value);
+    },
+
+    on_change_texts: function() {
+        this.annotations_model.set('title', this.$el.find('[name="title"]').val());
+        this.annotations_model.set('notes', this.$el.find('[name="notes"]').val());
     }
 
 });
