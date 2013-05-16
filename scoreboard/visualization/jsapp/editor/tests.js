@@ -467,6 +467,19 @@ describe('AxesEditor', function() {
             ).to.equal('desc');
     });
 
+    it('should save axes horizontal title choice', function() {
+        var view = new App.AxesEditor({model: new Backbone.Model()});
+        view.$el.find('[name="axis-horizontal-title"]').val('short').change();
+        expect(view.model.get('axis-horizontal-title')).to.equal('short');
+    });
+
+    it('should show existing axes horizontal title choice', function() {
+        var model = new Backbone.Model({'axis-horizontal-title': 'short'});
+        var view = new App.AxesEditor({model: model});
+        expect(view.$el.find('[name="axis-horizontal-title"]').val()
+            ).to.equal('short');
+    });
+
 });
 
 

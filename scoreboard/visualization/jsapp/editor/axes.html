@@ -2,13 +2,12 @@
   <legend>Horizontal</legend>
 
   <label>Title</label>
-  <select class="span3">
-    <option>None</option>
-    <option>Year</option>
-  </select>
-  <select class="span2">
-    <option>Long labels</option>
-    <option>Short labels</option>
+  <select class="span2" name="axis-horizontal-title">
+  {{# horizontal_title_options }}
+    <option value="{{ value }}"
+      {{# if selected }}selected{{/ if }}
+      >{{ label }}</option>
+  {{/ horizontal_title_options }}
   </select>
 
   <br>color: <tt>#000000</tt>
