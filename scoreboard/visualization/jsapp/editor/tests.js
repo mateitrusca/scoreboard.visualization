@@ -532,6 +532,38 @@ describe('FormatEditor', function() {
             .to.equal('short_label');
     });
 
+    it('should save chart height', function() {
+        var view = new App.FormatEditor({model: new Backbone.Model()});
+        view.$el.find('[name="height"]').val('123').change();
+        expect(view.model.get('height')).to.equal('123');
+    });
+
+    it('should display existing chart height', function() {
+        var view = new App.FormatEditor({model: new Backbone.Model({
+            height: '123'
+        })});
+        expect(view.$el.find('[name="height"]').val()).to.equal('123');
+    });
+
+    it('should save chart credits', function() {
+        var view = new App.FormatEditor({model: new Backbone.Model()});
+        view.$el.find('[name="credits-text"]').val('blah one').change();
+        view.$el.find('[name="credits-link"]').val('blah two').change();
+        var credits = view.model.get('credits');
+        expect(credits['text']).to.equal('blah one');
+        expect(credits['link']).to.equal('blah two');
+    });
+
+    it('should display existing chart height', function() {
+        var view = new App.FormatEditor({model: new Backbone.Model({
+            credits: {text: 'blah one', link: 'blah two'}
+        })});
+        expect(view.$el.find('[name="credits-text"]').val()
+            ).to.equal('blah one');
+        expect(view.$el.find('[name="credits-link"]').val()
+            ).to.equal('blah two');
+    });
+
 });
 
 

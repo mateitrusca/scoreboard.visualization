@@ -62,6 +62,12 @@ App.FormatEditor = Backbone.View.extend({
 
     title: "Format",
 
+    events: {
+        'change [name="height"]': 'on_change_height',
+        'change [name="credits-text"]': 'on_change_credits',
+        'change [name="credits-link"]': 'on_change_credits'
+    },
+
     initialize: function(options) {
         this.facets = new Backbone.Collection(this.model.get('facets'));
         var update_facets = _.bind(function() {
@@ -116,7 +122,14 @@ App.FormatEditor = Backbone.View.extend({
     },
 
     render: function() {
-        this.$el.html(this.template());
+        var context = {
+            height: this.model.get('height') || '500',
+            credits: _({
+                text: "European Commission, Digital Agenda Scoreboard",
+                link: "http://ec.europa.eu/digital-agenda/en/graphs/"
+            }).extend(this.model.get('credits'))
+        };
+        this.$el.html(this.template(context));
         this.title_label.render();
         this.$el.find('[data-marker="title-label"]').replaceWith(
             this.title_label.el);
@@ -125,6 +138,17 @@ App.FormatEditor = Backbone.View.extend({
         this.$el.find('[data-marker="subtitle-label"]').replaceWith(
             this.subtitle_label.el);
         this.subtitle_label.delegateEvents();
+    },
+
+    on_change_height: function() {
+        this.model.set('height', this.$el.find('[name="height"]').val());
+    },
+
+    on_change_credits: function() {
+        this.model.set('credits', {
+            text: this.$el.find('[name="credits-text"]').val(),
+            link: this.$el.find('[name="credits-link"]').val()
+        });
     }
 
 });
