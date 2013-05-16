@@ -123,7 +123,11 @@ App.FormatEditor = Backbone.View.extend({
 
     render: function() {
         var context = {
-            height: this.model.get('height') || '500'
+            height: this.model.get('height') || '500',
+            credits: _({
+                text: "European Commission, Digital Agenda Scoreboard",
+                link: "http://ec.europa.eu/digital-agenda/en/graphs/"
+            }).extend(this.model.get('credits'))
         };
         this.$el.html(this.template(context));
         this.title_label.render();

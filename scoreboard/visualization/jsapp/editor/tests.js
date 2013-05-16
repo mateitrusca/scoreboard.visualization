@@ -554,6 +554,16 @@ describe('FormatEditor', function() {
         expect(credits['link']).to.equal('blah two');
     });
 
+    it('should display existing chart height', function() {
+        var view = new App.FormatEditor({model: new Backbone.Model({
+            credits: {text: 'blah one', link: 'blah two'}
+        })});
+        expect(view.$el.find('[name="credits-text"]').val()
+            ).to.equal('blah one');
+        expect(view.$el.find('[name="credits-link"]').val()
+            ).to.equal('blah two');
+    });
+
 });
 
 
