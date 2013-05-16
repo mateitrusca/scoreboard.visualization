@@ -340,23 +340,11 @@ App.GraphControlsView = Backbone.View.extend({
         this.model.on('change', this.render, this);
         this.model.set({'value': 0, 'auto': false});
         this.multiseries = options['multiseries'] || false;
+        this.plotlines = options['plotlines'] || false;
     },
 
     update_plotlines: function(new_data){
-        _.chain([this.chart.xAxis, this.chart.yAxis])
-         .each(function(item){
-             _(item).each(function(axis){
-                if (_.chain(axis.plotLinesAndBands).pluck('id').contains('median').value()){
-                    var out = axis.removePlotLine('median');
-                    axis.addPlotLine({
-                        value: App.compute_plotLines(axis.xOrY, new_data, 'values'),
-                        width: 2,
-                        color: 'red',
-                        id: 'median'
-                    });
-                }
-             });
-         })
+         App.add_plotLines(this.chart, new_data);
     },
 
     update_chart: function(){
@@ -375,7 +363,9 @@ App.GraphControlsView = Backbone.View.extend({
                             {duration: 950, easing: 'linear'});
             }, this);
         }, this);
-        this.update_plotlines(new_data);
+        if (this.plotlines){
+            this.update_plotlines(new_data);
+        }
         this.chart.redraw();
         this.chart.setTitle(null, {text: new_data['name']});
     },
