@@ -15,7 +15,9 @@ App.AnnotationsEditor = Backbone.View.extend({
     title: "Annotations",
 
     events: {
-        'change [name="annotation"]': 'on_change_annotation'
+        'change [name="annotation"]': 'on_change_annotation',
+        'change [name="title"]': 'on_change_texts',
+        'change [name="notes"]': 'on_change_texts'
     },
 
     initialize: function(options) {
@@ -55,6 +57,11 @@ App.AnnotationsEditor = Backbone.View.extend({
             return {name: $(checkbox).val()};
         });
         this.annotations_model.set('filters', value);
+    },
+
+    on_change_texts: function() {
+        this.annotations_model.set('title', this.$el.find('[name="title"]').val());
+        this.annotations_model.set('notes', this.$el.find('[name="notes"]').val());
     }
 
 });

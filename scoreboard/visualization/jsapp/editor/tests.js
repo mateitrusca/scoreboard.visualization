@@ -595,6 +595,15 @@ describe('AnnotationsEditor', function() {
         expect(get_checkbox('dim2').is(':checked')).to.be.true;
     });
 
+    it('should save annotations texts', function() {
+        var view = new App.AnnotationsEditor({model: new Backbone.Model()});
+        view.$el.find('[name="title"]').val('blah one').change();
+        view.$el.find('[name="notes"]').val('blah two').change();
+        var annotations = view.model.get('annotations');
+        expect(annotations['title']).to.equal('blah one');
+        expect(annotations['notes']).to.equal('blah two');
+    });
+
 });
 
 
