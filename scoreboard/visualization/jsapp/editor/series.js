@@ -15,7 +15,8 @@ App.SeriesEditor = Backbone.View.extend({
     title: "Series",
 
     events: {
-        'change [name="tooltip"]': 'on_tooltip_change'
+        'change [name="tooltip"]': 'on_tooltip_change',
+        'change [name="legend-label"]': 'on_legend_label_change'
     },
 
     initialize: function(options) {
@@ -53,6 +54,11 @@ App.SeriesEditor = Backbone.View.extend({
                 this.tooltips_model.unset(tooltip);
             }
         }, this);
+    },
+
+    on_legend_label_change: function() {
+        var value = this.$el.find('[name="legend-label"]').val();
+        this.model.set('series-legend-label', value);
     }
 
 });

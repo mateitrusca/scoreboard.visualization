@@ -487,6 +487,12 @@ describe('SeriesEditor', function() {
         expect(view.$el.find('[value="flag"]').is(':checked')).to.be.false;
     });
 
+    it('should save legend choice', function() {
+        var view = new App.SeriesEditor({model: this.model});
+        view.$el.find('[name="legend-label"]').val('long').change();
+        expect(this.model.get('series-legend-label')).to.equal('long');
+    });
+
 });
 
 
