@@ -19,6 +19,12 @@ App.SeriesEditor = Backbone.View.extend({
         'change [name="legend-label"]': 'on_legend_label_change'
     },
 
+    legend_label_options: [
+        {value: 'none', label: "none"},
+        {value: 'short', label: "Short label"},
+        {value: 'long', label: "Long label"}
+    ],
+
     initialize: function(options) {
         this.tooltips_model = new Backbone.Model(this.model.get('tooltips'));
         this.tooltips_model.on('change', function() {
@@ -39,7 +45,15 @@ App.SeriesEditor = Backbone.View.extend({
             }
         }, this);
         var context = {
-            tooltips: tooltips
+            tooltips: tooltips,
+            legend_label_options: _(this.legend_label_options).map(
+                                   function(spec) {
+                var item = _({}).extend(spec);
+                if(item['value'] == this.model.get('series-legend-label')) {
+                    item['selected'] = true;
+                }
+                return item;
+            }, this)
         };
         this.$el.html(this.template(context));
     },

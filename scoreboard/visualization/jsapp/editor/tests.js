@@ -493,6 +493,12 @@ describe('SeriesEditor', function() {
         expect(this.model.get('series-legend-label')).to.equal('long');
     });
 
+    it('should show existing legend choice', function() {
+        this.model.set('series-legend-label', 'long');
+        var view = new App.SeriesEditor({model: this.model});
+        expect(view.$el.find('[name="legend-label"]').val()).to.equal('long');
+    });
+
 });
 
 

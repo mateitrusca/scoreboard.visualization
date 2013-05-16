@@ -1,8 +1,10 @@
 <label>Legend</label>
 <select class="span2" name="legend-label">
-  <option value="none">none</option>
-  <option value="short">Short label</option>
-  <option value="long">Long label</option>
+{{# legend_label_options }}
+  <option value="{{ value }}"
+    {{# if selected }}selected{{/ if }}
+    >{{ label }}</option>
+{{/ legend_label_options }}
 </select>
 
 
