@@ -19,6 +19,11 @@ App.AnnotationsEditor = Backbone.View.extend({
     },
 
     initialize: function(options) {
+        this.annotations_model = new Backbone.Model(
+            this.model.get('annotations'));
+        this.annotations_model.on('change', function() {
+            this.model.set('annotations', this.annotations_model.toJSON());
+        }, this);
         this.render();
     },
 
@@ -49,7 +54,7 @@ App.AnnotationsEditor = Backbone.View.extend({
         var value = _(checked).map(function(checkbox) {
             return {name: $(checkbox).val()};
         });
-        this.model.set('annotations', {filters: value});
+        this.annotations_model.set('filters', value);
     }
 
 });
