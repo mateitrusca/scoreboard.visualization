@@ -16,13 +16,12 @@
 
 <br>
 <label>Point label</label>
-<select class="span3">
-  <option>Year</option>
-  <option>Country</option>
-</select>
-<select class="span2">
-  <option>Short label</option>
-  <option>Long label</option>
+<select class="span2" name="point-label">
+{{# point_label_options }}
+  <option value="{{ value }}"
+    {{# if selected }}selected{{/ if }}
+    >{{ label }}</option>
+{{/ point_label_options }}
 </select>
 
 <br>

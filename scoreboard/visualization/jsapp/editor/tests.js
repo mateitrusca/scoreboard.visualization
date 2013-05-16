@@ -499,6 +499,18 @@ describe('SeriesEditor', function() {
         expect(view.$el.find('[name="legend-label"]').val()).to.equal('long');
     });
 
+    it('should save point label choice', function() {
+        var view = new App.SeriesEditor({model: this.model});
+        view.$el.find('[name="point-label"]').val('long').change();
+        expect(this.model.get('series-point-label')).to.equal('long');
+    });
+
+    it('should show existing point label choice', function() {
+        this.model.set('series-point-label', 'long');
+        var view = new App.SeriesEditor({model: this.model});
+        expect(view.$el.find('[name="point-label"]').val()).to.equal('long');
+    });
+
 });
 
 
