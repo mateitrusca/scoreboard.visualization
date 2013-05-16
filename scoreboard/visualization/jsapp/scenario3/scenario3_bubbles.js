@@ -163,7 +163,7 @@ App.scenario3_bubbles_filters_schema = {
                   {name: 'z-unit-measure'}]
     },
     chart_type: 'bubbles',
-    legend: true, 
+    legend: true,
     multidim: 3,
     plotlines: {x: 'values', y: 'values'},
     labels: {

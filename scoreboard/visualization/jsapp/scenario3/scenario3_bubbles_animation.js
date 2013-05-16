@@ -171,6 +171,7 @@ App.scenario3_bubbles_animation_filters_schema = {
     multidim: 3,
     animation: true,
     legend: true,
+    plotlines: {x: 'values', y: 'values'},
     labels: {
         title_x: {facet: 'x-indicator', field: 'short_label'},
         title_y: {facet: 'y-indicator', field: 'short_label'},

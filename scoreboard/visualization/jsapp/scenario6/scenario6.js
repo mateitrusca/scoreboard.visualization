@@ -62,6 +62,7 @@ App.scenario6_filters_schema = {
     category_facet: 'ref-area',
     multiple_series: 'time-period',
     animation: true,
+    plotlines: {y: 'values'},
     annotations: {
         filters: [{name: 'indicator'},
                   {name: 'breakdown-group'},
