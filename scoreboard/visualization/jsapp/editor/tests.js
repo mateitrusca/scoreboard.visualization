@@ -604,6 +604,14 @@ describe('AnnotationsEditor', function() {
         expect(annotations['notes']).to.equal('blah two');
     });
 
+    it('should display existing annotations texts', function() {
+        var view = new App.AnnotationsEditor({model: new Backbone.Model({
+            annotations: {title: 'blah one', notes: 'blah two'}
+        })});
+        expect(view.$el.find('[name="title"]').val()).to.equal('blah one');
+        expect(view.$el.find('[name="notes"]').val()).to.equal('blah two');
+    });
+
 });
 
 

@@ -47,7 +47,10 @@ App.AnnotationsEditor = Backbone.View.extend({
             facets.push(item);
         });
         this.$el.html(this.template({
-            facets: facets
+            facets: facets,
+            title: (this.annotations_model.get('title')
+                    || "Definitions and scopes"),
+            notes: this.annotations_model.get('notes')
         }));
     },
 
