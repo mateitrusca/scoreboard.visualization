@@ -15,8 +15,22 @@ App.SeriesEditor = Backbone.View.extend({
     title: "Series",
 
     events: {
-        'change [name="tooltip"]': 'on_tooltip_change'
+        'change [name="tooltip"]': 'on_tooltip_change',
+        'change [name="legend-label"]': 'on_legend_label_change',
+        'change [name="point-label"]': 'on_point_label_change'
     },
+
+    legend_label_options: [
+        {value: 'none', label: "none"},
+        {value: 'short', label: "Short label"},
+        {value: 'long', label: "Long label"}
+    ],
+
+    point_label_options: [
+        {value: 'none', label: "none"},
+        {value: 'short', label: "Short label"},
+        {value: 'long', label: "Long label"}
+    ],
 
     initialize: function(options) {
         this.tooltips_model = new Backbone.Model(this.model.get('tooltips'));
@@ -38,7 +52,23 @@ App.SeriesEditor = Backbone.View.extend({
             }
         }, this);
         var context = {
-            tooltips: tooltips
+            tooltips: tooltips,
+            legend_label_options: _(this.legend_label_options).map(
+                                   function(spec) {
+                var item = _({}).extend(spec);
+                if(item['value'] == this.model.get('series-legend-label')) {
+                    item['selected'] = true;
+                }
+                return item;
+            }, this),
+            point_label_options: _(this.point_label_options).map(
+                                   function(spec) {
+                var item = _({}).extend(spec);
+                if(item['value'] == this.model.get('series-point-label')) {
+                    item['selected'] = true;
+                }
+                return item;
+            }, this)
         };
         this.$el.html(this.template(context));
     },
@@ -53,6 +83,16 @@ App.SeriesEditor = Backbone.View.extend({
                 this.tooltips_model.unset(tooltip);
             }
         }, this);
+    },
+
+    on_legend_label_change: function() {
+        var value = this.$el.find('[name="legend-label"]').val();
+        this.model.set('series-legend-label', value);
+    },
+
+    on_point_label_change: function() {
+        var value = this.$el.find('[name="point-label"]').val();
+        this.model.set('series-point-label', value);
     }
 
 });
