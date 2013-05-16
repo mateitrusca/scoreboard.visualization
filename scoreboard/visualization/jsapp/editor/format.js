@@ -62,6 +62,10 @@ App.FormatEditor = Backbone.View.extend({
 
     title: "Format",
 
+    events: {
+        'change [name="height"]': 'on_change_height'
+    },
+
     initialize: function(options) {
         this.facets = new Backbone.Collection(this.model.get('facets'));
         var update_facets = _.bind(function() {
@@ -125,6 +129,10 @@ App.FormatEditor = Backbone.View.extend({
         this.$el.find('[data-marker="subtitle-label"]').replaceWith(
             this.subtitle_label.el);
         this.subtitle_label.delegateEvents();
+    },
+
+    on_change_height: function() {
+        this.model.set('height', this.$el.find('[name="height"]').val());
     }
 
 });

@@ -532,6 +532,12 @@ describe('FormatEditor', function() {
             .to.equal('short_label');
     });
 
+    it('should save chart height', function() {
+        var view = new App.FormatEditor({model: new Backbone.Model()});
+        view.$el.find('[name="height"]').val('123').change();
+        expect(view.model.get('height')).to.equal('123');
+    });
+
 });
 
 
