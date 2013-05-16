@@ -538,6 +538,13 @@ describe('FormatEditor', function() {
         expect(view.model.get('height')).to.equal('123');
     });
 
+    it('should display existing chart height', function() {
+        var view = new App.FormatEditor({model: new Backbone.Model({
+            height: '123'
+        })});
+        expect(view.$el.find('[name="height"]').val()).to.equal('123');
+    });
+
 });
 
 

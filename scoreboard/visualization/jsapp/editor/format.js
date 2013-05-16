@@ -120,7 +120,10 @@ App.FormatEditor = Backbone.View.extend({
     },
 
     render: function() {
-        this.$el.html(this.template());
+        var context = {
+            height: this.model.get('height') || '500'
+        };
+        this.$el.html(this.template(context));
         this.title_label.render();
         this.$el.find('[data-marker="title-label"]').replaceWith(
             this.title_label.el);
