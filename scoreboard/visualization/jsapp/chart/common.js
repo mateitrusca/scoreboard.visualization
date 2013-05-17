@@ -35,7 +35,7 @@ App.bar_colors = {
 };
 
 
-App.format_series = function (data, sort, type, percent, category){
+App.format_series = function (data, sort, type, percent, category, highlights){
     var multiplicators = _(percent).map(function(pc){
         return pc?100:1;
     });
@@ -114,10 +114,16 @@ App.format_series = function (data, sort, type, percent, category){
                     value*=100;
                 }
             }
-            return _.object([['name', series_item[category]['label']],
-                             ['code', series_item[category]['notation']],
-                             ['attributes', _(series_item).omit('value')],
-                             ['y', value]]);
+            var point = _.object([['name', series_item[category]['label']],
+                                 ['code', series_item[category]['notation']],
+                                 ['attributes', _(series_item).omit('value')],
+                                 ['y', value]]);
+            var color = null
+            if(_(highlights).contains(series_item[category]['notation'])){
+                var color = App.COUNTRY_COLOR[series_item[category]['notation']];
+            }
+            _(point).extend({ 'color': color });
+            return point;
         };
 
         var diffs_collection = {}
