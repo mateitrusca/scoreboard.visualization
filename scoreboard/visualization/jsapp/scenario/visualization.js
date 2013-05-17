@@ -13,7 +13,14 @@ App.Visualization = Backbone.View.extend({
         this.$el.html(this.template());
         this.filters = new Backbone.Model();
         this.filter_loadstate = new Backbone.Model();
-        this.router = new App.ChartRouter(this.filters);
+
+        if((App.initial_hash || '').substr(0, 7) == '#chart=') {
+            try {
+                this.filters.set(JSON.parse(App.initial_hash.substr(7)));
+            } catch(e) {
+                debugger;
+            }
+        }
 
         var filters_schema = [];
         var values_schema = [];
@@ -73,10 +80,24 @@ App.Visualization = Backbone.View.extend({
             scenario_chart: App.chart_library[options['schema']['chart_type']]
         });
 
-        Backbone.history.start();
+        this.filters.on('change', this.update_hashcfg, this);
 
+    },
+
+    update_hashcfg: function() {
+        var hashcfg = 'chart=' + JSON.stringify(this.filters);
+        this.navigation.update_hashcfg(hashcfg);
     }
 
+});
+
+
+App.global_events.on('beforeaddthis', function() {
+    App.initial_hash = window.location.hash;
+    if(typeof(window.history.replaceState) == "function") {
+        var base_url = window.location.href.split('#')[0];
+        window.history.replaceState(null, '', base_url);
+    }
 });
 
 

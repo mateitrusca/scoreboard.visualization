@@ -559,39 +559,6 @@ App.ShareOptionsView = Backbone.View.extend({
 });
 
 
-App.ChartRouter = Backbone.Router.extend({
-
-    encode: function(value) {
-        return encodeURIComponent(JSON.stringify(value));
-    },
-
-    decode: function(serialized) {
-        try {
-            return JSON.parse(decodeURIComponent(serialized));
-        }
-        catch(e) {
-            return {};
-        }
-    },
-
-    initialize: function(model) {
-        this.model = model;
-        this.route(/^chart\?(.*)$/, 'chart');
-        var router = this;
-        this.model.on('change', function(filters) {
-            var state = this.encode(filters.toJSON());
-            router.navigate('chart?' + state);
-        }, this);
-    },
-
-    chart: function(state) {
-        var value = this.decode(state);
-        this.model.set(value);
-    }
-
-});
-
-
 App.main = function() {
     if(App.chart_config.chart_entry_point) {
         // obsolete bootstrapping method

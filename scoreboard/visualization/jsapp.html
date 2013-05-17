@@ -35,7 +35,9 @@
         return Handlebars.compile(App.templates[name]);
     },
 
-    chart_library: {}
+    chart_library: {},
+
+    global_events: _({}).extend(Backbone.Events)
 
   };
   App.jQuery = window.jQuery;
@@ -75,5 +77,8 @@
 <script src="{{ JSAPP }}/editor/format.js"></script>
 <script src="{{ JSAPP }}/editor/annotations.js"></script>
 <script src="{{ JSAPP }}/editor/advanced.js"></script>
+<script>
+  App.global_events.trigger('beforeaddthis');
+</script>
 <script type="text/javascript">var addthis_config = {"data_track_addressbar":true};</script>
 <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#username=xa-4cb32783294785a7"></script>
