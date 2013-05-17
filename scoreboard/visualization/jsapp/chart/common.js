@@ -13,14 +13,14 @@ function sort_serie(serie, sort){
                     .value();
         }
         else{
-            if (sort.sort_by == 'value'){
+            if (sort.by == 'value'){
                 var value = item['y'];
                 if (isNaN(value)){
                     value = 0;
                 }
                 return sort.order * value;
             }
-            if (sort.sort_by == 'label'){
+            if (sort.by == 'label'){
                 return item['name'];
             }
         }
