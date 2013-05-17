@@ -220,7 +220,8 @@ App.ScenarioChartView = Backbone.View.extend({
             'legend': this.schema['legend'] || false,
             'multiseries': this.multiple_series,
             'category_facet': this.schema['category_facet'],
-            'subtype': this.schema.chart_subtype
+            'subtype': this.schema.chart_subtype,
+            'sort': this.schema['sort']
         };
 
         var multiseries_values = null;
