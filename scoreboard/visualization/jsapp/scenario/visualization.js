@@ -13,7 +13,6 @@ App.Visualization = Backbone.View.extend({
         this.$el.html(this.template());
         this.filters = new Backbone.Model();
         this.filter_loadstate = new Backbone.Model();
-        this.router = new App.ChartRouter(this.filters);
 
         var filters_schema = [];
         var values_schema = [];
@@ -72,8 +71,6 @@ App.Visualization = Backbone.View.extend({
             values_schema: values_schema,
             scenario_chart: App.chart_library[options['schema']['chart_type']]
         });
-
-        Backbone.history.start();
 
     }
 
