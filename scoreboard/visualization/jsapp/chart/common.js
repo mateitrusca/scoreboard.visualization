@@ -13,14 +13,14 @@ function sort_serie(serie, sort){
                     .value();
         }
         else{
-            if (sort.sort_by == 'value'){
+            if (sort.by == 'value'){
                 var value = item['y'];
                 if (isNaN(value)){
                     value = 0;
                 }
                 return sort.order * value;
             }
-            if (sort.sort_by == 'label'){
+            if (sort.by == 'label'){
                 return item['name'];
             }
         }
@@ -151,7 +151,7 @@ App.format_series = function (data, sort, type, percent, category){
               });
             if (sort && !first_serie){
                 serie = sort_serie(serie, sort);
-                if(sort.retain_first_serie_order){
+                if(!sort.each_series){
                     first_serie = serie;
                 }
             }
