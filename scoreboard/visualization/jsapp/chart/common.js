@@ -28,13 +28,6 @@ function sort_serie(serie, sort){
     return serie;
 };
 
-App.bar_colors = {
-    bar_color: "#7FB2F0",
-    special_bar_color: "#35478C",
-    na_bar_color: "#DDDDDD"
-};
-
-
 App.format_series = function (data, sort, type, percent, category, highlights){
     var multiplicators = _(percent).map(function(pc){
         return pc?100:1;
@@ -107,6 +100,7 @@ App.format_series = function (data, sort, type, percent, category, highlights){
         }).value();
     }else{
         var first_serie = false;
+        var highlights_registry = {};
         var extract_data = function(series_item){
             var value = series_item['value'];
             if(percent){
@@ -120,7 +114,18 @@ App.format_series = function (data, sort, type, percent, category, highlights){
                                  ['y', value]]);
             var color = null
             if(_(highlights).contains(series_item[category]['notation'])){
-                var color = App.COUNTRY_COLOR[series_item[category]['notation']];
+                var code = series_item[category]['notation'];
+                var country_color = App.COUNTRY_COLOR[code];
+                var scale = new chroma.ColorScale({
+                    colors: ['#000000', country_color]
+                });
+                if (_(highlights_registry).has(code)){
+                    var color = scale.getColor(highlights_registry[code]/2).hex();
+                }
+                else{
+                    highlights_registry[code] = 1;
+                    var color = scale.getColor(3).hex();
+                }
             }
             _(point).extend({ 'color': color });
             return point;
