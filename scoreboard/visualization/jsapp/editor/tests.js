@@ -30,6 +30,18 @@ describe('ChartTypeEditor', function() {
         expect(model.get('multidim')).to.be.undefined;
     });
 
+    it('should save animation choice', function() {
+        var view = new App.ChartTypeEditor({model: new Backbone.Model()});
+        view.$el.find('[name="animation"]').click().change();
+        expect(view.model.get('animation')).to.be.true;
+    });
+
+    it('should show existing animation choice', function() {
+        var model = new Backbone.Model({'animation': true});
+        var view = new App.ChartTypeEditor({model: model});
+        expect(view.$el.find('[name="animation"]').is(':checked')).to.be.true;
+    });
+
 });
 
 
