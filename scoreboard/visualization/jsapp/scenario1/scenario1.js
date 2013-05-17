@@ -82,6 +82,7 @@ App.scenario1_filters_schema = {
                   {name: 'breakdown'},
                   {name: 'unit-measure'}]
     },
+    highlights: ["EU27", "DE"],
     chart_type: 'columns',
     tooltips: {
         'unit-measure': true,
