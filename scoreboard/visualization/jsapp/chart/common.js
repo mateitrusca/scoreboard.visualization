@@ -151,7 +151,9 @@ App.format_series = function (data, sort, type, percent, category){
               });
             if (sort && !first_serie){
                 serie = sort_serie(serie, sort);
-                first_serie = serie;
+                if(sort.retain_first_serie_order){
+                    first_serie = serie;
+                }
             }
             else if (sort){
                     _(sort).extend({'first_serie': first_serie});

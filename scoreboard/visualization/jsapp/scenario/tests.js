@@ -92,6 +92,71 @@ describe('ChartSeriesPreparation', function() {
         }]);
     });
 
+    it('should retain the first serie order when specified', function(){
+        var series = [
+            {data: [
+                    {
+                        "ref-area": {
+                            "notation": "AT",
+                            "label": "Austria",
+                        },
+                        "value": 2
+                    },
+                    {
+                        "ref-area": {
+                            "notation": "BE",
+                            "label": "Belgium",
+                        },
+                        "value": 1
+                    }
+
+                   ],
+             label:'2000'},
+            {data: [
+                    {
+                        "ref-area": {
+                            "notation": "BE",
+                            "label": "Belgium",
+                        },
+                        "value": 2
+                    },
+                    {
+                        "ref-area": {
+                            "notation": "AT",
+                            "label": "Austria",
+                        },
+                        "value": 1
+                    },
+
+                   ],
+             label:'2001'},
+        ];
+
+        var sort = _.object(["sort_by", "order", "retain_first_serie_order"],
+                            ['value', 1, true]);
+        var result = App.format_series(series, sort, null, null, 'ref-area');
+        expect(_(result[0].data).pluck('code')).to.deep.equal(['BE', 'AT']);
+        expect(_(result[1].data).pluck('code')).to.deep.equal(['BE', 'AT']);
+
+        var sort = _.object(["sort_by", "order", "retain_first_serie_order"],
+                            ['value', 1, false]);
+        var result = App.format_series(series, sort, null, null, 'ref-area');
+        expect(_(result[0].data).pluck('code')).to.deep.equal(['BE', 'AT']);
+        expect(_(result[1].data).pluck('code')).to.deep.equal(['AT', 'BE']);
+
+        var sort = _.object(["sort_by", "order", "retain_first_serie_order"],
+                            ['label', 1, true]);
+        var result = App.format_series(series, sort, null, null, 'ref-area');
+        expect(_(result[0].data).pluck('code')).to.deep.equal(['AT', 'BE']);
+        expect(_(result[1].data).pluck('code')).to.deep.equal(['AT', 'BE']);
+
+        var sort = _.object(["sort_by", "order", "retain_first_serie_order"],
+                            ['label', 1, false]);
+        var result = App.format_series(series, sort, null, null, 'ref-area');
+        expect(_(result[0].data).pluck('code')).to.deep.equal(['AT', 'BE']);
+        expect(_(result[1].data).pluck('code')).to.deep.equal(['AT', 'BE']);
+    });
+
     it('should sort the data in snapshots by label', function(){
         var series = [
             {data: [
