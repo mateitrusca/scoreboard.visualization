@@ -75,6 +75,7 @@ App.scenario7_filters_schema = {
     ],
     category_facet: 'ref-area',
     multiple_series: 'breakdown',
+    highlights: ["BG", "DE"],
     annotations: {
         filters: [{name: 'indicator'},
                   {name: 'breakdown'},
