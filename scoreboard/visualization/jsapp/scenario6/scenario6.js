@@ -78,6 +78,7 @@ App.scenario6_filters_schema = {
     sort: {
         "by": "value",
         "order": -1,
+        "each_series": true
     },
     labels: {
         title: {facet: 'indicator', field: 'short_label'},
