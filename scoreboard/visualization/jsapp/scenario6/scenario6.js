@@ -63,6 +63,7 @@ App.scenario6_filters_schema = {
     multiple_series: 'time-period',
     animation: true,
     plotlines: {y: 'values'},
+    highlights: ["EU27", "DE"],
     annotations: {
         filters: [{name: 'indicator'},
                   {name: 'breakdown-group'},

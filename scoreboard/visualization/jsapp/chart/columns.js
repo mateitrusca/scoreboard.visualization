@@ -11,7 +11,8 @@ App.chart_library['columns'] = function(container, options) {
                     options['sort'],
                     '', //type e.g.: 'xy'/'xyz'
                     options['unit_is_pc'],
-                    options['category_facet']);
+                    options['category_facet'],
+                    options['highlights']);
     var init_serie = series;
     if (options['animation']){
         init_serie = [series[0]];

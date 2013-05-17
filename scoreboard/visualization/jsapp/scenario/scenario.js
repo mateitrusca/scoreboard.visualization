@@ -221,6 +221,7 @@ App.ScenarioChartView = Backbone.View.extend({
             'multiseries': this.multiple_series,
             'category_facet': this.schema['category_facet'],
             'subtype': this.schema.chart_subtype,
+            'highlights': this.schema.highlights,
             'sort': this.schema['sort']
         };
 

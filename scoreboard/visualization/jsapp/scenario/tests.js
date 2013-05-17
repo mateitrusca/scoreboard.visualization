@@ -87,6 +87,7 @@ describe('ChartSeriesPreparation', function() {
         expect(result[1]['data']).to.deep.equal([{
             'name': 'Austria',
             'code': 'AT',
+            'color': null,
             'attributes': _(series[1]['data'][0]).omit('value'),
             'y': 0.4808
         }]);
@@ -220,6 +221,7 @@ describe('ChartSeriesPreparation', function() {
         expect(result[0]['data']).to.deep.equal([{
             "name": "Austria",
             'code': 'AT',
+            'color': null,
             'attributes': _(series[1]['data'][0]).omit('value'),
             "y": 0.4808
         }]);
@@ -290,6 +292,7 @@ describe('ChartSeriesPreparation', function() {
         expect(_(result).pluck('data')).to.deep.equal([
             [{ 'name': 'Austria',
                'code': 'AT',
+               'color': null,
                'attributes': attributes,
                'y': 0.4808}],
             [{ 'name': 'Austria',
