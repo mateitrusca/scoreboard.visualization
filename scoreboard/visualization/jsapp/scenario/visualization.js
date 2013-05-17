@@ -14,6 +14,14 @@ App.Visualization = Backbone.View.extend({
         this.filters = new Backbone.Model();
         this.filter_loadstate = new Backbone.Model();
 
+        if((App.initial_hash || '').substr(0, 7) == '#chart=') {
+            try {
+                this.filters.set(JSON.parse(App.initial_hash.substr(7)));
+            } catch(e) {
+                debugger;
+            }
+        }
+
         var filters_schema = [];
         var values_schema = [];
         _(options['schema']['facets']).forEach(function(item) {
@@ -81,6 +89,11 @@ App.Visualization = Backbone.View.extend({
         this.navigation.update_hashcfg(hashcfg);
     }
 
+});
+
+
+App.global_events.on('beforeaddthis', function() {
+    App.initial_hash = window.location.hash;
 });
 
 
