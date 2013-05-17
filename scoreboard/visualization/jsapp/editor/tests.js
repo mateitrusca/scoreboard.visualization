@@ -466,11 +466,11 @@ describe('AxesEditor', function() {
     it('should save axes sort criteria choice', function() {
         var view = new App.AxesEditor({model: new Backbone.Model()});
         view.$el.find('[name="axis-sort-by"][value="category"]').click().change();
-        expect(view.model.get('axis-sort-by')).to.equal('category');
+        expect(view.model.get('sort')['by']).to.equal('category');
     });
 
     it('should show existing axes sort criteria choice', function() {
-        var model = new Backbone.Model({'axis-sort-by': 'category'});
+        var model = new Backbone.Model({sort: {by: 'category'}});
         var view = new App.AxesEditor({model: model});
         expect(view.$el.find('[name="axis-sort-by"]:checked').val()
             ).to.equal('category');
@@ -478,15 +478,15 @@ describe('AxesEditor', function() {
 
     it('should save axes sort order choice', function() {
         var view = new App.AxesEditor({model: new Backbone.Model()});
-        view.$el.find('[name="axis-sort-order"][value="desc"]').click().change();
-        expect(view.model.get('axis-sort-order')).to.equal('desc');
+        view.$el.find('[name="axis-sort-order"][value="-1"]').click().change();
+        expect(view.model.get('sort')['order']).to.equal(-1);
     });
 
     it('should show existing axes sort order choice', function() {
-        var model = new Backbone.Model({'axis-sort-order': 'desc'});
+        var model = new Backbone.Model({sort: {order: -1}});
         var view = new App.AxesEditor({model: model});
         expect(view.$el.find('[name="axis-sort-order"]:checked').val()
-            ).to.equal('desc');
+            ).to.equal('-1');
     });
 
     it('should save axes horizontal title choice', function() {

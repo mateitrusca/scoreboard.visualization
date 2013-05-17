@@ -28,8 +28,8 @@ App.AxesEditor = Backbone.View.extend({
     ],
 
     sort_order_options: [
-        {value: 'asc', label: "Ascending"},
-        {value: 'desc', label: "Descending"}
+        {value: 1, label: "Ascending"},
+        {value: -1, label: "Descending"}
     ],
 
     axis_title_options: [
@@ -58,17 +58,18 @@ App.AxesEditor = Backbone.View.extend({
     },
 
     render: function() {
+        var sort = this.model.get('sort') || {};
         var context = {
             sort_by_options: _(this.sort_by_options).map(function(spec) {
                 var item = _({}).extend(spec);
-                if(spec['value'] == this.model.get('axis-sort-by')) {
+                if(spec['value'] == sort['by']) {
                     item['checked'] = true;
                 }
                 return item;
             }, this),
             sort_order_options: _(this.sort_order_options).map(function(spec) {
                 var item = _({}).extend(spec);
-                if(spec['value'] == this.model.get('axis-sort-order')) {
+                if(spec['value'] == sort['order']) {
                     item['checked'] = true;
                 }
                 return item;
@@ -97,8 +98,10 @@ App.AxesEditor = Backbone.View.extend({
     on_change: function() {
         var val = _.bind(function(sel){return this.$el.find(sel).val()}, this);
         this.model.set({
-            'axis-sort-by': val('[name="axis-sort-by"]:checked'),
-            'axis-sort-order': val('[name="axis-sort-order"]:checked'),
+            'sort': {
+                by: val('[name="axis-sort-by"]:checked'),
+                order: Number(val('[name="axis-sort-order"]:checked')) || 0
+            },
             'axis-horizontal-title': val('[name="axis-horizontal-title"]'),
             'axis-horizontal-rotated':
                 this.$el.find('[name="axis-horizontal-rotated"]').is(':checked'),
