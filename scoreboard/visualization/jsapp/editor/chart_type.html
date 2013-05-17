@@ -7,8 +7,10 @@
   </label>
 {{/ chart_types }}
 
+{{# if animation_available }}
 <label>
   <input type="checkbox" name="animation"
          {{# if animation }}checked{{/ if }}>
   {{ label }}
 </label>
+{{/ if }}

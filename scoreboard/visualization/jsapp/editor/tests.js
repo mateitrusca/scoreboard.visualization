@@ -31,15 +31,25 @@ describe('ChartTypeEditor', function() {
     });
 
     it('should save animation choice', function() {
-        var view = new App.ChartTypeEditor({model: new Backbone.Model()});
+        var view = new App.ChartTypeEditor({model: new Backbone.Model({
+            chart_type: 'columns'})});
         view.$el.find('[name="animation"]').click().change();
         expect(view.model.get('animation')).to.be.true;
     });
 
     it('should show existing animation choice', function() {
-        var model = new Backbone.Model({'animation': true});
+        var model = new Backbone.Model({animation: true, chart_type: 'columns'});
         var view = new App.ChartTypeEditor({model: model});
         expect(view.$el.find('[name="animation"]').is(':checked')).to.be.true;
+    });
+
+    it('should draw animation checkbox for relevant chart types', function() {
+        var view = new App.ChartTypeEditor({model: new Backbone.Model({
+            chart_type: 'columns'})});
+        expect(view.$el.find('[name="animation"]').length).to.equal(1);
+        var view = new App.ChartTypeEditor({model: new Backbone.Model({
+            chart_type: 'lines'})});
+        expect(view.$el.find('[name="animation"]').length).to.equal(0);
     });
 
 });

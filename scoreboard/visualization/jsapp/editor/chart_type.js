@@ -19,9 +19,13 @@ App.ChartTypeEditor = Backbone.View.extend({
 
     chart_types: [
         {label: "Line", value: 'lines'},
-        {label: "Column", value: 'columns'},
-        {label: "Scatterplot", value: 'scatter', multidim: 2},
-        {label: "Bubble chart", value: 'bubbles', multidim: 3},
+        {label: "Column", value: 'columns',
+         animation_available: true},
+        {label: "Scatterplot", value: 'scatter',
+         multidim: 2,
+         animation_available: true},
+        {label: "Bubble chart", value: 'bubbles',
+         multidim: 3},
         {label: "Map", value: 'map'}
     ],
 
@@ -31,13 +35,18 @@ App.ChartTypeEditor = Backbone.View.extend({
 
     render: function() {
         var value = this.model.get('chart_type');
+        if(! _(this.chart_types).findWhere({value: value})) {
+            value = this.chart_types[0]['value'];
+        }
         var chart_types = _(this.chart_types).map(function(chart_type) {
             var selected = chart_type['value'] === value;
             return _({selected: selected}).extend(chart_type);
         }, this);
+        var chart_type_info = _(this.chart_types).findWhere({value: value});
         var context = {
             chart_types: chart_types,
-            animation: this.model.get('animation')
+            animation: this.model.get('animation'),
+            animation_available: chart_type_info['animation_available']
         };
         this.$el.html(this.template(context));
     },
