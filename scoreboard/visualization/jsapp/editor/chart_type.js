@@ -71,6 +71,7 @@ App.ChartTypeEditor = Backbone.View.extend({
         else {
             this.model.unset('multidim');
         }
+        this.render();
     }
 
 });

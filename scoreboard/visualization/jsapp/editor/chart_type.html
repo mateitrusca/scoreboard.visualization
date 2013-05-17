@@ -1,16 +1,18 @@
+<div class="chart-type-container">
 {{# chart_types }}
-  <label class="{{ value }}">
+  <label class="{{ value }} chart-type">
     <input type="radio" name="chart-type" value="{{ value }}"
            {{# if disabled }}disabled{{/ if }}
            {{# if selected }}checked{{/ if }}>
     {{ label }}
   </label>
 {{/ chart_types }}
+</div>
 
 {{# if animation_available }}
 <label>
   <input type="checkbox" name="animation"
          {{# if animation }}checked{{/ if }}>
-  {{ label }}
+  Animation
 </label>
 {{/ if }}
