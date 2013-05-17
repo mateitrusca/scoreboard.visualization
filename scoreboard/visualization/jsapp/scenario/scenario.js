@@ -372,10 +372,10 @@ App.GraphControlsView = Backbone.View.extend({
         if (this.plotlines){
             this.update_plotlines(new_data);
         }
-        if (this.sort.retain_first_serie_order){
+        if (this.sort && this.sort.retain_first_serie_order){
             this.chart.xAxis[0].categories =  _(this.snapshots_data[0]['data']).pluck('name');
         }
-        else{
+        else if(this.sort){
             this.chart.xAxis[0].categories =  _(new_data['data']).pluck('name');
         };
         this.chart.redraw();
