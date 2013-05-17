@@ -72,6 +72,13 @@ App.Visualization = Backbone.View.extend({
             scenario_chart: App.chart_library[options['schema']['chart_type']]
         });
 
+        this.filters.on('change', this.update_hashcfg, this);
+
+    },
+
+    update_hashcfg: function() {
+        var hashcfg = 'chart=' + JSON.stringify(this.filters);
+        this.navigation.update_hashcfg(hashcfg);
     }
 
 });
