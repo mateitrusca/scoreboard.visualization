@@ -111,7 +111,8 @@ App.chart_library['columns'] = function(container, options) {
                 snapshots_data: series,
                 interval: window.interval_set,
                 plotlines: options['plotlines'],
-                chart_type: options['plotlines']
+                chart_type: options['plotlines'],
+                sort: options['sort']
             });
             App.chart_controls.$el.insertAfter(container);
         }else{

@@ -343,6 +343,7 @@ App.GraphControlsView = Backbone.View.extend({
         this.multiseries = options['multiseries'] || false;
         this.plotlines = options['plotlines'] || false;
         this.chart_type = options['chart_type'];
+        this.sort = options['sort'];
     },
 
     update_plotlines: function(new_data){
@@ -371,6 +372,12 @@ App.GraphControlsView = Backbone.View.extend({
         if (this.plotlines){
             this.update_plotlines(new_data);
         }
+        if (this.sort.retain_first_serie_order){
+            this.chart.xAxis[0].categories =  _(this.snapshots_data[0]['data']).pluck('name');
+        }
+        else{
+            this.chart.xAxis[0].categories =  _(new_data['data']).pluck('name');
+        };
         this.chart.redraw();
         this.chart.setTitle(null, {text: new_data['name']});
     },
