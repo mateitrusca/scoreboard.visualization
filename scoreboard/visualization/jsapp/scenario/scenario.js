@@ -551,7 +551,6 @@ App.ShareOptionsView = Backbone.View.extend({
         this.url = App.SCENARIO_URL;
         this.related = $('#viewlet-below-content-body').detach();
         this.render();
-        this.model.on('change', this.render, this);
     },
 
     render: function() {
