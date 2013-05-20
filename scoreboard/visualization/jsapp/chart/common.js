@@ -28,11 +28,11 @@ function sort_serie(serie, sort){
     return serie;
 };
 
-App.format_series = function (data, sort, type, percent, category, highlights){
+App.format_series = function (data, sort, multidim, percent, category, highlights){
     var multiplicators = _(percent).map(function(pc){
         return pc?100:1;
     });
-    if (type=='xy' || type=='xyz'){
+    if (multidim=='xy' || multidim=='xyz'){
         var countrycolor = function(code) {
             if (_.isNull(App.COUNTRY_COLOR[code])) {
                 return '#1C3FFD';
@@ -56,7 +56,7 @@ App.format_series = function (data, sort, type, percent, category, highlights){
                     'x': datapoint['value']['x'] * multiplicators[0],
                     'y': datapoint['value']['y'] * multiplicators[1]
                 }]
-                if (type == 'xyz'){
+                if (multidim == 'xyz'){
                     data[0]['z'] = datapoint['value']['z'] * multiplicators[1]
                 }
                 var output = {
