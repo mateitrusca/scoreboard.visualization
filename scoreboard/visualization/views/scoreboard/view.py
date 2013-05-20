@@ -20,10 +20,13 @@ def jsapp_html_for_visualization(visualization):
     if not source:
         return "No data source available"
 
+    root_url = visualization.portal_url.getPortalObject().absolute_url()
+    JSAPP_URL = root_url + '/++resource++scoreboard-jsapp'
     cube = source.get_cube()
     return jsapp.jsapp_html(DATASOURCE_URL=source.absolute_url(),
                             SCENARIO_URL=visualization.absolute_url(),
-                            DATA_REVISION=cube.get_revision())
+                            DATA_REVISION=cube.get_revision(),
+                            JSAPP_URL=JSAPP_URL)
 
 def source_workflow_state(visualization):
     state = 'private'

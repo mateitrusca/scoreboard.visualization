@@ -10,14 +10,16 @@ from scoreboard.visualization.config import EU, BLACKLIST
 class TestsView(BrowserView):
 
     @property
-    def jsapp_prefix(self):
-        return '/++resource++scoreboard-jsapp'
+    def JSAPP_URL(self):
+        root_url = self.context.portal_url.getPortalObject().absolute_url()
+        return root_url + '/++resource++scoreboard-jsapp'
 
     def jsapp_html(self):
         return jsapp_html(
                 DATASOURCE_URL='',
                 SCENARIO_URL='',
-                DATA_REVISION='')
+                DATA_REVISION='',
+                JSAPP_URL=self.JSAPP_URL)
 
 class EuropeanUnion(BrowserView):
     """ European Union Countries

@@ -1,5 +1,5 @@
 <!doctype html>
-<html tal:define="JSAPP python:view.jsapp_prefix">
+<html tal:define="JSAPP python:view.JSAPP_URL">
 
 <head>
   <meta charset="utf-8">
