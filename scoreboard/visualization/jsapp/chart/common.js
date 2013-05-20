@@ -118,10 +118,10 @@ App.format_series = function (data, sort, multidim, percent, category, highlight
                 var country_color = App.COUNTRY_COLOR[code];
                 var scale = new chroma.ColorScale({
                     colors: ['#000000', country_color],
-                    limits: [data.length, 1]
+                    limits: [data.length, 0]
                 });
                 if(!_(highlights_counter).has(code)){
-                    highlights_counter[code] = 1;
+                    highlights_counter[code] = 0;
                 }
                 var color = scale.getColor(highlights_counter[code]).hex();
                 highlights_counter[code] += 1;
