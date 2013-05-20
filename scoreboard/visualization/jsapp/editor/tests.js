@@ -6,6 +6,12 @@ describe('ChartTypeEditor', function() {
 
     var testing = App.testing;
 
+    it('should save first value as default', function() {
+        var model = new Backbone.Model();
+        var editor = new App.ChartTypeEditor({model: model});
+        expect(model.get('chart_type')).to.equal('lines');
+    });
+
     it('should select chart type', function() {
         var model = new Backbone.Model();
         var editor = new App.ChartTypeEditor({model: model});

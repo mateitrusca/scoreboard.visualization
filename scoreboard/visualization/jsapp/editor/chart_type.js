@@ -30,6 +30,9 @@ App.ChartTypeEditor = Backbone.View.extend({
     ],
 
     initialize: function(options) {
+        if(! _(this.chart_types).findWhere({value: this.model.get('chart_type')})) {
+            this.model.set('chart_type', this.chart_types[0]['value']);
+        }
         this.render();
     },
 
