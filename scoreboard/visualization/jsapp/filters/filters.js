@@ -289,6 +289,14 @@ App.FiltersBox = Backbone.View.extend({
                 include_wildcard: item['include_wildcard'],
                 constraints: item['constraints']
             });
+            // TODO: temporary fix until default_value is present in the configurator
+            if (item['type'] == 'multiple_select' && filter.name == 'ref-area' && !filter.default_value) {
+                if ( filter.chart_type == 'lines' ) {
+                    filter.default_value = ['EU27'];
+                } else {
+                    filter.default_value = ['EU27', 'BE', 'BG', 'CZ', 'DK', 'DE', 'EE', 'IE', 'EL', 'ES', 'FR', 'IT', 'CY', 'LV', 'LT', 'LU', 'HU', 'MT', 'NL', 'AT', 'PL', 'PT', 'RO', 'SI', 'SK', 'FI', 'SE', 'UK'];
+                }
+            }
             this.filters.push(filter);
             if(item['type'] == 'multiple_select'){
                 $(filter.el).appendTo($('.right_column', this.$el));
