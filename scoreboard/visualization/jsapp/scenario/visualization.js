@@ -88,18 +88,21 @@ App.Visualization = Backbone.View.extend({
         var hashcfg = 'chart=' + JSON.stringify(this.filters);
         this.navigation.update_hashcfg(hashcfg);
         this.share.update_url(App.SCENARIO_URL + '#' + hashcfg);
+        App.update_url_hash(hashcfg);
     }
 
 });
 
 
-App.global_events.on('beforeaddthis', function() {
-    App.initial_hash = window.location.hash;
+App.update_url_hash = function(value) {
+    var base_url = window.location.href.split('#')[0];
     if(typeof(window.history.replaceState) == "function") {
-        var base_url = window.location.href.split('#')[0];
-        window.history.replaceState(null, '', base_url);
+        window.history.replaceState(null, '', base_url + '#' + value);
     }
-});
+    else {
+        window.location.hash = value;
+    }
+};
 
 
 App.create_visualization = function(container, schema) {
