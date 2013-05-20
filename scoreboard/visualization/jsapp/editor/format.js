@@ -22,9 +22,11 @@ App.LabelEditor = Backbone.View.extend({
 
     render: function() {
         var facet_options = this.options['facets'].map(function(facet) {
-            return _({
-                selected: (facet.get('value') == this.model.get('facet'))
-            }).extend(facet.toJSON());
+            return {
+                value: facet.get('name'),
+                label: facet.get('label'),
+                selected: (facet.get('name') == this.model.get('facet'))
+            };
         }, this);
         var field_options = [
             {value: 'label', label: 'Long labels'},
@@ -69,21 +71,10 @@ App.FormatEditor = Backbone.View.extend({
     },
 
     initialize: function(options) {
-        this.facets = new Backbone.Collection(this.model.get('facets'));
-        var update_facets = _.bind(function() {
-            this.facets.reset(_(_(this.model.get('facets'))
-                                .where({type: 'select'}))
-                              .map(function(facet) {
-                return {value: facet['name'], label: facet['label']};
-            }));
-        }, this);
-        update_facets();
-        this.model.on('change:facets', update_facets);
-
         this.title_label = new App.LabelEditor({
             name: 'title',
             title: "Title",
-            facets: this.facets,
+            facets: this.model.facets,
             model: new Backbone.Model(
                 (this.model.get('labels') || {})['title'])
         });
@@ -102,7 +93,7 @@ App.FormatEditor = Backbone.View.extend({
         this.subtitle_label = new App.LabelEditor({
             name: 'subtitle',
             title: "Subtitle",
-            facets: this.facets,
+            facets: this.model.facets,
             model: new Backbone.Model(
                 (this.model.get('labels') || {})['subtitle'])
         });
