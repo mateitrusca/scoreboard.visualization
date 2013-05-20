@@ -33,15 +33,16 @@ App.AnnotationsEditor = Backbone.View.extend({
         var filters  = (this.model.get('annotations') || {})['filters'];
         var selected_facets = _(filters).pluck('name');
         var facets = [];
-        _(this.model.get('facets')).forEach(function(facet) {
-            if(facet['type'] == 'ignore' || facet['dimension'] == 'value') {
+        this.model.facets.forEach(function(facet) {
+            if(facet.get('type') == 'ignore' ||
+               facet.get('dimension') == 'value') {
                 return;
             }
             var item = {
-                label: facet['label'],
-                value: facet['name']
+                label: facet.get('label'),
+                value: facet.get('name')
             };
-            if(_(selected_facets).contains(facet['name'])) {
+            if(_(selected_facets).contains(facet.get('name'))) {
                 item['checked'] = true;
             }
             facets.push(item);

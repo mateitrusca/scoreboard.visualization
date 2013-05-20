@@ -731,10 +731,8 @@ describe('AnnotationsEditor', function() {
         {type_label: 'dimension', notation: 'dim4', label: "Dim 4"}];
 
     it('should add selected items to model', function() {
-        var model = new App.EditorConfiguration({
-            facets: [{name: 'dim1', type: 'select'},
-                     {name: 'dim2', type: 'select'}],
-        }, {dimensions: four_dimensions});
+        var model = new App.EditorConfiguration({}, {
+            dimensions: four_dimensions});
         var view = new App.AnnotationsEditor({model: model});
         view.$el.find('[name="annotation"][value="dim2"]').click().change();
         var names = _(model.get('annotations')['filters']).pluck('name');
@@ -744,8 +742,6 @@ describe('AnnotationsEditor', function() {
 
     it('should preselect checkboxes with current value', function() {
         var model = new App.EditorConfiguration({
-            facets: [{name: 'dim1', type: 'select'},
-                     {name: 'dim2', type: 'select'}],
             annotations: {filters: [{name: 'dim2'}]}
         }, {dimensions: four_dimensions});
         var view = new App.AnnotationsEditor({model: model});
