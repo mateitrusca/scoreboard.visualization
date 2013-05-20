@@ -6,10 +6,6 @@
 
 App.chart_library['country_profile'] = function(container, options) {
 
-    var sort = _.object(["sort_by", "order"],['value', -1]);
-    var percent = options['unit_is_pc'];
-    var category = options['category_facet'];
-
     var add_commas = function(nStr){
         nStr += '';
         var x = nStr.split('.');
@@ -40,7 +36,13 @@ App.chart_library['country_profile'] = function(container, options) {
 
     // Highchart
     if(options.subtype === 'bar'){
-        var series = App.format_series(options['series'], sort, '', percent, category);
+        var series = App.format_series(
+                        options['series'],
+                        options['sort'],
+                        options['multidim'],
+                        options['unit_is_pc'],
+                        options['category_facet'],
+                        options['highlights']);
 
         var stack_series = [
             {

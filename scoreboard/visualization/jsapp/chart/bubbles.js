@@ -9,8 +9,13 @@ App.chart_library['bubbles'] = function(container, options) {
 
     $(container).addClass('normal-chart');
 
-    var percent = options['unit_is_pc'];
-    var series = App.format_series(options['series'], false, 'xyz', percent, options['category_facet']);
+    var series = App.format_series(
+                    options['series'],
+                    options['sort'],
+                    options['multidim'],
+                    options['unit_is_pc'],
+                    options['category_facet'],
+                    options['highlights']);
 
     var chartOptions = {
         chart: {
