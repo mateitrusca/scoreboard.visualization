@@ -88,9 +88,21 @@ App.Visualization = Backbone.View.extend({
         var hashcfg = 'chart=' + JSON.stringify(this.filters);
         this.navigation.update_hashcfg(hashcfg);
         this.share.update_url(App.SCENARIO_URL + '#' + hashcfg);
+        App.update_url_hash(hashcfg);
     }
 
 });
+
+
+App.update_url_hash = function(value) {
+    var base_url = window.location.href.split('#')[0];
+    if(typeof(window.history.replaceState) == "function") {
+        window.history.replaceState(null, '', base_url + '#' + value);
+    }
+    else {
+        window.location.hash = value;
+    }
+};
 
 
 App.create_visualization = function(container, schema) {
