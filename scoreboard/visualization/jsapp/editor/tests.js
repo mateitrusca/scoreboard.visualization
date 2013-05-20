@@ -448,6 +448,33 @@ describe('FacetsEditor', function() {
 
     });
 
+    describe('sort facet options', function() {
+
+        it('should save selected values', function() {
+            var model = new App.EditorConfiguration({}, {
+                dimensions: four_dimensions});
+            var view = new App.FacetsEditor({model: model});
+            var $dim2_el = view.$el.find('[data-name="dim2"]');
+            $dim2_el.find('[name="sort-by"]').val('notation').change();
+            $dim2_el.find('[name="sort-order"]').val('reverse').change();
+            var dim2 = _(model.get('facets')).findWhere({name: 'dim2'});
+            expect(dim2['sortBy']).to.equal('notation');
+            expect(dim2['sortOrder']).to.equal('reverse');
+        });
+
+        it('should display selected values', function() {
+            var model = new App.EditorConfiguration({
+                facets: [
+                    {name: 'dim2', sortBy: 'notation', sortOrder: 'reverse'}]
+            }, {dimensions: four_dimensions});
+            var view = new App.FacetsEditor({model: model});
+            var $dim2_el = view.$el.find('[data-name="dim2"]');
+            expect($dim2_el.find('[name="sort-by"]').val()).to.equal('notation');
+            expect($dim2_el.find('[name="sort-order"]').val()).to.equal('reverse');
+        });
+
+    });
+
 });
 
 

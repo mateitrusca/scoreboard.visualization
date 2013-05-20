@@ -15,7 +15,9 @@ App.FacetEditorField = Backbone.View.extend({
         'change [name="type"]': 'on_change_type',
         'click .facet-sort': 'on_click_sort',
         'change [name="include_wildcard"]': 'on_change_wildcard',
-        'change [name="multidim"]': 'on_change_multidim'
+        'change [name="multidim"]': 'on_change_multidim',
+        'change [name="sort-by"]': 'on_change_sorting',
+        'change [name="sort-order"]': 'on_change_sorting'
     },
 
     type_options: [
@@ -23,6 +25,17 @@ App.FacetEditorField = Backbone.View.extend({
         {value: 'multiple_select', label: "multiple selection"},
         {value: 'all-values', label: "all values"},
         {value: 'ignore', label: "ignore"}
+    ],
+
+    sort_by_options: [
+        {value: 'label', label: "label"},
+        {value: 'short_label', label: "short label"},
+        {value: 'notation', label: "code"}
+    ],
+
+    sort_order_options: [
+        {value: 'asc', label: "ascending"},
+        {value: 'reverse', label: "descending"}
     ],
 
     initialize: function(options) {
@@ -40,6 +53,20 @@ App.FacetEditorField = Backbone.View.extend({
                 return _({
                     selected: selected
                 }).extend(opt);
+            }, this),
+            sort_by_options: _(this.sort_by_options).map(function(spec) {
+                var opt = _({}).extend(spec);
+                if(spec['value'] == this.model.get('sortBy')) {
+                    opt['selected'] = true;
+                }
+                return opt;
+            }, this),
+            sort_order_options: _(this.sort_order_options).map(function(spec) {
+                var opt = _({}).extend(spec);
+                if(spec['value'] == this.model.get('sortOrder')) {
+                    opt['selected'] = true;
+                }
+                return opt;
             }, this),
             is_single_select: (this.model.get('type') == 'select'),
             chart_is_multidim: this.facets_editor.chart_is_multidim()
@@ -87,6 +114,13 @@ App.FacetEditorField = Backbone.View.extend({
         if(this.model.get('type') != 'select') {
             this.model.unset('include_wildcard');
         }
+    },
+
+    on_change_sorting: function() {
+        this.model.set({
+            'sortBy': this.$el.find('[name="sort-by"]').val(),
+            'sortOrder': this.$el.find('[name="sort-order"]').val()
+        });
     }
 
 });

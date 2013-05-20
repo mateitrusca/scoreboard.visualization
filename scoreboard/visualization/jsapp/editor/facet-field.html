@@ -19,6 +19,24 @@
 </td>
 
 <td>
+  <select name="sort-by" class="span2">
+  {{# sort_by_options }}
+    <option value="{{ value }}"
+      {{# if selected }}selected{{/ if }}
+      >{{ label }}</option>
+  {{/ sort_by_options }}
+  </select>
+
+  <select name="sort-order" class="span1">
+  {{# sort_order_options }}
+    <option value="{{ value }}"
+      {{# if selected }}selected{{/ if }}
+      >{{ label }}</option>
+  {{/ sort_order_options }}
+  </select>
+</td>
+
+<td>
 {{# if is_single_select }}
   <input type="checkbox" name="include_wildcard"
       {{# if include_wildcard }}checked{{/ if }}>
