@@ -100,7 +100,7 @@ App.format_series = function (data, sort, type, percent, category, highlights){
         }).value();
     }else{
         var first_serie = false;
-        var highlights_registry = {};
+        var highlights_counter = {};
         var extract_data = function(series_item){
             var value = series_item['value'];
             if(percent){
@@ -117,15 +117,14 @@ App.format_series = function (data, sort, type, percent, category, highlights){
                 var code = series_item[category]['notation'];
                 var country_color = App.COUNTRY_COLOR[code];
                 var scale = new chroma.ColorScale({
-                    colors: ['#000000', country_color]
+                    colors: ['#000000', country_color],
+                    limits: [data.length, 1]
                 });
-                if (_(highlights_registry).has(code)){
-                    var color = scale.getColor(highlights_registry[code]/2).hex();
+                if(!_(highlights_counter).has(code)){
+                    highlights_counter[code] = 1;
                 }
-                else{
-                    highlights_registry[code] = 1;
-                    var color = scale.getColor(3).hex();
-                }
+                var color = scale.getColor(highlights_counter[code]).hex();
+                highlights_counter[code] += 1;
             }
             _(point).extend({ 'color': color });
             return point;
