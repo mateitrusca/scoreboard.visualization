@@ -724,11 +724,17 @@ describe('FormatEditor', function() {
 
 describe('AnnotationsEditor', function() {
 
+    var four_dimensions = [
+        {type_label: 'dimension', notation: 'dim1', label: "Dim 1"},
+        {type_label: 'dimension', notation: 'dim2', label: "Dim 2"},
+        {type_label: 'dimension', notation: 'dim3', label: "Dim 3"},
+        {type_label: 'dimension', notation: 'dim4', label: "Dim 4"}];
+
     it('should add selected items to model', function() {
-        var model = new Backbone.Model({
+        var model = new App.EditorConfiguration({
             facets: [{name: 'dim1', type: 'select'},
                      {name: 'dim2', type: 'select'}],
-        });
+        }, {dimensions: four_dimensions});
         var view = new App.AnnotationsEditor({model: model});
         view.$el.find('[name="annotation"][value="dim2"]').click().change();
         var names = _(model.get('annotations')['filters']).pluck('name');
@@ -737,11 +743,11 @@ describe('AnnotationsEditor', function() {
     });
 
     it('should preselect checkboxes with current value', function() {
-        var model = new Backbone.Model({
+        var model = new App.EditorConfiguration({
             facets: [{name: 'dim1', type: 'select'},
                      {name: 'dim2', type: 'select'}],
             annotations: {filters: [{name: 'dim2'}]}
-        });
+        }, {dimensions: four_dimensions});
         var view = new App.AnnotationsEditor({model: model});
         var get_checkbox = function(name) {
             return view.$el.find('[name="annotation"][value="' + name + '"]');
@@ -751,7 +757,9 @@ describe('AnnotationsEditor', function() {
     });
 
     it('should save annotations texts', function() {
-        var view = new App.AnnotationsEditor({model: new Backbone.Model()});
+        var model = new App.EditorConfiguration({}, {
+            dimensions: four_dimensions});
+        var view = new App.AnnotationsEditor({model: model});
         view.$el.find('[name="title"]').val('blah one').change();
         view.$el.find('[name="notes"]').val('blah two').change();
         var annotations = view.model.get('annotations');
@@ -760,9 +768,10 @@ describe('AnnotationsEditor', function() {
     });
 
     it('should display existing annotations texts', function() {
-        var view = new App.AnnotationsEditor({model: new Backbone.Model({
+        var model = new App.EditorConfiguration({
             annotations: {title: 'blah one', notes: 'blah two'}
-        })});
+        }, {dimensions: four_dimensions});
+        var view = new App.AnnotationsEditor({model: model});
         expect(view.$el.find('[name="title"]').val()).to.equal('blah one');
         expect(view.$el.find('[name="notes"]').val()).to.equal('blah two');
     });
