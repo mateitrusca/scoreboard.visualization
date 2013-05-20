@@ -312,7 +312,6 @@ App.ScenarioChartView = Backbone.View.extend({
             if(requests.length < 2) { responses = [responses]; }
 
             chart_data['series'] = _(multiseries_values).map(function(value, n) {
-                //TODO resp should always have the same keys
                 var resp = responses[n];
                 var datapoints = resp[0]['datapoints'];
                 if(this.client_filter) {
@@ -358,6 +357,7 @@ App.GraphControlsView = Backbone.View.extend({
         this.plotlines = options['plotlines'] || false;
         this.chart_type = options['chart_type'];
         this.sort = options['sort'];
+        this.update_subtitle();
     },
 
     update_plotlines: function(new_data){
@@ -365,6 +365,11 @@ App.GraphControlsView = Backbone.View.extend({
              new_data = [new_data];
          }
          App.add_plotLines(this.chart, new_data, this.chart_type);
+    },
+
+    update_subtitle: function(){
+        var subtitle = this.snapshots_data[this.model.get('value')]['name'];
+        this.chart.setTitle(null, {text: subtitle});
     },
 
     update_chart: function(){
@@ -393,7 +398,7 @@ App.GraphControlsView = Backbone.View.extend({
             this.chart.xAxis[0].categories =  _(this.snapshots_data[0]['data']).pluck('name');
         };
         this.chart.redraw();
-        this.chart.setTitle(null, {text: new_data['name']});
+        this.update_subtitle();
     },
 
     on_next: function(){
