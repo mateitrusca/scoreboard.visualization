@@ -87,6 +87,7 @@ App.Visualization = Backbone.View.extend({
     update_hashcfg: function() {
         var hashcfg = 'chart=' + JSON.stringify(this.filters);
         this.navigation.update_hashcfg(hashcfg);
+        this.share.update_url(App.SCENARIO_URL + '#' + hashcfg);
     }
 
 });

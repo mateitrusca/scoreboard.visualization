@@ -557,6 +557,11 @@ App.ShareOptionsView = Backbone.View.extend({
     render: function() {
         this.$el.html(this.template({'related': this.related.html()}));
         window.addthis.button('#scoreboard-addthis', {}, {url: this.url});
+    },
+
+    update_url: function(new_url) {
+        this.url = new_url;
+        this.render();
     }
 
 });
