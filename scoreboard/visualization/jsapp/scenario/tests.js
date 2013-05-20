@@ -146,19 +146,19 @@ describe('ChartSeriesPreparation', function() {
         expect(_(result[1].data).pluck('code')).to.deep.equal(['AT', 'BE']);
 
         var sort = _.object(["by", "order", "each_series"],
-                            ['label', 1, false]);
+                            ['category', 1, false]);
         var result = App.format_series(series, sort, null, null, 'ref-area');
         expect(_(result[0].data).pluck('code')).to.deep.equal(['AT', 'BE']);
         expect(_(result[1].data).pluck('code')).to.deep.equal(['AT', 'BE']);
 
         var sort = _.object(["by", "order", "each_series"],
-                            ['label', 1, true]);
+                            ['category', 1, true]);
         var result = App.format_series(series, sort, null, null, 'ref-area');
         expect(_(result[0].data).pluck('code')).to.deep.equal(['AT', 'BE']);
         expect(_(result[1].data).pluck('code')).to.deep.equal(['AT', 'BE']);
     });
 
-    it('should sort the data in snapshots by label', function(){
+    it('should sort the data in snapshots by category', function(){
         var series = [
             {data: [
                     {
@@ -197,13 +197,13 @@ describe('ChartSeriesPreparation', function() {
                    ],
              label:'2001'},
         ];
-        var sort = _.object(["by", "order"],['label', 1]);
+        var sort = _.object(["by", "order"],['category', 1]);
         var result = App.format_series(series, sort, null, null, 'ref-area');
         expect(result.length).to.equal(2);
         expect(result[0]['data'][0]['name']).equal('Austria');
     });
 
-    it('should sort the series by label', function(){
+    it('should sort the series by category', function(){
         var series = [
             {data: [],
              label:'2001'},
@@ -269,7 +269,7 @@ describe('ChartSeriesPreparation', function() {
                    ],
              label:'2002'}
         ];
-        var sort = _.object(["by", "order"],['label', 1]);
+        var sort = _.object(["by", "order"],['category', 1]);
         var result = App.format_series(series, sort, null, null, 'ref-area');
         expect(_(_(result).pluck('data')[1]).pluck('y')).to.deep.equal([
             null, 0.4808]);

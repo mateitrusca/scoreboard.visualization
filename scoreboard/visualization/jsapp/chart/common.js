@@ -20,7 +20,7 @@ function sort_serie(serie, sort){
                 }
                 return sort.order * value;
             }
-            if (sort.by == 'label'){
+            if (sort.by == 'category'){
                 return item['name'];
             }
         }
