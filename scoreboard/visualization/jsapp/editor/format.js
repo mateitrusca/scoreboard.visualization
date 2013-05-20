@@ -119,6 +119,8 @@ App.FormatEditor = Backbone.View.extend({
         }, this);
 
         this.render();
+        this.on_change_height();
+        this.on_change_credits();
     },
 
     render: function() {
