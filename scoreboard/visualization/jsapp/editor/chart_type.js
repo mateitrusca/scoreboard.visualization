@@ -25,7 +25,8 @@ App.ChartTypeEditor = Backbone.View.extend({
          multidim: 2,
          animation_available: true},
         {label: "Bubble chart", value: 'bubbles',
-         multidim: 3},
+         multidim: 3,
+         animation_available: true},
         {label: "Map", value: 'map'}
     ],
 
