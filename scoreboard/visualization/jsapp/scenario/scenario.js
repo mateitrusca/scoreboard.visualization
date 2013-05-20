@@ -548,14 +548,22 @@ App.ShareOptionsView = Backbone.View.extend({
     template: App.get_template('scenario/share.html'),
 
     initialize: function(options) {
+        this.url = App.SCENARIO_URL;
         this.related = $('#viewlet-below-content-body').detach();
         this.render();
+        this.model.on('change', this.render, this);
     },
 
     render: function() {
         this.$el.html(this.template({'related': this.related.html()}));
-        return this;
+        window.addthis.button('#scoreboard-addthis', {}, {url: this.url});
+    },
+
+    update_url: function(new_url) {
+        this.url = new_url;
+        this.render();
     }
+
 });
 
 
