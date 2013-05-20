@@ -10,9 +10,13 @@ App.chart_library['scatter'] = function(container, options) {
     $(container).addClass('high-chart');
     $(container).addClass('scatter-chart');
 
-    var percent = options['unit_is_pc'];
-    var category = options['category_facet'];
-    var series = App.format_series(options['series'], false, 'xy', percent, category);
+    var series = App.format_series(
+                    options['series'],
+                    options['sort'],
+                    options['multidim'],
+                    options['unit_is_pc'],
+                    options['category_facet'],
+                    options['highlights']);
 
     var chartOptions = {
         chart: {

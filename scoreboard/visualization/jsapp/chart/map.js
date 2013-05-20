@@ -23,8 +23,15 @@ function get_value_for_code(code, series){
 App.chart_library['map'] = function(container, options) {
     var map_div = $('<div class="map-chart">');
     $(container).empty().append(map_div);
-    var percent = options['unit_is_pc'];
-    var series = App.format_series(options['series'], false, '', percent, options['category_facet']);
+
+    var series = App.format_series(
+                    options['series'],
+                    options['sort'],
+                    options['multidim'],
+                    options['unit_is_pc'],
+                    options['category_facet'],
+                    options['highlights']);
+
     var max_value = _.chain(series).pluck('data').
                       first().pluck('y').max().value();
     var colorscale = new chroma.ColorScale({
