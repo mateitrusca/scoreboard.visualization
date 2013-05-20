@@ -93,15 +93,6 @@ App.Visualization = Backbone.View.extend({
 });
 
 
-App.global_events.on('beforeaddthis', function() {
-    App.initial_hash = window.location.hash;
-    if(typeof(window.history.replaceState) == "function") {
-        var base_url = window.location.href.split('#')[0];
-        window.history.replaceState(null, '', base_url);
-    }
-});
-
-
 App.create_visualization = function(container, schema) {
     App.visualization = new App.Visualization({
         el: container,
