@@ -31,7 +31,7 @@ describe('ChartSeriesPreparation', function() {
                  label:'Austria'},
             ];
 
-            var result = App.format_series(series, null, 'xy', null, 'ref-area');
+            var result = App.format_series(series, null, 2, null, 'ref-area');
             expect(result[0][0].name).to.equal('Austria');
             expect(result[0][0].data.length).to.equal(1);
         })
@@ -60,7 +60,7 @@ describe('ChartSeriesPreparation', function() {
                        ],
                  label:'Austria'},
             ];
-            var result = App.format_series(series, null, 'xy', null, 'ref-area');
+            var result = App.format_series(series, null, 2, null, 'ref-area');
             expect(result.length).to.equal(2);
             expect(result[0].length).to.equal(2);
             expect(result[1].length).to.equal(2);

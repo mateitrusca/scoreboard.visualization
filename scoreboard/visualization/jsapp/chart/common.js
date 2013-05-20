@@ -32,7 +32,7 @@ App.format_series = function (data, sort, multidim, percent, category, highlight
     var multiplicators = _(percent).map(function(pc){
         return pc?100:1;
     });
-    if (multidim=='xy' || multidim=='xyz'){
+    if (multidim > 1){
         var countrycolor = function(code) {
             if (_.isNull(App.COUNTRY_COLOR[code])) {
                 return '#1C3FFD';
@@ -56,7 +56,7 @@ App.format_series = function (data, sort, multidim, percent, category, highlight
                     'x': datapoint['value']['x'] * multiplicators[0],
                     'y': datapoint['value']['y'] * multiplicators[1]
                 }]
-                if (multidim == 'xyz'){
+                if (multidim == 3){
                     data[0]['z'] = datapoint['value']['z'] * multiplicators[1]
                 }
                 var output = {
