@@ -11,16 +11,18 @@ App.chart_library['lines'] = function(container, options) {
     var category = options['category_facet'];
     var series = App.format_series(options['series'], sort, '', percent, category);
 	_.map(series, function(elem) {
-        _(_.last(elem.data)).extend({
-            dataLabels: {
-              enabled: true,
-              crop: false,
-              x: 3,
-              align: 'left',
-              verticalAlign: 'middle',
-              formatter: function() { return this.series.name }
-            }
-        });
+        if ( elem.data.length > 0 ) {
+            _(_.last(elem.data)).extend({
+                dataLabels: {
+                  enabled: true,
+                  crop: false,
+                  x: 3,
+                  align: 'left',
+                  verticalAlign: 'middle',
+                  formatter: function() { return this.series.name }
+                }
+            });
+        }
     });
     var all_years = _(series[0]['data']).pluck('code');
     var chartOptions = {
