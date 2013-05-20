@@ -9,10 +9,11 @@ App.chart_library['columns'] = function(container, options) {
     var series = App.format_series(
                     options['series'],
                     options['sort'],
-                    '', //type e.g.: 'xy'/'xyz'
+                    options['multidim'],
                     options['unit_is_pc'],
                     options['category_facet'],
-                    options['highlights']);
+                    options['highlights'],
+                    options['animation']);
     var init_serie = series;
     if (options['animation']){
         init_serie = [series[0]];

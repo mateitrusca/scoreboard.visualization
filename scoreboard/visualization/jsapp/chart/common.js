@@ -28,7 +28,7 @@ function sort_serie(serie, sort){
     return serie;
 };
 
-App.format_series = function (data, sort, multidim, percent, category, highlights){
+App.format_series = function (data, sort, multidim, percent, category, highlights, animation){
     var multiplicators = _(percent).map(function(pc){
         return pc?100:1;
     });
@@ -125,7 +125,9 @@ App.format_series = function (data, sort, multidim, percent, category, highlight
                     highlights_counter[code] = 0;
                 }
                 var color = scale.getColor(highlights_counter[code]).hex();
-                highlights_counter[code] += 1;
+                if (! animation) {
+                    highlights_counter[code] += 1;
+                }
             }
             _(point).extend({ 'color': color });
             return point;
