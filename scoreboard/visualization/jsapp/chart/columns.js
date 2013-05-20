@@ -120,6 +120,7 @@ App.chart_library['columns'] = function(container, options) {
         }else{
             App.chart_controls.chart = chart;
             App.chart_controls.snapshots_data = series;
+            App.chart_controls.update_chart();
         };
     }
 };
