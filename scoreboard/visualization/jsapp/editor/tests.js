@@ -636,12 +636,18 @@ describe('SeriesEditor', function() {
 
 describe('FormatEditor', function() {
 
+    var four_dimensions = [
+        {type_label: 'dimension', notation: 'dim1', label: "Dim 1"},
+        {type_label: 'dimension', notation: 'dim2', label: "Dim 2"},
+        {type_label: 'dimension', notation: 'dim3', label: "Dim 3"},
+        {type_label: 'dimension', notation: 'dim4', label: "Dim 4"}];
+
     it('should set title and subtitle in model', function() {
-        var model = new Backbone.Model({
+        var model = new App.EditorConfiguration({
             facets: [{name: 'dim1', type: 'select'},
                      {name: 'dim2', type: 'select'},
                      {name: 'dim3', type: 'select'}]
-        });
+        }, {dimensions: four_dimensions});
         var view = new App.FormatEditor({model: model});
         var $title_el = view.$el.find('[data-label="title"]');
         $title_el.find('[name="facet"]').val('dim2').change();
@@ -658,13 +664,13 @@ describe('FormatEditor', function() {
     });
 
     it('should display current title and subtitle values', function() {
-        var model = new Backbone.Model({
+        var model = new App.EditorConfiguration({
             facets: [{name: 'dim1', type: 'select'},
                      {name: 'dim2', type: 'select'},
                      {name: 'dim3', type: 'select'}],
             labels: {title: {facet: 'dim2', field: 'short_label'},
                      subtitle: {facet: 'dim3', field: 'short_label'}}
-        });
+        }, {dimensions: four_dimensions});
         var view = new App.FormatEditor({model: model});
         var $title_el = view.$el.find('[data-label="title"]');
         expect($title_el.find('[name="facet"]').val()).to.equal('dim2');
@@ -677,20 +683,24 @@ describe('FormatEditor', function() {
     });
 
     it('should save chart height', function() {
-        var view = new App.FormatEditor({model: new Backbone.Model()});
+        var model = new App.EditorConfiguration({}, {
+            dimensions: four_dimensions});
+        var view = new App.FormatEditor({model: model});
         view.$el.find('[name="height"]').val('123').change();
         expect(view.model.get('height')).to.equal('123');
     });
 
     it('should display existing chart height', function() {
-        var view = new App.FormatEditor({model: new Backbone.Model({
-            height: '123'
-        })});
+        var model = new App.EditorConfiguration({height: '123'}, {
+            dimensions: four_dimensions});
+        var view = new App.FormatEditor({model: model});
         expect(view.$el.find('[name="height"]').val()).to.equal('123');
     });
 
     it('should save chart credits', function() {
-        var view = new App.FormatEditor({model: new Backbone.Model()});
+        var model = new App.EditorConfiguration({}, {
+            dimensions: four_dimensions});
+        var view = new App.FormatEditor({model: model});
         view.$el.find('[name="credits-text"]').val('blah one').change();
         view.$el.find('[name="credits-link"]').val('blah two').change();
         var credits = view.model.get('credits');
@@ -699,9 +709,10 @@ describe('FormatEditor', function() {
     });
 
     it('should display existing chart height', function() {
-        var view = new App.FormatEditor({model: new Backbone.Model({
+        var model = new App.EditorConfiguration({
             credits: {text: 'blah one', link: 'blah two'}
-        })});
+        }, {dimensions: four_dimensions});
+        var view = new App.FormatEditor({model: model});
         expect(view.$el.find('[name="credits-text"]').val()
             ).to.equal('blah one');
         expect(view.$el.find('[name="credits-link"]').val()
