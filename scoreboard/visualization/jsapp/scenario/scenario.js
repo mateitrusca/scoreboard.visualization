@@ -207,8 +207,8 @@ App.ScenarioChartView = Backbone.View.extend({
                 return out;
             },
             'credits': {
-                'href': 'http://ec.europa.eu/digital-agenda/en/graphs/',
-                'text': 'European Commission, Digital Agenda Scoreboard'
+                'href': this.schema['credits']['link'] || 'http://ec.europa.eu/digital-agenda/en/graphs/',
+                'text': this.schema['credits']['text'] || 'European Commission, Digital Agenda Scoreboard'
             },
             'xlabels_formatter': function() {
                 var max_length = 15;
@@ -221,7 +221,7 @@ App.ScenarioChartView = Backbone.View.extend({
             'unit_is_pc': unit_is_pc,
             'plotlines': this.schema['plotlines'] || false,
             'animation': this.schema['animation'] || false,
-            'legend': this.schema['legend'] || false,
+            'series-legend-label': this.schema['series-legend-label'] || false,
             'multiseries': this.multiple_series,
             'category_facet': this.schema['category_facet'],
             'subtype': this.schema.chart_subtype,
@@ -266,20 +266,27 @@ App.ScenarioChartView = Backbone.View.extend({
                 _.chain(groupby_facet.constraints)
                  .values()
                  .each(function(facet){
-                    _(labels_args).extend(
-                        _.object([
-                            [facet, this.model.get(facet)]
-                        ])
-                    );
+                    if ( this.model.get(facet) != 'any' ) {
+                        _(labels_args).extend(
+                            _.object([
+                                [facet, this.model.get(facet)]
+                            ])
+                        );
+                    }
                 }, this);
             }
             var labels_request = $.getJSON(this.cube_url + '/dimension_options',
                                        labels_args);
+            var dict = {'short': 'short_label', 'long': 'label', 'none': 'notation'};
+            var series_names = 'notation';
+            if ( this.schema['series-legend-label'] ) {
+                series_names = dict[this.schema['series-legend-label']] || 'notation';
+            }
             labels_request.done(function(data) {
                 var results = data['options'];
                 chart_data['group_labels'] = _.object(
                     _(results).pluck('notation'),
-                    _(results).pluck('label'));
+                    _(results).pluck(series_names));
             });
             requests.push(labels_request);
         }

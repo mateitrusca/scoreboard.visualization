@@ -231,11 +231,13 @@ App.add_plotLines = function(chart, series, chart_type){
     });
 }
 
-App.disable_legend = function(chartOptions, legend_options){
-    var disabled_legend = {
-        legend: {enabled: false}
-    };
-    _(chartOptions).extend(disabled_legend);
+App.disable_legend = function(chartOptions, options){
+    if (options && !options['series-legend-label'] || options['series-legend-label'] == 'none'){
+        var disabled_legend = {
+            legend: {enabled: false}
+        };
+        _(chartOptions).extend(disabled_legend);
+    }
 }
 
 })();
