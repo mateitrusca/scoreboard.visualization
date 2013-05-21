@@ -14,9 +14,9 @@ App.chart_library['columns'] = function(container, options) {
                     options['category_facet'],
                     options['highlights'],
                     options['animation']);
-    var init_serie = series;
+    var init_series = series;
     if (options['animation']){
-        init_serie = [series[0]];
+        init_series = series.slice(-1);
     }
 
     var chartOptions = {
@@ -92,7 +92,7 @@ App.chart_library['columns'] = function(container, options) {
                 width:400
             }
         },
-        series: init_serie
+        series: init_series
     };
 
     if (!options['legend']){
@@ -102,7 +102,7 @@ App.chart_library['columns'] = function(container, options) {
     var chart = new Highcharts.Chart(chartOptions);
 
     if (options['plotlines']){
-        App.add_plotLines(chart, init_serie, options['plotlines']);
+        App.add_plotLines(chart, init_series, options['plotlines']);
     }
 
     if (options['animation']){
