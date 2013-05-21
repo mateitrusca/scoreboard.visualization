@@ -32,14 +32,15 @@ App.format_series = function (data, sort, multidim, percent, category, highlight
     var multiplicators = _(percent).map(function(pc){
         return pc?100:1;
     });
-    if (multidim > 1){
-        var countrycolor = function(code) {
-            if (_.isNull(App.COUNTRY_COLOR[code])) {
-                return '#1C3FFD';
-            } else {
-                return App.COUNTRY_COLOR[code];
-            }
+    var countrycolor = function(code) {
+        if (_.isNull(App.COUNTRY_COLOR[code])) {
+            return '#1C3FFD';
+        } else {
+            return App.COUNTRY_COLOR[code];
         }
+    }
+    if (multidim > 1){
+
 
 
         var label_formatter = function() {
@@ -142,8 +143,8 @@ App.format_series = function (data, sort, multidim, percent, category, highlight
               uniq(diffs_collection).
               value();
             return _.object(
-                    ['name', 'data'],
-                    [item['label'], data]);
+                    ['name', 'notation', 'color', 'data'],
+                    [item['label'], item['notation'], countrycolor(item['notation']), data]);
         }).map(function(item){
             var serie = item['data'];
             _.chain(diffs_collection).
@@ -170,8 +171,8 @@ App.format_series = function (data, sort, multidim, percent, category, highlight
                     serie = sort_serie(serie, sort);
             }
             return _.object(
-                    ['name', 'data'],
-                    [item['name'], serie]);
+                    ['name', 'notation', 'color', 'data'],
+                    [item['name'], item['notation'], countrycolor(item['notation']), serie]);
         }).value();
     }
     return _(series).sortBy('name');
@@ -232,7 +233,7 @@ App.add_plotLines = function(chart, series, chart_type){
 }
 
 App.disable_legend = function(chartOptions, options){
-    if (options && !options['series-legend-label'] || options['series-legend-label'] == 'none'){
+    if (options && (!options['series-legend-label'] || options['series-legend-label'] == 'none')){
         var disabled_legend = {
             legend: {enabled: false}
         };

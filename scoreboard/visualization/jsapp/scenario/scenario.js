@@ -207,8 +207,8 @@ App.ScenarioChartView = Backbone.View.extend({
                 return out;
             },
             'credits': {
-                'href': this.schema['credits']['link'] || 'http://ec.europa.eu/digital-agenda/en/graphs/',
-                'text': this.schema['credits']['text'] || 'European Commission, Digital Agenda Scoreboard'
+                'href': this.schema['credits'] && this.schema['credits']['link'] || 'http://ec.europa.eu/digital-agenda/en/graphs/',
+                'text': this.schema['credits'] && this.schema['credits']['text'] || 'European Commission, Digital Agenda Scoreboard'
             },
             'xlabels_formatter': function() {
                 var max_length = 15;
@@ -324,6 +324,7 @@ App.ScenarioChartView = Backbone.View.extend({
                 }
                 return {
                     'label': chart_data['group_labels'][value],
+                    'notation': value,
                     'data': datapoints
                 };
             }, this);
