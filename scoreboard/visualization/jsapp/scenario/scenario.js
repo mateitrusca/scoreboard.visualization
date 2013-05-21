@@ -149,7 +149,11 @@ App.ScenarioChartView = Backbone.View.extend({
                             out += attrs['unit-measure']['x'].label;
                         }
                     }
-                    out += '<br><b>y</b>: ' + Math.round(this.y*10)/10 + ' ';
+                    out += '<br>';
+                    if ( multidim ) {
+                        out += '<b>y</b>: ';
+                    }
+                    out += Math.round(this.y*10)/10 + ' ';
                     if (_.contains(tooltip_attributes, 'unit-measure')) {
                         if ( multidim ) {
                             out += attrs['unit-measure']['y'].label;
