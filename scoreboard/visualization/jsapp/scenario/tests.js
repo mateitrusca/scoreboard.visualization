@@ -431,10 +431,10 @@ describe('ScenarioChartViewParameters', function() {
             }
         }
         var options_legend_off = {
-            series-legend-label : 'none'
+            'series-legend-label' : 'none'
         }
         var options_legend_on = {
-            series-legend-label : 'label'
+            'series-legend-label' : 'label'
         }
         App.disable_legend(chartOptions);
         expect(chartOptions.legend.enabled).to.equal(true);
