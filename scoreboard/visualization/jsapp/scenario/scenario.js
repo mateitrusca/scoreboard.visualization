@@ -559,7 +559,7 @@ App.AnnotationsView = Backbone.View.extend({
                 }
                 var section_title = this.schema['annotations'] && 
                   this.schema['annotations']['title'] || 
-                  'Definition and scopes 1:';
+                  'Definition and scopes:';
                 this.$el.html(this.template(
                     {"description": chart_description,
                      "section_title": section_title,
