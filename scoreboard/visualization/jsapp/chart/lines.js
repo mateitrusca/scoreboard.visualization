@@ -57,7 +57,7 @@ App.chart_library['lines'] = function(container, options) {
                 color: '#000000',
                 fontWeight: 'bold',
                 fontSize:'1.2em',
-                width: '600'
+                width: '900'
             }
         },
         subtitle: {
