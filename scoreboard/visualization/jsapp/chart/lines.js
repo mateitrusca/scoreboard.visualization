@@ -56,9 +56,19 @@ App.chart_library['lines'] = function(container, options) {
             style: {
                 color: '#000000',
                 fontWeight: 'bold',
-                fontSize:'1.2em'
+                fontSize:'1.2em',
+                width: '600'
             }
-
+        },
+        subtitle: {
+            text: options.meta_data['subtitle'],
+            x: -20,
+            margin: 30,
+            style: {
+                color: '#000000',
+                fontSize:'1em',
+                width: '600'
+            }
         },
         xAxis: {
             categories: all_years,
