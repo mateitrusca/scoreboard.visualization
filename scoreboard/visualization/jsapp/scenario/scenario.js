@@ -358,7 +358,7 @@ App.GraphControlsView = Backbone.View.extend({
         this.plotlines = options['plotlines'] || false;
         this.chart_type = options['chart_type'];
         this.sort = options['sort'];
-        this.update_chart();
+        this.update_subtitle();
     },
 
     update_plotlines: function(new_data){
@@ -428,15 +428,20 @@ App.GraphControlsView = Backbone.View.extend({
         var prev = this.model.get('auto');
         var options = this.model.attributes;
         this.model.set('auto', !prev);
+        if(options['value'] == this.snapshots_data.length - 1){
+            options['auto'] = true;
+            options['value'] = 0;
+            this.model.set(options);
+            this.update_chart();
+        }
         if (prev){
             clearInterval(this.interval);
         }
         else{
             this.interval = setInterval(_.bind(function(){
-                var idx = options['value']
+                var idx = options['value'];
                 var chart = this.chart;
                 if (idx < this.snapshots_data.length){
-                    var data = this.snapshots_data[idx];
                     this.update_chart();
                     options['value']+=1;
                 }
