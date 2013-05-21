@@ -312,7 +312,6 @@ App.ScenarioChartView = Backbone.View.extend({
             if(requests.length < 2) { responses = [responses]; }
 
             chart_data['series'] = _(multiseries_values).map(function(value, n) {
-                //TODO resp should always have the same keys
                 var resp = responses[n];
                 var datapoints = resp[0]['datapoints'];
                 if(this.client_filter) {
@@ -353,11 +352,13 @@ App.GraphControlsView = Backbone.View.extend({
         this.range = options['range'];
         this.interval = options['interval'];
         this.model.on('change', this.render, this);
-        this.model.set({'value': 0, 'auto': false});
+        this.model.set({'value': this.snapshots_data.length - 1,
+                        'auto': false});
         this.multiseries = options['multiseries'] || false;
         this.plotlines = options['plotlines'] || false;
         this.chart_type = options['chart_type'];
         this.sort = options['sort'];
+        this.update_subtitle();
     },
 
     update_plotlines: function(new_data){
@@ -365,6 +366,11 @@ App.GraphControlsView = Backbone.View.extend({
              new_data = [new_data];
          }
          App.add_plotLines(this.chart, new_data, this.chart_type);
+    },
+
+    update_subtitle: function(){
+        var subtitle = this.snapshots_data[this.model.get('value')]['name'];
+        this.chart.setTitle(null, {text: subtitle});
     },
 
     update_chart: function(){
@@ -390,10 +396,10 @@ App.GraphControlsView = Backbone.View.extend({
             this.chart.xAxis[0].categories =  _(new_data['data']).pluck('name');
         }
         else if(this.sort){
-            this.chart.xAxis[0].categories =  _(this.snapshots_data[0]['data']).pluck('name');
+            this.chart.xAxis[0].categories =  _(this.snapshots_data[this.model.get('value')]['data']).pluck('name');
         };
         this.chart.redraw();
-        this.chart.setTitle(null, {text: new_data['name']});
+        this.update_subtitle();
     },
 
     on_next: function(){
@@ -422,15 +428,20 @@ App.GraphControlsView = Backbone.View.extend({
         var prev = this.model.get('auto');
         var options = this.model.attributes;
         this.model.set('auto', !prev);
+        if(options['value'] == this.snapshots_data.length - 1){
+            options['auto'] = true;
+            options['value'] = 0;
+            this.model.set(options);
+            this.update_chart();
+        }
         if (prev){
             clearInterval(this.interval);
         }
         else{
             this.interval = setInterval(_.bind(function(){
-                var idx = options['value']
+                var idx = options['value'];
                 var chart = this.chart;
                 if (idx < this.snapshots_data.length){
-                    var data = this.snapshots_data[idx];
                     this.update_chart();
                     options['value']+=1;
                 }

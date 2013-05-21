@@ -9,13 +9,14 @@ App.chart_library['columns'] = function(container, options) {
     var series = App.format_series(
                     options['series'],
                     options['sort'],
-                    '', //type e.g.: 'xy'/'xyz'
+                    options['multidim'],
                     options['unit_is_pc'],
                     options['category_facet'],
-                    options['highlights']);
-    var init_serie = series;
+                    options['highlights'],
+                    options['animation']);
+    var init_series = series;
     if (options['animation']){
-        init_serie = [series[0]];
+        init_series = series.slice(-1);
     }
 
     var chartOptions = {
@@ -91,7 +92,7 @@ App.chart_library['columns'] = function(container, options) {
                 width:400
             }
         },
-        series: init_serie
+        series: init_series
     };
 
     if (!options['legend']){
@@ -101,7 +102,7 @@ App.chart_library['columns'] = function(container, options) {
     var chart = new Highcharts.Chart(chartOptions);
 
     if (options['plotlines']){
-        App.add_plotLines(chart, init_serie, options['plotlines']);
+        App.add_plotLines(chart, init_series, options['plotlines']);
     }
 
     if (options['animation']){
@@ -119,6 +120,7 @@ App.chart_library['columns'] = function(container, options) {
         }else{
             App.chart_controls.chart = chart;
             App.chart_controls.snapshots_data = series;
+            App.chart_controls.update_chart();
         };
     }
 };
