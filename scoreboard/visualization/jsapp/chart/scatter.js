@@ -40,17 +40,7 @@ App.chart_library['scatter'] = function(container, options) {
                 y: -2
             }
         },
-        title: {
-            text: (options.meta_data['title_x'] + ' vs. ' +
-                   options.meta_data['title_y']),
-            style: {
-                color: '#000000',
-                fontWeight: 'bold',
-                fontSize:'1.2em',
-                width: '600'
-            }
-
-        },
+        title: null,
         xAxis: [{
             title: {
                 enabled: true,
