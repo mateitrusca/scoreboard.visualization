@@ -542,8 +542,12 @@ App.AnnotationsView = Backbone.View.extend({
                         "filter_label": facet.label
                     });
                 }, this).value();
+                var chart_description = this.description.html();
+                if ( this.schema.annotations && this.schema.annotations.notes ) {
+                    chart_description = this.schema.annotations.notes;
+                }
                 this.$el.html(this.template(
-                    {"description": this.description.html(),
+                    {"description": chart_description,
                      "indicators_details_url": this.cube_url + '/indicators',
                      "blocks": blocks}
                 ));
