@@ -298,11 +298,17 @@ App.FiltersBox = Backbone.View.extend({
                 }
             }
             this.filters.push(filter);
-            if(item['type'] == 'multiple_select'){
-                $(filter.el).appendTo($('.right_column', this.$el));
+            if(item.position == 'upper-right' || item.type == 'multiple_select'){
+                $(filter.el).appendTo($('.upper-right', this.$el));
+            }
+            else if(item.position == 'bottom-left'){
+                $(filter.el).appendTo($('.bottom-left', this.$el));
+            }
+            else if(item.position == 'bottom-right'){
+                $(filter.el).appendTo($('.bottom-right', this.$el));
             }
             else{
-                $(filter.el).appendTo($('.left_column', this.$el));
+                $(filter.el).appendTo($('.upper-left', this.$el));
             }
         }, this);
     }
