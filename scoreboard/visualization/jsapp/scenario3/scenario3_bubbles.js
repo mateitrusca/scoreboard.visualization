@@ -46,11 +46,13 @@ App.scenario3_bubbles_filters_schema = {
          name: 'y-indicator-group',
          label: "(Y) indicator group",
          dimension: 'indicator-group',
+         position: 'upper-right',
          constraints: {}},
         {type: 'select',
          name: 'y-indicator',
          label: "(Y) indicator",
          dimension: 'indicator',
+         position: 'upper-right',
          constraints: {
              'indicator-group': 'y-indicator-group'
          }},
@@ -58,6 +60,7 @@ App.scenario3_bubbles_filters_schema = {
          name: 'y-breakdown-group',
          label: "(Y) breakdown group",
          dimension: 'breakdown-group',
+         position: 'upper-right',
          constraints: {
              'indicator':       'y-indicator'
          }},
@@ -65,6 +68,7 @@ App.scenario3_bubbles_filters_schema = {
          name: 'y-breakdown',
          label: "(Y) breakdown",
          dimension: 'breakdown',
+         position: 'upper-right',
          constraints: {
              'indicator':       'y-indicator'
          }},
@@ -72,6 +76,7 @@ App.scenario3_bubbles_filters_schema = {
          name: 'y-unit-measure',
          label: "(Y) unit of measure",
          dimension: 'unit-measure',
+         position: 'upper-right',
          constraints: {
              'indicator':       'y-indicator',
              'breakdown':       'y-breakdown'
@@ -80,11 +85,13 @@ App.scenario3_bubbles_filters_schema = {
          name: 'z-indicator-group',
          label: "(Z) indicator group",
          dimension: 'indicator-group',
+         position: 'bottom-right',
          constraints: {}},
         {type: 'select',
          name: 'z-indicator',
          label: "(Z) indicator",
          dimension: 'indicator',
+         position: 'bottom-right',
          constraints: {
              'indicator-group': 'z-indicator-group'
          }},
@@ -92,6 +99,7 @@ App.scenario3_bubbles_filters_schema = {
          name: 'z-breakdown-group',
          label: "(Z) breakdown group",
          dimension: 'breakdown-group',
+         position: 'bottom-right',
          constraints: {
              'indicator':       'x-indicator'
          }},
@@ -99,6 +107,7 @@ App.scenario3_bubbles_filters_schema = {
          name: 'z-breakdown',
          label: "(Z) breakdown",
          dimension: 'breakdown',
+         position: 'bottom-right',
          constraints: {
              'indicator':       'z-indicator'
          }},
@@ -106,6 +115,7 @@ App.scenario3_bubbles_filters_schema = {
          name: 'z-unit-measure',
          label: "(Z) unit of measure",
          dimension: 'unit-measure',
+         position: 'bottom-right',
          constraints: {
              'indicator':       'z-indicator',
              'breakdown':       'z-breakdown'
@@ -117,6 +127,7 @@ App.scenario3_bubbles_filters_schema = {
          sortBy: 'label',
          sortOrder: 'reverse', 
          dimension: 'time-period',
+         position: 'bottom-left',
          constraints: {
              'x-indicator':    'x-indicator',
              'x-breakdown':    'x-breakdown',
