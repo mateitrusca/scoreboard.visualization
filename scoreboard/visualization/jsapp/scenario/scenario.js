@@ -352,12 +352,13 @@ App.GraphControlsView = Backbone.View.extend({
         this.range = options['range'];
         this.interval = options['interval'];
         this.model.on('change', this.render, this);
-        this.model.set({'value': 0, 'auto': false});
+        this.model.set({'value': this.snapshots_data.length - 1,
+                        'auto': false});
         this.multiseries = options['multiseries'] || false;
         this.plotlines = options['plotlines'] || false;
         this.chart_type = options['chart_type'];
         this.sort = options['sort'];
-        this.update_subtitle();
+        this.update_chart();
     },
 
     update_plotlines: function(new_data){
@@ -395,7 +396,7 @@ App.GraphControlsView = Backbone.View.extend({
             this.chart.xAxis[0].categories =  _(new_data['data']).pluck('name');
         }
         else if(this.sort){
-            this.chart.xAxis[0].categories =  _(this.snapshots_data[0]['data']).pluck('name');
+            this.chart.xAxis[0].categories =  _(this.snapshots_data[this.model.get('value')]['data']).pluck('name');
         };
         this.chart.redraw();
         this.update_subtitle();
