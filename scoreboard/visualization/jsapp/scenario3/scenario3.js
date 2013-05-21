@@ -19,7 +19,7 @@ App.scenario3_filters_schema = {
          constraints: {
              'indicator-group': 'x-indicator-group'
          }},
-        {type: 'select',
+        {type: 'ignore',
          name: 'x-breakdown-group',
          label: "(X) breakdown group",
          dimension: 'breakdown-group',
@@ -32,7 +32,6 @@ App.scenario3_filters_schema = {
          dimension: 'breakdown',
          constraints: {
              'indicator':       'x-indicator',
-             'breakdown-group': 'x-breakdown-group'
          }},
         {type: 'select',
          name: 'x-unit-measure',
@@ -47,18 +46,21 @@ App.scenario3_filters_schema = {
          name: 'y-indicator-group',
          label: "(Y) indicator group",
          dimension: 'indicator-group',
+         position: 'upper-right',
          constraints: {}},
         {type: 'select',
          name: 'y-indicator',
          label: "(Y) indicator",
          dimension: 'indicator',
+         position: 'upper-right',
          constraints: {
              'indicator-group': 'y-indicator-group'
          }},
-        {type: 'select',
+        {type: 'ignore',
          name: 'y-breakdown-group',
          label: "(Y) breakdown group",
          dimension: 'breakdown-group',
+         position: 'upper-right',
          constraints: {
              'indicator':       'y-indicator'
          }},
@@ -66,14 +68,15 @@ App.scenario3_filters_schema = {
          name: 'y-breakdown',
          label: "(Y) breakdown",
          dimension: 'breakdown',
+         position: 'upper-right',
          constraints: {
              'indicator':       'y-indicator',
-             'breakdown-group': 'y-breakdown-group'
          }},
         {type: 'select',
          name: 'y-unit-measure',
          label: "(Y) unit of measure",
          dimension: 'unit-measure',
+         position: 'upper-right',
          constraints: {
              'indicator':       'y-indicator',
              'breakdown':       'y-breakdown'
@@ -93,7 +96,7 @@ App.scenario3_filters_schema = {
              'y-breakdown':    'y-breakdown',
              'y-unit-measure': 'y-unit-measure'
          }},
-        {type: 'multiple_select',
+        {type: 'all-values',
          multidim_common: true,
          name: 'ref-area',
          label: 'Country / Countries',
