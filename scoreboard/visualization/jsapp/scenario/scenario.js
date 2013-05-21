@@ -546,8 +546,12 @@ App.AnnotationsView = Backbone.View.extend({
                 if ( this.schema.annotations && this.schema.annotations.notes ) {
                     chart_description = this.schema.annotations.notes;
                 }
+                var section_title = this.schema['annotations'] && 
+                  this.schema['annotations']['title'] || 
+                  'Definition and scopes 1:';
                 this.$el.html(this.template(
                     {"description": chart_description,
+                     "section_title": section_title,
                      "indicators_details_url": this.cube_url + '/indicators',
                      "blocks": blocks}
                 ));
