@@ -430,7 +430,17 @@ describe('ScenarioChartViewParameters', function() {
                 enabled: true
             }
         }
+        var options_legend_off = {
+            series-legend-label : 'none'
+        }
+        var options_legend_on = {
+            series-legend-label : 'label'
+        }
         App.disable_legend(chartOptions);
+        expect(chartOptions.legend.enabled).to.equal(true);
+        App.disable_legend(chartOptions, options_legend_on);
+        expect(chartOptions.legend.enabled).to.equal(true);
+        App.disable_legend(chartOptions, options_legend_off);
         expect(chartOptions.legend.enabled).to.equal(false);
     });
 
