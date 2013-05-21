@@ -550,7 +550,7 @@ describe('modular filters', function() {
                 schema: schema,
                 filters_schema: schema.facets
             });
-            expect($('.upper-left', filters_box.$el).children().length).to.equal(1);
+            expect($('.upper-left > div', filters_box.$el).length).to.equal(1);
         });
 
         it('should position filters according to their type', function(){
@@ -567,8 +567,8 @@ describe('modular filters', function() {
                 schema: this.schema,
                 filters_schema: this.schema.facets
             });
-            expect($('.upper-left', filters_box.$el).children().length).to.equal(1);
-            expect($('.upper-right', filters_box.$el).children().length).to.equal(1);
+            expect($('.upper-left > div', filters_box.$el).length).to.equal(1);
+            expect($('.upper-right > div', filters_box.$el).length).to.equal(1);
         });
 
     });
