@@ -2,27 +2,19 @@
 {{ description }}
 {{#each blocks}}
 <p>
-  <b>{{ this.filter_label }}</b>
+  <b>{{ this.filter_label }}</b>: {{ this.label }}
 </p>
 <ul>
-  <li>{{ this.label }} </li>
-  <li>Caption: {{ this.short_label }}</li>
-  <li><strong>Definition:</strong> {{ this.definition }}</li>
-
+  <li><strong>Definition: </strong> {{ this.definition }}</li>
+  
+  {{# if this.note }}
+  <li>
+    <strong>Notes: </strong>{{ this.note }}
+  </li>
+  {{/ if }}
   {{# if this.source_definition }}
   <li>
-    <strong>Source:</strong>
-      <ul>
-        <li>
-          {{ this.source_label }}&nbsp;[<a href="{{ this.source_url }}">More&nbsp;information</a>]
-        </li>
-        <li>
-          <strong>Definition:</strong>{{ this.source_definition }}
-        </li>
-        <li>
-        <strong>Notes:</strong>{{ this.source_notes }}
-        </li>
-      </ul>
+    <strong>Source: </strong>{{ this.source_definition }}&nbsp;[<a href="{{ this.source_url }}">More&nbsp;information</a>]
   </li>
   {{/ if }}
 </ul>
