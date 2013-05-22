@@ -596,6 +596,37 @@ describe('ScenarioChartViewParameters', function() {
         expect(url_param(requests[2].url, 'ref-area')).to.equal('area2');
     });
 
+    it('should ignore specified values for an AllValuesFilter', function() {
+        var loadstate = new Backbone.Model();
+        var filter = new App.AllValuesFilter({
+            model: this.model,
+            loadstate: loadstate,
+            type: 'all-values',
+            dimension: 'ref-area',
+            name: 'ref-area',
+            ignore_values: ['area2']
+        });
+        var chart = new App.ScenarioChartView({
+            model: this.model,
+            loadstate: loadstate,
+            schema: {
+                multiple_series: 'ref-area'
+            },
+            scenario_chart: this.scenario_chart,
+            filters_schema: [
+                {type: 'all-values', dimension: 'ref-area', name: 'ref-area'}
+            ],
+            values_schema: [
+                {type: 'all-values', dimension: 'value'}
+            ]
+        });
+        var country_options = [{'notation': 'area1'}, {'notation': 'area2'}];
+        var url_param = App.testing.url_param;
+        var requests = this.sandbox.server.requests;
+        App.respond_json(requests[0], {'options': country_options});
+        expect(this.model.get('ref-area')).to.deep.equal(['area1']);
+    });
+
 });
 
 
