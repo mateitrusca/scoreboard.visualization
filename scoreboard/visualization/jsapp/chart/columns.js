@@ -16,7 +16,7 @@ App.chart_library['columns'] = function(container, options) {
                     options['animation']);
     var init_series = series;
     if (options['animation']){
-        init_series = series.slice(-1);
+        init_series = JSON.parse(JSON.stringify(series.slice(-1)));
     }
 
     var chartOptions = {
