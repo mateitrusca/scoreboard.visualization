@@ -61,7 +61,7 @@ App.chart_library['columns'] = function(container, options) {
                 align: 'right',
                 formatter: options['xlabels_formatter'],
                 style: {
-                    color: '#000000',
+                    color: '#000000'
                 }
              }
         },
@@ -84,7 +84,7 @@ App.chart_library['columns'] = function(container, options) {
             borderWidth: 0,
             itemStyle: {
                 width: 150
-            },
+            }
         },
         tooltip: {
             formatter: options['tooltip_formatter'],

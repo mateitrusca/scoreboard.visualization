@@ -36,7 +36,7 @@ App.scenario9_table_filters_schema = {
       sortOrder: 'reverse',
       constraints: {
         "indicator-group": "indicator-group",
-        "ref-area": "ref-area",
+        "ref-area": "ref-area"
       }
     },
     {

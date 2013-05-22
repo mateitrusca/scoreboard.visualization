@@ -342,7 +342,7 @@ App.GraphControlsView = Backbone.View.extend({
     events: {
         'click #toolbar #prev': 'on_prev',
         'click #toolbar #play': 'on_auto_change',
-        'click #toolbar #next': 'on_next',
+        'click #toolbar #next': 'on_next'
     },
 
     initialize: function(options) {

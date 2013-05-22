@@ -125,7 +125,7 @@ App.chart_library['country_profile'] = function(container, options) {
                 marginLeft: 300,
                 marginRight: 50,
                 height: 200 + series[0].data.length * 75,
-                width: 850,
+                width: 850
             },
             credits: {
                 href: options['credits']['href'],
@@ -209,7 +209,7 @@ App.chart_library['country_profile'] = function(container, options) {
             },
             plotOptions: {
                 series: {
-                    stacking: 'normal',
+                    stacking: 'normal'
                 }
             },
             series: stack_series

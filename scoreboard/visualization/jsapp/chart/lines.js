@@ -109,7 +109,7 @@ App.chart_library['lines'] = function(container, options) {
             borderWidth: 0,
             itemStyle: {
                 width: 150
-            },
+            }
         },
         plotOptions: {
             series: {

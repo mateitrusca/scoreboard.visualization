@@ -147,7 +147,7 @@ App.scenario3_bubbles_animation_filters_schema = {
              'y-unit-measure': 'y-unit-measure',
              'z-indicator':    'z-indicator',
              'z-breakdown':    'z-breakdown',
-             'z-unit-measure': 'z-unit-measure',
+             'z-unit-measure': 'z-unit-measure'
          }},
          {type: 'all-values', dimension: 'value', multidim_value: true}
     ],
