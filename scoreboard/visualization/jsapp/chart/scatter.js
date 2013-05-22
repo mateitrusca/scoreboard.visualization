@@ -28,7 +28,8 @@ App.chart_library['scatter'] = function(container, options) {
             marginTop: 70,
             marginBottom: 100,
             height: 670,
-            width: 750
+            width: 750,
+            ignoreHiddenSeries: false
         },
         credits: {
             href: options['credits']['href'],
