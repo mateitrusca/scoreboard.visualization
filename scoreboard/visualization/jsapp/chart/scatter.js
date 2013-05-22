@@ -28,7 +28,8 @@ App.chart_library['scatter'] = function(container, options) {
             marginTop: 70,
             marginBottom: 100,
             height: 670,
-            width: 750
+            width: 750,
+            ignoreHiddenSeries: false
         },
         credits: {
             href: options['credits']['href'],
@@ -40,21 +41,13 @@ App.chart_library['scatter'] = function(container, options) {
                 y: -2
             }
         },
-        title: {
-            text: (options.meta_data['title_x'] + ' vs. ' +
-                   options.meta_data['title_y']),
-            style: {
-                color: '#000000',
-                fontWeight: 'bold',
-                fontSize:'1.2em',
-                width: '600'
-            }
-
-        },
+        title: null,
         xAxis: [{
             title: {
                 enabled: true,
-                text: options.meta_data['title_x'],
+                text: options['title_formatter'](
+                        options.meta_data['title_x'],
+                        options.meta_data['breakdown_x']),
                 style: {
                     color: '#000000',
                     fontWeight: 'bold'
@@ -82,7 +75,9 @@ App.chart_library['scatter'] = function(container, options) {
         }],
         yAxis: {
             title: {
-                text: options.meta_data['title_y'],
+                text: options['title_formatter'](
+                        options.meta_data['title_y'],
+                        options.meta_data['breakdown_y']),
                 style: {
                     color: '#000000',
                     fontWeight: 'bold'

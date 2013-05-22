@@ -37,6 +37,7 @@ App.SelectFilter = Backbone.View.extend({
         this.dimension_options = [];
         this.ajax = null;
         this.default_value = options['default_value'];
+        this.ignore_values = options['ignore_values'];
         this.default_all = options['default_all'] || false;
         this.loadstate = options['loadstate'] || new Backbone.Model();
         _(this.constraints).forEach(function(other_name, other_dimension) {
@@ -248,7 +249,11 @@ App.AllValuesFilter = App.SelectFilter.extend({
     },
 
     adjust_value: function() {
-        this.model.set(this.name, _(this.dimension_options).pluck('notation'));
+        var adjusted_values = _.chain(this.dimension_options)
+                               .pluck('notation')
+                               .difference(this.ignore_values)
+                               .value();
+        this.model.set(this.name, adjusted_values);
     }
 
 });
@@ -284,6 +289,7 @@ App.FiltersBox = Backbone.View.extend({
                 name: item['name'],
                 label: item['label'],
                 default_value: item['default_value'],
+                ignore_values: item['ignore_values'],
                 default_all: default_all,
                 dimension: item['dimension'],
                 include_wildcard: item['include_wildcard'],
@@ -298,11 +304,17 @@ App.FiltersBox = Backbone.View.extend({
                 }
             }
             this.filters.push(filter);
-            if(item['type'] == 'multiple_select'){
-                $(filter.el).appendTo($('.right_column', this.$el));
+            if(item.position == 'upper-right' || item.type == 'multiple_select'){
+                $(filter.el).appendTo($('.upper-right', this.$el));
+            }
+            else if(item.position == 'bottom-left'){
+                $(filter.el).appendTo($('.bottom-left', this.$el));
+            }
+            else if(item.position == 'bottom-right'){
+                $(filter.el).appendTo($('.bottom-right', this.$el));
             }
             else{
-                $(filter.el).appendTo($('.left_column', this.$el));
+                $(filter.el).appendTo($('.upper-left', this.$el));
             }
         }, this);
     }

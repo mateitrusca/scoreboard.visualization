@@ -32,7 +32,9 @@ App.Visualization = Backbone.View.extend({
                 if(item['dimension'] == 'value' ||
                    item['dimension'] == options['schema']['category_facet']) {
                     values_schema.push(item);
-                    return;
+                    if(item.dimension == 'value'){
+                        return;
+                    }
                 }
             }
             filters_schema.push(item);

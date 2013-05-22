@@ -217,6 +217,12 @@ App.ScenarioChartView = Backbone.View.extend({
                 }
                 return this.value;
             },
+            'title_formatter': function(title, breakdown){
+                if (breakdown && breakdown != "Total"){
+                    return title + '<br/> by ' + breakdown
+                }
+                return title
+            },
             'group_labels': {},
             'unit_is_pc': unit_is_pc,
             'plotlines': this.schema['plotlines'] || false,
