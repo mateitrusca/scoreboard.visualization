@@ -96,7 +96,7 @@ App.chart_library['columns'] = function(container, options) {
     };
 
     if (!options['legend']){
-        App.disable_legend(chartOptions);
+        App.disable_legend(chartOptions, options);
     }
 
     var chart = new Highcharts.Chart(chartOptions);
