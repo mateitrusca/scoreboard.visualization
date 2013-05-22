@@ -91,7 +91,7 @@ App.SelectFilter = Backbone.View.extend({
                         ['label', 'Any'],
                         ['short_label', 'Any'],
                         ['notation', 'any'],
-                        ['uri', null],
+                        ['uri', null]
                     ]
                 ));
             }
