@@ -40,11 +40,29 @@ App.chart_library['bubbles'] = function(container, options) {
                 y: -2
             }
         },
-        title: null,
+        title: {
+            text: options.meta_data['period_label'],
+            align: 'left',
+            style: {
+                color: '#000000',
+                fontWeight: 'bold'
+            }
+        },
+        subtitle: {
+            text: options['title_formatter'](
+                    'Bubbles size (Z): ' + options.meta_data['title_z'],
+                    options.meta_data['breakdown_z']),
+            style: {
+                color: '#000000',
+                fontWeight: 'bold'
+            }
+        },
         xAxis: [{
             title: {
                 enabled: true,
-                text: options.meta_data['title_x'],
+                text: options['title_formatter'](
+                        options.meta_data['title_x'],
+                        options.meta_data['breakdown_x']),
                 style: {
                     color: '#000000',
                     fontWeight: 'bold'
@@ -59,19 +77,12 @@ App.chart_library['bubbles'] = function(container, options) {
                 }
              }
 
-        },{
-            opposite:true,
-            title: {
-                text: 'Year 2011',
-                style: {
-                    color: '#000000',
-                    fontWeight: 'bold'
-                }
-            }
         }],
         yAxis: {
             title: {
-                text: options.meta_data['title_y'],
+                text: options['title_formatter'](
+                        options.meta_data['title_y'],
+                        options.meta_data['breakdown_y']),
                 style: {
                     color: '#000000',
                     fontWeight: 'bold'
