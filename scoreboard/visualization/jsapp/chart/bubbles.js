@@ -143,10 +143,11 @@ App.chart_library['bubbles'] = function(container, options) {
                 plotlines: options['plotlines'],
                 chart_type: options['plotlines']
             });
-            App.chart_controls.$el.insertAfter(container);
+            App.chart_controls.$el.insertBefore(container);
         }else{
             App.chart_controls.chart = chart;
             App.chart_controls.snapshots_data = series;
+            App.chart_controls.update_chart();
         };
     }
 
