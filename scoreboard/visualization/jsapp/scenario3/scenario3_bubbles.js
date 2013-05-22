@@ -145,6 +145,7 @@ App.scenario3_bubbles_filters_schema = {
          on_client: true,
          label: 'Country / Countries',
          dimension: 'ref-area',
+         ignore_values: ['EU27'],
          default_value: ['BE', 'BG', 'CZ', 'DK', 'DE', 'EE', 'IE', 'EL', 'ES', 'FR', 'IT', 'CY', 'LV', 'LT', 'LU', 'HU', 'MT', 'NL', 'AT', 'PL', 'PT', 'RO', 'SI', 'SK', 'FI', 'SE', 'UK'],
          position: '.right_column',
          constraints: {
@@ -178,18 +179,13 @@ App.scenario3_bubbles_filters_schema = {
     multidim: 3,
     plotlines: {x: 'values', y: 'values'},
     labels: {
-        title_x: {
-         facet: 'x-indicator',
-         field: 'short_label'},
-        title_y: {
-         facet: 'y-indicator',
-         field: 'short_label'},
-        title_z: {
-         facet: 'z-indicator',
-         field: 'short_label'},
-        period_label: {
-         facet: 'time-period',
-         field: 'label'}
+        title_x: { facet: 'x-indicator', field: 'short_label'},
+        title_y: { facet: 'y-indicator', field: 'short_label'},
+        title_z: { facet: 'z-indicator', field: 'short_label'},
+        period_label: { facet: 'time-period', field: 'label'},
+        breakdown_x: {facet: 'x-breakdown', field: 'label'},
+        breakdown_y: {facet: 'y-breakdown', field: 'label'},
+        breakdown_z: {facet: 'z-breakdown', field: 'label'}
     }
 };
 

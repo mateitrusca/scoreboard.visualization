@@ -132,7 +132,9 @@ App.scenario3_filters_schema = {
     labels: {
         title_x: {facet: 'x-indicator', field: 'short_label'},
         title_y: {facet: 'y-indicator', field: 'short_label'},
-        period_label: {facet: 'time-period', field: 'label'}
+        period_label: {facet: 'time-period', field: 'label'},
+        breakdown_x: {facet: 'x-breakdown', field: 'label'},
+        breakdown_y: {facet: 'y-breakdown', field: 'label'}
     }
 };
 
