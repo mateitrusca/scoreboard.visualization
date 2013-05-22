@@ -125,7 +125,7 @@ App.scenario3_bubbles_filters_schema = {
          name: 'time-period',
          label: "Year",
          sortBy: 'label',
-         sortOrder: 'reverse', 
+         sortOrder: 'reverse',
          dimension: 'time-period',
          position: 'bottom-left',
          constraints: {
@@ -139,7 +139,7 @@ App.scenario3_bubbles_filters_schema = {
              'z-breakdown':    'z-breakdown',
              'z-unit-measure': 'z-unit-measure'
          }},
-        {type: 'multiple_select',
+        {type: 'all-values',
          multidim_common: true,
          name: 'ref-area',
          on_client: true,
