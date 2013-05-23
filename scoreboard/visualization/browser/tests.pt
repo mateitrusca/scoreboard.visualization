@@ -20,7 +20,7 @@
     mocha.globals(['addthis_open', 'addthis_close', 'addthis_sendto', '_ate',
                    'addthis_conf', '_adr', 'addthis_pub', 'addthis_pp',
                    'addthis_share', '_at_plusonecallback', '_at_pluscallback',
-                   'addthis_config']);
+                   'addthis_config', 'util']);
     expect = chai.expect;
   </script>
   <script
