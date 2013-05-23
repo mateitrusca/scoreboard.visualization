@@ -18,6 +18,15 @@ App.chart_library['scatter'] = function(container, options) {
                     options['category_facet'],
                     options['highlights']);
 
+    var init_series = JSON.parse(JSON.stringify(series[0]));
+
+    // formatter is lost after stringify
+    _(init_series).each(function(item){
+        item['dataLabels']['formatter'] = function(){
+            return this.point.name;
+        }
+    });
+
     var chartOptions = {
         chart: {
             renderTo: container,
@@ -115,7 +124,7 @@ App.chart_library['scatter'] = function(container, options) {
                 }
             }
         },
-        series: series[0]
+        series: init_series
     };
 
     if (!options['legend']){
