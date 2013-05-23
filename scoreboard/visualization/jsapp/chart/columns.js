@@ -25,6 +25,7 @@ App.chart_library['columns'] = function(container, options) {
         chart: {
             renderTo: container,
             defaultSeriesType: 'column',
+            zoomType: 'y',
             marginLeft: 100,
             marginRight: 170,
             marginTop: 50,
