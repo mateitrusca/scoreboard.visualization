@@ -23,9 +23,7 @@ App.ScenarioChartView = Backbone.View.extend({
         this.client_filter = null;
         _(options.filters_schema).forEach(function(facet) {
             this.dimensions_mapping[facet['name']] = facet['dimension'];
-            // TODO: remove hardcoding that ignores other facets than ref-area
-            if( facet['dimension'] == 'ref-area' &&
-                facet['name'] == this.schema['category_facet']) {
+            if(facet['name'] == this.schema['category_facet']) {
                 this.client_filter = facet['name'];
             }
         }, this);

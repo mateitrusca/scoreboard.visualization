@@ -28,14 +28,9 @@ App.Visualization = Backbone.View.extend({
             if(item['type'] == 'ignore') {
                 return;
             }
-            if(item['type'] == 'all-values') {
-                if(item['dimension'] == 'value' ||
-                   item['dimension'] == options['schema']['category_facet']) {
-                    values_schema.push(item);
-                    if(item.dimension == 'value'){
-                        return;
-                    }
-                }
+            if(item['dimension'] == 'value') {
+                values_schema.push(item);
+                return;
             }
             filters_schema.push(item);
         });
