@@ -101,32 +101,22 @@ App.ScenarioChartView = Backbone.View.extend({
             var units = [this.model.get('x-unit-measure') || '',
                          this.model.get('y-unit-measure') || '',
                          this.model.get('z-unit-measure') || '']
-            _(units).each(function(unit){
-                var evaluation = false
-                if (unit.substring(0,3) == 'pc_'){
-                    evaluation = true;
-                }
-                unit_is_pc.push(evaluation);
-            });
         }
         else if(this.schema['multidim'] == 2){
             args['join_by'] = this.schema.category_facet;
             var units = [this.model.get('x-unit-measure') || '',
                          this.model.get('y-unit-measure') || '']
-            _(units).each(function(unit){
-                var evaluation = false
-                if (unit.substring(0,3) == 'pc_'){
-                    evaluation = true;
-                }
-                unit_is_pc.push(evaluation);
-            });
         }
         else{
-            var unit = this.model.get('unit-measure') || '';
-            if (unit.substring(0,3) == 'pc_'){
-                unit_is_pc.push(true);
-            }
+            var units = [this.model.get('unit-measure') || ''];
         }
+        _(units).each(function(unit){
+            var evaluation = false
+            if (unit.substring(0,3) == 'pc_'){
+                evaluation = true;
+            }
+            unit_is_pc.push(evaluation);
+        });
         // category_facet, value and unit-measure always in tooltip
         var tooltip_attributes = ['value', 'unit-measure'];;
         if ( this.schema['tooltips'] ) {
