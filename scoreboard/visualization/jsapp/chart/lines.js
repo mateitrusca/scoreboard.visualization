@@ -49,6 +49,7 @@ App.chart_library['lines'] = function(container, options) {
             height: 450,
             width: 1100
         },
+        colors: App.SERIES_COLOR,
         credits: {
             href: options['credits']['href'],
             text: options['credits']['text'],
