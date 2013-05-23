@@ -561,6 +561,34 @@ describe('AxesEditor', function() {
             ).to.equal('short');
     });
 
+    it('should save horizontal plotlines choice', function() {
+        var view = new App.AxesEditor({model: new Backbone.Model()});
+        view.$el.find('[name="axis-horizontal-plotline"]'
+            ).val('values').change();
+        expect(view.model.get('plotlines')['x']).to.equal('values');
+    });
+
+    it('should show existing horizontal plotlines choice', function() {
+        var model = new Backbone.Model({'plotlines': {x: 'values'}});
+        var view = new App.AxesEditor({model: model});
+        expect(view.$el.find('[name="axis-horizontal-plotline"]').val()
+            ).to.equal('values');
+    });
+
+    it('should save vertical plotlines choice', function() {
+        var view = new App.AxesEditor({model: new Backbone.Model()});
+        view.$el.find('[name="axis-vertical-plotline"]'
+            ).val('values').change();
+        expect(view.model.get('plotlines')['y']).to.equal('values');
+    });
+
+    it('should show existing vertical plotlines choice', function() {
+        var model = new Backbone.Model({'plotlines': {y: 'values'}});
+        var view = new App.AxesEditor({model: model});
+        expect(view.$el.find('[name="axis-vertical-plotline"]').val()
+            ).to.equal('values');
+    });
+
 });
 
 

@@ -19,7 +19,9 @@ App.AxesEditor = Backbone.View.extend({
         'change [name="axis-sort-order"]': 'on_change',
         'change [name="axis-horizontal-title"]': 'on_change',
         'change [name="axis-horizontal-rotated"]': 'on_change',
-        'change [name="axis-vertical-title"]': 'on_change'
+        'change [name="axis-horizontal-plotline"]': 'on_change',
+        'change [name="axis-vertical-title"]': 'on_change',
+        'change [name="axis-vertical-plotline"]': 'on_change'
     },
 
     sort_by_options: [
@@ -36,6 +38,11 @@ App.AxesEditor = Backbone.View.extend({
         {value: 'none', label: "none"},
         {value: 'short', label: "Short label"},
         {value: 'long', label: "Long label"}
+    ],
+
+    plotlines_options: [
+        {value: '', label: "none"},
+        {value: 'values', label: "values"}
     ],
 
     initialize: function(options) {
@@ -59,6 +66,7 @@ App.AxesEditor = Backbone.View.extend({
 
     render: function() {
         var sort = this.model.get('sort') || {};
+        var plotlines = this.model.get('plotlines') || {};
         var context = {
             sort_by_options: _(this.sort_by_options).map(function(spec) {
                 var item = _({}).extend(spec);
@@ -83,6 +91,14 @@ App.AxesEditor = Backbone.View.extend({
                 return item;
             }, this),
             horizontal_rotated: this.model.get('axis-horizontal-rotated'),
+            horizontal_plotline_options: _(this.plotlines_options).map(
+                                          function(spec) {
+                var item = _({}).extend(spec);
+                if(spec['value'] == plotlines['x']) {
+                    item['selected'] = true;
+                }
+                return item;
+            }),
             vertical_title_options: _(this.axis_title_options).map(
                                        function(spec) {
                 var item = _({}).extend(spec);
@@ -90,13 +106,28 @@ App.AxesEditor = Backbone.View.extend({
                     item['selected'] = true;
                 }
                 return item;
-            }, this)
+            }, this),
+            vertical_plotline_options: _(this.plotlines_options).map(
+                                          function(spec) {
+                var item = _({}).extend(spec);
+                if(spec['value'] == plotlines['y']) {
+                    item['selected'] = true;
+                }
+                return item;
+            })
         };
         this.$el.html(this.template(context));
     },
 
     on_change: function() {
         var val = _.bind(function(sel){return this.$el.find(sel).val()}, this);
+        var plotlines = {
+            x: val('[name="axis-horizontal-plotline"]'),
+            y: val('[name="axis-vertical-plotline"]')
+        };
+        _(['x', 'y']).forEach(function(key) {
+            if(! plotlines[key]) { delete plotlines[key]; }
+        });
         this.model.set({
             'sort': {
                 by: val('[name="axis-sort-by"]:checked'),
@@ -105,7 +136,8 @@ App.AxesEditor = Backbone.View.extend({
             'axis-horizontal-title': val('[name="axis-horizontal-title"]'),
             'axis-horizontal-rotated':
                 this.$el.find('[name="axis-horizontal-rotated"]').is(':checked'),
-            'axis-vertical-title': val('[name="axis-vertical-title"]')
+            'axis-vertical-title': val('[name="axis-vertical-title"]'),
+            'plotlines': plotlines
         });
     }
 
