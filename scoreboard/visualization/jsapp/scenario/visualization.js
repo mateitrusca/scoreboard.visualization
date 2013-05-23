@@ -14,12 +14,6 @@ App.Visualization = Backbone.View.extend({
         this.filters = new Backbone.Model();
         this.filter_loadstate = new Backbone.Model();
 
-        if((App.initial_hash || '').substr(0, 7) == '#chart=') {
-            try {
-                this.filters.set(JSON.parse(App.initial_hash.substr(7)));
-            } catch(e) {}
-        }
-
         var filters_schema = [];
         var values_schema = [];
         _(options['schema']['facets']).forEach(function(item) {
@@ -32,6 +26,33 @@ App.Visualization = Backbone.View.extend({
             }
             filters_schema.push(item);
         });
+
+        if((App.initial_hash || '').substr(0, 7) == '#chart=') {
+            var url_filters = {};
+            try {
+                url_filters = JSON.parse(App.initial_hash.substr(7))
+            } catch(e) {}
+            var keep_filters = {};
+            _(filters_schema).forEach(function(item) {
+                if(item['type'] == 'select') {
+                    keep_filters[item['name']] = true;
+                }
+            });
+            _(url_filters).forEach(function(value, name) {
+                if(! keep_filters[name]) {
+                    if(name.substr(0, 2) == 'x-') {
+                        name = name.substr(2);
+                    }
+                    else if(keep_filters['x-' + name]) {
+                        name = 'x-' + name;
+                    }
+                    else {
+                        return;
+                    }
+                }
+                this.filters.set(name, value);
+            }, this);
+        }
 
         this.filters_box = new App.FiltersBox({
             el: this.$el.find('#the-filters'),
