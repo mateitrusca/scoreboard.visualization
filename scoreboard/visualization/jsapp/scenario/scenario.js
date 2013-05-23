@@ -23,7 +23,9 @@ App.ScenarioChartView = Backbone.View.extend({
         this.client_filter = null;
         _(options.filters_schema).forEach(function(facet) {
             this.dimensions_mapping[facet['name']] = facet['dimension'];
-            if(facet['name'] == this.schema['category_facet']) {
+            // TODO: remove hardcoding that ignores other facets than ref-area
+            if( facet['dimension'] == 'ref-area' &&
+                facet['name'] == this.schema['category_facet']) {
                 this.client_filter = facet['name'];
             }
         }, this);
@@ -246,6 +248,9 @@ App.ScenarioChartView = Backbone.View.extend({
         }
         else if(this.schema['chart_type'] === 'country_profile'){
             args.subtype = this.schema['chart_subtype'];
+            // TODO: proper handling of all-values dimensions
+            // indicator is a filter because it is the category facet
+            args = _.omit(args, 'indicator');
             data_method = '/datapoints_cp';
         }
         else {
