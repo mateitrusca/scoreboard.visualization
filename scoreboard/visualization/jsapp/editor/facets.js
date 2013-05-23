@@ -28,6 +28,7 @@ App.FacetEditorField = Backbone.View.extend({
     ],
 
     sort_by_options: [
+        {value: 'nosort', label: "order field"},
         {value: 'label', label: "label"},
         {value: 'short_label', label: "short label"},
         {value: 'notation', label: "code"}

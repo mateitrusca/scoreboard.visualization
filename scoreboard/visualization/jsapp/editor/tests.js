@@ -522,6 +522,19 @@ describe('AxesEditor', function() {
             ).to.equal('-1');
     });
 
+    it('should save sort each series choice', function() {
+        var view = new App.AxesEditor({model: new Backbone.Model()});
+        view.$el.find('[name="axis-sort-each-series"]').click().change();
+        expect(view.model.get('sort')['each_series']).to.be.true;
+    });
+
+    it('should show existing sort each series choice', function() {
+        var model = new Backbone.Model({sort: {each_series: true}});
+        var view = new App.AxesEditor({model: model});
+        expect(view.$el.find('[name="axis-sort-each-series"]').is(':checked')
+            ).to.be.true;
+    });
+
     it('should save axes horizontal title choice', function() {
         var view = new App.AxesEditor({model: new Backbone.Model()});
         view.$el.find('[name="axis-horizontal-title"]').val('short').change();
@@ -559,6 +572,34 @@ describe('AxesEditor', function() {
         var view = new App.AxesEditor({model: model});
         expect(view.$el.find('[name="axis-vertical-title"]').val()
             ).to.equal('short');
+    });
+
+    it('should save horizontal plotlines choice', function() {
+        var view = new App.AxesEditor({model: new Backbone.Model()});
+        view.$el.find('[name="axis-horizontal-plotline"]'
+            ).val('values').change();
+        expect(view.model.get('plotlines')['x']).to.equal('values');
+    });
+
+    it('should show existing horizontal plotlines choice', function() {
+        var model = new Backbone.Model({'plotlines': {x: 'values'}});
+        var view = new App.AxesEditor({model: model});
+        expect(view.$el.find('[name="axis-horizontal-plotline"]').val()
+            ).to.equal('values');
+    });
+
+    it('should save vertical plotlines choice', function() {
+        var view = new App.AxesEditor({model: new Backbone.Model()});
+        view.$el.find('[name="axis-vertical-plotline"]'
+            ).val('values').change();
+        expect(view.model.get('plotlines')['y']).to.equal('values');
+    });
+
+    it('should show existing vertical plotlines choice', function() {
+        var model = new Backbone.Model({'plotlines': {y: 'values'}});
+        var view = new App.AxesEditor({model: model});
+        expect(view.$el.find('[name="axis-vertical-plotline"]').val()
+            ).to.equal('values');
     });
 
 });
