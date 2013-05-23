@@ -62,8 +62,9 @@ App.chart_library['scatter'] = function(container, options) {
             title: {
                 enabled: true,
                 text: options['title_formatter'](
-                        options.meta_data['title_x'], '<br>',
-                        options.meta_data['breakdown_x']),
+                        options.meta_data['title_x'], ', by ',
+                        options.meta_data['breakdown_x'], ' (',
+                        options.meta_data['unit_x'], ')'),
                 style: {
                     color: '#000000',
                     fontWeight: 'bold',
@@ -84,8 +85,9 @@ App.chart_library['scatter'] = function(container, options) {
         yAxis: {
             title: {
                 text: options['title_formatter'](
-                        options.meta_data['title_y'], '<br>',
-                        options.meta_data['breakdown_y']),
+                        options.meta_data['title_y'], '<br>by ',
+                        options.meta_data['breakdown_y'], '<br>(',
+                        options.meta_data['unit_y'], ')'),
                 style: {
                     color: '#000000',
                     fontWeight: 'bold',
