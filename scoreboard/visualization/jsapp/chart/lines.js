@@ -82,6 +82,8 @@ App.chart_library['lines'] = function(container, options) {
              }
         },
         yAxis: {
+            min:0,
+            max: options['unit_is_pc'][0]?100:null,
             title: {
                 text: options.meta_data['ordinate'],
                 style: {
@@ -93,8 +95,7 @@ App.chart_library['lines'] = function(container, options) {
                 style: {
                     color: '#000000'
                 }
-            },
-            min: 0
+            }
         },
         tooltip: {
             formatter: options['tooltip_formatter'],
