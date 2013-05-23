@@ -78,7 +78,7 @@ App.format_series = function (data, sort, multidim, percent, category, highlight
                         'x': 16,
                         'y': 4,
                         'style': {
-                            'font-weight': 'bold'
+                            'font-weight': 'normal'
                         },
                         'formatter': label_formatter
                     }
@@ -167,6 +167,9 @@ App.format_series = function (data, sort, multidim, percent, category, highlight
                   );
               });
             if (sort && !first_serie){
+                if ( sort.first_serie ) {
+                    sort.first_serie = null;
+                }
                 serie = sort_serie(serie, sort);
                 if(!sort.each_series){
                     first_serie = serie;
