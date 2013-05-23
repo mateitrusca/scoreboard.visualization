@@ -123,7 +123,7 @@ App.scenario3_bubbles_filters_schema = {
         {type: 'select',
          multidim_common: true,
          name: 'time-period',
-         label: "Year",
+         label: "Period",
          sortBy: 'label',
          sortOrder: 'reverse',
          dimension: 'time-period',

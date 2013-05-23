@@ -8,7 +8,7 @@
 App.chart_library['scatter'] = function(container, options) {
 
     $(container).addClass('high-chart');
-    $(container).addClass('scatter-chart');
+    $(container).parent().addClass('scatter-chart');
 
     var series = App.format_series(
                     options['series'],
@@ -119,7 +119,7 @@ App.chart_library['scatter'] = function(container, options) {
     };
 
     if (!options['legend']){
-        App.disable_legend(chartOptions);
+        App.disable_legend(chartOptions, options);
     }
 
     var chart = new Highcharts.Chart(chartOptions);

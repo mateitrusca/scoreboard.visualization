@@ -65,7 +65,13 @@ App.scenario2_filters_schema = {
         'flag': true,
         'note': true
     },
-    legend: true,
+    'series-legend-label': 'long',
+    'series-point-label': 'long',
+    sort: {
+        by: 'category',
+        order: -1,
+        each_series: true
+    },
     labels: {
         title: {facet: 'indicator', field: 'short_label'},
         ordinate: {facet: 'unit-measure', field: 'short_label'},

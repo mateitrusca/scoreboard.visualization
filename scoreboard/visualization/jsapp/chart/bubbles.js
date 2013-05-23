@@ -7,7 +7,8 @@
 
 App.chart_library['bubbles'] = function(container, options) {
 
-    $(container).addClass('normal-chart');
+    $(container).addClass('high-chart');
+    $(container).parent().addClass('bubble-chart');
 
     var series = App.format_series(
                     options['series'],
@@ -123,7 +124,7 @@ App.chart_library['bubbles'] = function(container, options) {
     };
 
     if (!options['legend']){
-        App.disable_legend(chartOptions);
+        App.disable_legend(chartOptions, options);
     }
 
     var chart = new Highcharts.Chart(chartOptions);

@@ -85,8 +85,8 @@ App.scenario1_filters_schema = {
     highlights: ["EU27", "DE"],
     chart_type: 'columns',
     sort: {
-        "by": "value",
-        "order": -1
+        'by': 'value',
+        'order': -1
     },
     tooltips: {
         'unit-measure': true,

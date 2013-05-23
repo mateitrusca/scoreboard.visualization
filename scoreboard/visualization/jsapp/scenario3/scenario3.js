@@ -86,7 +86,7 @@ App.scenario3_filters_schema = {
          name: 'time-period',
          sortBy: 'label',
          sortOrder: 'reverse', 
-         label: "Year",
+         label: "Period",
          dimension: 'time-period',
          constraints: {
              'x-indicator':    'x-indicator',

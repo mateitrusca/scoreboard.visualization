@@ -6,6 +6,9 @@
 
 App.chart_library['country_profile'] = function(container, options) {
 
+    $(container).addClass('high-chart');
+    $(container).parent().addClass('country-profile');
+
     var add_commas = function(nStr){
         nStr += '';
         var x = nStr.split('.');
@@ -216,7 +219,7 @@ App.chart_library['country_profile'] = function(container, options) {
         };
 
         if (!options['legend']){
-            App.disable_legend(chartOptions);
+            App.disable_legend(chartOptions, options);
         }
 
         var chart = new Highcharts.Chart(chartOptions);

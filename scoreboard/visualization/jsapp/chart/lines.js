@@ -6,6 +6,8 @@
 
 
 App.chart_library['lines'] = function(container, options) {
+    $(container).addClass('high-chart');
+    $(container).parent().addClass('spline-chart');
     var series = App.format_series(
                     options['series'],
                     options['sort'],
