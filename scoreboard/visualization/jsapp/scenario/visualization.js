@@ -17,9 +17,7 @@ App.Visualization = Backbone.View.extend({
         if((App.initial_hash || '').substr(0, 7) == '#chart=') {
             try {
                 this.filters.set(JSON.parse(App.initial_hash.substr(7)));
-            } catch(e) {
-                debugger;
-            }
+            } catch(e) {}
         }
 
         var filters_schema = [];
