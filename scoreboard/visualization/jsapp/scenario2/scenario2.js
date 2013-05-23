@@ -66,6 +66,7 @@ App.scenario2_filters_schema = {
         'note': true
     },
     'series-legend-label': 'long',
+    'series-ending-label': 'long',
     'series-point-label': 'long',
     sort: {
         by: 'category',

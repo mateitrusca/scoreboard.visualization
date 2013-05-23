@@ -24,7 +24,14 @@ App.chart_library['lines'] = function(container, options) {
                   x: 3,
                   align: 'left',
                   verticalAlign: 'middle',
-                  formatter: function() { return this.series.name }
+                  formatter: function() {
+                    if (options['series-ending-label'] == 'long') {
+                        return this.series.name;
+                    } else if (options['series-ending-label'] == 'short') {
+                        return this.series.options.notation;
+                    }
+                    return "";
+                  }
                 }
             });
         }
@@ -116,19 +123,6 @@ App.chart_library['lines'] = function(container, options) {
         plotOptions: {
             series: {
                 connectNulls: true,
-                dataLabels: {
-                    enabled: true,
-                    formatter: function() {
-                    var ex = this.series.xAxis.getExtremes();
-                    if (this.x == ex.dataMax) {
-                        this.series.options.dataLabels.y = -8;
-                        this.series.options.dataLabels.x = 25;
-                        return this.series.name;
-                        } else {
-                            return "";
-                        }
-                    }
-                },
                 marker: {
                     fillColor: null,
                     lineWidth: 4,

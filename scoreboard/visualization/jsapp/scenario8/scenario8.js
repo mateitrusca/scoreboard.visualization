@@ -69,7 +69,9 @@ App.scenario8_filters_schema = {
                   {name: 'unit-measure'}]
     },
     chart_type: 'lines',
-    legend: true,
+    'series-legend-label': 'long',
+    'series-ending-label': 'long',
+    'series-point-label': 'none',
     labels: {
         title: {facet: 'breakdown-group', field: 'short_label'},
         ordinate: {facet: 'unit-measure', field: 'short_label'},
