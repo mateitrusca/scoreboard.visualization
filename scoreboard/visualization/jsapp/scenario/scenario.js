@@ -323,7 +323,7 @@ App.ScenarioChartView = Backbone.View.extend({
             chart_data['series'] = _(multiseries_values).map(function(value, n) {
                 var resp = responses[n];
                 var datapoints = resp[0]['datapoints'];
-                if(this.client_filter) {
+                if(this.client_filter && datapoints[0] && typeof(datapoints[0][dimension]) != "undefined") {
                     var dimension = this.dimensions_mapping[this.client_filter];
                     datapoints = _(datapoints).filter(function(item) {
                         return _(client_filter_options).contains(
