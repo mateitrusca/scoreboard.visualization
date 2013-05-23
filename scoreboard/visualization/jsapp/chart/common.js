@@ -44,6 +44,7 @@ App.format_series = function (data, sort, multidim, percent, category, highlight
 
 
         var label_formatter = function() {
+            // not really used as each scenario redefines its own formatting
             return this.point.name;
         };
 
@@ -76,6 +77,9 @@ App.format_series = function (data, sort, multidim, percent, category, highlight
                         'enabled': true,
                         'x': 16,
                         'y': 4,
+                        'style': {
+                            'font-weight': 'bold'
+                        },
                         'formatter': label_formatter
                     }
                 }

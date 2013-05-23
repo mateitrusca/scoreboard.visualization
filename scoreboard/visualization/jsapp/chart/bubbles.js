@@ -25,6 +25,8 @@ App.chart_library['bubbles'] = function(container, options) {
         item['dataLabels']['formatter'] = function(){
             return this.point.name;
         }
+        item['dataLabels']['x'] = 0;
+        item['dataLabels']['y'] = 0;
     });
 
     var chartOptions = {
@@ -124,7 +126,7 @@ App.chart_library['bubbles'] = function(container, options) {
             bubble: {
                 dataLabels: {
                     enabled: true,
-                    color: 'black'
+                    color: '#555555'
                 }
             },
             scatter: {
