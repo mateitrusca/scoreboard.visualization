@@ -166,8 +166,11 @@ App.SelectFilter = Backbone.View.extend({
             var grouper = _.chain(App.visualization.filters_box.filters).
               findWhere({name: App.groupers[this.name]}).value();
             template_data['groups'] = _.chain(groups).map(function(item){
-                var label = grouper.options_labels[item[0]].short_label ||
+                var label = null;
+                if ( grouper.options_labels[item[0]] ) {
+                    label = grouper.options_labels[item[0]].short_label ||
                             grouper.options_labels[item[0]].label;
+                };
                 var out = _.object(['group', 'options'],
                                    [label, item[1]]);
                 return out;
