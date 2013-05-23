@@ -33,6 +33,7 @@ App.chart_library['columns'] = function(container, options) {
             height: 450,
             width: 1100
         },
+        colors: App.SERIES_COLOR,
         credits: {
             href: options['credits']['href'],
             text: options['credits']['text'],
@@ -44,7 +45,10 @@ App.chart_library['columns'] = function(container, options) {
             }
         },
         title: {
-            text: options.meta_data['title'],
+            text: options['title_formatter'](
+                        options.meta_data['title'],
+                        ', ',
+                        options.meta_data['title2']), 
             style: {
                 color: '#000000',
                 fontWeight: 'bold',
@@ -54,8 +58,12 @@ App.chart_library['columns'] = function(container, options) {
         },
         subtitle: {
             text: options.meta_data['subtitle'],
-            align: 'left'
-
+            style: {
+                fontWeight: 'bold',
+                fontSize: '16px'
+            },
+            align: 'left',
+            x: 70
         },
         xAxis: {
             type: 'category',
@@ -64,7 +72,8 @@ App.chart_library['columns'] = function(container, options) {
                 align: 'right',
                 formatter: options['xlabels_formatter'],
                 style: {
-                    color: '#000000'
+                    color: '#000000',
+                    width: 700
                 }
              }
         },
@@ -104,7 +113,6 @@ App.chart_library['columns'] = function(container, options) {
     }
 
     var chart = new Highcharts.Chart(chartOptions);
-
     if (options['plotlines']){
         App.add_plotLines(chart, init_series, options['plotlines']);
     }

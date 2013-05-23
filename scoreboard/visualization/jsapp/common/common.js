@@ -39,7 +39,7 @@ var country_data = [
     {code: 'TR',   color: '#9900AB', label: "Turkey"},
     {code: 'GB',   color: '#D000C4', label: "United Kingdom"},
     {code: 'UK',   color: '#D000C4', label: "United Kingdom"}, // duplicate GB
-    {code: 'EU27', color: '#94090D', label: "European Union"}
+    {code: 'EU27', color: '#0B4EA2', label: "European Union"}
 ];
 
 
@@ -50,6 +50,7 @@ App.COUNTRY_COLOR = _.object(_(country_data).pluck('code'),
 App.COUNTRY_NAME = _.object(_(country_data).pluck('code'),
                             _(country_data).pluck('label'));
 
+App.SERIES_COLOR = ['#377EB8', '#E41A1C', '#4DAF4A', '#984EA3', '#FF7F00', '#FFFF33', '#A65628', '#F781BF', '#0d233a'];
 
 App.index_by = function(list, prop) {
     return _.object(_(list).pluck(prop), list);

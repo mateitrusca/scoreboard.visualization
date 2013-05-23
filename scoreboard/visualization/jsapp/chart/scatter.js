@@ -50,16 +50,24 @@ App.chart_library['scatter'] = function(container, options) {
                 y: -2
             }
         },
-        title: null,
+        title: {
+            text: options.meta_data['period_label'],
+            align: 'center',
+            style: {
+                color: '#000000',
+                fontWeight: 'bold'
+            }
+        },
         xAxis: [{
             title: {
                 enabled: true,
                 text: options['title_formatter'](
-                        options.meta_data['title_x'],
+                        options.meta_data['title_x'], '<br>',
                         options.meta_data['breakdown_x']),
                 style: {
                     color: '#000000',
-                    fontWeight: 'bold'
+                    fontWeight: 'bold',
+                    width: 500
                 }
             },
 			min: 0,
@@ -72,25 +80,18 @@ App.chart_library['scatter'] = function(container, options) {
                 }
              }
 
-        },{
-            opposite:true,
-            title: {
-                text: options.meta_data['period_label'],
-                style: {
-                    color: '#000000',
-                    fontWeight: 'bold'
-                }
-            }
         }],
         yAxis: {
             title: {
                 text: options['title_formatter'](
-                        options.meta_data['title_y'],
+                        options.meta_data['title_y'], '<br>',
                         options.meta_data['breakdown_y']),
                 style: {
                     color: '#000000',
-                    fontWeight: 'bold'
-                }
+                    fontWeight: 'bold',
+                    width: 500
+                },
+                margin: 30
             },
 			min: 0,
             labels: {

@@ -217,11 +217,14 @@ App.ScenarioChartView = Backbone.View.extend({
                 }
                 return this.value;
             },
-            'title_formatter': function(title, breakdown){
-                if (breakdown && breakdown != "Total"){
-                    return title + '<br/> by ' + breakdown
+            'title_formatter': function(){
+                var title = '';
+                for (var i = 0; i < arguments.length; i++) {
+                    if (arguments && arguments[i] && arguments[i] != 'Total') {
+                        title += arguments[i];
+                    }
                 }
-                return title
+                return title;
             },
             'group_labels': {},
             'unit_is_pc': unit_is_pc,

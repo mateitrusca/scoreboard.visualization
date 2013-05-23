@@ -54,7 +54,7 @@ App.chart_library['bubbles'] = function(container, options) {
         },
         title: {
             text: options.meta_data['period_label'],
-            align: 'left',
+            align: 'center',
             style: {
                 color: '#000000',
                 fontWeight: 'bold'
@@ -62,10 +62,11 @@ App.chart_library['bubbles'] = function(container, options) {
         },
         subtitle: {
             text: options['title_formatter'](
-                    'Bubbles size (Z): ' + options.meta_data['title_z'],
-                    options.meta_data['breakdown_z']),
+                    'Bubbles size (Z): ', options.meta_data['title_z'],
+                    '<br>', options.meta_data['breakdown_z']),
             style: {
                 color: '#000000',
+                width: 600,
                 fontWeight: 'bold'
             }
         },
@@ -75,9 +76,11 @@ App.chart_library['bubbles'] = function(container, options) {
                 enabled: true,
                 text: options['title_formatter'](
                         options.meta_data['title_x'],
+                        '<br>',
                         options.meta_data['breakdown_x']),
                 style: {
                     color: '#000000',
+                    width: 500,
                     fontWeight: 'bold'
                 }
             },
@@ -96,15 +99,18 @@ App.chart_library['bubbles'] = function(container, options) {
             title: {
                 text: options['title_formatter'](
                         options.meta_data['title_y'],
+                        '<br>',
                         options.meta_data['breakdown_y']),
                 style: {
                     color: '#000000',
-                    fontWeight: 'bold'
-                }
+                    fontWeight: 'bold',
+                    width: 500
+                },
+                 margin: 30
             },
             labels: {
                 style: {
-                    color: '#000000'
+                    color: '#000000',
                 }
             }
         },
