@@ -5,7 +5,7 @@ from zope.component import queryUtility
 from Products.Five.browser import BrowserView
 from eea.app.visualization.zopera import IPropertiesTool
 from scoreboard.visualization.jsapp import jsapp_html
-from scoreboard.visualization.config import EU, BLACKLIST
+from scoreboard.visualization.config import EU, WHITELIST
 
 class TestsView(BrowserView):
 
@@ -45,26 +45,26 @@ class EuropeanUnion(BrowserView):
     def __call__(self, **kwargs):
         return json.dumps(self.eu)
 
-class BlackList(BrowserView):
-    """ Blacklisted indicators
+class WhiteList(BrowserView):
+    """ Whitelisted indicators
     """
     @property
-    def blacklist(self):
+    def whitelist(self):
         ptool = queryUtility(IPropertiesTool)
         stool = getattr(ptool, 'scoreboard_properties', None)
         if not stool:
-            return BLACKLIST
+            return WHITELIST
 
-        blacklist = stool.getProperty('BLACKLIST', None)
-        if not blacklist:
-            return BLACKLIST
+        whitelist = stool.getProperty('WHITELIST', None)
+        if not whitelist:
+            return WHITELIST
 
         try:
-            json.loads(blacklist)
+            whitelist = json.loads(whitelist)
         except Exception:
-            return BLACKLIST
+            return WHITELIST
         else:
-            return blacklist
+            return whitelist
 
     def __call__(self, **kwargs):
-        return json.dumps(self.blacklist)
+        return json.dumps(self.whitelist)

@@ -5,7 +5,7 @@ import logging
 from zope.component import queryUtility
 from eea.app.visualization.zopera import IPropertiesTool
 from eea.app.visualization.interfaces import IDavizSettings
-from scoreboard.visualization.config import EU, BLACKLIST
+from scoreboard.visualization.config import EU, WHITELIST
 logger = logging.getLogger('scoreboard.visualization')
 
 def setupVarious(context):
@@ -32,7 +32,7 @@ def setupVarious(context):
         default = json.dumps(EU, indent=2)
         stool.manage_addProperty('EU', default, 'text')
 
-    blacklist = stool.getProperty('BLACKLIST', None)
-    if not blacklist:
-        default = json.dumps(BLACKLIST, indent=2)
-        stool.manage_addProperty('BLACKLIST', default, 'text')
+    whitelist = stool.getProperty('WHITELIST', None)
+    if not whitelist:
+        default = json.dumps(WHITELIST, indent=2)
+        stool.manage_addProperty('WHITELIST', default, 'text')
