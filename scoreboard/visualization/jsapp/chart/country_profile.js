@@ -107,7 +107,7 @@ App.chart_library['country_profile'] = function(container, options) {
 
             item.name = '<strong>' + item.attributes.indicator['short-label'] + '</strong>';
             if(item.attributes.breakdown['short-label']){
-                item.name += ' <br/> ' + item.attributes.breakdown['short-label'];
+                item.name += ' - ' + item.attributes.breakdown['short-label'];
             }
             if(item.attributes['unit-measure']['short-label']){
                 item.name += ' (in ' + item.attributes['unit-measure']['short-label'] + ')';
@@ -237,7 +237,7 @@ App.chart_library['country_profile'] = function(container, options) {
                         res += ' ';
                     }
                     if(title){
-                        res += title;
+                        res += ' ' + title;
                     }
                     return res;
                 }
