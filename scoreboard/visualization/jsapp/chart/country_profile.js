@@ -138,7 +138,7 @@ App.chart_library['country_profile'] = function(container, options) {
             chart: {
                 renderTo: container,
                 defaultSeriesType: 'bar',
-                marginTop: 60,
+                marginTop: 100,
                 marginBottom: 100,
                 marginLeft: 300,
                 marginRight: 60,
@@ -157,15 +157,23 @@ App.chart_library['country_profile'] = function(container, options) {
             },
             title: {
                 text: title,
+                align: 'center',
                 style: {
                     color: '#000000',
                     fontWeight: 'bold',
                     fontSize:'1.2em',
-                    width: '700'
+                    width: '600'
                 }
             },
             subtitle: {
-                text: options.meta_data['subtitle']
+                y:50,
+                text: options.meta_data['subtitle'],
+                style: {
+                    fontWeight: 'bold',
+                    fontSize: '16px'
+                },
+                align: 'left',
+                x:70
             },
             xAxis: {
                 type: 'category',
