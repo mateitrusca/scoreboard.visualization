@@ -109,6 +109,12 @@ App.chart_library['bubbles'] = function(container, options) {
             borderWidth: 0
         },
         plotOptions: {
+            bubble: {
+                dataLabels: {
+                    enabled: true,
+                    color: 'black'
+                }
+            },
             scatter: {
                 states: {
                     hover: {
