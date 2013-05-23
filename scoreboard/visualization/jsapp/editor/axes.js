@@ -17,6 +17,7 @@ App.AxesEditor = Backbone.View.extend({
     events: {
         'change [name="axis-sort-by"]': 'on_change',
         'change [name="axis-sort-order"]': 'on_change',
+        'change [name="axis-sort-each-series"]': 'on_change',
         'change [name="axis-horizontal-title"]': 'on_change',
         'change [name="axis-horizontal-rotated"]': 'on_change',
         'change [name="axis-horizontal-plotline"]': 'on_change',
@@ -82,6 +83,7 @@ App.AxesEditor = Backbone.View.extend({
                 }
                 return item;
             }, this),
+            sort_each_series: sort['each_series'],
             horizontal_title_options: _(this.axis_title_options).map(
                                        function(spec) {
                 var item = _({}).extend(spec);
@@ -121,6 +123,8 @@ App.AxesEditor = Backbone.View.extend({
 
     on_change: function() {
         var val = _.bind(function(sel){return this.$el.find(sel).val()}, this);
+        var checked = _.bind(function(sel){
+            return this.$el.find(sel).is(':checked')}, this);
         var plotlines = {
             x: val('[name="axis-horizontal-plotline"]'),
             y: val('[name="axis-vertical-plotline"]')
@@ -131,11 +135,11 @@ App.AxesEditor = Backbone.View.extend({
         this.model.set({
             'sort': {
                 by: val('[name="axis-sort-by"]:checked'),
-                order: Number(val('[name="axis-sort-order"]:checked')) || 0
+                order: Number(val('[name="axis-sort-order"]:checked')) || 0,
+                each_series: checked('[name="axis-sort-each-series"]')
             },
             'axis-horizontal-title': val('[name="axis-horizontal-title"]'),
-            'axis-horizontal-rotated':
-                this.$el.find('[name="axis-horizontal-rotated"]').is(':checked'),
+            'axis-horizontal-rotated': checked('[name="axis-horizontal-rotated"]'),
             'axis-vertical-title': val('[name="axis-vertical-title"]'),
             'plotlines': plotlines
         });

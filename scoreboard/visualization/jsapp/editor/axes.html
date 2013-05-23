@@ -69,7 +69,6 @@
   {{/ sort_by_options }}
 
   <br>
-
   {{# sort_order_options }}
   <label>
     <input type="radio" name="axis-sort-order"
@@ -78,4 +77,11 @@
     {{ label }}
   </label>
   {{/ sort_order_options }}
+
+  <br>
+  <label>
+    Sort each series
+    <input type="checkbox" name="axis-sort-each-series"
+           {{# if sort_each_series }}checked{{/ if }}>
+  </label>
 </fieldset>

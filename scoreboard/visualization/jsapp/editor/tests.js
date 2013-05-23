@@ -522,6 +522,19 @@ describe('AxesEditor', function() {
             ).to.equal('-1');
     });
 
+    it('should save sort each series choice', function() {
+        var view = new App.AxesEditor({model: new Backbone.Model()});
+        view.$el.find('[name="axis-sort-each-series"]').click().change();
+        expect(view.model.get('sort')['each_series']).to.be.true;
+    });
+
+    it('should show existing sort each series choice', function() {
+        var model = new Backbone.Model({sort: {each_series: true}});
+        var view = new App.AxesEditor({model: model});
+        expect(view.$el.find('[name="axis-sort-each-series"]').is(':checked')
+            ).to.be.true;
+    });
+
     it('should save axes horizontal title choice', function() {
         var view = new App.AxesEditor({model: new Backbone.Model()});
         view.$el.find('[name="axis-horizontal-title"]').val('short').change();
