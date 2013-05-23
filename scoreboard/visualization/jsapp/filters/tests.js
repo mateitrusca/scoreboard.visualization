@@ -418,7 +418,8 @@ describe('modular filters', function() {
                     options: [{
                         group_notation: 'group',
                         label: 'Option One',
-                        notation: 'one'
+                        notation: 'one',
+                        selected: true
                     }]
                 }]
             );
