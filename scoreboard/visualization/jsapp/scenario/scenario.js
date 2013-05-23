@@ -134,7 +134,9 @@ App.ScenarioChartView = Backbone.View.extend({
                 // point value(s) and unit-measure
                 if (_.contains(tooltip_attributes, 'value')) {
                     if ( multidim ) {
-                        out += '<br><b>x</b>: ' + Math.round(this.x*10)/10 + ' ';
+                        out += '<br><b>x</b>: ' + Math.round(this.x*10)/10;
+                        if (unit_is_pc[0]) out += '%';
+                        out += ' ';
                         if (_.contains(tooltip_attributes, 'unit-measure')) {
                             out += attrs['unit-measure']['x'].label;
                         }
@@ -143,7 +145,13 @@ App.ScenarioChartView = Backbone.View.extend({
                     if ( multidim ) {
                         out += '<b>y</b>: ';
                     }
-                    out += Math.round(this.y*10)/10 + ' ';
+                    out += Math.round(this.y*10)/10;
+                    if ( multidim ) {
+                        if (unit_is_pc[1]) out += '%';
+                    } else {
+                        if (unit_is_pc[0]) out += '%';
+                    }
+                    out += ' ';
                     if (_.contains(tooltip_attributes, 'unit-measure')) {
                         if ( multidim ) {
                             out += attrs['unit-measure']['y'].label;
@@ -152,7 +160,9 @@ App.ScenarioChartView = Backbone.View.extend({
                         }
                     }
                     if ( multidim == 3 ) {
-                        out += '<br><b>z</b>: ' + Math.round(this.point.z*10)/10 + ' ';
+                        out += '<br><b>z</b>: ' + Math.round(this.point.z*10)/10;
+                        if (unit_is_pc[2]) out += '%';
+                        out += ' ';
                         if (_.contains(tooltip_attributes, 'unit-measure')) {
                             out += attrs['unit-measure']['z'].label;
                         }
