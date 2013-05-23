@@ -312,8 +312,26 @@ describe('ChartSeriesPreparation', function() {
                     }],
              label:'2001'},
         ];
-        var result = App.format_series(series, false, '', [true], "ref-area");
+        var result = App.format_series(series, false, 1, [true], "ref-area");
         expect(result[0]['data'][0]['y']).to.deep.equal(48.08);
+
+        var series = [
+            {data: [{ "ref-area": {
+                          "notation": "AT",
+                          "label": "Austria",
+                      },
+                        "value": {
+                            x: 0.4808,
+                            y: 0.4808,
+                            z: 0.4808
+                        }
+                    }],
+             label:'2001'},
+        ];
+        var result = App.format_series(series, false, 3, [true, true, false], "ref-area");
+        expect(result[0][0]['data'][0]['x']).to.deep.equal(48.08);
+        expect(result[0][0]['data'][0]['y']).to.deep.equal(48.08);
+        expect(result[0][0]['data'][0]['z']).to.deep.equal(0.4808);
     });
 
     it('should compute the values for plot lines (single dimension)', function(){

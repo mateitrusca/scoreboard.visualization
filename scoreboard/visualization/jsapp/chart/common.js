@@ -58,7 +58,7 @@ App.format_series = function (data, sort, multidim, percent, category, highlight
                     'y': datapoint['value']['y'] * multiplicators[1]
                 }]
                 if (multidim == 3){
-                    data[0]['z'] = datapoint['value']['z'] * multiplicators[1]
+                    data[0]['z'] = datapoint['value']['z'] * multiplicators[2]
                 }
                 var output = {
                     'name': App.COUNTRY_NAME[notation],
