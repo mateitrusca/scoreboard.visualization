@@ -68,6 +68,7 @@ App.chart_library['bubbles'] = function(container, options) {
             }
         },
         xAxis: [{
+            min: 0,
             title: {
                 enabled: true,
                 text: options['title_formatter'](
@@ -89,6 +90,7 @@ App.chart_library['bubbles'] = function(container, options) {
 
         }],
         yAxis: {
+            min: 0,
             title: {
                 text: options['title_formatter'](
                         options.meta_data['title_y'],
