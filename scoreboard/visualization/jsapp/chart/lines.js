@@ -61,25 +61,15 @@ App.chart_library['lines'] = function(container, options) {
             }
         },
         title: {
-            text: options.meta_data['title'],
-            x: 0,
-            margin: 30,
+            text: options['title_formatter'](
+                        options.meta_data['title'],
+                        options.meta_data['title2']&&options.meta_data['title2']!='Total'?', by ':'',
+                        options.meta_data['title2']),
             style: {
                 color: '#000000',
                 fontWeight: 'bold',
                 fontSize:'1.2em',
                 width: '800'
-            }
-        },
-        subtitle: {
-            text: (options.meta_data['subtitle'] != 'Total') ? options.meta_data['subtitle'] : null,
-            x: 0,
-            y: 45,
-            margin: 30,
-            style: {
-                color: '#000000',
-                fontSize:'1em',
-                width: '600'
             }
         },
         xAxis: {
