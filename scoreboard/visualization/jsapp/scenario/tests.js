@@ -312,8 +312,26 @@ describe('ChartSeriesPreparation', function() {
                     }],
              label:'2001'},
         ];
-        var result = App.format_series(series, false, '', [true], "ref-area");
+        var result = App.format_series(series, false, 1, [true], "ref-area");
         expect(result[0]['data'][0]['y']).to.deep.equal(48.08);
+
+        var series = [
+            {data: [{ "ref-area": {
+                          "notation": "AT",
+                          "label": "Austria",
+                      },
+                        "value": {
+                            x: 0.4808,
+                            y: 0.4808,
+                            z: 0.4808
+                        }
+                    }],
+             label:'2001'},
+        ];
+        var result = App.format_series(series, false, 3, [true, true, false], "ref-area");
+        expect(result[0][0]['data'][0]['x']).to.deep.equal(48.08);
+        expect(result[0][0]['data'][0]['y']).to.deep.equal(48.08);
+        expect(result[0][0]['data'][0]['z']).to.deep.equal(0.4808);
     });
 
     it('should compute the values for plot lines (single dimension)', function(){
@@ -479,15 +497,6 @@ describe('ScenarioChartViewParameters', function() {
     it('should render the chart passed as parameter', function() {
         var server = this.sandbox.server;
         var scenario_chart = sinon.spy();
-        var schema = {
-            facets: [
-                {type: 'select',
-                 name: 'indicator-group',
-                 label: 'Select indicator group',
-                 dimension: 'indicator-group',
-                 constraints: {}}
-            ]
-        };
         var chart = new App.ScenarioChartView({
             model: this.model,
             schema: {
@@ -562,6 +571,63 @@ describe('ScenarioChartViewParameters', function() {
         expect(url_param(url, 'indicator')).to.equal('ind1');
         expect(url_param(url, 'ref-area')).to.equal('BE');
     });
+
+
+    it('should detect percent units of measure', function() {
+        var server = this.sandbox.server;
+        var chart = new App.ScenarioChartView({
+            model: this.model,
+            schema: {
+                multidim: 3,
+                labels: {label1: {facet: 'indicator', field: 'label'}}
+            },
+            filters_schema: [
+                {type: 'select',
+                 name: 'indicator',
+                 label: 'Select one indicator',
+                 dimension: 'indicator',
+                 constraints: { }
+                },
+                {type: 'select',
+                 name: 'x-unit-measure',
+                 label: 'Select one indicator',
+                 dimension: 'unit-measure',
+                 constraints: {
+                     'indicator': 'indicator'
+                 }},
+                {type: 'select',
+                 name: 'y-unit-measure',
+                 label: 'Select one indicator',
+                 dimension: 'unit-measure',
+                 constraints: {
+                     'indicator': 'indicator'
+                 }},
+                {type: 'select',
+                 name: 'z-unit-measure',
+                 label: 'Select one indicator',
+                 dimension: 'unit-measure',
+                 constraints: {
+                     'indicator': 'indicator'
+                 }},
+            ],
+            values_schema: [
+                 {type: 'all-values', dimension: 'dimension1'},
+                 {type: 'all-values', dimension: 'value1'}
+            ],
+            scenario_chart: this.scenario_chart
+        });
+        this.model.set({
+            'indicator': 'ind1',
+            'x-unit-measure': 'pc_unit',
+            'y-unit-measure': 'pcunit',
+            'z-unit-measure': 'pc__abc',
+        });
+        App.respond_json(server.requests[0], {'datapoints': []});
+        App.respond_json(server.requests[1], {});
+        expect(this.scenario_chart.args[0][1].unit_is_pc).to.deep.equal(
+                [true, false, true]);
+    });
+
 
     it('should fetch all series from an AllValuesFilter', function() {
         var loadstate = new Backbone.Model();
