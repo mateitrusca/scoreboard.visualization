@@ -34,6 +34,7 @@ App.chart_library['lines'] = function(container, options) {
         chart: {
             renderTo: container,
             type: 'spline',
+            zoomType: 'y',
             marginLeft: 100,
             marginRight: 170,
             marginTop: 60,
