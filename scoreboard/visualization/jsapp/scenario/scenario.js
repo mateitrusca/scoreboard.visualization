@@ -112,7 +112,7 @@ App.ScenarioChartView = Backbone.View.extend({
         }
         _(units).each(function(unit){
             var evaluation = false
-            if (unit.substring(0,3) == 'pc_'){
+            if (unit && unit.length > 3 && unit.substring(0,3).toLowerCase() == 'pc_' ){
                 evaluation = true;
             }
             unit_is_pc.push(evaluation);
