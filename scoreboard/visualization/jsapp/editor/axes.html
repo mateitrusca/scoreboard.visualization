@@ -16,6 +16,18 @@
     <input type="checkbox"
            name="axis-horizontal-rotated"
            {{# if horizontal_rotated }}checked{{/ if }}>
+
+  <br>
+  <label>
+    Median line
+    <select class="span2" name="axis-horizontal-plotline">
+    {{# horizontal_plotline_options }}
+    <option value="{{ value }}"
+      {{# if selected }}selected{{/ if }}
+      >{{ label }}</option>
+    {{/ horizontal_plotline_options }}
+    </select>
+  </label>
 </fieldset>
 
 <fieldset>
@@ -29,6 +41,18 @@
       >{{ label }}</option>
   {{/ vertical_title_options }}
   </select>
+
+  <br>
+  <label>
+    Median line
+    <select class="span2" name="axis-vertical-plotline">
+    {{# vertical_plotline_options }}
+    <option value="{{ value }}"
+      {{# if selected }}selected{{/ if }}
+      >{{ label }}</option>
+    {{/ vertical_plotline_options }}
+    </select>
+  </label>
 </fieldset>
 
 
@@ -45,7 +69,6 @@
   {{/ sort_by_options }}
 
   <br>
-
   {{# sort_order_options }}
   <label>
     <input type="radio" name="axis-sort-order"
@@ -54,4 +77,11 @@
     {{ label }}
   </label>
   {{/ sort_order_options }}
+
+  <br>
+  <label>
+    Sort each series
+    <input type="checkbox" name="axis-sort-each-series"
+           {{# if sort_each_series }}checked{{/ if }}>
+  </label>
 </fieldset>
