@@ -171,8 +171,12 @@ App.SelectFilter = Backbone.View.extend({
                     label = grouper.options_labels[item[0]].short_label ||
                             grouper.options_labels[item[0]].label;
                 };
+                options = _(item[1]).map(function(item) {
+                    var selected = (item['notation'] == selected_value);
+                    return _({'selected': selected}).extend(item);
+                });
                 var out = _.object(['group', 'options'],
-                                   [label, item[1]]);
+                                   [label, options]);
                 return out;
             }).sortBy('group').value();
             this.$el.html(this.group_template(template_data));

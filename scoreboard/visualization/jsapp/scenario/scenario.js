@@ -202,8 +202,8 @@ App.ScenarioChartView = Backbone.View.extend({
                             }
                         }
                     }
-                });                
-                
+                });
+
                 return out;
             },
             'credits': {
@@ -323,7 +323,7 @@ App.ScenarioChartView = Backbone.View.extend({
             chart_data['series'] = _(multiseries_values).map(function(value, n) {
                 var resp = responses[n];
                 var datapoints = resp[0]['datapoints'];
-                if(this.client_filter && datapoints[0] && typeof(datapoints[0][dimension]) != "undefined") {
+                if(this.client_filter && (this.schema['chart_type'] !== 'country_profile')) {
                     var dimension = this.dimensions_mapping[this.client_filter];
                     datapoints = _(datapoints).filter(function(item) {
                         return _(client_filter_options).contains(
@@ -575,8 +575,8 @@ App.AnnotationsView = Backbone.View.extend({
                 if ( this.schema.annotations && this.schema.annotations.notes ) {
                     chart_description = this.schema.annotations.notes;
                 }
-                var section_title = this.schema['annotations'] && 
-                  this.schema['annotations']['title'] || 
+                var section_title = this.schema['annotations'] &&
+                  this.schema['annotations']['title'] ||
                   'Definition and scopes:';
                 this.$el.html(this.template(
                     {"description": chart_description,
