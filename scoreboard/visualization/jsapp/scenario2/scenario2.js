@@ -48,8 +48,8 @@ App.scenario2_filters_schema = {
              'breakdown': 'breakdown',
              'unit-measure': 'unit-measure'
          }},
-         {type: 'all-values', dimension: 'time-period'},
-         {type: 'all-values', dimension: 'value'}
+         {type: 'all-values', name: 'time-period', dimension: 'time-period'},
+         {type: 'all-values', name: 'value', dimension: 'value'}
     ],
     category_facet: 'time-period',
     multiple_series: 'ref-area',
@@ -75,6 +75,7 @@ App.scenario2_filters_schema = {
     },
     labels: {
         title: {facet: 'indicator', field: 'short_label'},
+        subtitle: {facet: 'breakdown', field: 'label'},
         ordinate: {facet: 'unit-measure', field: 'short_label'},
         unit: {facet: 'unit-measure', field: 'short_label'}
     }

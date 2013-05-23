@@ -44,24 +44,20 @@ EU = {
 
 # This list is used by country_profile chart and can be customized within
 # ZMI > portal_properties > scoreboard_properties
-BLACKLIST = [
+WHITELIST = [
     {
-        'indicator': 'bb_lines',
-        'breakdown': 'TOTAL',
+        'unit-measure': 'pc_hh',
     },
     {
-        'indicator': 'mob_subs',
-        'unit-measure': 'nbr_subs',
+        'unit-measure': 'pc_ent',
     },
     {
-        'indicator': 'FP7ICT_EC_funding',
-        'unit-measure': 'euro',
+        'unit-measure': 'pc_lines',
     },
     {
-        'indicator': 'FP7ICT_TOTcost',
-        'unit-measure': 'euro',
+        'unit-measure': 'pc_rural_pop',
     },
     {
-        'unit-measure': 'million_euro',
+        'unit-measure': 'pc_pop',
     },
 ]

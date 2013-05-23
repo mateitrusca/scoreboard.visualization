@@ -21,11 +21,15 @@ App.chart_library['country_profile'] = function(container, options) {
         return x1 + x2;
     };
 
-    var x_formatter = function(value){
+    var x_formatter = function(value, unit){
         try{
             value.toFixed(2);
         }catch(err){
             return '-';
+        }
+
+        if(unit && unit.toLowerCase().indexOf('pc_') !== -1){
+            value *= 100;
         }
 
         if(value > 100){
@@ -38,8 +42,9 @@ App.chart_library['country_profile'] = function(container, options) {
 
 
     // Highchart
+    var series;
     if(options.subtype === 'bar'){
-        var series = App.format_series(
+        series = App.format_series(
                         options['series'],
                         options['sort'],
                         options['multidim'],
@@ -57,7 +62,12 @@ App.chart_library['country_profile'] = function(container, options) {
                     align: 'right',
                     formatter: function(){
                         if(this.point.y){
-                            return x_formatter(this.point.original);
+                            var unit = this.point.attributes['unit-measure']['notation'];
+                            var res = x_formatter(this.point.original, unit);
+                            if(unit && unit.toLowerCase().indexOf('pc_') !== -1){
+                                res += '%';
+                            }
+                            return '<strong>' + res + '</strong>';
                         }else{
                             return '';
                         }
@@ -74,7 +84,12 @@ App.chart_library['country_profile'] = function(container, options) {
                     align: 'right',
                     formatter: function(){
                         if(this.point.y){
-                            return x_formatter(this.point.original);
+                            var unit = this.point.attributes['unit-measure']['notation'];
+                            var res = x_formatter(this.point.original, unit);
+                            if(unit && unit.toLowerCase().indexOf('pc_') !== -1){
+                                res += '%';
+                            }
+                            return '<strong>' + res + '</strong>';
                         }else{
                             return '';
                         }
@@ -90,12 +105,12 @@ App.chart_library['country_profile'] = function(container, options) {
             //item.rank = item.attributes.rank;
             item.original = item.attributes.original;
 
-            item.name = item.attributes.indicator['short-label'];
-            if(item.attributes.breakdown['label']){
-                item.name += ' by ' + item.attributes.breakdown['label'];
+            item.name = '<strong>' + item.attributes.indicator['short-label'] + '</strong>';
+            if(item.attributes.breakdown['short-label']){
+                item.name += ' <br/> ' + item.attributes.breakdown['short-label'];
             }
-            if(item.attributes['unit-measure']['label']){
-                item.name += ' in ' + item.attributes['unit-measure']['label'];
+            if(item.attributes['unit-measure']['short-label']){
+                item.name += ' (in ' + item.attributes['unit-measure']['short-label'] + ')';
             }
 
             // Fill stack
@@ -115,7 +130,7 @@ App.chart_library['country_profile'] = function(container, options) {
 
         var title = options.meta_data['title'];
         if(options.meta_data['ref-area'] && options.meta_data['indicator-group']){
-            title = [options.meta_data['ref-area'], options.meta_data['indicator-group']].join(', ');
+            title = [options.meta_data['ref-area'], options.meta_data['indicator-group'] + ' indicators'].join(', ');
         }
         title = 'Country profile for ' + title;
 
@@ -126,7 +141,7 @@ App.chart_library['country_profile'] = function(container, options) {
                 marginTop: 60,
                 marginBottom: 100,
                 marginLeft: 300,
-                marginRight: 50,
+                marginRight: 60,
                 height: 200 + series[0].data.length * 75,
                 width: 850
             },
@@ -167,7 +182,7 @@ App.chart_library['country_profile'] = function(container, options) {
                 tickPositions: [0, 1, 2],
                  labels: {
                     formatter: function() {
-                        return ['Min', 'EU27', 'Max'][this.value];
+                        return ['lowest EU country', 'EU27 average', 'highest EU country'][this.value];
                     }
                 },
                 title: {
@@ -191,7 +206,7 @@ App.chart_library['country_profile'] = function(container, options) {
                 }],
                 labels: {
                     formatter: function() {
-                        return ['Min', 'EU27', 'Max'][this.value];
+                        return ['lowest EU country', 'EU27 average', 'highest EU country'][this.value];
                     }
                 },
                 opposite:true
@@ -207,7 +222,16 @@ App.chart_library['country_profile'] = function(container, options) {
             },
             tooltip: {
                 formatter: function(){
-                    return x_formatter(this.point.original);
+                    var unit = this.point.attributes['unit-measure']['notation'];
+                    var title = this.point.attributes['unit-measure']['short-label'];
+                    var res = 'Original indicator value: ' + x_formatter(this.point.original, unit);
+                    if(unit && unit.toLowerCase().indexOf('pc_') === -1){
+                        res += ' ';
+                    }
+                    if(title){
+                        res += title;
+                    }
+                    return res;
                 }
             },
             plotOptions: {
@@ -226,7 +250,7 @@ App.chart_library['country_profile'] = function(container, options) {
 
     // Custom table
     }else{
-        var series = options['series'];
+        series = options['series'];
         App.country_profile = new App.CountryProfileView({
             el: '#' + $(container).attr('id'),
             model: new Backbone.Model(),

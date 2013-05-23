@@ -45,10 +45,10 @@
     />
 
   <browser:page
-    name="blacklist.json"
+    name="whitelist.json"
     for="zope.interface.Interface"
     permission="zope2.View"
-    class=".views.BlackList"
+    class=".views.WhiteList"
     />
 
   <browser:page
