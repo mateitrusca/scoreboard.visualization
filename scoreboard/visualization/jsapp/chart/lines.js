@@ -131,6 +131,8 @@ App.chart_library['lines'] = function(view, options) {
 
     var chart = new Highcharts.Chart(chartOptions);
 
+    view.trigger('chart_ready', series);
+
 };
 
 })();

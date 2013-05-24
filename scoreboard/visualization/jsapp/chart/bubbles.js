@@ -154,6 +154,8 @@ App.chart_library['bubbles'] = function(view, options) {
 
     var chart = new Highcharts.Chart(chartOptions);
 
+    view.trigger('chart_ready', series);
+
     if (options['plotlines']){
         App.add_plotLines(chart, series[0], options['plotlines']);
     }

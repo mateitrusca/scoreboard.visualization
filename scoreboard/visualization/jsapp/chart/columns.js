@@ -113,6 +113,9 @@ App.chart_library['columns'] = function(view, options) {
     }
 
     var chart = new Highcharts.Chart(chartOptions);
+
+    view.trigger('chart_ready', series);
+
     if (options['plotlines']){
         App.add_plotLines(chart, init_series, options['plotlines']);
     }

@@ -76,6 +76,8 @@ App.chart_library['map'] = function(view, options) {
             }
         });
     });
+
+    view.trigger('chart_ready', series);
 };
 
 
