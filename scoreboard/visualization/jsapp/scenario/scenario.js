@@ -599,12 +599,20 @@ App.AnnotationsView = Backbone.View.extend({
 
 App.ShareOptionsView = Backbone.View.extend({
 
+    events: {
+        'click #csv': 'request_csv'
+    },
+
     template: App.get_template('scenario/share.html'),
 
     initialize: function(options) {
         this.url = App.SCENARIO_URL;
         this.related = $('#viewlet-below-content-body').detach();
         this.render();
+    },
+
+    request_csv: function(){
+        this.$el.find('form').submit();
     },
 
     chart_ready: function(series){
