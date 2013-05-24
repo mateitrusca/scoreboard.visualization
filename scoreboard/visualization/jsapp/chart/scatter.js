@@ -5,8 +5,9 @@
 "use strict";
 
 
-App.chart_library['scatter'] = function(container, options) {
+App.chart_library['scatter'] = function(view, options) {
 
+    var container = view.el
     $(container).addClass('high-chart');
 
     var series = App.format_series(

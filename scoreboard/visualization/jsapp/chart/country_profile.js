@@ -4,8 +4,9 @@
 (function() {
 "use strict";
 
-App.chart_library['country_profile'] = function(container, options) {
+App.chart_library['country_profile'] = function(view, options) {
 
+    var container = view.el
     $(container).addClass('high-chart');
     $(container).parent().addClass('country-profile');
 
