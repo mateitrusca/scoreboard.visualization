@@ -607,6 +607,20 @@ App.ShareOptionsView = Backbone.View.extend({
         this.render();
     },
 
+    chart_ready: function(series){
+        var action_url = App.URL + '/export.csv'
+        var form = App.jQuery('<form>', {
+            'action': action_url,
+            'target': '_top',
+            'method': 'POST'
+        }).append(App.jQuery('<input>', {
+            'name': 'chart_data',
+            'value': JSON.stringify(series),
+            'type': 'hidden'
+        }));
+        App.jQuery(form).appendTo(this.$el);
+    },
+
     render: function() {
         this.$el.html(this.template({'related': this.related.html()}));
         window.addthis.button('#scoreboard-addthis', {}, {url: this.url});
