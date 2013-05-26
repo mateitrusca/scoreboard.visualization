@@ -6,79 +6,156 @@
 
 
 App.scenario2_filters_schema = {
-    facets: [
-        {type: 'select',
-         name: 'indicator-group',
-         label: 'Indicator group',
-         dimension: 'indicator-group',
-         constraints: {}},
-        {type: 'select',
-         name: 'indicator',
-         label: 'Indicator',
-         dimension: 'indicator',
-         constraints: {
-             'indicator-group': 'indicator-group'
-         }
-        },
-        {type: 'select',
-         name: 'breakdown',
-         label: 'Breakdown',
-         dimension: 'breakdown',
-         constraints: {
-             'indicator-group': 'indicator-group',
-             'indicator': 'indicator'
-         }},
-        {type: 'select',
-         name: 'unit-measure',
-         label: 'Unit of measure',
-         dimension: 'unit-measure',
-         constraints: {
-             'indicator-group': 'indicator-group',
-             'indicator': 'indicator',
-             'breakdown': 'breakdown'
-         }},
-        {type: 'multiple_select',
-         name: 'ref-area',
-         label: 'Countries',
-         dimension: 'ref-area',
-         default_value: ['EU27'],
-         constraints: {
-             'indicator-group': 'indicator-group',
-             'indicator': 'indicator',
-             'breakdown': 'breakdown',
-             'unit-measure': 'unit-measure'
-         }},
-         {type: 'all-values', name: 'time-period', dimension: 'time-period'},
-         {type: 'all-values', name: 'value', dimension: 'value'}
+  "animation": false,
+  "annotations": {
+    "filters": [
+      {
+        "name": "indicator"
+      },
+      {
+        "name": "breakdown"
+      },
+      {
+        "name": "unit-measure"
+      }
     ],
-    category_facet: 'time-period',
-    multiple_series: 'ref-area',
-    annotations: {
-        filters: [{name: 'indicator'},
-                  {name: 'breakdown-group'},
-                  {name: 'breakdown'},
-                  {name: 'unit-measure'}]
+    "title": "Definitions and scopes"
+  },
+  "axis-horizontal-rotated": false,
+  "axis-horizontal-title": "none",
+  "axis-vertical-title": "long",
+  "category_facet": "time-period",
+  "chart_type": "lines",
+  "credits": {
+    "text": "European Commission, Digital Agenda Scoreboard",
+    "link": "http://ec.europa.eu/digital-agenda/en/graphs/"
+  },
+  "facets": [
+    {
+      "constraints": {},
+      "dimension": "indicator-group",
+      "include_wildcard": true,
+      "label": "Indicator group",
+      "name": "indicator-group",
+      "sortBy": "nosort",
+      "sortOrder": "asc",
+      "type": "select"
     },
-    chart_type: 'lines',
-    tooltips: {
-        'unit-measure': true,
-        'flag': true,
-        'note': true
+    {
+      "constraints": {
+        "indicator-group": "indicator-group"
+      },
+      "dimension": "indicator",
+      "label": "Indicator",
+      "name": "indicator",
+      "sortBy": "nosort",
+      "sortOrder": "asc",
+      "type": "select"
     },
-    'series-legend-label': 'long',
-    'series-ending-label': 'long',
-    'series-point-label': 'long',
-    sort: {
-        by: 'category',
-        order: -1,
-        each_series: true
+    {
+      "constraints": {
+        "indicator-group": "indicator-group",
+        "indicator": "indicator"
+      },
+      "dimension": "breakdown-group",
+      "include_wildcard": true,
+      "label": "Breakdown group",
+      "name": "breakdown-group",
+      "sortBy": "nosort",
+      "sortOrder": "asc",
+      "type": "select"
     },
-    labels: {
-        title: {facet: 'indicator', field: 'short_label'},
-        subtitle: {facet: 'breakdown', field: 'label'},
-        ordinate: {facet: 'unit-measure', field: 'short_label'},
-        unit: {facet: 'unit-measure', field: 'short_label'}
+    {
+      "constraints": {
+        "indicator-group": "indicator-group",
+        "indicator": "indicator",
+        "breakdown-group": "breakdown-group"
+      },
+      "dimension": "breakdown",
+      "label": "Breakdown",
+      "name": "breakdown",
+      "sortBy": "nosort",
+      "sortOrder": "asc",
+      "type": "select"
+    },
+    {
+      "constraints": {
+        "indicator-group": "indicator-group",
+        "indicator": "indicator",
+        "breakdown-group": "breakdown-group",
+        "breakdown": "breakdown"
+      },
+      "dimension": "unit-measure",
+      "label": "Unit of measure",
+      "name": "unit-measure",
+      "type": "select"
+    },
+    {
+      "constraints": {
+        "indicator-group": "indicator-group",
+        "indicator": "indicator",
+        "breakdown-group": "breakdown-group",
+        "breakdown": "breakdown",
+        "unit-measure": "unit-measure"
+      },
+      "dimension": "ref-area",
+      "default_value": ["EU27"],
+      "label": "Select the countries",
+      "name": "ref-area",
+      "type": "multiple_select"
+    },
+    {
+      "constraints": {
+        "indicator-group": "indicator-group",
+        "indicator": "indicator",
+        "breakdown-group": "breakdown-group",
+        "breakdown": "breakdown",
+        "unit-measure": "unit-measure"
+      },
+      "dimension": "time-period",
+      "label": "Time period",
+      "name": "time-period",
+      "type": "all-values"
+    },
+    {
+      "name": "value",
+      "type": "all-values",
+      "dimension": "value"
     }
+  ],
+  "height": 500,
+  "labels": {
+    "ordinate": {
+      "facet": "unit-measure",
+      "field": "short_label"
+    },
+    "title2": {
+      "facet": "breakdown",
+      "field": "label"
+    },
+    "title": {
+      "facet": "indicator",
+      "field": "label"
+    },
+    "unit-measure": {
+      "facet": "unit-measure",
+      "field": "short_label"
+    }
+  },
+  "multiple_series": "ref-area",
+  "series-legend-label": "long",
+  "series-ending-label": "long",
+  "series-point-label": "long",
+  "sort": {
+    "by": "category",
+    "order": -1,
+    "each_series": true
+  },
+  "tooltips": {
+    "flag": true,
+    "note": true,
+    "unit-measure": true
+  }
 };
 
 

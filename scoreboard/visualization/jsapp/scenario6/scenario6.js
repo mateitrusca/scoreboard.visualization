@@ -6,85 +6,155 @@
 
 
 App.scenario6_filters_schema = {
-    facets: [
-        {type: 'select',
-         name: 'indicator-group',
-         label: 'Indicator group',
-         dimension: 'indicator-group',
-         constraints: {}},
-        {type: 'select',
-         name: 'indicator',
-         label: 'Indicator',
-         dimension: 'indicator',
-         constraints: {
-             'indicator-group': 'indicator-group'
-         }
-        },
-        {type: 'select',
-         name: 'breakdown',
-         label: 'Breakdown',
-         dimension: 'breakdown',
-         constraints: {
-             'indicator-group': 'indicator-group',
-             'indicator': 'indicator'
-         }},
-        {type: 'select',
-         name: 'unit-measure',
-         label: 'Unit of measure',
-         dimension: 'unit-measure',
-         constraints: {
-             'indicator-group': 'indicator-group',
-             'indicator': 'indicator',
-             'breakdown': 'breakdown'
-         }},
-        {type: 'multiple_select',
-         name: 'ref-area',
-         label: 'Countries',
-         dimension: 'ref-area',
-         default_value: ['BE', 'BG', 'CZ', 'DK', 'DE', 'EE', 'IE', 'EL', 'ES', 'FR', 'IT', 'CY', 'LV', 'LT', 'LU', 'HU', 'MT', 'NL', 'AT', 'PL', 'PT', 'RO', 'SI', 'SK', 'FI', 'SE', 'UK', 'EU27'],
-         constraints: {
-             'indicator-group': 'indicator-group',
-             'indicator': 'indicator',
-             'breakdown': 'breakdown',
-             'unit-measure': 'unit-measure'
-         }},
-         {type: 'all-values',
-          dimension: 'time-period',
-          constraints: {
-              'indicator-group': 'indicator-group',
-              'indicator': 'indicator',
-              'breakdown': 'breakdown',
-              'unit-measure': 'unit-measure'
-          },
-          name: 'time-period'},
-         {type: 'all-values', dimension: 'value'}
-    ],
-    category_facet: 'ref-area',
-    multiple_series: 'time-period',
-    animation: true,
-    plotlines: {y: 'values'},
-    highlights: ["EU27", "DE"],
-    annotations: {
-        filters: [{name: 'indicator'},
-                  {name: 'breakdown-group'},
-                  {name: 'breakdown'},
-                  {name: 'unit-measure'}]
+  "animation": true,
+  "annotations": {
+    "filters": [
+      {
+        "name": "indicator"
+      },
+      {
+        "name": "breakdown"
+      },
+      {
+        "name": "unit-measure"
+      }
+    ]
+  },
+  "category_facet": "ref-area",
+  "chart_type": "columns",
+  "facets": [
+    {
+      "constraints": {},
+      "dimension": "indicator-group",
+      "include_wildcard": true,
+      "label": "Indicator group",
+      "name": "indicator-group",
+      "type": "select",
+      "sortBy": "nosort",
+      "sortOrder": "asc"
     },
-    chart_type: 'columns',
-    tooltips: {
-        'unit-measure': true,
-        'flag': true,
-        'note': true
+    {
+      "constraints": {
+        "indicator-group": "indicator-group"
+      },
+      "dimension": "indicator",
+      "label": "Indicator",
+      "sortBy": "nosort",
+      "sortOrder": "asc",
+      "name": "indicator",
+      "type": "select"
     },
-    sort: {
-        "by": "value",
-        "order": -1,
-        "each_series": true
+    {
+      "name": "breakdown-group",
+      "dimension": "breakdown-group",
+      "include_wildcard": true,
+      "label": "Breakdown group",
+      "sortBy": "nosort",
+      "sortOrder": "asc",
+      "type": "select",
+      "constraints": {
+        "indicator-group": "indicator-group",
+        "indicator": "indicator"
+      }
     },
-    labels: {
-        title: {facet: 'indicator', field: 'short_label'},
-        ordinate: {facet: 'unit-measure', field: 'short_label'}
+    {
+      "constraints": {
+        "indicator-group": "indicator-group",
+        "indicator": "indicator",
+        "breakdown-group": "breakdown-group"
+      },
+      "dimension": "breakdown",
+      "label": "Breakdown",
+      "name": "breakdown",
+      "sortBy": "nosort",
+      "sortOrder": "asc",
+      "type": "select"
+    },
+    {
+      "constraints": {
+        "indicator-group": "indicator-group",
+        "indicator": "indicator",
+        "breakdown-group": "breakdown-group",
+        "breakdown": "breakdown"
+      },
+      "dimension": "unit-measure",
+      "label": "Unit of measure",
+      "name": "unit-measure",
+      "type": "select"
+    },
+    {
+      "constraints": {
+        "indicator-group": "indicator-group",
+        "indicator": "indicator",
+        "breakdown-group": "breakdown-group",
+        "breakdown": "breakdown",
+        "unit-measure": "unit-measure"
+      },
+      "default_value": [
+        "BE","BG","CZ","DK","DE","EE","IE","EL","ES","FR",
+        "IT","CY","LV","LT","LU","HU","MT","NL","AT","PL",
+        "PT","RO","SI","SK","FI","SE","UK","EU27"
+      ],
+      "dimension": "ref-area",
+      "label": "Select the countries",
+      "name": "ref-area",
+      "type": "multiple_select"
+    },
+    {
+      "constraints": {
+        "indicator-group": "indicator-group",
+        "indicator": "indicator",
+        "breakdown-group": "breakdown-group",
+        "breakdown": "breakdown",
+        "unit-measure": "unit-measure"
+      },
+      "dimension": "time-period",
+      "name": "time-period",
+      "type": "all-values"
+    },
+    {
+      "name": "value",
+      "type": "all-values",
+      "dimension": "value"
     }
+  ],
+  "highlights": ["EU27"],
+  "labels": {
+    "ordinate": {
+      "facet": "unit-measure",
+      "field": "short_label"
+    },
+    "title": {
+      "facet": "indicator",
+      "field": "label"
+    },
+    "unit-measure": {
+      "facet": "unit-measure",
+      "field": "short_label"
+    },
+    "title2": {
+      "facet": "breakdown",
+      "field": "label"
+    }
+  },
+  "multiple_series": "time-period",
+  "height": 450,
+  "credits": {
+    "text": "European Commission, Digital Agenda Scoreboard",
+    "link": "http://ec.europa.eu/digital-agenda/en/graphs/"
+  },
+  "sort": {
+    "by": "value",
+    "order": -1,
+    "each_series": true
+  },
+  "tooltips": {
+    "unit-measure": true,
+    "flag": true,
+    "note": true
+  },
+  "series-legend-label": "none",
+  "series-point-label": "long"
 };
 
 

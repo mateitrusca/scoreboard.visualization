@@ -16,6 +16,8 @@ App.scenario9_table_filters_schema = {
       name: "indicator-group",
       label: "Indicator group",
       dimension: "indicator-group",
+      sortBy: "nosort",
+      sortOrder: "asc",
       constraints: {}
      },
     {
