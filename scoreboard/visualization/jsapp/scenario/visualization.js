@@ -34,7 +34,7 @@ App.Visualization = Backbone.View.extend({
             } catch(e) {}
             var keep_filters = {};
             _(filters_schema).forEach(function(item) {
-                if(item['type'] == 'select') {
+                if(item['type'] == 'select' || item['type'] == 'multiple_select') {
                     keep_filters[item['name']] = true;
                 }
             });
