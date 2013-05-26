@@ -113,6 +113,9 @@ App.format_series = function (data, sort, multidim, percent, category, highlight
                     value*=100;
                 }
             }
+            if ( typeof(value) == "string" ) {
+                value = parseFloat(value);
+            }
             var point = _.object([['name', series_item[category]['label']],
                                  ['code', series_item[category]['notation']],
                                  ['attributes', _(series_item).omit('value')],
