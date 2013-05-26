@@ -39,7 +39,7 @@ App.chart_library['map'] = function(container, options) {
         colors: chroma.brewer['YlOrBr'],
         limits: [0, max_value]
     });
-    var unit = options['meta_data']['unit'];
+    var unit = options['meta_data']['unit-measure'];
 
     var n = 0;
     var map = Kartograph.map(map_div[0]);
