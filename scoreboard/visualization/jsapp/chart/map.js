@@ -24,7 +24,6 @@ App.chart_library['map'] = function(container, options) {
     var map_div = $('<div class="map-chart">');
     $(container).empty().append(map_div);
     $(container).addClass('map-chart');
-    $(container).parent().addClass('map-chart');
 
     var series = App.format_series(
                     options['series'],

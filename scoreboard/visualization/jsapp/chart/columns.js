@@ -7,7 +7,6 @@
 App.chart_library['columns'] = function(container, options) {
 
     $(container).addClass('high-chart');
-    $(container).parent().addClass('column-chart');
     var series = App.format_series(
                     options['series'],
                     options['sort'],

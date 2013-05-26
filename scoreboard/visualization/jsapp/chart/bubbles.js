@@ -8,7 +8,6 @@
 App.chart_library['bubbles'] = function(container, options) {
 
     $(container).addClass('high-chart');
-    $(container).parent().addClass('bubble-chart');
 
     var series = App.format_series(
                     options['series'],

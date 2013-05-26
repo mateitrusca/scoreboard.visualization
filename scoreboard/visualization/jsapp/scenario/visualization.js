@@ -84,6 +84,7 @@ App.Visualization = Backbone.View.extend({
             scenario_url: App.SCENARIO_URL
         });
 
+        var chart_type = options['schema']['chart_type'];
         this.chart_view = new App.ScenarioChartView({
             el: this.$el.find('#the-chart'),
             model: this.filters,
@@ -93,8 +94,9 @@ App.Visualization = Backbone.View.extend({
             schema: options['schema'],
             filters_schema: filters_schema,
             values_schema: values_schema,
-            scenario_chart: App.chart_library[options['schema']['chart_type']]
+            scenario_chart: App.chart_library[chart_type]
         });
+        this.$el.addClass(chart_type+'-chart');
 
         this.filters.on('change', this.update_hashcfg, this);
 

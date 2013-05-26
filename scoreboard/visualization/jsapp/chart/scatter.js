@@ -8,7 +8,6 @@
 App.chart_library['scatter'] = function(container, options) {
 
     $(container).addClass('high-chart');
-    $(container).parent().addClass('scatter-chart');
 
     var series = App.format_series(
                     options['series'],
