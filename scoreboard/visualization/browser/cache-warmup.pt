@@ -1,0 +1,18 @@
+<!doctype html>
+<html tal:define="JSAPP python:view.JSAPP_URL">
+
+<head>
+  <meta charset="utf-8">
+  <title>Warming up the cache</title>
+</head>
+
+<body>
+  <tal:block content="structure python:view.jsapp_html()"/>
+  <div class='message_log'>
+    <ul id="logs">
+    </ul>
+  </div>
+  <script tal:attributes="src string:${JSAPP}/cache-warmup.js"></script>
+</body>
+
+</html>
