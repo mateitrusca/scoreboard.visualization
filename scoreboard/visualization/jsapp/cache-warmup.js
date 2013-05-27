@@ -14,7 +14,10 @@ var DATA_REVISION;
 App.start = function() {
     var tokens = window.location.href.split("/");
     App.CUBE_URL = tokens.slice(0, tokens.length-1).join("/");
-    App.getJSON('revision', null, function(result){
+    var args = {
+        'random': Math.random();
+    };
+    App.getJSON('revision', args, function(result){
         DATA_REVISION = result;
         // get dimension_labels and dimension_value_metadata
 
@@ -28,7 +31,6 @@ App.start = function() {
         App.dimension_value_method('dimension_labels', 'unit-measure');
         App.dimension_value_method('dimension_labels', 'ref-area');
         App.dimension_value_method('dimension_labels', 'time-period');
-
         if ( depth > 1 ) {
             App.dimension_options_indicator_groups();
         }
