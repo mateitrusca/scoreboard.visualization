@@ -20,7 +20,6 @@ App.start = function() {
     App.getJSON('revision', args, function(result){
         DATA_REVISION = result;
         // get dimension_labels and dimension_value_metadata
-
         App.dimension_value_method('dimension_labels', 'indicator-group');
         App.dimension_value_method('dimension_value_metadata', 'indicator');
         App.dimension_value_method('dimension_labels', 'indicator');
@@ -31,9 +30,7 @@ App.start = function() {
         App.dimension_value_method('dimension_labels', 'unit-measure');
         App.dimension_value_method('dimension_labels', 'ref-area');
         App.dimension_value_method('dimension_labels', 'time-period');
-        if ( depth > 1 ) {
-            App.dimension_options_indicator_groups();
-        }
+        App.dimension_options_indicator_groups();
     });
 };
 
