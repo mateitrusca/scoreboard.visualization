@@ -58,9 +58,11 @@ App.chart_library['country_profile'] = function(view, options) {
                 name: 'Under EU27 average',
                 color: '#7dc30f',
                 dataLabels: {
-                    color: '#436b06',
+                    color: '#7dc30f',
                     enabled: true,
                     align: 'right',
+                    inside: false,
+                    x: 50,
                     formatter: function(){
                         if(this.point.y){
                             var unit = this.point.attributes['unit-measure']['notation'];
@@ -80,9 +82,11 @@ App.chart_library['country_profile'] = function(view, options) {
                 name: 'Above EU27 average',
                 color: '#436b06',
                 dataLabels: {
-                    color: '#7dc30f',
+                    color: '#436b06',
                     enabled: true,
                     align: 'right',
+                    inside: false,
+                    x: 50,
                     formatter: function(){
                         if(this.point.y){
                             var unit = this.point.attributes['unit-measure']['notation'];
@@ -141,10 +145,10 @@ App.chart_library['country_profile'] = function(view, options) {
                 defaultSeriesType: 'bar',
                 marginTop: 100,
                 marginBottom: 100,
-                marginLeft: 300,
+                marginLeft: 400,
                 marginRight: 60,
                 height: 200 + series[0].data.length * 75,
-                width: 850
+                width: 950
             },
             credits: {
                 href: options['credits']['href'],
