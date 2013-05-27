@@ -15,7 +15,7 @@ App.start = function() {
     var tokens = window.location.href.split("/");
     App.CUBE_URL = tokens.slice(0, tokens.length-1).join("/");
     var args = {
-        'random': Math.random();
+        'random': Math.random()
     };
     App.getJSON('revision', args, function(result){
         DATA_REVISION = result;
