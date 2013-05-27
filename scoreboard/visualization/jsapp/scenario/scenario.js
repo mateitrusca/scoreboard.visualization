@@ -612,7 +612,8 @@ App.ShareOptionsView = Backbone.View.extend({
         this.render();
     },
 
-    request_csv: function(){
+    request_csv: function(ev){
+        ev.preventDefault();
         this.$el.find('form').submit();
     },
 
