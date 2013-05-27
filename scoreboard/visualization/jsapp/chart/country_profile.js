@@ -269,6 +269,8 @@ App.chart_library['country_profile'] = function(view, options) {
             x_formatter: x_formatter
         });
     }
+    view.trigger('chart_ready', series,
+        options['chart_type'] + '_' + options.subtype)
 };
 
 App.CountryProfileView = Backbone.View.extend({
