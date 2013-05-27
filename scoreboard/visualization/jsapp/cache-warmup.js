@@ -59,6 +59,10 @@ App.dimension_options_indicator_groups = function() {
             }
         });
     });
+    // get for 'Any'
+    if ( depth > 1 ) {
+        App.dimension_options_indicators();
+    }
     // get for country profile
     App.dimension_options_indicator_groups_cp('bar');
     App.dimension_options_indicator_groups_cp('table');
