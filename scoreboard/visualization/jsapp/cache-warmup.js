@@ -169,7 +169,7 @@ App.dimension_options_ref_area_cp = function(indicator_group, subtype) {
     App.getJSON("dimension_options_cp", args, function(data){
         _.each(data.options, function(option) {
             if ( depth > 2 ) {
-                App.dimension_options_time_period_cp(option.notation, subtype);
+                App.dimension_options_time_period_cp(indicator_group, option.notation, subtype);
             }
         });
     });
@@ -186,7 +186,7 @@ App.dimension_options_time_period_cp = function(indicator_group, ref_area, subty
     App.getJSON("dimension_options_cp", args, function(data){
         _.each(data.options, function(option) {
             if ( depth > 3 ) {
-                App.dimension_options_indicator_cp(option.notation, subtype);
+                App.dimension_options_indicator_cp(indicator_group, ref_area, option.notation, subtype);
             }
         });
     });
