@@ -5,8 +5,9 @@
 "use strict";
 
 
-App.chart_library['scatter'] = function(container, options) {
+App.chart_library['scatter'] = function(view, options) {
 
+    var container = view.el
     $(container).addClass('high-chart');
 
     var series = App.format_series(
@@ -134,6 +135,8 @@ App.chart_library['scatter'] = function(container, options) {
     }
 
     var chart = new Highcharts.Chart(chartOptions);
+
+    view.trigger('chart_ready', series, options['chart_type']);
 
     if (options['plotlines']){
         App.add_plotLines(chart, series[0], options['plotlines']);

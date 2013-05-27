@@ -5,7 +5,9 @@
 "use strict";
 
 
-App.chart_library['lines'] = function(container, options) {
+App.chart_library['lines'] = function(view, options) {
+
+    var container = view.el
     $(container).addClass('high-chart');
     var series = App.format_series(
                     options['series'],
@@ -128,6 +130,8 @@ App.chart_library['lines'] = function(container, options) {
     App.disable_legend(chartOptions, options);
 
     var chart = new Highcharts.Chart(chartOptions);
+
+    view.trigger('chart_ready', series);
 
 };
 
