@@ -98,6 +98,8 @@ App.Visualization = Backbone.View.extend({
         });
         this.$el.addClass(chart_type+'-chart');
 
+        this.chart_view.on('chart_ready', this.share.chart_ready, this.share);
+
         this.filters.on('change', this.update_hashcfg, this);
 
     },

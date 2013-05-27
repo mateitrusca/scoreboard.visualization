@@ -20,7 +20,8 @@ function get_value_for_code(code, series){
     }
 }
 
-App.chart_library['map'] = function(container, options) {
+App.chart_library['map'] = function(view, options) {
+    var container = view.el
     var map_div = $('<div class="map-chart">');
     $(container).empty().append(map_div);
     $(container).addClass('map-chart');
@@ -75,6 +76,8 @@ App.chart_library['map'] = function(container, options) {
             }
         });
     });
+
+    view.trigger('chart_ready', series);
 };
 
 
