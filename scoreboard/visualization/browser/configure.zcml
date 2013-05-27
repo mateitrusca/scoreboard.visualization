@@ -59,4 +59,12 @@
     template="tests.pt"
     />
 
+    <browser:page
+    name="cache_warmup"
+    for="edw.datacube.interfaces.IDataCube"
+    class=".views.CacheView"
+    permission="zope2.View"
+    template="cache-warmup.pt"
+    />
+
 </configure>

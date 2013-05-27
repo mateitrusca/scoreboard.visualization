@@ -68,3 +68,18 @@ class WhiteList(BrowserView):
 
     def __call__(self, **kwargs):
         return json.dumps(self.whitelist)
+
+class CacheView(BrowserView):
+
+    @property
+    def JSAPP_URL(self):
+        root_url = self.context.portal_url.getPortalObject().absolute_url()
+        return root_url + '/++resource++scoreboard-jsapp'
+
+    def jsapp_html(self):
+        return jsapp_html(
+                DATASOURCE_URL='',
+                SCENARIO_URL='',
+                DATA_REVISION='',
+                JSAPP_URL=self.JSAPP_URL)
+
