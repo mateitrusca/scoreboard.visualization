@@ -237,7 +237,8 @@ App.ScenarioChartView = Backbone.View.extend({
             'subtype': this.schema.chart_subtype,
             'highlights': this.schema.highlights,
             'sort': this.schema['sort'],
-            'multidim': this.schema['multidim']
+            'multidim': this.schema['multidim'],
+            'chart_type': this.schema['chart_type']
         };
 
         var multiseries_values = null;
@@ -615,7 +616,7 @@ App.ShareOptionsView = Backbone.View.extend({
         this.$el.find('form').submit();
     },
 
-    chart_ready: function(series){
+    chart_ready: function(series, chart_type){
         var action_url = App.URL + '/export.csv'
         var form = App.jQuery('<form>', {
             'action': action_url,
@@ -624,6 +625,11 @@ App.ShareOptionsView = Backbone.View.extend({
         }).append(App.jQuery('<input>', {
             'name': 'chart_data',
             'value': JSON.stringify(series),
+            'type': 'hidden'
+        }));
+        App.jQuery(form).append(App.jQuery('<input>', {
+            'name': 'chart_type',
+            'value': chart_type,
             'type': 'hidden'
         }));
         App.jQuery(form).appendTo(this.$el);

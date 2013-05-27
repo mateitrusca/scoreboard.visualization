@@ -136,7 +136,7 @@ App.chart_library['scatter'] = function(view, options) {
 
     var chart = new Highcharts.Chart(chartOptions);
 
-    view.trigger('chart_ready', series);
+    view.trigger('chart_ready', series, options['chart_type']);
 
     if (options['plotlines']){
         App.add_plotLines(chart, series[0], options['plotlines']);
