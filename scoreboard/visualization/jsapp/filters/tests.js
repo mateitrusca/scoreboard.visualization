@@ -280,7 +280,13 @@ describe('modular filters', function() {
         it("should have a mapping to groupers on App", function(){
             expect(App.groupers).to.deep.equal({
                 'indicator': 'indicator-group',
-                'breakdown': 'breakdown-group'
+                'x-indicator': 'x-indicator-group',
+                'y-indicator': 'y-indicator-group',
+                'z-indicator': 'z-indicator-group',
+                'breakdown': 'breakdown-group',
+                'x-breakdown': 'x-breakdown-group',
+                'y-breakdown': 'y-breakdown-group',
+                'z-breakdown': 'z-breakdown-group'
             });
         });
 
