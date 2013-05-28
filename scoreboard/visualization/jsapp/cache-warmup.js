@@ -88,7 +88,7 @@ App.dimension_options_indicators = function(indicator_group) {
     };
     App.getJSON("dimension_options", args, function(data){
         _.each(data.options, function(option) {
-            if ( depth > 2 ) {
+            if ( depth > 3 ) {
                 App.dimension_options_breakdown_group(indicator_group, option.notation);
             }
         });
@@ -104,7 +104,7 @@ App.dimension_options_breakdown_group = function(indicator_group, indicator) {
     };
     App.getJSON("dimension_options", args, function(data){
         _.each(data.options, function(option) {
-            if ( depth > 3 ) {
+            if ( depth > 4 ) {
                 App.dimension_options_breakdown(indicator_group, indicator, option.notation);
             }
         });
@@ -123,7 +123,7 @@ App.dimension_options_breakdown = function(indicator_group, indicator, breakdown
     };
     App.getJSON("dimension_options", args, function(data){
         _.each(data.options, function(option) {
-            if ( depth > 4 ) {
+            if ( depth > 5 ) {
                 App.dimension_options_unit_measure(indicator_group, indicator, breakdown_group, option.notation);
             }
         });
