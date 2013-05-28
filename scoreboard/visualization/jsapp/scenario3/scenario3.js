@@ -13,7 +13,7 @@ App.scenario3_filters_schema = {
         "dimension": "indicator-group",
         "sortBy": "nosort",
         "sortOrder": "asc",
-        "include_wildcard": false,
+        "include_wildcard": true,
         "constraints": {
             
         }
@@ -66,7 +66,7 @@ App.scenario3_filters_schema = {
         "name": "y-indicator-group",
         "label": "(Y) indicator group",
         "dimension": "indicator-group",
-        "include_wildcard": false,
+        "include_wildcard": true,
         "sortBy": "nosort",
         "sortOrder": "asc",
         "position": "upper-right",
