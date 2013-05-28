@@ -6,7 +6,13 @@
 
 App.groupers =  {
     'indicator': 'indicator-group',
-    'breakdown': 'breakdown-group'
+    'x-indicator': 'x-indicator-group',
+    'y-indicator': 'y-indicator-group',
+    'z-indicator': 'z-indicator-group',
+    'breakdown': 'breakdown-group',
+    'x-breakdown': 'x-breakdown-group',
+    'y-breakdown': 'y-breakdown-group',
+    'z-breakdown': 'z-breakdown-group'
 };
 
 
