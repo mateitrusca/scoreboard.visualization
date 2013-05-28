@@ -305,7 +305,18 @@ App.scenario3_bubbles_filters_schema = {
         "flag": true,
         "note": true,
         "unit-measure": true
-    }
+    },
+    "text": [
+        {"value": "Horizontal axis",
+         "position": "upper-left"
+        },
+        {"value": "Vertical axis",
+         "position": "upper-right"
+        },
+        {"value": "Bubbles size (Z) proportional to:",
+         "position": "bottom-right"
+        }
+    ]
 };
 
 

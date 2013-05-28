@@ -65,7 +65,12 @@ App.scenario9_filters_schema = {
     'indicator-group': {facet: 'indicator-group', field: 'label'},
     'ref-area': {facet: 'ref-area', field: 'label'},
     'time-period': {facet: 'time-period', field: 'short_label'}
-  }
+  },
+  text: [
+    {"value": "The bars present the relative position of a country on all the key indicators of a thematic group, compared on a common scale with the lowest, average and highest European countries values.",
+     "position": "upper-right"
+    }
+  ]
 };
 
 
