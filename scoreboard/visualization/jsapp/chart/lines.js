@@ -37,7 +37,10 @@ App.chart_library['lines'] = function(view, options) {
             });
         }
     });
-    var all_years = _(series[0]['data']).pluck('code');
+    var all_years = [];
+    if (series.length > 0){
+        all_years = _.chain(series[0]['data']).pluck('code').value();
+    }
     var chartOptions = {
         chart: {
             renderTo: container,
