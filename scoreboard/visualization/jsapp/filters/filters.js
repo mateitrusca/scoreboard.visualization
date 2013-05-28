@@ -57,6 +57,9 @@ App.SelectFilter = Backbone.View.extend({
         var range = _(this.dimension_options).pluck('notation');
         if(! _(range).contains(this.model.get(this.name))) {
             var default_value = this.default_value || range[0];
+            if ( default_value == '#random' ) {
+                default_value = range[Math.floor( Math.random()*range.length )];
+            }
             this.model.set(this.name, default_value);
         }
     },
@@ -219,6 +222,13 @@ App.MultipleSelectFilter = App.SelectFilter.extend({
             }
             else{
                 var default_value = this.default_value || [range[0]];
+                default_value = _.map(default_value, function(item) {
+                    if ( item == '#random' ) {
+                        return range[Math.floor( Math.random()*range.length )];
+                    } else {
+                        return item;
+                    }
+                });
                 this.model.set(this.name, default_value);
             }
         }

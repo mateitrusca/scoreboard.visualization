@@ -25,6 +25,7 @@ App.scenario3_filters_schema = {
         "dimension": "indicator",
         "sortBy": "nosort",
         "sortOrder": "asc",
+        "default_value": "#random",
         "constraints": {
             "indicator-group": "x-indicator-group"
         }
@@ -47,6 +48,7 @@ App.scenario3_filters_schema = {
         "dimension": "breakdown",
         "sortBy": "nosort",
         "sortOrder": "asc",
+        "default_value": "#random",
         "constraints": {
             "indicator": "x-indicator"
         }
@@ -56,6 +58,7 @@ App.scenario3_filters_schema = {
         "name": "x-unit-measure",
         "label": "(X) unit of measure",
         "dimension": "unit-measure",
+        "default_value": "#random",
         "constraints": {
             "indicator": "x-indicator",
             "breakdown": "x-breakdown"
@@ -69,6 +72,7 @@ App.scenario3_filters_schema = {
         "include_wildcard": true,
         "sortBy": "nosort",
         "sortOrder": "asc",
+        "default_value": "#random",
         "position": "upper-right",
         "constraints": {
             
@@ -82,6 +86,7 @@ App.scenario3_filters_schema = {
         "sortBy": "nosort",
         "sortOrder": "asc",
         "position": "upper-right",
+        "default_value": "#random",
         "constraints": {
             "indicator-group": "y-indicator-group"
         }
@@ -106,6 +111,7 @@ App.scenario3_filters_schema = {
         "sortBy": "nosort",
         "sortOrder": "asc",
         "position": "upper-right",
+        "default_value": "#random",
         "constraints": {
             "indicator": "y-indicator"
         }
@@ -116,6 +122,7 @@ App.scenario3_filters_schema = {
         "label": "(Y) unit of measure",
         "dimension": "unit-measure",
         "position": "upper-right",
+        "default_value": "#random",
         "constraints": {
             "indicator": "y-indicator",
             "breakdown": "y-breakdown"

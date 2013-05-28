@@ -30,6 +30,7 @@ App.scenario6_filters_schema = {
       "label": "Indicator group",
       "name": "indicator-group",
       "type": "select",
+      "default_value": "#random",
       "sortBy": "nosort",
       "sortOrder": "asc"
     },
@@ -42,6 +43,7 @@ App.scenario6_filters_schema = {
       "sortBy": "nosort",
       "sortOrder": "asc",
       "name": "indicator",
+      "default_value": "#random",
       "type": "select"
     },
     {
@@ -51,6 +53,7 @@ App.scenario6_filters_schema = {
       "label": "Breakdown group",
       "sortBy": "nosort",
       "sortOrder": "asc",
+      "default_value": "#random",
       "type": "select",
       "constraints": {
         "indicator-group": "indicator-group",
@@ -68,6 +71,7 @@ App.scenario6_filters_schema = {
       "name": "breakdown",
       "sortBy": "nosort",
       "sortOrder": "asc",
+      "default_value": "#random",
       "type": "select"
     },
     {
@@ -80,6 +84,7 @@ App.scenario6_filters_schema = {
       "dimension": "unit-measure",
       "label": "Unit of measure",
       "name": "unit-measure",
+      "default_value": "#random",
       "type": "select"
     },
     {

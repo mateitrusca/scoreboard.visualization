@@ -14,6 +14,7 @@ App.scenario7_filters_schema = {
         "include_wildcard": true,
         "sortBy": "nosort",
         "sortOrder": "asc",
+        "default_value": "#random",
         "constraints": {
             
         }
@@ -25,6 +26,7 @@ App.scenario7_filters_schema = {
         "dimension": "indicator",
         "sortBy": "nosort",
         "sortOrder": "asc",
+        "default_value": "#random",
         "constraints": {
             "indicator-group": "indicator-group"
         }
@@ -37,6 +39,7 @@ App.scenario7_filters_schema = {
         "dimension": "breakdown-group",
         "sortBy": "nosort",
         "sortOrder": "asc",
+        "default_value": "#random",
         "constraints": {
             "indicator-group": "indicator-group",
             "indicator": "indicator"
@@ -47,6 +50,7 @@ App.scenario7_filters_schema = {
         "name": "unit-measure",
         "label": "Unit of measure",
         "dimension": "unit-measure",
+        "default_value": "#random",
         "constraints": {
             "indicator-group": "indicator-group",
             "indicator": "indicator",
@@ -72,7 +76,7 @@ App.scenario7_filters_schema = {
         "name": "ref-area",
         "label": "Select the countries",
         "dimension": "ref-area",
-        "default_value": ["EU27"],
+        "default_value": ["EU27", "#random"],
         "constraints": {
             "unit-measure": "unit-measure",
             "breakdown-group": "breakdown-group",
