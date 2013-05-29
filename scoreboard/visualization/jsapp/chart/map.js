@@ -23,7 +23,11 @@ function get_value_for_code(code, series){
 App.chart_library['map'] = function(view, options) {
     var container = view.el
     var map_div = $('<div class="map-chart">');
-    $(container).empty().append(map_div);
+    $(container).empty().append($('<p>', {
+        'id': 'map-legend-title',
+        'text': options.meta_data['title']
+    }));
+    $(container).append(map_div);
     $(container).addClass('map-chart');
 
     var series = App.format_series(
