@@ -24,7 +24,7 @@ App.chart_library['map'] = function(view, options) {
     var container = view.el
     var map_div = $('<div class="map-chart">');
     $(container).empty().append($('<p>', {
-        'id': 'map-legend-title',
+        'id': 'map-title',
         'text': options.meta_data['title']
     }));
     $(container).append(map_div);
