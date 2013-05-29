@@ -20,6 +20,24 @@ function get_value_for_code(code, series){
     }
 }
 
+
+function draw_legend(paper, colorscale, x0, y0, min, max, unit) {
+    var box_width = 40;
+    var box_height = 30;
+    var n_boxes = 4;
+    _(_.range(n_boxes)).forEach(function(n) {
+        var x = x0 + box_width * n;
+        var value = min + (min + max) / (n_boxes - 1) * n;
+        var color = colorscale.getColor(value);
+        var text = "" + App.round(value, 4);
+        paper.rect(x, y0, box_width, box_height).attr({fill: color});
+        paper.text(x + box_width/2, y0 + box_height + 10, text);
+    });
+    //paper.text(x0 + box_width * (n_boxes + 1/2), y0 + box_height + 10, unit);
+    paper.text(x0 + box_width * n_boxes / 2, y0 + box_height + 20, unit);
+};
+
+
 App.chart_library['map'] = function(view, options) {
     var container = view.el
     var map_div = $('<div class="map-chart">');
@@ -48,6 +66,7 @@ App.chart_library['map'] = function(view, options) {
 
     var n = 0;
     var map = Kartograph.map(map_div[0]);
+    App.kartograph_map = map;
     map.loadMap(App.JSAPP + '/europe.svg', function() {
         map.addLayer('countries', {
             titles: function(feature) {
@@ -79,6 +98,7 @@ App.chart_library['map'] = function(view, options) {
                 }
             }
         });
+        draw_legend(map.paper, colorscale, 10, 420, 0, max_value, unit);
     });
 
     view.trigger('chart_ready', series);

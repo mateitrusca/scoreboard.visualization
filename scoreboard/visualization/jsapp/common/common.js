@@ -58,6 +58,7 @@ App.index_by = function(list, prop) {
 
 
 App.round = function(value, precision) {
+    if(value == 0) { return 0; }
     var magnitude = Math.floor(Math.log(value) / Math.LN10);
     var decimals = precision - magnitude - 1;
     var power = Math.pow(10, decimals);
