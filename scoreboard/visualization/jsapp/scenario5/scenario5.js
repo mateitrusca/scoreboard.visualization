@@ -134,6 +134,10 @@ App.scenario5_filters_schema = {
     }],
     "height": 500,
     "labels": {
+        "title": {
+          "facet": "indicator",
+          "field": "label"
+        },
         "ordinate": {
             "facet": "unit-measure",
             "field": "short_label"
