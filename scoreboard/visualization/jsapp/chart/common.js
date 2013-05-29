@@ -40,9 +40,6 @@ App.format_series = function (data, sort, multidim, percent, category, highlight
         }
     }
     if (multidim > 1){
-
-
-
         var label_formatter = function() {
             // not really used as each scenario redefines its own formatting
             return this.point.name;
@@ -154,6 +151,22 @@ App.format_series = function (data, sort, multidim, percent, category, highlight
             return _.object(
                     ['name', 'notation', 'color', 'data'],
                     [item['label'], item['notation'], countrycolor(item['notation']), data]);
+        }).tap(function(){
+            // ajust category labels for time-series charts (lines)
+            if (category == 'time-period'){
+                var min = parseInt(_.chain(diffs_collection).keys().min().value());
+                var max = parseInt(_.chain(diffs_collection).keys().max().value());
+                _.range(min, max + 1).map(function(year){
+                    if(! _.chain(diffs_collection).has(year.toString()).value()){
+                        diffs_collection[year.toString()] = _.object([
+                            [category, _.object([
+                                ['notation', year.toString()],
+                                ['label', 'Year:'+year.toString()]
+                            ])]
+                        ])
+                    }
+                })
+            }
         }).map(function(item){
             var serie = item['data'];
             _.chain(diffs_collection).
