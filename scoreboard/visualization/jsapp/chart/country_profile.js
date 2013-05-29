@@ -49,7 +49,7 @@ App.chart_library['country_profile'] = function(view, options) {
                         options['series'],
                         options['sort'],
                         options['multidim'],
-                        options['unit_is_pc'],
+                        [false],
                         options['category_facet'],
                         options['highlights']);
 
