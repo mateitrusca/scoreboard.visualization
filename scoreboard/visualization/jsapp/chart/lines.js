@@ -37,10 +37,7 @@ App.chart_library['lines'] = function(view, options) {
             });
         }
     });
-    var all_years = [];
-    if (series.length > 0){
-        all_years = _.chain(series[0]['data']).pluck('code').value();
-    }
+
     var chartOptions = {
         chart: {
             renderTo: container,
@@ -77,7 +74,8 @@ App.chart_library['lines'] = function(view, options) {
             }
         },
         xAxis: {
-            categories: all_years,
+            type: 'datetime',
+            tickInterval: 3600 * 24 * 1000 * 7 * 4 * 12,
             labels: {
                 style: {
                     color: '#000000'
