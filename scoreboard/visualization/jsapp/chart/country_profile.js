@@ -294,6 +294,7 @@ App.CountryProfileView = Backbone.View.extend({
 
         _(this.options.data.table).forEach(function(item, key){
             var row = {};
+            row.order = item['inner_order'] || 0;
             row.name = key;
             row.title = item.name;
             row.hasRank = self.options.data['has-rank'];
@@ -305,7 +306,7 @@ App.CountryProfileView = Backbone.View.extend({
             row.year3 = format(item[latest - 3]);
             table.push(row);
         });
-        return table;
+        return _(table).sortBy('order');
     },
 
     render: function(){
