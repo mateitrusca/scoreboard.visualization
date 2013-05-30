@@ -64,7 +64,7 @@ App.chart_library['country_profile'] = function(view, options) {
                     inside: false,
                     x: 50,
                     formatter: function(){
-                        if(this.point.y){
+                        if(this.point.y >= 0){
                             var unit = this.point.attributes['unit-measure']['notation'];
                             var res = x_formatter(this.point.original, unit);
                             if(unit && unit.toLowerCase().indexOf('pc_') !== -1){
