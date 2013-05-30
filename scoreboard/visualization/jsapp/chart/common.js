@@ -156,6 +156,7 @@ App.format_series = function (data, sort, multidim, percent, category, highlight
             if (category == 'time-period'){
                 var min = parseInt(_.chain(diffs_collection).keys().min().value());
                 var max = parseInt(_.chain(diffs_collection).keys().max().value());
+                /*
                 _.range(min, max + 1).map(function(year){
                     if(! _.chain(diffs_collection).has(year.toString()).value()){
                         diffs_collection[year.toString()] = _.object([
@@ -166,6 +167,7 @@ App.format_series = function (data, sort, multidim, percent, category, highlight
                         ])
                     }
                 })
+                */
             }
         }).map(function(item){
             var serie = item['data'];
