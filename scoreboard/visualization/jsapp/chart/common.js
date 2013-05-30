@@ -59,7 +59,7 @@ App.format_series = function (data, sort, multidim, percent, category, highlight
                     data[0]['z'] = datapoint['value']['z'] * multiplicators[2]
                 }
                 var output = {
-                    'name': App.COUNTRY_NAME[notation],
+                    'name': datapoint[category]['label'],
                     'code': notation,
                     'color': countrycolor(notation),
                     'data': data,
