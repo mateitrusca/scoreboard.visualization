@@ -25,16 +25,34 @@ function draw_legend(paper, colorscale, x0, y0, min, max, unit) {
     var box_width = 40;
     var box_height = 30;
     var n_boxes = 4;
+    var max_value = min + (min + max) / (n_boxes - 1) * n_boxes;
+    var magnitude = (max_value>0)?Math.floor(Math.log(max_value) / Math.LN10):0;
+    var multiply = (magnitude>3)?'x10^' + magnitude + " ":"";
     _(_.range(n_boxes)).forEach(function(n) {
         var x = x0 + box_width * n;
         var value = min + (min + max) / (n_boxes - 1) * n;
         var color = colorscale.getColor(value);
-        var text = "" + App.round(value, 4);
+        var text = "";
+        if (unit.is_pc){
+            text += Math.floor(value);
+        }
+        else{
+            var print_value = value;
+            if (magnitude > 3){
+                if (value>0){
+                    print_value = print_value / Math.pow(10, magnitude);
+                }
+                text += App.round(print_value, 2);
+            }
+            else{
+                text += value;
+            }
+        }
         paper.rect(x, y0, box_width, box_height).attr({fill: color});
         paper.text(x + box_width/2, y0 + box_height + 10, text);
     });
     //paper.text(x0 + box_width * (n_boxes + 1/2), y0 + box_height + 10, unit);
-    paper.text(x0 + box_width * n_boxes / 2, y0 + box_height + 20, unit);
+    paper.text(x0 + box_width * n_boxes / 2, y0 + box_height + 20, multiply + unit.text);
 };
 
 
@@ -100,7 +118,8 @@ App.chart_library['map'] = function(view, options) {
                 }
             }
         });
-        draw_legend(map.paper, colorscale, 10, 420, 0, max_value, unit);
+        draw_legend(map.paper, colorscale, 10, 420, 0, max_value,
+                {text: unit, is_pc: options.unit_is_pc[0]});
     });
 
     view.trigger('chart_ready', series);
