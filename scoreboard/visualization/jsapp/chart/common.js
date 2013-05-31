@@ -180,13 +180,19 @@ App.format_series = function (data, sort, multidim, percent, category, highlight
                     serie = sort_serie(serie, sort);
             }
             if (category == 'time-period'){
-                var date_pattern = /^([0-9]{4})(?:-([0-9]{2}))*$/;
+                var date_pattern = /^([0-9]{4})(?:-(?:([0-9]{2})|(?:Q([0-9]){1})))*$/;
                 _(serie).each(function(item){
-                    var date_params = [];
-                    _(date_pattern.exec(item['code']).slice(1)).each(function(item){
-                        date_params.push(parseInt(item || 0));
-                    })
-                    item['x'] = Date.UTC.apply(this, date_params);
+                    var matches = date_pattern.exec(item['code']);
+                    var year = parseInt(matches[1]);
+                    var month = parseInt(matches[2]);
+                    var quarter = parseInt(matches[3]);
+                    if (!_(quarter).isNaN() && _(month).isNaN()){
+                        month = (quarter * 4) - 1;
+                    }
+                    else if(_(month).isNaN()){
+                        month = 0;
+                    }
+                    item['x'] = Date.UTC(year, month);
                 })
             }
             return _.object(
