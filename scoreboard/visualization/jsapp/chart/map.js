@@ -51,10 +51,10 @@ function draw_legend(paper, colorscale, x0, y0, min, max, unit, orientation) {
                 if (value>0){
                     print_value = print_value / Math.pow(10, magnitude);
                 }
-                text += App.round(print_value, 2);
+                text += App.round(print_value, 4);
             }
             else{
-                text += App.round(value, 2);
+                text += App.round(value, 4);
             }
         }
         if (orientation == 'vertical'){
