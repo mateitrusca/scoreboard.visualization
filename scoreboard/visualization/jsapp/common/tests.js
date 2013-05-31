@@ -22,6 +22,8 @@ describe('Float rounder', function() {
         expect(App.round(234.5678, 3)).to.equal('235');
         expect(App.round(345.6789, 3)).to.equal('346');
         expect(App.round(400.0000, 3)).to.equal('400');
+        expect(App.round(22700001, 3)).to.equal('22700001');
+        expect(App.round(22750000, 3)).to.equal('22750000');
     });
 
 });
