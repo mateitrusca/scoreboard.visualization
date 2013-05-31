@@ -21,15 +21,25 @@ function get_value_for_code(code, series){
 }
 
 
-function draw_legend(paper, colorscale, x0, y0, min, max, unit) {
+function draw_legend(paper, colorscale, x0, y0, min, max, unit, orientation) {
     var box_width = 40;
     var box_height = 30;
-    var n_boxes = 4;
+    var n_boxes = 6;
+
     var max_value = min + (min + max) / (n_boxes - 1) * n_boxes;
     var magnitude = (max_value>0)?Math.floor(Math.log(max_value) / Math.LN10):0;
     var multiply = (magnitude>3)?'x10^' + magnitude + " ":"";
+
     _(_.range(n_boxes)).forEach(function(n) {
-        var x = x0 + box_width * n;
+        var x = x0;
+        var y = y0;
+        if (orientation == 'vertical'){
+            console.log(y);
+            y = y0 + box_height * n;
+        }
+        else{
+            x = x0 + box_width * n;
+        }
         var value = min + (min + max) / (n_boxes - 1) * n;
         var color = colorscale.getColor(value);
         var text = "";
@@ -48,11 +58,22 @@ function draw_legend(paper, colorscale, x0, y0, min, max, unit) {
                 text += value;
             }
         }
-        paper.rect(x, y0, box_width, box_height).attr({fill: color});
-        paper.text(x + box_width/2, y0 + box_height + 10, text);
+        if (orientation == 'vertical'){
+            paper.rect(x0, y, box_width, box_height).attr({fill: color});
+            paper.text(x0 + box_width + 20, y + box_height/2, text);
+        }
+        else{
+            paper.rect(x, y0, box_width, box_height).attr({fill: color});
+            paper.text(x + box_width/2, y0 + box_height + 10, text);
+        }
     });
     //paper.text(x0 + box_width * (n_boxes + 1/2), y0 + box_height + 10, unit);
-    paper.text(x0 + box_width * n_boxes / 2, y0 + box_height + 20, multiply + unit.text);
+    if (orientation == 'vertical'){
+        paper.text(x0 + box_width + 20, y0 + box_height * n_boxes + 20, multiply + unit.text);
+    }
+    else{
+        paper.text(x0 + box_width * n_boxes / 2, y0 + box_height + 20, multiply + unit.text);
+    }
 };
 
 
@@ -118,8 +139,15 @@ App.chart_library['map'] = function(view, options) {
                 }
             }
         });
+        //horizontal
+        /*
         draw_legend(map.paper, colorscale, 10, 420, 0, max_value,
                 {text: unit, is_pc: options.unit_is_pc[0]});
+        */
+        //vertical
+        draw_legend(map.paper, colorscale, 10, 10, 0, max_value,
+                {text: unit, is_pc: options.unit_is_pc[0]},
+                'vertical');
     });
 
     view.trigger('chart_ready', series);
