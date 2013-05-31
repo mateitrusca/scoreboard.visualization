@@ -299,11 +299,11 @@ App.CountryProfileView = Backbone.View.extend({
             row.title = item.name;
             row.hasRank = self.options.data['has-rank'];
             row.rank = item.rank || '-';
-            row.eu = format(item.eu);
-            row.year = format(item[latest]);
-            row.year1 = format(item[latest - 1]);
-            row.year2 = format(item[latest - 2]);
-            row.year3 = format(item[latest - 3]);
+            row.eu = format(item.eu, item.unit);
+            row.year = format(item[latest], item.unit);
+            row.year1 = format(item[latest - 1], item.unit);
+            row.year2 = format(item[latest - 2], item.unit);
+            row.year3 = format(item[latest - 3], item.unit);
             table.push(row);
         });
         return _(table).sortBy('order');
