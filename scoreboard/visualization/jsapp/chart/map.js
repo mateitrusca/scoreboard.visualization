@@ -34,7 +34,6 @@ function draw_legend(paper, colorscale, x0, y0, min, max, unit, orientation) {
         var x = x0;
         var y = y0;
         if (orientation == 'vertical'){
-            console.log(y);
             y = y0 + box_height * n;
         }
         else{
