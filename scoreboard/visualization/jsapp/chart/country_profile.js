@@ -28,15 +28,18 @@ App.chart_library['country_profile'] = function(view, options) {
         }catch(err){
             return '-';
         }
-
+        var unit_is_pc = false;
         if(unit && unit.toLowerCase().indexOf('pc_') !== -1){
-            value *= 100;
+            unit_is_pc = true;
         }
 
         if(value > 100){
             value = value.toFixed(0);
             return add_commas(value);
         }else{
+            if (unit_is_pc){
+                return (value * 100).toFixed(0);
+            }
             return value.toFixed(2);
         }
     };
