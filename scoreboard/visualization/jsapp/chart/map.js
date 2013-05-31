@@ -55,7 +55,7 @@ function draw_legend(paper, colorscale, x0, y0, min, max, unit, orientation) {
                 text += App.round(print_value, 2);
             }
             else{
-                text += value;
+                text += App.round(value, 2);
             }
         }
         if (orientation == 'vertical'){
