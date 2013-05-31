@@ -76,6 +76,7 @@ App.chart_library['lines'] = function(view, options) {
         xAxis: {
             type: 'datetime',
             tickInterval: 3600 * 24 * 1000 * 7 * 4 * 12,
+            maxZoom: 3600 * 24 * 1000 * 7 * 4 * 12,
             labels: {
                 style: {
                     color: '#000000'
