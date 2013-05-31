@@ -218,13 +218,35 @@ App.ScenarioChartView = Backbone.View.extend({
                 return this.value;
             },
             'title_formatter': function(){
-                var title = '';
-                for (var i = 0; i < arguments.length; i++) {
-                    if (arguments && arguments[i] && arguments[i] != 'Total') {
-                        title += arguments[i];
+                if (arguments){
+                    var title = '';
+                    if (_(arguments[0]).isArray()){
+                        title = arguments[0][0];
+                        _(arguments[0].slice(1)).each(function(item, idx){
+                            var sep = ', ';
+                            var part = (item != 'Total')?item:null;
+                            if (_(part).isArray()){
+                                sep = item[0];
+                                part = (item[1] != 'Total')?item[1]:null;
+                            }
+                            if (idx >= 0 && part){
+                                title += sep;
+                                title += part;
+                            }
+                        });
+                        return title;
                     }
+
+                    for (var i = 0; i < arguments.length; i++) {
+                        if (arguments[i] && arguments[i] != 'Total') {
+                            title += arguments[i];
+                        }
+                    }
+                    return title;
                 }
-                return title;
+                else{
+                    return '';
+                }
             },
             'group_labels': {},
             'unit_is_pc': unit_is_pc,
