@@ -149,6 +149,39 @@ describe('FacetsEditor', function() {
 
     });
 
+    describe('facet position', function() {
+
+        it('should update model with selection', function() {
+            var model = new App.EditorConfiguration({
+                    facets: [
+                        {name: 'dim1', type: 'select'}
+                    ]
+                }, {
+                    dimensions: [
+                        {type_label: 'dimension', notation: 'time-period'}]
+                });
+            var view = new App.FacetsEditor({model: model});
+            expect(model.facets.first().get('position')).to.be.undefined;
+            view.$el.find('[name="position"]').val('upper-right').change();
+            expect(model.facets.first().get('position')).to.equal(
+                'upper-right');
+        });
+
+        it('should select existing filter position', function(){
+            var view = new App.FacetsEditor({
+                    model: new App.EditorConfiguration({
+                        facets: [
+                            {name: 'time-period', position: 'upper-left'}]
+                    }, {
+                        dimensions: [
+                            {type_label: 'dimension', notation: 'time-period'}]
+                    })
+            });
+            var facet0 = view.model.toJSON()['facets'][0];
+            expect(facet0['position']).to.equal('upper-left');
+        });
+    });
+
     describe('facet type', function() {
 
         it('should default to "select"', function() {

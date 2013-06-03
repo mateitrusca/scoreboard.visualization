@@ -12,6 +12,7 @@ App.FacetEditorField = Backbone.View.extend({
     template: App.get_template('editor/facet-field.html'),
 
     events: {
+        'change [name="position"]': 'on_change_position',
         'change [name="type"]': 'on_change_type',
         'click .facet-sort': 'on_click_sort',
         'change [name="include_wildcard"]': 'on_change_wildcard',
@@ -19,6 +20,13 @@ App.FacetEditorField = Backbone.View.extend({
         'change [name="sort-by"]': 'on_change_sorting',
         'change [name="sort-order"]': 'on_change_sorting'
     },
+
+    position_options:[
+        {value: 'upper-left', label: "upper left"},
+        {value: 'upper-right', label: "upper right"},
+        {value: 'bottom-left', label: "lower left"},
+        {value: 'bottom-right', label: "lower right"},
+    ],
 
     type_options: [
         {value: 'select', label: "single selection"},
@@ -49,6 +57,12 @@ App.FacetEditorField = Backbone.View.extend({
 
     render: function() {
         var context = _({
+            position_options:_(this.position_options).map(function(opt) {
+                var selected = this.model.get('position') == opt['value'];
+                return _({
+                    selected: selected
+                }).extend(opt);
+            }, this),
             type_options: _(this.type_options).map(function(opt) {
                 var selected = this.model.get('type') == opt['value'];
                 return _({
@@ -74,6 +88,12 @@ App.FacetEditorField = Backbone.View.extend({
         }).extend(this.model.toJSON());
         this.$el.html(this.template(context));
         this.$el.attr('data-name', this.model.get('name'));
+    },
+
+    on_change_position: function(evt) {
+        this.model.set({
+            position: this.$el.find('[name="position"]').val()
+        });
     },
 
     on_change_type: function(evt) {
