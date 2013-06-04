@@ -21,6 +21,10 @@ jinja_env.globals['get_js_templates'] = get_js_templates
 jinja_env.filters['json'] = lambda v: jinja2.Markup(json.dumps(v))
 
 
+def getZopeState():
+    import Globals; return Globals.DevelopmentMode
+
+
 def jsapp_html(DATASOURCE_URL, SCENARIO_URL, DATA_REVISION, JSAPP_URL):
     tmpl = jinja_env.from_string((MODULE_PATH / 'jsapp.html').text('utf-8'))
     return tmpl.render(**{
@@ -28,4 +32,5 @@ def jsapp_html(DATASOURCE_URL, SCENARIO_URL, DATA_REVISION, JSAPP_URL):
         'SCENARIO_URL': SCENARIO_URL,
         'DATA_REVISION': DATA_REVISION,
         'JSAPP': JSAPP_URL,
+        'DEBUG': getZopeState(),
     })
