@@ -89,12 +89,8 @@ App.chart_library['bubbles'] = function(view, options) {
             endOnTick: true,
             showLastLabel: true,
             labels: {
-                formatter: function() {
-                    if (this.value < 0){
-                        return null;
-                    }
-                    return this.value;
-                },
+                formatter: _.partial(App.tick_labels_formatter,
+                                     options.unit_is_pc[0]),
                 style: {
                     color: '#000000'
                 }
@@ -117,12 +113,8 @@ App.chart_library['bubbles'] = function(view, options) {
                  margin: 30
             },
             labels: {
-                formatter: function() {
-                    if (this.value < 0){
-                        return null;
-                    }
-                    return this.value;
-                },
+                formatter: _.partial(App.tick_labels_formatter,
+                                     options.unit_is_pc[1]),
                 style: {
                     color: '#000000',
                 }
