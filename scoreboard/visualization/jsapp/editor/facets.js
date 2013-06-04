@@ -18,7 +18,16 @@ App.FacetEditorField = Backbone.View.extend({
         'change [name="include_wildcard"]': 'on_change_wildcard',
         'change [name="multidim"]': 'on_change_multidim',
         'change [name="sort-by"]': 'on_change_sorting',
-        'change [name="sort-order"]': 'on_change_sorting'
+        'change [name="sort-order"]': 'on_change_sorting',
+        'change [name="ignore_values"]': 'on_change_ignore_values'
+    },
+
+    fetch_options: function(){
+        var args = {};
+        args['dimension'] = this.model.get('dimension');
+        args['rev'] = App.DATA_REVISION;
+        var view_name = 'dimension_options';
+        return $.getJSON(App.URL + '/' + view_name, args);
     },
 
     position_options:[
@@ -52,11 +61,26 @@ App.FacetEditorField = Backbone.View.extend({
             this.model.set('type', this.type_options[0]['value']);
         }
         this.facets_editor = options['facets_editor'];
+        var ajax = this.fetch_options();
+
+        ajax.done(_.bind(function(data){
+            options = [];
+            _(data.options).each(function(item){
+                options.push({
+                    label: item['label'],
+                    value: item['notation']
+                });
+            });
+            this.facet_options = options;
+            this.render();
+        },this));
+
         this.render();
     },
 
     render: function() {
         var context = _({
+            facet_options: this.facet_options,
             position_options:_(this.position_options).map(function(opt) {
                 var selected = this.model.get('position') == opt['value'];
                 return _({
@@ -88,11 +112,30 @@ App.FacetEditorField = Backbone.View.extend({
         }).extend(this.model.toJSON());
         this.$el.html(this.template(context));
         this.$el.attr('data-name', this.model.get('name'));
+        this.$el.find('[name="ignore_values"]').select2();
     },
 
     on_change_position: function(evt) {
         this.model.set({
             position: this.$el.find('[name="position"]').val()
+        });
+    },
+
+    on_change_ignore_values: function(evt) {
+        var id = null;
+        var selected = false;
+        if (evt.added){
+            id = evt.added.id;
+            selected = true;
+        }else if(evt.removed){
+            id = evt.removed.id;
+        }
+        var option = _(this.facet_options).findWhere({value: id});
+        if(option){
+            option['selected'] = selected;
+        }
+        this.model.set({
+            ignore_values: this.$el.find('[name="ignore_values"]').val() || []
         });
     },
 

@@ -149,6 +149,29 @@ describe('FacetsEditor', function() {
 
     });
 
+    describe('facet ignore values', function() {
+        it('should update model with user input', function() {
+            this.sandbox.useFakeServer();
+            var model = new App.EditorConfiguration({
+                    facets: [
+                        {name: 'dim1', type: 'multiple_select'}
+                    ]
+                }, {
+                    dimensions: [
+                        {type_label: 'dimension', notation: 'time-period'}]
+                });
+            var view = new App.FacetsEditor({model: model});
+            var server = this.sandbox.server;
+            var options = [{'label': "Option One", 'notation': 'one'},
+                           {'label': "Option Two", 'notation': 'two'}];
+            App.respond_json(server.requests[0], {'options': options});
+            expect(model.facets.models[0].get('ignore_values')).to.be.undefined;
+            view.$el.find('[name="ignore_values"]').val(['two']).change();
+            expect(model.facets.models[0].get('ignore_values')).to.deep.equal(['two']);
+        });
+
+    });
+
     describe('facet position', function() {
 
         it('should update model with selection', function() {
