@@ -71,7 +71,8 @@ App.chart_library['bubbles'] = function(view, options) {
             }
         },
         xAxis: [{
-            min: 0,
+            minPadding: 0.1,
+            maxPadding: 0.1,
             title: {
                 enabled: true,
                 text: options['title_formatter'](
@@ -88,6 +89,8 @@ App.chart_library['bubbles'] = function(view, options) {
             endOnTick: true,
             showLastLabel: true,
             labels: {
+                formatter: _.partial(App.tick_labels_formatter,
+                                     options.unit_is_pc[0]),
                 style: {
                     color: '#000000'
                 }
@@ -95,7 +98,8 @@ App.chart_library['bubbles'] = function(view, options) {
 
         }],
         yAxis: {
-            min: 0,
+            minPadding: 0.1,
+            maxPadding: 0.1,
             title: {
                 text: options['title_formatter'](
                         options.meta_data['title_y'],
@@ -109,6 +113,8 @@ App.chart_library['bubbles'] = function(view, options) {
                  margin: 30
             },
             labels: {
+                formatter: _.partial(App.tick_labels_formatter,
+                                     options.unit_is_pc[1]),
                 style: {
                     color: '#000000',
                 }
