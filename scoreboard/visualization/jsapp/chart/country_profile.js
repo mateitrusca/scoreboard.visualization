@@ -297,7 +297,12 @@ App.CountryProfileView = Backbone.View.extend({
 
         _(this.options.data.table).forEach(function(item, key){
             var row = {};
-            row.order = item['inner_order'] || 0;
+            row.order = 999999;
+            if ( typeof(item['inner_order']) == "string" ) {
+              row.order = parseInt(item['inner_order']);
+            } else if ( typeof(item['inner_order']) == "number" ) {
+              row.order = item['inner_order'];
+            }
             row.name = key;
             row.title = item.name;
             row.hasRank = self.options.data['has-rank'];
