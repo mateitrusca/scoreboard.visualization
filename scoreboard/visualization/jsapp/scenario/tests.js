@@ -76,7 +76,8 @@ describe('ChartSeriesPreparation', function() {
                         "ref-area": {
                             "notation": "AT",
                             "label": "Austria",
-                            "short-label": "AT"
+                            "short-label": "AT",
+                            "inner_order": null
                         },
                         "value": 0.4808
                     }],
@@ -88,6 +89,7 @@ describe('ChartSeriesPreparation', function() {
             'name': 'Austria',
             'code': 'AT',
             'color': null,
+            'order': null,
             'attributes': _(series[1]['data'][0]).omit('value'),
             'y': 0.4808
         }]);
@@ -211,6 +213,7 @@ describe('ChartSeriesPreparation', function() {
                         "ref-area": {
                             "notation": "AT",
                             "label": "Austria",
+                            "inner_order": null
                         },
                         "value": 0.4808
                     }],
@@ -222,6 +225,7 @@ describe('ChartSeriesPreparation', function() {
             "name": "Austria",
             'code': 'AT',
             'color': null,
+            'order': null,
             'attributes': _(series[1]['data'][0]).omit('value'),
             "y": 0.4808
         }]);
@@ -282,6 +286,7 @@ describe('ChartSeriesPreparation', function() {
             {data: [{ "ref-area": {
                           "notation": "AT",
                           "label": "Austria",
+                          "inner_order": 1234
                       },
                         "value": 0.4808
                     }],
@@ -293,10 +298,12 @@ describe('ChartSeriesPreparation', function() {
             [{ 'name': 'Austria',
                'code': 'AT',
                'color': null,
+               'order': 1234,
                'attributes': attributes,
                'y': 0.4808}],
             [{ 'name': 'Austria',
                'code': 'AT',
+               'order': 1234,
                'attributes': attributes,
                'y': null}]
         ]);
