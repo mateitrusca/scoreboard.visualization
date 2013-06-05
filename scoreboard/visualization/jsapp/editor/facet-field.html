@@ -47,10 +47,20 @@
 </td>
 
 <td>
+  <select name="default_value" multiple>
+  {{# facet_options }}
+    <option value="{{ value }}"
+      {{# if default }}selected{{/ if }}
+      >{{ label }}</option>
+  {{/ facet_options }}
+  </select>
+</td>
+
+<td>
   <select name="ignore_values" multiple>
   {{# facet_options }}
     <option value="{{ value }}"
-      {{# if selected }}selected{{/ if }}
+      {{# if ignore }}selected{{/ if }}
       >{{ label }}</option>
   {{/ facet_options }}
   </select>

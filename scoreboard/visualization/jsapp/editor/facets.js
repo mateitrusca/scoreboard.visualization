@@ -19,6 +19,7 @@ App.FacetEditorField = Backbone.View.extend({
         'change [name="multidim"]': 'on_change_multidim',
         'change [name="sort-by"]': 'on_change_sorting',
         'change [name="sort-order"]': 'on_change_sorting',
+        'change [name="default_value"]': 'on_change_default_value',
         'change [name="ignore_values"]': 'on_change_ignore_values'
     },
 
@@ -113,6 +114,7 @@ App.FacetEditorField = Backbone.View.extend({
         this.$el.html(this.template(context));
         this.$el.attr('data-name', this.model.get('name'));
         this.$el.find('[name="ignore_values"]').select2();
+        this.$el.find('[name="default_value"]').select2();
     },
 
     on_change_position: function(evt) {
@@ -120,6 +122,25 @@ App.FacetEditorField = Backbone.View.extend({
             position: this.$el.find('[name="position"]').val()
         });
     },
+
+    on_change_default_value: function(evt) {
+        var id = null;
+        var selected = false;
+        if (evt.added){
+            id = evt.added.id;
+            selected = true;
+        }else if(evt.removed){
+            id = evt.removed.id;
+        }
+        var option = _(this.facet_options).findWhere({value: id});
+        if(option){
+            option['default'] = selected;
+        }
+        this.model.set({
+            default_value: this.$el.find('[name="default_value"]').val() || []
+        });
+    },
+
 
     on_change_ignore_values: function(evt) {
         var id = null;
@@ -132,7 +153,7 @@ App.FacetEditorField = Backbone.View.extend({
         }
         var option = _(this.facet_options).findWhere({value: id});
         if(option){
-            option['selected'] = selected;
+            option['ignore'] = selected;
         }
         this.model.set({
             ignore_values: this.$el.find('[name="ignore_values"]').val() || []

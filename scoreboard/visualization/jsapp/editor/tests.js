@@ -172,6 +172,29 @@ describe('FacetsEditor', function() {
 
     });
 
+    describe('facet default value', function() {
+        it('should update model with values selected', function() {
+            this.sandbox.useFakeServer();
+            var model = new App.EditorConfiguration({
+                    facets: [
+                        {name: 'dim1', type: 'multiple_select'}
+                    ]
+                }, {
+                    dimensions: [
+                        {type_label: 'dimension', notation: 'time-period'}]
+                });
+            var view = new App.FacetsEditor({model: model});
+            var server = this.sandbox.server;
+            var options = [{'label': "Option One", 'notation': 'one'},
+                           {'label': "Option Two", 'notation': 'two'}];
+            App.respond_json(server.requests[0], {'options': options});
+            expect(model.facets.models[0].get('default_value')).to.be.undefined;
+            view.$el.find('[name="default_value"]').val(['two']).change();
+            expect(model.facets.models[0].get('default_value')).to.deep.equal(['two']);
+        });
+
+    });
+
     describe('facet position', function() {
 
         it('should update model with selection', function() {
