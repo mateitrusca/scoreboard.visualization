@@ -27,6 +27,7 @@ var depth = parseInt(urlParam('depth')) || 0;
     * dimension_options_cp?dimension=time-period&indicator-group&ref-area&subtype
   4) in addition to 3), will preload the fourth filter:
     * indicators for country profile - only the latest year
+    * datapoints for country profile - only the latest year
   5) in addition to 4), will preload the fourth filter:
     * dimension_options?dimension=breakdown&indicator=&indicator-group=&breakdown-group=
     * dimension_options?dimension=breakdown&indicator=&breakdown-group=
@@ -229,6 +230,7 @@ App.dimension_options_time_period_cp = function(indicator_group, ref_area, subty
                 return item.notation;
             });
             App.dimension_options_indicator_cp(indicator_group, ref_area, _.last(data.options).notation, subtype);
+            App.datapoints_cp(indicator_group, ref_area, _.last(data.options).notation, subtype);
         };
     });
 }
@@ -244,6 +246,18 @@ App.dimension_options_indicator_cp = function(indicator_group, ref_area, time_pe
     };
     App.getJSON("dimension_options_cp", args);
 }
+
+App.datapoints_cp = function(indicator_group, ref_area, time_period, subtype) {
+    var args = {
+        'rev': DATA_REVISION,
+        'indicator-group': indicator_group,
+        'ref-area': ref_area,
+        'time-period': time_period,
+        'subtype': subtype,
+    };
+    App.getJSON("datapoints_cp", args);
+}
+
 
 var serialize = function(obj) {
   var str = [];
