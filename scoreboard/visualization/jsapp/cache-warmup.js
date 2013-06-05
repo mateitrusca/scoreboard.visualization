@@ -8,7 +8,40 @@ var urlParam = function(name){
     return results && results[1] || 0;
 }
 
-var depth = parseInt(urlParam('depth')) || 1;
+var depth = parseInt(urlParam('depth')) || 0;
+/*
+  explanation of depth parameter:
+  0) will preload all dimension_labels and dimension_value_metadata for each dimension (should be used separately)
+  1) will preload the first filter for the predefined charts: 
+    * dimension_options?dimension=indicator-group
+    * dimension_options_cp?dimension=indicator-group&subtype
+  2) in addition to 1), will preload the second filter: 
+    * dimension_options?dimension=indicator&indicator-group
+    * dimension_options?dimension=indicator
+    * dimension_options_cp?dimension=ref-area&indicator-group
+  3) in addition to 2), will preload the third filter: 
+    * dimension_options?dimension=breakdown-group&indicator&indicator-group
+    * dimension_options?dimension=breakdown-group&indicator
+    * dimension_options?dimension=breakdown&indicator&indicator-group
+    * dimension_options?dimension=breakdown&indicator
+    * dimension_options_cp?dimension=time-period&indicator-group&ref-area&subtype
+  4) in addition to 3), will preload the fourth filter:
+    * indicators for country profile - only the latest year
+  5) in addition to 4), will preload the fourth filter:
+    * dimension_options?dimension=breakdown&indicator=&indicator-group=&breakdown-group=
+    * dimension_options?dimension=breakdown&indicator=&breakdown-group=
+    * dimension_options?dimension=breakdown&indicator=&indicator-group=
+    * dimension_options?dimension=breakdown&indicator=
+    * dimension_options?dimension=unit-measure&indicator=&indicator-group=&breakdown=
+    * dimension_options?dimension=unit-measure&indicator=&breakdown=
+    * dimension_options?dimension=unit-measure&indicator=&indicator-group=&breakdown-group=
+    * dimension_options?dimension=unit-measure&indicator=&indicator-group=
+    * dimension_options?dimension=unit-measure&indicator=&breakdown-group=
+    * dimension_options?dimension=unit-measure&indicator=
+   6) in addition to 5), will preload the fifth filter
+    * dimension_options?dimension=unit-measure&indicator=&indicator-group=&breakdown-group=&breakdown=
+
+*/
 var DATA_REVISION;
 
 App.start = function() {
@@ -20,17 +53,24 @@ App.start = function() {
     App.getJSON('revision', args, function(result){
         DATA_REVISION = result;
         // get dimension_labels and dimension_value_metadata
-        App.dimension_value_method('dimension_labels', 'indicator-group');
-        App.dimension_value_method('dimension_value_metadata', 'indicator');
-        App.dimension_value_method('dimension_labels', 'indicator');
-        App.dimension_value_method('dimension_labels', 'breakdown-group');
-        App.dimension_value_method('dimension_value_metadata', 'breakdown');
-        App.dimension_value_method('dimension_labels', 'breakdown');
-        App.dimension_value_method('dimension_value_metadata', 'unit-measure');
-        App.dimension_value_method('dimension_labels', 'unit-measure');
-        App.dimension_value_method('dimension_labels', 'ref-area');
-        App.dimension_value_method('dimension_labels', 'time-period');
-        App.dimension_options_indicator_groups();
+        if ( depth == 0 ) {
+            App.dimension_value_method('dimension_labels', 'indicator-group');
+            App.dimension_value_method('dimension_value_metadata', 'indicator');
+            App.dimension_value_method('dimension_labels', 'indicator');
+            App.dimension_value_method('dimension_labels', 'breakdown-group');
+            App.dimension_value_method('dimension_value_metadata', 'breakdown');
+            App.dimension_value_method('dimension_labels', 'breakdown');
+            App.dimension_value_method('dimension_value_metadata', 'unit-measure');
+            App.dimension_value_method('dimension_labels', 'unit-measure');
+            App.dimension_value_method('dimension_labels', 'ref-area');
+            App.dimension_value_method('dimension_labels', 'time-period');
+        } else {
+            // get for regular charts
+            App.dimension_options_indicator_groups();
+            // get for country profiles
+            App.dimension_options_indicator_groups_cp('bar');
+            App.dimension_options_indicator_groups_cp('table');
+        }
     });
 };
 
@@ -60,9 +100,6 @@ App.dimension_options_indicator_groups = function() {
     if ( depth > 1 ) {
         App.dimension_options_indicators();
     }
-    // get for country profile
-    App.dimension_options_indicator_groups_cp('bar');
-    App.dimension_options_indicator_groups_cp('table');
 };
 
 App.dimension_options_indicator_groups_cp = function(subtype) {
@@ -90,6 +127,8 @@ App.dimension_options_indicators = function(indicator_group) {
         _.each(data.options, function(option) {
             if ( depth > 2 ) {
                 App.dimension_options_breakdown_group(indicator_group, option.notation);
+                // get breakdowns without breakdown-group (scatter and bubble)
+                App.dimension_options_breakdown(indicator_group, option.notation);
             }
         });
     });
@@ -104,7 +143,7 @@ App.dimension_options_breakdown_group = function(indicator_group, indicator) {
     };
     App.getJSON("dimension_options", args, function(data){
         _.each(data.options, function(option) {
-            if ( depth > 3 ) {
+            if ( depth > 4 ) {
                 App.dimension_options_breakdown(indicator_group, indicator, option.notation);
             }
         });
@@ -123,7 +162,7 @@ App.dimension_options_breakdown = function(indicator_group, indicator, breakdown
     };
     App.getJSON("dimension_options", args, function(data){
         _.each(data.options, function(option) {
-            if ( depth > 4 ) {
+            if ( depth > 5 ) {
                 App.dimension_options_unit_measure(indicator_group, indicator, breakdown_group, option.notation);
             }
         });
@@ -184,11 +223,13 @@ App.dimension_options_time_period_cp = function(indicator_group, ref_area, subty
         'rev': DATA_REVISION
     };
     App.getJSON("dimension_options_cp", args, function(data){
-        _.each(data.options, function(option) {
-            if ( depth > 3 ) {
-                App.dimension_options_indicator_cp(indicator_group, ref_area, option.notation, subtype);
-            }
-        });
+        if ( depth > 3 ) {
+            // only get the latest year
+            data.options = _(data.options).sortBy( function(item) {
+                return item.notation;
+            });
+            App.dimension_options_indicator_cp(indicator_group, ref_area, _.last(data.options).notation, subtype);
+        };
     });
 }
 
