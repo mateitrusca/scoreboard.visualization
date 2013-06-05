@@ -59,6 +59,8 @@ App.chart_library['scatter'] = function(view, options) {
             }
         },
         xAxis: [{
+            startOnTick: true,
+            endOnTick: true,
             title: {
                 enabled: true,
                 text: options['title_formatter'](
@@ -71,11 +73,10 @@ App.chart_library['scatter'] = function(view, options) {
                     width: 500
                 }
             },
-			min: 0,
-            startOnTick: true,
-            endOnTick: true,
             showLastLabel: true,
             labels: {
+                formatter: _.partial(App.tick_labels_formatter,
+                                     options.unit_is_pc[0]),
                 style: {
                     color: '#000000'
                 }
@@ -83,6 +84,8 @@ App.chart_library['scatter'] = function(view, options) {
 
         }],
         yAxis: {
+            startOnTick: true,
+            endOnTick: true,
             title: {
                 text: options['title_formatter'](
                         options.meta_data['title_y'], '<br>by ',
@@ -95,8 +98,9 @@ App.chart_library['scatter'] = function(view, options) {
                 },
                 margin: 30
             },
-			min: 0,
             labels: {
+                formatter: _.partial(App.tick_labels_formatter,
+                                     options.unit_is_pc[1]),
                 style: {
                     color: '#000000'
                 }

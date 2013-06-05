@@ -277,5 +277,16 @@ App.disable_legend = function(chartOptions, options){
     }
 }
 
+App.tick_labels_formatter = function(max100) {
+    if (this.value < 0){
+        return null;
+    }
+    if (max100 && this.value > 100){
+        return null;
+    }
+    return this.value;
+}
+
+
 })();
 

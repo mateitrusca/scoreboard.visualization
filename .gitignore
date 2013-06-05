@@ -4,3 +4,4 @@
 *.wpr
 *.wpu
 *.log
+scoreboard/visualization/jsapp/jsapp.min.js

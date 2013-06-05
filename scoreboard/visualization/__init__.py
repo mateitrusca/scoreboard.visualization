@@ -1,5 +1,8 @@
 """Main product initializer
 """
+from jsapp_init import run
+run()
+
 
 from zope.i18nmessageid import MessageFactory
 from scoreboard.visualization import config

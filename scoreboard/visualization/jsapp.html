@@ -49,35 +49,39 @@
 
 </script>
 
-<script src="{{ JSAPP }}/common/common.js"></script>
-<script src="{{ JSAPP }}/filters/filters.js"></script>
-<script src="{{ JSAPP }}/chart/common.js"></script>
-<script src="{{ JSAPP }}/chart/columns.js"></script>
-<script src="{{ JSAPP }}/chart/country_profile.js"></script>
-<script src="{{ JSAPP }}/chart/lines.js"></script>
-<script src="{{ JSAPP }}/chart/scatter.js"></script>
-<script src="{{ JSAPP }}/chart/bubbles.js"></script>
-<script src="{{ JSAPP }}/chart/map.js"></script>
-<script src="{{ JSAPP }}/scenario/scenario.js"></script>
-<script src="{{ JSAPP }}/scenario1/scenario1.js"></script>
-<script src="{{ JSAPP }}/scenario2/scenario2.js"></script>
-<script src="{{ JSAPP }}/scenario3/scenario3.js"></script>
-<script src="{{ JSAPP }}/scenario3/scenario3_scatter_animation.js"></script>
-<script src="{{ JSAPP }}/scenario3/scenario3_bubbles.js"></script>
-<script src="{{ JSAPP }}/scenario3/scenario3_bubbles_animation.js"></script>
-<script src="{{ JSAPP }}/scenario5/scenario5.js"></script>
-<script src="{{ JSAPP }}/scenario6/scenario6.js"></script>
-<script src="{{ JSAPP }}/scenario7/scenario7.js"></script>
-<script src="{{ JSAPP }}/scenario8/scenario8.js"></script>
-<script src="{{ JSAPP }}/scenario9/scenario9.js"></script>
-<script src="{{ JSAPP }}/scenario9/scenario9_table.js"></script>
-<script src="{{ JSAPP }}/scenario/visualization.js"></script>
-<script src="{{ JSAPP }}/editor/editor.js"></script>
-<script src="{{ JSAPP }}/editor/chart_type.js"></script>
-<script src="{{ JSAPP }}/editor/facets.js"></script>
-<script src="{{ JSAPP }}/editor/axes.js"></script>
-<script src="{{ JSAPP }}/editor/series.js"></script>
-<script src="{{ JSAPP }}/editor/format.js"></script>
-<script src="{{ JSAPP }}/editor/annotations.js"></script>
-<script src="{{ JSAPP }}/editor/advanced.js"></script>
+{% if not DEBUG %}
+  <script src="{{ JSAPP }}/jsapp.min.js"></script>
+{% else %}
+  <script src="{{ JSAPP }}/common/common.js"></script>
+  <script src="{{ JSAPP }}/filters/filters.js"></script>
+  <script src="{{ JSAPP }}/chart/common.js"></script>
+  <script src="{{ JSAPP }}/chart/columns.js"></script>
+  <script src="{{ JSAPP }}/chart/country_profile.js"></script>
+  <script src="{{ JSAPP }}/chart/lines.js"></script>
+  <script src="{{ JSAPP }}/chart/scatter.js"></script>
+  <script src="{{ JSAPP }}/chart/bubbles.js"></script>
+  <script src="{{ JSAPP }}/chart/map.js"></script>
+  <script src="{{ JSAPP }}/scenario/scenario.js"></script>
+  <script src="{{ JSAPP }}/scenario1/scenario1.js"></script>
+  <script src="{{ JSAPP }}/scenario2/scenario2.js"></script>
+  <script src="{{ JSAPP }}/scenario3/scenario3.js"></script>
+  <script src="{{ JSAPP }}/scenario3/scenario3_scatter_animation.js"></script>
+  <script src="{{ JSAPP }}/scenario3/scenario3_bubbles.js"></script>
+  <script src="{{ JSAPP }}/scenario3/scenario3_bubbles_animation.js"></script>
+  <script src="{{ JSAPP }}/scenario5/scenario5.js"></script>
+  <script src="{{ JSAPP }}/scenario6/scenario6.js"></script>
+  <script src="{{ JSAPP }}/scenario7/scenario7.js"></script>
+  <script src="{{ JSAPP }}/scenario8/scenario8.js"></script>
+  <script src="{{ JSAPP }}/scenario9/scenario9.js"></script>
+  <script src="{{ JSAPP }}/scenario9/scenario9_table.js"></script>
+  <script src="{{ JSAPP }}/scenario/visualization.js"></script>
+  <script src="{{ JSAPP }}/editor/editor.js"></script>
+  <script src="{{ JSAPP }}/editor/chart_type.js"></script>
+  <script src="{{ JSAPP }}/editor/facets.js"></script>
+  <script src="{{ JSAPP }}/editor/axes.js"></script>
+  <script src="{{ JSAPP }}/editor/series.js"></script>
+  <script src="{{ JSAPP }}/editor/format.js"></script>
+  <script src="{{ JSAPP }}/editor/annotations.js"></script>
+  <script src="{{ JSAPP }}/editor/advanced.js"></script>
+{% endif %}
 <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#username=xa-4cb32783294785a7"></script>
