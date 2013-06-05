@@ -150,7 +150,8 @@ App.dimension_options_breakdown_group = function(indicator_group, indicator) {
         });
     });
     // and also simulate 'any' breakdown group
-    App.dimension_options_breakdown(indicator_group, indicator);
+    // already done in depth=3
+    // App.dimension_options_breakdown(indicator_group, indicator);
 }
 
 App.dimension_options_breakdown = function(indicator_group, indicator, breakdown_group) {
