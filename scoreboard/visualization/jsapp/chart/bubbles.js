@@ -178,7 +178,7 @@ App.chart_library['bubbles'] = function(view, options) {
                 plotlines: options['plotlines'],
                 chart_type: options['plotlines']
             });
-            App.chart_controls.$el.insertBefore(container);
+            $('#the-filters .footer').append(App.chart_controls.$el);
         }else{
             App.chart_controls.chart = chart;
             App.chart_controls.snapshots_data = series;
