@@ -59,7 +59,7 @@ App.chart_library['country_profile'] = function(view, options) {
         var stack_series = [
             {
                 name: 'Under EU27 average',
-                color: '#330000',
+                color: '#7dc30f',
                 dataLabels: {
                     color: '#000000',
                     enabled: true,
@@ -83,9 +83,9 @@ App.chart_library['country_profile'] = function(view, options) {
             },
             {
                 name: 'Above EU27 average',
-                color: '#000000',
+                color: '#436b06',
                 dataLabels: {
-                    color: '#436b06',
+                    color: '#000000',
                     enabled: true,
                     align: 'right',
                     inside: false,
