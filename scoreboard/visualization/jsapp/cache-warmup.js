@@ -67,7 +67,7 @@ App.start = function() {
             App.dimension_value_method('dimension_labels', 'time-period');
         } else {
             // get for regular charts
-            App.dimension_options_indicator_groups();
+            //App.dimension_options_indicator_groups();
             // get for country profiles
             App.dimension_options_indicator_groups_cp('bar');
             App.dimension_options_indicator_groups_cp('table');
@@ -230,7 +230,11 @@ App.dimension_options_time_period_cp = function(indicator_group, ref_area, subty
             data.options = _(data.options).sortBy( function(item) {
                 return item.notation;
             });
-            App.dimension_options_indicator_cp(indicator_group, ref_area, _.last(data.options).notation, subtype);
+            if ( _.last(data.options) && _.last(data.options).notation ) {
+                App.dimension_options_indicator_cp(indicator_group, ref_area, _.last(data.options).notation, subtype);
+            } else {
+                log('Undefined:' + JSON.stringify(data.options));
+            }
             //App.datapoints_cp(indicator_group, ref_area, _.last(data.options).notation, subtype);
         };
     });
