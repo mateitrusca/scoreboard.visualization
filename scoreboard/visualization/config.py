@@ -157,5 +157,14 @@ WHITELIST = [
     {'indicator': 'i_ia12ave', 'breakdown': 'y16_24', 'unit-measure': 'pc_ind_iu3'},
     {'indicator': 'i_skedu', 'breakdown': 'y25_54', 'unit-measure': 'pc_ind'},
     {'indicator': 'i_ia12ave', 'breakdown': 'y25_54', 'unit-measure': 'pc_ind_iu3'},
-    {'indicator': 'i_ia12ave', 'breakdown': 'y55_74', 'unit-measure': 'pc_ind_iu3'}
+    {'indicator': 'i_ia12ave', 'breakdown': 'y55_74', 'unit-measure': 'pc_ind_iu3'},
+    {'indicator': 'eun_computers', 'breakdown': 'grade11gen', 'unit-measure': 'nb_x100stud'},
+    {'indicator': 'eun_computers', 'breakdown': 'grade11voc', 'unit-measure': 'nb_x100stud'},
+    {'indicator': 'eun_computers', 'breakdown': 'grade4', 'unit-measure': 'nb_x100stud'},
+    {'indicator': 'eun_computers', 'breakdown': 'grade8', 'unit-measure': 'nb_x100stud'},
+    {'indicator': 'eun_web', 'breakdown': 'grade11gen', 'unit-measure': 'pc_schools'},
+    {'indicator': 'eun_web', 'breakdown': 'grade11voc', 'unit-measure': 'pc_schools'},
+    {'indicator': 'eun_web', 'breakdown': 'grade4', 'unit-measure': 'pc_schools'},
+    {'indicator': 'eun_web', 'breakdown': 'grade8', 'unit-measure': 'pc_schools'}
+
 ]
