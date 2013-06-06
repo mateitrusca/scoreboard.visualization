@@ -73,7 +73,7 @@ App.chart_library['country_profile'] = function(view, options) {
                             if(unit && unit.toLowerCase().indexOf('pc_') !== -1){
                                 res += '%';
                             }
-                            return '<strong>' + res + '</strong>';
+                            return res;
                         }else{
                             return '';
                         }
@@ -97,7 +97,7 @@ App.chart_library['country_profile'] = function(view, options) {
                             if(unit && unit.toLowerCase().indexOf('pc_') !== -1){
                                 res += '%';
                             }
-                            return '<strong>' + res + '</strong>';
+                            return res;
                         }else{
                             return '';
                         }
