@@ -89,10 +89,8 @@ App.SelectFilter = Backbone.View.extend({
             }
         }, this);
         if(incomplete) {
-            this.$el.html("--");
             return;
         }
-        this.$el.html("-- loading --");
         this.ajax = this.fetch_options(args);
         this.ajax.done(_.bind(function(data) {
             this.ajax = null;
