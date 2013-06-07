@@ -42,6 +42,10 @@ App.ScenarioChartView = Backbone.View.extend({
         }
     },
 
+    chart_ready: function(){
+        this.$el.removeClass('loading-small');
+    },
+
     get_meta_data: function(chart_data){
         var meta_data = {};
         chart_data['meta_data'] = meta_data;
