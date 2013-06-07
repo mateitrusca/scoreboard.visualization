@@ -91,8 +91,10 @@ App.ScenarioChartView = Backbone.View.extend({
         }, this);
         if(incomplete) {
             // not all filters have values
+            this.$el.html("");
             return;
         }
+        this.$el.html("");
         var unit_is_pc = [];
         if(this.schema['multidim'] == 3){
             args['join_by'] = this.schema.category_facet;
