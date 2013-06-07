@@ -47,7 +47,8 @@
 </td>
 
 <td>
-  <select name="default_value" multiple>
+  <select name="default_value"
+    {{# unless is_single_select }} multiple {{/unless}}>
   {{# facet_options }}
     <option value="{{ value }}"
       {{# if default }}selected{{/ if }}

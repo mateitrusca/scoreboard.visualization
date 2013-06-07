@@ -173,11 +173,11 @@ describe('FacetsEditor', function() {
     });
 
     describe('facet default value', function() {
-        it('should update model with values selected', function() {
+        it('should have no default_value by default', function() {
             this.sandbox.useFakeServer();
             var model = new App.EditorConfiguration({
                     facets: [
-                        {name: 'dim1', type: 'multiple_select'}
+                        {name: 'time-period', type: 'select'}
                     ]
                 }, {
                     dimensions: [
@@ -188,9 +188,52 @@ describe('FacetsEditor', function() {
             var options = [{'label': "Option One", 'notation': 'one'},
                            {'label': "Option Two", 'notation': 'two'}];
             App.respond_json(server.requests[0], {'options': options});
+            var facet0 = view.model.toJSON()['facets'][0];
+            expect(facet0['default_value']).to.be.undefined;
+        });
+
+        it('should select existing default_value', function() {
+            this.sandbox.useFakeServer();
+            var model = new App.EditorConfiguration({
+                    facets: [
+                        {name: 'time-period', type: 'select', default_value: ['one']}
+                    ]
+                }, {
+                    dimensions: [
+                        {type_label: 'dimension', notation: 'time-period'}]
+                });
+            var view = new App.FacetsEditor({model: model});
+            var server = this.sandbox.server;
+            var options = [{'label': "Option One", 'notation': 'one'},
+                           {'label': "Option Two", 'notation': 'two'}];
+            App.respond_json(server.requests[0], {'options': options});
+            var facet0 = view.model.toJSON()['facets'][0];
+            expect(facet0['default_value']).to.deep.equal(['one']);
+        });
+
+        it('should update model with values selected', function() {
+            this.sandbox.useFakeServer();
+            var model = new App.EditorConfiguration({
+                    facets: [
+                        {name: 'dim1', type: 'select'},
+                        {name: 'dim2', type: 'multiple_select'}
+                    ]
+                }, {
+                    dimensions: [
+                        {type_label: 'dimension', notation: 'dim1'},
+                        {type_label: 'dimension', notation: 'dim2'}]
+                });
+            var view = new App.FacetsEditor({model: model});
+            var server = this.sandbox.server;
+            var options = [{'label': "Option One", 'notation': 'one'},
+                           {'label': "Option Two", 'notation': 'two'}];
+            App.respond_json(server.requests[0], {'options': options});
             expect(model.facets.models[0].get('default_value')).to.be.undefined;
-            view.$el.find('[name="default_value"]').val(['two']).change();
+            App.respond_json(server.requests[1], {'options': options});
+            view.$el.find('[name="default_value"]:first').val(['two']).change();
             expect(model.facets.models[0].get('default_value')).to.deep.equal(['two']);
+            view.$el.find('[name="default_value"]:eq(1)').val(['one']).change();
+            expect(model.facets.models[1].get('default_value')).to.deep.equal(['one']);
         });
 
     });

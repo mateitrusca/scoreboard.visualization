@@ -81,7 +81,12 @@ App.FacetEditorField = Backbone.View.extend({
 
     render: function() {
         var context = _({
-            facet_options: this.facet_options,
+            facet_options: _(this.facet_options).map(function(opt) {
+                if (_(this.model.get('default_value')).contains(opt['value'])) {
+                    return _({default: true}).extend(opt);
+                }
+                return opt;
+            }, this),
             position_options:_(this.position_options).map(function(opt) {
                 var selected = this.model.get('position') == opt['value'];
                 return _({
@@ -113,8 +118,12 @@ App.FacetEditorField = Backbone.View.extend({
         }).extend(this.model.toJSON());
         this.$el.html(this.template(context));
         this.$el.attr('data-name', this.model.get('name'));
-        this.$el.find('[name="ignore_values"]').select2();
-        this.$el.find('[name="default_value"]').select2();
+        var params = {
+            placeholder: "Select value",
+            allowClear: true
+        }
+        this.$el.find('[name="ignore_values"]').select2(params);
+        this.$el.find('[name="default_value"]').select2(params);
     },
 
     on_change_position: function(evt) {
@@ -124,20 +133,24 @@ App.FacetEditorField = Backbone.View.extend({
     },
 
     on_change_default_value: function(evt) {
-        var id = null;
-        var selected = false;
-        if (evt.added){
-            id = evt.added.id;
-            selected = true;
-        }else if(evt.removed){
-            id = evt.removed.id;
+        var old_values = this.model.get('default_value');
+        var new_values = this.$el.find('[name="default_value"]').val();
+        if (this.model.get('type') == 'select'){
+            old_values = [old_values];
+            new_values = [new_values];
         }
-        var option = _(this.facet_options).findWhere({value: id});
-        if(option){
-            option['default'] = selected;
-        }
+        var result = [];
+        _(this.facet_options).each(function(opt){
+            if (_(old_values).contains(opt.value)){
+                opt['default'] = false;
+            }
+            if (_(new_values).contains(opt.value)){
+                opt['default'] = true;
+                result.push(opt.value);
+            }
+        })
         this.model.set({
-            default_value: this.$el.find('[name="default_value"]').val() || []
+            default_value: result
         });
     },
 
