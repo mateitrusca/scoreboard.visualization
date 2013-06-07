@@ -131,6 +131,7 @@ App.SelectFilter = Backbone.View.extend({
                   }
             }, this);
             this.adjust_value();
+            this.$el.removeClass('loading-small');
             this.render();
             this.loadstate.set(this.name, false);
         }, this));
