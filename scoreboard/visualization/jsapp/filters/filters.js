@@ -18,6 +18,8 @@ App.groupers =  {
 
 App.SelectFilter = Backbone.View.extend({
 
+    className: "chart-filter loading-small",
+
     template: App.get_template('filters/dropdown.html'),
 
     simple_template: App.get_template('filters/dropdown.html'),
