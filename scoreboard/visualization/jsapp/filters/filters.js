@@ -18,7 +18,7 @@ App.groupers =  {
 
 App.SelectFilter = Backbone.View.extend({
 
-    className: "chart-filter loading-small on-hold",
+    className: "chart-filter",
 
     template: App.get_template('filters/dropdown.html'),
 
@@ -67,6 +67,8 @@ App.SelectFilter = Backbone.View.extend({
     },
 
     update: function() {
+        this.$el.addClass('loading-small');
+        this.$el.addClass('on-hold');
         if(this.ajax) {
             this.ajax.abort();
             this.ajax = null;
