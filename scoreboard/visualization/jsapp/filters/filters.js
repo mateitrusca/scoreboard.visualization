@@ -269,6 +269,8 @@ App.MultipleSelectFilter = App.SelectFilter.extend({
 
 App.AllValuesFilter = App.SelectFilter.extend({
 
+    className: "chart-filter",
+
     render: function() {
         this.$el.html("");
     },
