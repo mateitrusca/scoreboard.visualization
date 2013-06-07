@@ -120,7 +120,10 @@ App.FacetEditorField = Backbone.View.extend({
         this.$el.attr('data-name', this.model.get('name'));
         var params = {
             placeholder: "Select value",
-            allowClear: true
+            allowClear: true,
+        }
+        if (this.model.get('type') == 'select'){
+            params['maximumSelectionSize'] = 1;
         }
         this.$el.find('[name="ignore_values"]').select2(params);
         this.$el.find('[name="default_value"]').select2(params);
@@ -134,16 +137,10 @@ App.FacetEditorField = Backbone.View.extend({
 
     on_change_default_value: function(evt) {
         var old_values = this.model.get('default_value');
-        var new_values = this.$el.find('[name="default_value"]').val();
-        if (this.model.get('type') == 'select'){
-            old_values = [old_values];
-            new_values = [new_values];
-        }
+        var new_values = this.$el.find('[name="default_value"]').val() || [];
         var result = [];
         _(this.facet_options).each(function(opt){
-            if (_(old_values).contains(opt.value)){
-                opt['default'] = false;
-            }
+            opt['default'] = false;
             if (_(new_values).contains(opt.value)){
                 opt['default'] = true;
                 result.push(opt.value);

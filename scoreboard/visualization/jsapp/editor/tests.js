@@ -211,6 +211,24 @@ describe('FacetsEditor', function() {
             expect(facet0['default_value']).to.deep.equal(['one']);
         });
 
+        it('should remove existing default_value', function() {
+            this.sandbox.useFakeServer();
+            var model = new App.EditorConfiguration({
+                    facets: [
+                        {name: 'time-period', type: 'select', default_value: ['one']}
+                    ]
+                }, {
+                    dimensions: [
+                        {type_label: 'dimension', notation: 'time-period'}]
+                });
+            var view = new App.FacetsEditor({model: model});
+            var server = this.sandbox.server;
+            var options = [{'label': "Option One", 'notation': 'one'},
+                           {'label': "Option Two", 'notation': 'two'}];
+            App.respond_json(server.requests[0], {'options': options});
+            view.$el.find('[name="default_value"]:first').val([]).change();
+        });
+
         it('should update model with values selected', function() {
             this.sandbox.useFakeServer();
             var model = new App.EditorConfiguration({

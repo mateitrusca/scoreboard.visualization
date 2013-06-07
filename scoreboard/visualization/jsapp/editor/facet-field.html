@@ -47,17 +47,16 @@
 </td>
 
 <td>
-  <select name="default_value"
-    {{# unless is_single_select }} multiple {{/unless}}>
+  <label>default value</label>
+  <select name="default_value" multiple>
   {{# facet_options }}
     <option value="{{ value }}"
       {{# if default }}selected{{/ if }}
       >{{ label }}</option>
   {{/ facet_options }}
   </select>
-</td>
 
-<td>
+  <label>ignore values</label>
   <select name="ignore_values" multiple>
   {{# facet_options }}
     <option value="{{ value }}"
@@ -65,8 +64,6 @@
       >{{ label }}</option>
   {{/ facet_options }}
   </select>
-</td>
-
 <td>
 {{# if is_single_select }}
   <input type="checkbox" name="include_wildcard"
