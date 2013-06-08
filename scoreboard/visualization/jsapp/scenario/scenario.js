@@ -42,6 +42,10 @@ App.ScenarioChartView = Backbone.View.extend({
         }
     },
 
+    chart_ready: function(){
+        this.$el.removeClass('loading-small');
+    },
+
     get_meta_data: function(chart_data){
         var meta_data = {};
         chart_data['meta_data'] = meta_data;
@@ -91,10 +95,10 @@ App.ScenarioChartView = Backbone.View.extend({
         }, this);
         if(incomplete) {
             // not all filters have values
-            this.$el.html('--');
+            this.$el.html("");
             return;
         }
-        this.$el.html('-- loading --');
+        this.$el.html("");
         var unit_is_pc = [];
         if(this.schema['multidim'] == 3){
             args['join_by'] = this.schema.category_facet;
