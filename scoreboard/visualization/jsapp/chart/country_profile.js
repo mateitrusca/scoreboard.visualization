@@ -304,7 +304,9 @@ App.CountryProfileView = Backbone.View.extend({
               row.order = item['inner_order'];
             }
             row.name = key;
-            row.title = item.name;
+            row.title = '<strong>' + item.indicator + '</strong> - '
+                + item.breakdown + ' (in ' + item['unit-measure'] +
+                ')';
             row.hasRank = self.options.data['has-rank'];
             row.rank = item.rank || '-';
             row.eu = format(item.eu, item.unit);
