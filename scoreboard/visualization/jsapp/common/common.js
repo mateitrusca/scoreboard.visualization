@@ -2,6 +2,8 @@
 /*jshint sub:true */
 
 (function($) {
+"use strict";
+
 
 var country_data = [
     {code: 'AT',   color: '#AABC66', label: "Austria"},
