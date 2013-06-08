@@ -7,7 +7,7 @@ PATH = os.path.join(os.path.dirname(__file__), 'jsapp')
 js_bundles = [
     {
         'output': 'jsapp.min.js',
-        'minify': True,
+        'minify': False,
         'input': [
             'common/common.js',
             'filters/filters.js',
