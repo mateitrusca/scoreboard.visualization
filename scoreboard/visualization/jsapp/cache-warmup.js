@@ -67,7 +67,7 @@ App.start = function() {
             App.dimension_value_method('dimension_labels', 'time-period');
         } else {
             // get for regular charts
-            //App.dimension_options_indicator_groups();
+            App.dimension_options_indicator_groups();
             // get for country profiles
             App.dimension_options_indicator_groups_cp('bar');
             App.dimension_options_indicator_groups_cp('table');
