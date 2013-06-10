@@ -136,9 +136,13 @@ App.FacetEditorField = Backbone.View.extend({
     },
 
     on_change_default_value: function(evt) {
-        this.model.set({
-            default_value: this.$el.find('[name="default_value"]').val() || []
-        });
+        var value = this.$el.find('[name="default_value"]').val();
+        if (value){
+            this.model.set({default_value: value});
+        }
+        else if (this.model.has('default_value')){
+            this.model.unset('default_value');
+        }
     },
 
 

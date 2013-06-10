@@ -258,6 +258,29 @@ describe('FacetsEditor', function() {
             expect(model.facets.models[1].get('default_value')).to.deep.equal(['one']);
         });
 
+        it('should unset default_value from model', function(){
+            this.sandbox.useFakeServer();
+            var model = new App.EditorConfiguration({
+                    facets: [
+                        {name: 'dim1', type: 'select'}
+                    ]
+                }, {
+                    dimensions: [
+                        {type_label: 'dimension', notation: 'dim1'}
+                    ]
+                });
+            var view = new App.FacetsEditor({model: model});
+            var server = this.sandbox.server;
+            var options = [{'label': "Option One", 'notation': 'one'},
+                           {'label': "Option Two", 'notation': 'two'}];
+            App.respond_json(server.requests[0], {'options': options});
+            expect(model.facets.models[0].get('default_value')).to.be.undefined;
+            view.$el.find('[name="default_value"]:first').val(['two']).change();
+            expect(model.facets.models[0].get('default_value')).to.deep.equal(['two']);
+            view.$el.find('[name="default_value"]:first').val([]).change();
+            expect(model.facets.models[0].get('default_value')).to.be.undefined;
+        });
+
     });
 
     describe('facet position', function() {
