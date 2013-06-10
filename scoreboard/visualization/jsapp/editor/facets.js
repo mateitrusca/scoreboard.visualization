@@ -147,9 +147,13 @@ App.FacetEditorField = Backbone.View.extend({
 
 
     on_change_ignore_values: function(evt) {
-        this.model.set({
-            ignore_values: this.$el.find('[name="ignore_values"]').val() || []
-        });
+        var value = this.$el.find('[name="ignore_values"]').val();
+        if (value){
+            this.model.set({ignore_values: value});
+        }
+        else if (this.model.has('ignore_values')){
+            this.model.unset('ignore_values');
+        }
     },
 
     on_change_type: function(evt) {
