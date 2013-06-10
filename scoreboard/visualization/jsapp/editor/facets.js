@@ -136,35 +136,13 @@ App.FacetEditorField = Backbone.View.extend({
     },
 
     on_change_default_value: function(evt) {
-        var old_values = this.model.get('default_value');
-        var new_values = this.$el.find('[name="default_value"]').val() || [];
-        var result = [];
-        _(this.facet_options).each(function(opt){
-            opt['default'] = false;
-            if (_(new_values).contains(opt.value)){
-                opt['default'] = true;
-                result.push(opt.value);
-            }
-        })
         this.model.set({
-            default_value: result
+            default_value: this.$el.find('[name="default_value"]').val() || []
         });
     },
 
 
     on_change_ignore_values: function(evt) {
-        var id = null;
-        var selected = false;
-        if (evt.added){
-            id = evt.added.id;
-            selected = true;
-        }else if(evt.removed){
-            id = evt.removed.id;
-        }
-        var option = _(this.facet_options).findWhere({value: id});
-        if(option){
-            option['ignore'] = selected;
-        }
         this.model.set({
             ignore_values: this.$el.find('[name="ignore_values"]').val() || []
         });

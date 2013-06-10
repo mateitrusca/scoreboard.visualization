@@ -150,15 +150,17 @@ describe('FacetsEditor', function() {
     });
 
     describe('facet ignore values', function() {
-        it('should update model with user input', function() {
+        it('should update model with values selected', function() {
             this.sandbox.useFakeServer();
             var model = new App.EditorConfiguration({
                     facets: [
-                        {name: 'dim1', type: 'multiple_select'}
+                        {name: 'dim1', type: 'select'},
+                        {name: 'dim2', type: 'multiple_select'}
                     ]
                 }, {
                     dimensions: [
-                        {type_label: 'dimension', notation: 'time-period'}]
+                        {type_label: 'dimension', notation: 'dim1'},
+                        {type_label: 'dimension', notation: 'dim2'}]
                 });
             var view = new App.FacetsEditor({model: model});
             var server = this.sandbox.server;
@@ -166,10 +168,12 @@ describe('FacetsEditor', function() {
                            {'label': "Option Two", 'notation': 'two'}];
             App.respond_json(server.requests[0], {'options': options});
             expect(model.facets.models[0].get('ignore_values')).to.be.undefined;
-            view.$el.find('[name="ignore_values"]').val(['two']).change();
-            expect(model.facets.models[0].get('ignore_values')).to.deep.equal(['two']);
+            App.respond_json(server.requests[1], {'options': options});
+            view.$el.find('[name="ignore_values"]:first').val(['one', 'two']).change();
+            expect(model.facets.models[0].get('ignore_values')).to.deep.equal(['one', 'two']);
+            view.$el.find('[name="ignore_values"]:eq(1)').val(['one']).change();
+            expect(model.facets.models[1].get('ignore_values')).to.deep.equal(['one']);
         });
-
     });
 
     describe('facet default value', function() {
