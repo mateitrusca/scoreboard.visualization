@@ -122,10 +122,10 @@ App.FacetEditorField = Backbone.View.extend({
             placeholder: "Select value",
             allowClear: true,
         }
+        this.$el.find('[name="ignore_values"]').select2(params);
         if (this.model.get('type') == 'select'){
             params['maximumSelectionSize'] = 1;
         }
-        this.$el.find('[name="ignore_values"]').select2(params);
         this.$el.find('[name="default_value"]').select2(params);
     },
 
