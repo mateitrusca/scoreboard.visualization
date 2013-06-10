@@ -37,5 +37,16 @@
 
   {{# if category_facet }}
     categories by {{ category_facet.label }}
+    <label>
+      {{category_facet.label}} highlights
+      <select name="highlights" multiple>
+        <option value="">--</option>
+        {{# category_options }}
+          <option value="{{ value }}"
+            {{# if highlight }}selected{{/ if }}
+            >{{ label }}</option>
+        {{/ category_options }}
+      </select>
+    </label>
   {{/ if }}
 </div>

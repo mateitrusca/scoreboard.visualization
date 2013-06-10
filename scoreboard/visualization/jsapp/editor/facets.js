@@ -73,6 +73,10 @@ App.FacetEditorField = Backbone.View.extend({
                 });
             });
             this.facet_options = options;
+            this.trigger('options_received',
+                this.model.get('dimension'),
+                this
+            );
             this.render();
         },this));
 
@@ -357,7 +361,8 @@ App.FacetsEditor = Backbone.View.extend({
     title: "Facets",
 
     events: {
-        'change [name="multiple_series"]': 'on_multiple_series_change'
+        'change [name="multiple_series"]': 'on_multiple_series_change',
+        'change [name="highlights"]': 'on_highlights_change'
     },
 
     initialize: function(options) {
@@ -369,10 +374,23 @@ App.FacetsEditor = Backbone.View.extend({
                 model: facet_model,
                 facets_editor: this
             });
+            facet_view.on('options_received',
+                          this.render_categories, this);
             return [facet_model.cid, facet_view];
         }, this));
         this.apply_changes();
         this.model.facets.on('change sort', this.apply_changes, this);
+    },
+
+    render_categories: function(dimension, facet){
+        var category_options = [];
+        var category_facet = _(this.facet_views).find(function(view){
+            return view.model.get('name') == this.model.get('category_facet');
+        }, this);
+        if (category_facet){
+            this.category_options = category_facet.facet_options || [];
+        };
+        this.render();
     },
 
     compute_facet_roles: function() {
@@ -418,6 +436,7 @@ App.FacetsEditor = Backbone.View.extend({
             err_too_few: this.facet_roles.err_too_few,
             err_too_many: this.facet_roles.err_too_many,
             category_facet: this.facet_roles.category_facet,
+            category_options: this.category_options,
             chart_is_multidim: this.chart_is_multidim()
         };
         this.$el.html(this.template(context));
@@ -427,6 +446,11 @@ App.FacetsEditor = Backbone.View.extend({
             this.$el.find('tbody').append(facet_view.el);
             facet_view.delegateEvents();
         }, this);
+        var params = {
+            placeholder: "Select value",
+            allowClear: true,
+        }
+        this.$el.find('[name="highlights"]').select2(params);
     },
 
     save_value: function() {
@@ -442,6 +466,21 @@ App.FacetsEditor = Backbone.View.extend({
         this.compute_facet_roles();
         this.save_value();
         this.render();
+    },
+
+    on_highlights_change: function(){
+        var select = this.$el.find('[name="highlights"]');
+        var result = [];
+        this.category_options.forEach(function(cat){
+            cat.highlight = false;
+            if(_(select.val()).contains(cat.value)){
+                cat.highlight = true;
+                result.push(cat.value);
+            }
+        });
+        this.model.set('highlights', result || null);
+        this.model.set('highlights', select.val() || null);
+        this.apply_changes();
     },
 
     on_multiple_series_change: function() {
