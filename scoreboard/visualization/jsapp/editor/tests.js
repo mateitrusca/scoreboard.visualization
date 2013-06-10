@@ -342,6 +342,31 @@ describe('FacetsEditor', function() {
     });
 
     describe('highlights', function() {
+
+        it('should display existing values', function() {
+            this.sandbox.useFakeServer();
+            var view = new App.FacetsEditor({
+                model: new App.EditorConfiguration({
+                    facets: [
+                        {name: 'dim1', type: 'multiple_select'},
+                    ],
+                    highlights: [
+                        'two'
+                    ]
+                }, {
+                    dimensions: [
+                        {type_label: 'dimension', notation: 'dim1'}
+                    ]
+                })
+            });
+            var server = this.sandbox.server;
+            var options = [{'label': "Option One", 'notation': 'one'},
+                           {'label': "Option Two", 'notation': 'two'}];
+            App.respond_json(server.requests[0], {'options': options});
+            var select = view.$el.find('[name="highlights"]');
+            expect(select.val()).to.deep.equal(['two']);
+        }),
+
         it('should update model with values selected', function() {
             this.sandbox.useFakeServer();
             var view = new App.FacetsEditor({

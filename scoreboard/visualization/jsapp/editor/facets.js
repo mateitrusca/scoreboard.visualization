@@ -387,8 +387,15 @@ App.FacetsEditor = Backbone.View.extend({
         var category_facet = _(this.facet_views).find(function(view){
             return view.model.get('name') == this.model.get('category_facet');
         }, this);
-        if (category_facet){
-            this.category_options = category_facet.facet_options || [];
+        if (category_facet && category_facet.facet_options){
+            category_facet.facet_options.forEach(function(cat){
+                cat.highlight = false;
+                if (_(this.model.get('highlights')).contains(cat.value)){
+                    cat.highlight = true;
+                }
+                category_options.push(cat);
+            }, this);
+            this.category_options =  category_options;
         };
         this.render();
     },
@@ -470,15 +477,6 @@ App.FacetsEditor = Backbone.View.extend({
 
     on_highlights_change: function(){
         var select = this.$el.find('[name="highlights"]');
-        var result = [];
-        this.category_options.forEach(function(cat){
-            cat.highlight = false;
-            if(_(select.val()).contains(cat.value)){
-                cat.highlight = true;
-                result.push(cat.value);
-            }
-        });
-        this.model.set('highlights', result || null);
         this.model.set('highlights', select.val() || null);
         this.apply_changes();
     },
