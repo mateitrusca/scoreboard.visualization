@@ -137,8 +137,16 @@ App.FacetEditorField = Backbone.View.extend({
 
     on_change_default_value: function(evt) {
         var value = this.$el.find('[name="default_value"]').val();
-        if (value){
-            this.model.set({default_value: value});
+        var result = [];
+        _(this.facet_options).each(function(opt){
+            opt['default'] = false;
+            if (_(value).contains(opt.value)){
+                opt['default'] = true;
+                result.push(opt.value);
+            }
+        })
+        if (result.length > 0){
+            this.model.set({default_value: result});
         }
         else if (this.model.has('default_value')){
             this.model.unset('default_value');
@@ -148,8 +156,16 @@ App.FacetEditorField = Backbone.View.extend({
 
     on_change_ignore_values: function(evt) {
         var value = this.$el.find('[name="ignore_values"]').val();
-        if (value){
-            this.model.set({ignore_values: value});
+        var result = []
+        _(this.facet_options).each(function(opt){
+            opt['ignore'] = false;
+            if (_(value).contains(opt.value)){
+                opt['ignore'] = true;
+                result.push(opt.value);
+            }
+        })
+        if (result.length > 0){
+            this.model.set({ignore_values: result});
         }
         else if (this.model.has('ignore_values')){
             this.model.unset('ignore_values');
