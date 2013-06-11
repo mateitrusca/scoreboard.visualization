@@ -44,17 +44,6 @@ App.scenario9_table_filters_schema = {
       }
     },
     {
-      constraints: {
-        "indicator-group": "indicator-group",
-        "ref-area": "ref-area",
-        "time-period": "time-period"
-      },
-      dimension: "indicator",
-      name: "indicator",
-      type: "all-values",
-      label: "Indicator"
-    },
-    {
       type: "all-values",
       dimension: "value"
     }
