@@ -95,6 +95,7 @@ App.ScenarioChartView = Backbone.View.extend({
         }, this);
         if(incomplete) {
             // not all filters have values
+            this.$el.addClass('loading-small');
             this.$el.html("");
             return;
         }

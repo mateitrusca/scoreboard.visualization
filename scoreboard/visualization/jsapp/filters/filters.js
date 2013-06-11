@@ -66,9 +66,13 @@ App.SelectFilter = Backbone.View.extend({
         }
     },
 
-    update: function() {
+    update_loading_bar: function() {
         this.$el.addClass('loading-small');
+    },
+
+    update: function() {
         this.$el.addClass('on-hold');
+        this.update_loading_bar();
         if(this.ajax) {
             this.ajax.abort();
             this.ajax = null;
@@ -277,6 +281,9 @@ App.AllValuesFilter = App.SelectFilter.extend({
 
     render: function() {
         this.$el.html("");
+    },
+
+    update_loading_bar: function() {
     },
 
     adjust_value: function() {
