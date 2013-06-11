@@ -6,176 +6,9 @@
 
 
 App.scenario3_filters_schema = {
-    "facets": [{
-        "type": "select",
-        "name": "x-indicator-group",
-        "label": "(X) indicator group",
-        "dimension": "indicator-group",
-        "sortBy": "nosort",
-        "sortOrder": "asc",
-        "include_wildcard": true,
-        "constraints": {
-            
-        }
-    },
-    {
-        "type": "select",
-        "name": "x-indicator",
-        "label": "(X) indicator",
-        "dimension": "indicator",
-        "sortBy": "nosort",
-        "sortOrder": "asc",
-        "default_value": "#random",
-        "constraints": {
-            "indicator-group": "x-indicator-group"
-        }
-    },
-    {
-        "type": "ignore",
-        "name": "x-breakdown-group",
-        "label": "(X) breakdown group",
-        "dimension": "breakdown-group",
-        "sortBy": "nosort",
-        "sortOrder": "asc",
-        "constraints": {
-            "indicator": "x-indicator"
-        }
-    },
-    {
-        "type": "select",
-        "name": "x-breakdown",
-        "label": "(X) breakdown",
-        "dimension": "breakdown",
-        "sortBy": "nosort",
-        "sortOrder": "asc",
-        "default_value": "#random",
-        "constraints": {
-            "indicator": "x-indicator"
-        }
-    },
-    {
-        "type": "select",
-        "name": "x-unit-measure",
-        "label": "(X) unit of measure",
-        "dimension": "unit-measure",
-        "default_value": "#random",
-        "constraints": {
-            "indicator": "x-indicator",
-            "breakdown": "x-breakdown"
-        }
-    },
-    {
-        "type": "select",
-        "name": "y-indicator-group",
-        "label": "(Y) indicator group",
-        "dimension": "indicator-group",
-        "include_wildcard": true,
-        "sortBy": "nosort",
-        "sortOrder": "asc",
-        "default_value": "#random",
-        "position": "upper-right",
-        "constraints": {
-            
-        }
-    },
-    {
-        "type": "select",
-        "name": "y-indicator",
-        "label": "(Y) indicator",
-        "dimension": "indicator",
-        "sortBy": "nosort",
-        "sortOrder": "asc",
-        "position": "upper-right",
-        "default_value": "#random",
-        "constraints": {
-            "indicator-group": "y-indicator-group"
-        }
-    },
-    {
-        "type": "ignore",
-        "name": "y-breakdown-group",
-        "label": "(Y) breakdown group",
-        "dimension": "breakdown-group",
-        "sortBy": "nosort",
-        "sortOrder": "asc",
-        "position": "upper-right",
-        "constraints": {
-            "indicator": "y-indicator"
-        }
-    },
-    {
-        "type": "select",
-        "name": "y-breakdown",
-        "label": "(Y) breakdown",
-        "dimension": "breakdown",
-        "sortBy": "nosort",
-        "sortOrder": "asc",
-        "position": "upper-right",
-        "default_value": "#random",
-        "constraints": {
-            "indicator": "y-indicator"
-        }
-    },
-    {
-        "type": "select",
-        "name": "y-unit-measure",
-        "label": "(Y) unit of measure",
-        "dimension": "unit-measure",
-        "position": "upper-right",
-        "default_value": "#random",
-        "constraints": {
-            "indicator": "y-indicator",
-            "breakdown": "y-breakdown"
-        }
-    },
-    {
-        "type": "select",
-        "multidim_common": true,
-        "name": "time-period",
-        "sortBy": "label",
-        "sortOrder": "reverse",
-        "label": "Period",
-        "dimension": "time-period",
-        "constraints": {
-            "x-indicator": "x-indicator",
-            "x-breakdown": "x-breakdown",
-            "x-unit-measure": "x-unit-measure",
-            "y-indicator": "y-indicator",
-            "y-breakdown": "y-breakdown",
-            "y-unit-measure": "y-unit-measure"
-        }
-    },
-    {
-        "type": "all-values",
-        "multidim_common": true,
-        "name": "ref-area",
-        "label": "Country / Countries",
-        "dimension": "ref-area",
-        "ignore_values": ["EU27"],
-        "default_value": ["BE", "BG", "CZ", "DK", "DE",
-        "EE", "IE", "EL", "ES", "FR",
-        "IT", "CY", "LV", "LT", "LU",
-        "HU", "MT", "NL", "AT", "PL",
-        "PT", "RO", "SI", "SK", "FI",
-        "SE", "UK"],
-        "constraints": {
-            "x-indicator": "x-indicator",
-            "x-breakdown": "x-breakdown",
-            "x-unit-measure": "x-unit-measure",
-            "y-indicator": "y-indicator",
-            "y-breakdown": "y-breakdown",
-            "y-unit-measure": "y-unit-measure",
-            "time-period": "time-period"
-        }
-    },
-    {
-        "type": "all-values",
-        "dimension": "value",
-        "multidim_value": true
-    }],
-    "category_facet": "ref-area",
     "annotations": {
-        "filters": [{
+        "filters": [
+        {
             "name": "x-indicator"
         },
         {
@@ -198,29 +31,182 @@ App.scenario3_filters_schema = {
         },
         {
             "name": "y-unit-measure"
-        }]
+        }
+        ]
     },
+    "category_facet": "ref-area",
     "chart_type": "scatter",
-    "multidim": 2,
-    "plotlines": {
-        "x": "values",
-        "y": "values"
+    "credits": {
+        "text": "European Commission, Digital Agenda Scoreboard",
+        "link": "http://ec.europa.eu/digital-agenda/en/graphs/"
     },
-    "series-legend-label": "long",
-    "series-point-label": "long",
+    "facets": [
+    {
+        "name": "x-indicator-group",
+        "label": "(X) indicator group",
+        "constraints": {},
+        "dimension": "indicator-group",
+        "include_wildcard": true,
+        "sortBy": "nosort",
+        "sortOrder": "asc",
+        "type": "select"
+    },
+    {
+        "name": "x-indicator",
+        "label": "(X) indicator",
+        "constraints": {
+            "indicator-group": "x-indicator-group"
+        },
+        "default_value": "#random",
+        "dimension": "indicator",
+        "sortBy": "inner_order",
+        "sortOrder": "asc",
+        "type": "select"
+    },
+    {
+        "name": "x-breakdown-group",
+        "label": "(X) breakdown group",
+        "constraints": {
+            "indicator": "x-indicator"
+        },
+        "dimension": "breakdown-group",
+        "sortBy": "nosort",
+        "sortOrder": "asc",
+        "type": "ignore"
+    },
+    {
+        "name": "x-breakdown",
+        "label": "(X) breakdown",
+        "constraints": {
+            "indicator": "x-indicator"
+        },
+        "default_value": "#random",
+        "dimension": "breakdown",
+        "sortBy": "inner_order",
+        "sortOrder": "asc",
+        "type": "select"
+    },
+    {
+        "name": "x-unit-measure",
+        "label": "(X) unit of measure",
+        "constraints": {
+            "indicator": "x-indicator",
+            "breakdown": "x-breakdown"
+        },
+        "default_value": "#random",
+        "dimension": "unit-measure",
+        "type": "select"
+    },
+    {
+        "name": "y-indicator-group",
+        "label": "(Y) indicator group",
+        "constraints": {},
+        "default_value": "#random",
+        "dimension": "indicator-group",
+        "include_wildcard": true,
+        "sortBy": "nosort",
+        "sortOrder": "asc",
+        "position": "upper-right",
+        "type": "select"
+    },
+    {
+        "name": "y-indicator",
+        "label": "(Y) indicator",
+        "constraints": {
+            "indicator-group": "y-indicator-group"
+        },
+        "default_value": "#random",
+        "dimension": "indicator",
+        "sortBy": "inner_order",
+        "sortOrder": "asc",
+        "position": "upper-right",
+        "type": "select"
+    },
+    {
+        "name": "y-breakdown-group",
+        "label": "(Y) breakdown group",
+        "constraints": {
+            "indicator": "y-indicator"
+        },
+        "dimension": "breakdown-group",
+        "sortBy": "nosort",
+        "sortOrder": "asc",
+        "position": "upper-right",
+        "type": "ignore"
+    },
+    {
+        "name": "y-breakdown",
+        "label": "(Y) breakdown",
+        "constraints": {
+            "indicator": "y-indicator"
+        },
+        "default_value": "#random",
+        "dimension": "breakdown",
+        "sortBy": "inner_order",
+        "sortOrder": "asc",
+        "position": "upper-right",
+        "type": "select"
+    },
+    {
+        "name": "y-unit-measure",
+        "label": "(Y) unit of measure",
+        "constraints": {
+            "indicator": "y-indicator",
+            "breakdown": "y-breakdown"
+        },
+        "default_value": "#random",
+        "dimension": "unit-measure",
+        "position": "upper-right",
+        "type": "select"
+    },
+    {
+        "constraints": {
+            "x-indicator": "x-indicator",
+            "x-breakdown": "x-breakdown",
+            "x-unit-measure": "x-unit-measure",
+            "y-indicator": "y-indicator",
+            "y-breakdown": "y-breakdown",
+            "y-unit-measure": "y-unit-measure"
+        },
+        "dimension": "time-period",
+        "label": "Period",
+        "multidim_common": true,
+        "name": "time-period",
+        "sortBy": "label",
+        "sortOrder": "reverse",
+        "type": "select"
+    },
+    {
+        "constraints": {
+            "x-indicator": "x-indicator",
+            "x-breakdown": "x-breakdown",
+            "x-unit-measure": "x-unit-measure",
+            "y-indicator": "y-indicator",
+            "y-breakdown": "y-breakdown",
+            "y-unit-measure": "y-unit-measure",
+            "time-period": "time-period"
+        },
+        "default_value": ["BE", "BG", "CZ", "DK", "DE",
+        "EE", "IE", "EL", "ES", "FR",
+        "IT", "CY", "LV", "LT", "LU",
+        "HU", "MT", "NL", "AT", "PL",
+        "PT", "RO", "SI", "SK", "FI",
+        "SE", "UK"],
+        "dimension": "ref-area",
+        "ignore_values": ["EU27"],
+        "label": "Country / Countries",
+        "multidim_common": true,
+        "name": "ref-area",
+        "type": "all-values"
+    },
+    {
+        "name": "value",
+        "type": "all-values",
+        "dimension": "value",
+        "multidim_value": true
+    }
+    ],
     "labels": {
-        "title_x": {
-            "facet": "x-indicator",
-            "field": "short_label"
-        },
-        "title_y": {
-            "facet": "y-indicator",
-            "field": "short_label"
-        },
-        "period_label": {
-            "facet": "time-period",
-            "field": "label"
-        },
         "breakdown_x": {
             "facet": "x-breakdown",
             "field": "label"
@@ -228,6 +214,18 @@ App.scenario3_filters_schema = {
         "breakdown_y": {
             "facet": "y-breakdown",
             "field": "label"
+        },
+        "period_label": {
+            "facet": "time-period",
+            "field": "label"
+        },
+        "title_x": {
+            "facet": "x-indicator",
+            "field": "short_label"
+        },
+        "title_y": {
+            "facet": "y-indicator",
+            "field": "short_label"
         },
         "unit_x": {
             "facet": "x-unit-measure",
@@ -238,19 +236,30 @@ App.scenario3_filters_schema = {
             "field": "short_label"
         }
     },
+    "multidim": 2,
+    "multiple_series": null,
+    "plotlines": {
+        "x": "values",
+        "y": "values"
+    },
+    "series-legend-label": "long",
+    "series-point-label": "long",
+    "text": [
+      {
+        "position": "upper-left",
+        "value": "Horizontal axis"
+      },
+      {
+        "position": "upper-right",
+        "value": "Vertical axis"
+      }
+    ],
     "tooltips": {
         "flag": true,
         "note": true,
         "unit-measure": true
     },
-    "text": [
-        {"value": "Horizontal axis",
-         "position": "upper-left"
-        },
-        {"value": "Vertical axis",
-         "position": "upper-right"
-        }
-    ]
+    "height": "500"
 };
 
 

@@ -44,7 +44,7 @@ App.scenario5_filters_schema = {
         "dimension": "indicator",
         "label": "Indicator",
         "name": "indicator",
-        "sortBy": "nosort",
+        "sortBy": "inner_order",
         "sortOrder": "asc",
         "default_value": "#random",
         "type": "select"
@@ -72,7 +72,7 @@ App.scenario5_filters_schema = {
         "dimension": "breakdown",
         "label": "Breakdown",
         "name": "breakdown",
-        "sortBy": "nosort",
+        "sortBy": "inner_order",
         "sortOrder": "asc",
         "default_value": "#random",
         "type": "select"
@@ -134,12 +134,12 @@ App.scenario5_filters_schema = {
     }],
     "height": 500,
     "labels": {
-        "indicator": {
-          "facet": "indicator",
-          "field": "label"
-        },
         "breakdown": {
           "facet": "breakdown",
+          "field": "label"
+        },
+        "indicator": {
+          "facet": "indicator",
           "field": "label"
         },
         "ordinate": {
