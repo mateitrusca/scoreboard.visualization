@@ -159,13 +159,18 @@ WHITELIST = [
     {'indicator': 'i_iux', 'breakdown': 'ind_total', 'unit-measure': 'pc_ind'},
     {'indicator': 'i_skedu', 'breakdown': 'y16_24', 'unit-measure': 'pc_ind'},
     {'indicator': 'i_skedu', 'breakdown': 'y25_54', 'unit-measure': 'pc_ind'},
+    {'indicator': 'ict_exp', 'breakdown': 'goods', 'unit-measure': 'pc_exp'},
+    {'indicator': 'ict_exp', 'breakdown': 'services', 'unit-measure': 'pc_exp'},
+    {'indicator': 'ict_imp', 'breakdown': 'goods', 'unit-measure': 'pc_imp'},
+    {'indicator': 'ict_imp', 'breakdown': 'services', 'unit-measure': 'pc_imp'},
+    {'indicator': 'ict_specialists', 'breakdown': 'total', 'unit-measure': 'pc_ind_emp'},
     {'indicator': 'mbb_3gcov', 'breakdown': 'total_pop', 'unit-measure': 'pc_pop'},
     {'indicator': 'mbb_hspacov', 'breakdown': 'TOTAL_POPHH', 'unit-measure': 'pc_hh_all'},
     {'indicator': 'mbb_penet', 'breakdown': 'TOTAL_MBB', 'unit-measure': 'subs_per_100_pop'},
-    {'indicator': 'mob_arpm', 'breakdown': 'total_mob', 'unit-measure': 'eurocent'},
-    {'indicator': 'mob_arpu', 'breakdown': 'total_mob', 'unit-measure': 'euro'},
+    {'indicator': 'mob_arpm', 'breakdown': 'TOTAL_MOB', 'unit-measure': 'eurocent'},
+    {'indicator': 'mob_arpu', 'breakdown': 'TOTAL_MOB', 'unit-measure': 'euro'},
     {'indicator': 'mob_ms', 'breakdown': 'total_mob', 'unit-measure': 'pc_subs'},
     {'indicator': 'mob_penet', 'breakdown': 'TOTAL_MOB', 'unit-measure': 'subs_per_100_pop'},
     {'indicator': 'mob_roam', 'breakdown': 'total', 'unit-measure': 'eurocent'},
-    {'indicator': 'tel_invrev', 'breakdown': 'total_tel', 'unit-measure': 'pc_tel_rev'}
+    {'indicator': 'tel_inv', 'breakdown': 'TOTAL_TEL', 'unit-measure': 'pc_tel_rev'}
 ]
