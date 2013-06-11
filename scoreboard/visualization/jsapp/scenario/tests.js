@@ -77,7 +77,8 @@ describe('ChartSeriesPreparation', function() {
                             "notation": "AT",
                             "label": "Austria",
                             "short-label": "AT",
-                            "inner_order": null
+                            "inner_order": null,
+                            "ending_label": "Austria"
                         },
                         "value": 0.4808
                     }],
@@ -87,6 +88,7 @@ describe('ChartSeriesPreparation', function() {
         expect(result.length).to.equal(2);
         expect(result[1]['data']).to.deep.equal([{
             'name': 'Austria',
+            'ending_label': 'Austria',
             'code': 'AT',
             'color': null,
             'order': null,
@@ -213,6 +215,7 @@ describe('ChartSeriesPreparation', function() {
                         "ref-area": {
                             "notation": "AT",
                             "label": "Austria",
+                            "ending_label": "Austria",
                             "inner_order": null
                         },
                         "value": 0.4808
@@ -223,6 +226,7 @@ describe('ChartSeriesPreparation', function() {
         expect(_(result).pluck('name')).to.deep.equal(['2000', '2001']);
         expect(result[0]['data']).to.deep.equal([{
             "name": "Austria",
+            "ending_label": "Austria",
             'code': 'AT',
             'color': null,
             'order': null,
@@ -286,6 +290,7 @@ describe('ChartSeriesPreparation', function() {
             {data: [{ "ref-area": {
                           "notation": "AT",
                           "label": "Austria",
+                          "ending_label": "AT",
                           "inner_order": 1234
                       },
                         "value": 0.4808
@@ -296,12 +301,14 @@ describe('ChartSeriesPreparation', function() {
         var attributes = _(series[1]['data'][0]).omit('value');
         expect(_(result).pluck('data')).to.deep.equal([
             [{ 'name': 'Austria',
+               'ending_label': 'AT',
                'code': 'AT',
                'color': null,
                'order': 1234,
                'attributes': attributes,
                'y': 0.4808}],
             [{ 'name': 'Austria',
+               'ending_label': 'AT',
                'code': 'AT',
                'order': 1234,
                'attributes': attributes,

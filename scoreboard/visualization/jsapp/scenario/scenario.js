@@ -253,7 +253,8 @@ App.ScenarioChartView = Backbone.View.extend({
                     return '';
                 }
             },
-            'group_labels': {},
+            'series_names': {},
+            'series_ending_labels': {},
             'unit_is_pc': unit_is_pc,
             'plotlines': this.schema['plotlines'] || false,
             'animation': this.schema['animation'] || false,
@@ -323,11 +324,18 @@ App.ScenarioChartView = Backbone.View.extend({
             if ( this.schema['series-legend-label'] ) {
                 series_names = dict[this.schema['series-legend-label']] || 'notation';
             }
+            var series_ending_labels = 'notation';
+            if ( this.schema['series-ending-label'] ) {
+                series_ending_labels = dict[this.schema['series-ending-label']] || 'notation';
+            }
             labels_request.done(function(data) {
                 var results = data['options'];
-                chart_data['group_labels'] = _.object(
+                chart_data['series_names'] = _.object(
                     _(results).pluck('notation'),
                     _(results).pluck(series_names));
+                chart_data['series_ending_labels'] = _.object(
+                    _(results).pluck('notation'),
+                    _(results).pluck(series_ending_labels));
             });
             requests.push(labels_request);
         }
@@ -363,7 +371,8 @@ App.ScenarioChartView = Backbone.View.extend({
                     }, this);
                 }
                 return {
-                    'label': chart_data['group_labels'][value],
+                    'label': chart_data['series_names'][value],
+                    'ending_label': chart_data['series_ending_labels'][value],
                     'notation': value,
                     'data': datapoints
                 };
