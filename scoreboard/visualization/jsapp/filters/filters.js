@@ -117,18 +117,19 @@ App.SelectFilter = Backbone.View.extend({
 
             // Sort items
             var sortBy = this.sortBy;
-            if(this.sortOrder === 'reverse'){
-                this.dimension_options = _(data['options']).sortBy(function(item){
-                    return item[sortBy];
-                }).reverse();
-            }else if(this.sortOrder === 'nosort'){
+            if(this.sortOrder === 'nosort'){
                 this.dimension_options = data[options];
             }else{
                 this.dimension_options = _(data['options']).sortBy(function(item){
+                    if (item[sortBy] && !isNaN(parseInt(item[sortBy]))) {
+                        return parseInt(item[sortBy]);
+                    }
                     return item[sortBy];
                 });
             }
-
+            if(this.sortOrder === 'reverse'){
+                this.dimension_options = _(this.dimension_options).reverse();
+            }
             this.options_labels = {};
             _(this.dimension_options).each(function(opt){
                   if (opt['notation'] != 'any'){
