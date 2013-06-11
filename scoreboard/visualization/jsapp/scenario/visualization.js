@@ -106,6 +106,7 @@ App.Visualization = Backbone.View.extend({
 
 
         this.chart_view.on('chart_ready', this.share.chart_ready, this.share);
+        this.chart_view.on('chart_ready', this.chart_view.chart_ready);
 
         this.filters.on('change', this.update_hashcfg, this);
 

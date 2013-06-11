@@ -131,7 +131,7 @@ App.chart_library['columns'] = function(view, options) {
                 chart_type: options['plotlines'],
                 sort: options['sort']
             });
-            App.chart_controls.$el.insertBefore(container);
+            $('#the-filters .footer').append(App.chart_controls.$el);
         }else{
             App.chart_controls.chart = chart;
             App.chart_controls.snapshots_data = series;

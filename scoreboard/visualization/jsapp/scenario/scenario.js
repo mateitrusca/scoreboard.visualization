@@ -42,6 +42,10 @@ App.ScenarioChartView = Backbone.View.extend({
         }
     },
 
+    chart_ready: function(){
+        this.$el.removeClass('loading-small');
+    },
+
     get_meta_data: function(chart_data){
         var meta_data = {};
         chart_data['meta_data'] = meta_data;
@@ -91,10 +95,11 @@ App.ScenarioChartView = Backbone.View.extend({
         }, this);
         if(incomplete) {
             // not all filters have values
-            this.$el.html('--');
+            this.$el.addClass('loading-small');
+            this.$el.html("");
             return;
         }
-        this.$el.html('-- loading --');
+        this.$el.html("");
         var unit_is_pc = [];
         if(this.schema['multidim'] == 3){
             args['join_by'] = this.schema.category_facet;
@@ -373,6 +378,8 @@ App.ScenarioChartView = Backbone.View.extend({
 
 App.GraphControlsView = Backbone.View.extend({
 
+    className: 'chart-controls',
+
     template: App.get_template('scenario/graph_controls.html'),
 
     events: {
@@ -505,10 +512,6 @@ App.GraphControlsView = Backbone.View.extend({
         this.$el.html(this.template(
             { 'auto': this.model.get('auto') }
         ));
-        App.plone_jQuery( "#year" ).val( App.plone_jQuery( "#slider" ).slider( "value" ) );
-        if (this.model.get('auto')){
-            App.plone_jQuery( "#slider" ).slider('disable');
-        }
         var prev = this.$el.find('#prev');
         var play = this.$el.find('#play');
         var next = this.$el.find('#next');
@@ -518,16 +521,10 @@ App.GraphControlsView = Backbone.View.extend({
                 primary: "ui-icon-seek-start"
             }
         });
-        var auto_icon = '';
-        if (this.model.get('auto')){
-            auto_icon = "ui-icon-pause";
-        }else{
-            auto_icon = "ui-icon-play";
-        }
         App.plone_jQuery(play).button({
             text: false,
             icons: {
-                primary: auto_icon
+                primary: this.model.get('auto')?"ui-icon-pause":"ui-icon-play"
             }
         });
         App.plone_jQuery(next).button({

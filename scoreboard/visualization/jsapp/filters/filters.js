@@ -18,6 +18,8 @@ App.groupers =  {
 
 App.SelectFilter = Backbone.View.extend({
 
+    className: "chart-filter",
+
     template: App.get_template('filters/dropdown.html'),
 
     simple_template: App.get_template('filters/dropdown.html'),
@@ -64,7 +66,13 @@ App.SelectFilter = Backbone.View.extend({
         }
     },
 
+    update_loading_bar: function() {
+        this.$el.addClass('loading-small');
+    },
+
     update: function() {
+        this.$el.addClass('on-hold');
+        this.update_loading_bar();
         if(this.ajax) {
             this.ajax.abort();
             this.ajax = null;
@@ -87,10 +95,11 @@ App.SelectFilter = Backbone.View.extend({
             }
         }, this);
         if(incomplete) {
-            this.$el.html("--");
+            this.$el.html("");
             return;
         }
-        this.$el.html("-- loading --");
+        this.$el.removeClass('on-hold');
+        this.$el.html("");
         this.ajax = this.fetch_options(args);
         this.ajax.done(_.bind(function(data) {
             this.ajax = null;
@@ -128,6 +137,7 @@ App.SelectFilter = Backbone.View.extend({
                   }
             }, this);
             this.adjust_value();
+            this.$el.removeClass('loading-small');
             this.render();
             this.loadstate.set(this.name, false);
         }, this));
@@ -267,8 +277,13 @@ App.MultipleSelectFilter = App.SelectFilter.extend({
 
 App.AllValuesFilter = App.SelectFilter.extend({
 
+    className: "chart-filter",
+
     render: function() {
         this.$el.html("");
+    },
+
+    update_loading_bar: function() {
     },
 
     adjust_value: function() {
