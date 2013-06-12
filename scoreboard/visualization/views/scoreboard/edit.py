@@ -22,11 +22,6 @@ class Edit(EditForm):
     def object_url_json(self):
         return json.dumps(self.context.absolute_url())
 
-    @property
-    def cube_dimensions_json(self):
-        cube = get_source(self.context).get_cube()
-        return json.dumps(cube.get_dimensions(flat=True))
-
     def jsapp_html(self):
         return jsapp_html_for_visualization(self.context)
 
