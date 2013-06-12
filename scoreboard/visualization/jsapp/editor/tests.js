@@ -852,6 +852,7 @@ describe('SeriesEditor', function() {
     });
 
     it('should save value from checkboxes', function() {
+        this.model.set('tooltips', {note: false});
         var view = new App.SeriesEditor({model: this.model});
         view.$el.find('[value="note"]').click().change();
         expect(this.model.get('tooltips')['note']).to.be.true;
@@ -861,6 +862,28 @@ describe('SeriesEditor', function() {
         this.model.set('tooltips', {note: true});
         var view = new App.SeriesEditor({model: this.model});
         expect(view.$el.find('[value="note"]').is(':checked')).to.be.true;
+        expect(view.$el.find('[value="flag"]').is(':checked')).to.be.false;
+    });
+
+    it('should precheck all checkboxes at first', function() {
+        var view = new App.SeriesEditor({model: this.model});
+        expect(view.$el.find('[value="unit-measure"]').is(':checked')).to.be.true;
+        expect(view.$el.find('[value="note"]').is(':checked')).to.be.true;
+        expect(view.$el.find('[value="flag"]').is(':checked')).to.be.true;
+    });
+
+    it('should set tooltips to an empty dict when uncheching all', function() {
+        this.model.set('tooltips', {note: true});
+        var view = new App.SeriesEditor({model: this.model});
+        view.$el.find('[value="note"]').click().change();
+        expect(this.model.toJSON()['tooltips']).to.deep.equal(_.object());
+    });
+
+    it('should leave checkboxes unchanged if previously unchecked', function() {
+        this.model.set('tooltips', {});
+        var view = new App.SeriesEditor({model: this.model});
+        expect(view.$el.find('[value="unit-measure"]').is(':checked')).to.be.false;
+        expect(view.$el.find('[value="note"]').is(':checked')).to.be.false;
         expect(view.$el.find('[value="flag"]').is(':checked')).to.be.false;
     });
 

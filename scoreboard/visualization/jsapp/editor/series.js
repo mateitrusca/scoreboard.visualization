@@ -34,6 +34,14 @@ App.SeriesEditor = Backbone.View.extend({
 
     initialize: function(options) {
         this.tooltips_model = new Backbone.Model(this.model.get('tooltips'));
+        if (!this.model.has('tooltips')){
+            _.chain(this.model.dimensions)
+             .where({type_label: "attribute"})
+             .each(function(dimension){
+                this.tooltips_model.set(dimension.notation, true);
+             }, this);
+            this.model.set('tooltips', this.tooltips_model.toJSON());
+        }
         this.tooltips_model.on('change', function() {
             this.model.set('tooltips', this.tooltips_model.toJSON());
         }, this);
