@@ -62,7 +62,8 @@ App.Visualization = Backbone.View.extend({
             data_revision: options['data_revision'],
             schema: options['schema'],
             filters_schema: filters_schema,
-            multidim: options['schema']['multidim']
+            multidim: options['schema']['multidim'],
+            dimensions: App.CUBE_DIMENSIONS
         });
 
         this.metadata = new App.AnnotationsView({
@@ -94,7 +95,8 @@ App.Visualization = Backbone.View.extend({
             schema: options['schema'],
             filters_schema: filters_schema,
             values_schema: values_schema,
-            scenario_chart: App.chart_library[chart_type]
+            scenario_chart: App.chart_library[chart_type],
+            dimensions: App.CUBE_DIMENSIONS
         });
         this.$el.addClass(chart_type+'-chart');
         var chart_type = options['schema']['chart_type'];

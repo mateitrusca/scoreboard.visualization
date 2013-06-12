@@ -48,6 +48,9 @@ App.SelectFilter = Backbone.View.extend({
         this.ignore_values = options['ignore_values'];
         this.default_all = options['default_all'] || false;
         this.loadstate = options['loadstate'] || new Backbone.Model();
+        this.dimension_group_map = _.object(
+            _(options['dimensions']).pluck('notation'),
+            _(options['dimensions']).pluck('group_notation'));
         _(this.constraints).forEach(function(other_name, other_dimension) {
             this.model.on('change:' + other_name, this.update, this);
             this.loadstate.on('change:' + other_name, this.update, this);
@@ -100,6 +103,7 @@ App.SelectFilter = Backbone.View.extend({
         }
         this.$el.removeClass('on-hold');
         this.$el.html("");
+        App.trim_dimension_group_args(args, this.dimension_group_map);
         this.ajax = this.fetch_options(args);
         this.ajax.done(_.bind(function(data) {
             this.ajax = null;
@@ -331,6 +335,7 @@ App.FiltersBox = Backbone.View.extend({
                 ignore_values: item['ignore_values'],
                 default_all: default_all,
                 dimension: item['dimension'],
+                dimensions: options['dimensions'],
                 include_wildcard: item['include_wildcard'],
                 constraints: item['constraints']
             });
@@ -359,6 +364,18 @@ App.FiltersBox = Backbone.View.extend({
     }
 
 });
+
+
+App.trim_dimension_group_args = function(args, dimension_group_map) {
+    _(dimension_group_map).forEach(function(group_name, name) {
+        if(! group_name) return;
+        _(['', 'x-', 'y-', 'z-']).forEach(function(prefix) {
+            if(args[prefix + name] && args[prefix + group_name]) {
+                delete args[prefix + group_name];
+            }
+        });
+    });
+};
 
 
 })(App.jQuery);

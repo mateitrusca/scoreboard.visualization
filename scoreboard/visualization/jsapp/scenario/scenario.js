@@ -21,6 +21,9 @@ App.ScenarioChartView = Backbone.View.extend({
         this.dimensions_mapping = {};
         this.multiple_series = options['schema']['multiple_series'];
         this.client_filter = null;
+        this.dimension_group_map = _.object(
+            _(options['dimensions']).pluck('notation'),
+            _(options['dimensions']).pluck('group_notation'));
         _(options.filters_schema).forEach(function(facet) {
             this.dimensions_mapping[facet['name']] = facet['dimension'];
             if(facet['name'] == this.schema['category_facet']) {
@@ -75,6 +78,7 @@ App.ScenarioChartView = Backbone.View.extend({
                 _(relevant_args).extend(pair);
             }
         });
+        App.trim_dimension_group_args(relevant_args, this.dimension_group_map);
         relevant_args = _({rev: this.data_revision}).extend(relevant_args);
         return $.getJSON(url, relevant_args);
     },
