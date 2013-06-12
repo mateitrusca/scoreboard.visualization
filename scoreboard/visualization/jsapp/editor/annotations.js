@@ -21,6 +21,20 @@ App.AnnotationsEditor = Backbone.View.extend({
     },
 
     initialize: function(options) {
+        if (!this.model.has('annotations')){
+            var filters = [];
+            var defaults = ['indicator', 'breakdown', 'unit-measure']
+            _.chain(this.model.get('facets'))
+             .filter(function(facet){
+                if(facet['type'] == 'ignore' || facet['dimension'] == 'value') {
+                    return false;
+                }
+                 return _(defaults).contains(facet.dimension);
+             }).each(function(facet){
+                 filters.push({'name': facet.name});
+             });
+            this.model.set('annotations', {filters: filters});
+        }
         this.annotations_model = new Backbone.Model(
             this.model.get('annotations'));
         this.annotations_model.on('change', function() {

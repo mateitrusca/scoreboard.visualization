@@ -1005,6 +1005,39 @@ describe('AnnotationsEditor', function() {
         expect(names).to.contain('dim2');
     });
 
+    it('should preselect defaults', function() {
+        var model = new Backbone.Model({
+            facets: [{name: 'dim1', type: 'select', dimension: 'indicator'},
+                     {name: 'dim2', type: 'select', dimension: 'breakdown'},
+                     {name: 'dim3', type: 'select', dimension: 'unit-measure'},
+                     {name: 'dim4', type: 'select', dimension: 'breakdown'},
+                     {name: 'dim5', type: 'select', dimension: 'other'}]
+        });
+        var view = new App.AnnotationsEditor({model: model});
+        var get_checkbox = function(name) {
+            return view.$el.find('[name="annotation"][value="' + name + '"]');
+        }
+        expect(get_checkbox('dim1').is(':checked')).to.be.true;
+        expect(get_checkbox('dim2').is(':checked')).to.be.true;
+        expect(get_checkbox('dim3').is(':checked')).to.be.true;
+        expect(get_checkbox('dim4').is(':checked')).to.be.true;
+        expect(get_checkbox('dim5').is(':checked')).to.be.false;
+    });
+
+    it('should not preselect defaults', function() {
+        var model = new Backbone.Model({
+            facets: [{name: 'dim1', type: 'select', dimension: 'indicator'},
+                     {name: 'dim2', type: 'select', dimension: 'breakdown'}],
+            annotations: {filters: [{name: 'dim2'}]}
+        });
+        var view = new App.AnnotationsEditor({model: model});
+        var get_checkbox = function(name) {
+            return view.$el.find('[name="annotation"][value="' + name + '"]');
+        }
+        expect(get_checkbox('dim1').is(':checked')).to.be.false;
+        expect(get_checkbox('dim2').is(':checked')).to.be.true;
+    });
+
     it('should preselect checkboxes with current value', function() {
         var model = new Backbone.Model({
             facets: [{name: 'dim1', type: 'select'},
