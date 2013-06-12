@@ -6,106 +6,9 @@
 
 
 App.scenario7_filters_schema = {
-    "facets": [{
-        "type": "select",
-        "name": "indicator-group",
-        "label": "Indicator group",
-        "dimension": "indicator-group",
-        "include_wildcard": true,
-        "sortBy": "nosort",
-        "sortOrder": "asc",
-        "default_value": "#random",
-        "constraints": {
-            
-        }
-    },
-    {
-        "type": "select",
-        "name": "indicator",
-        "label": "Indicator",
-        "dimension": "indicator",
-        "sortBy": "nosort",
-        "sortOrder": "asc",
-        "default_value": "#random",
-        "constraints": {
-            "indicator-group": "indicator-group"
-        }
-    },
-    {
-        "type": "select",
-        "name": "breakdown-group",
-        "label": "Breakdown group",
-        "include_wildcard": false,
-        "dimension": "breakdown-group",
-        "sortBy": "nosort",
-        "sortOrder": "asc",
-        "default_value": "#random",
-        "constraints": {
-            "indicator-group": "indicator-group",
-            "indicator": "indicator"
-        }
-    },
-    {
-        "type": "select",
-        "name": "unit-measure",
-        "label": "Unit of measure",
-        "dimension": "unit-measure",
-        "default_value": "#random",
-        "constraints": {
-            "indicator-group": "indicator-group",
-            "indicator": "indicator",
-            "breakdown-group": "breakdown-group"
-        }
-    },
-    {
-        "type": "select",
-        "name": "time-period",
-        "label": "Period",
-        "sortBy": "label",
-        "sortOrder": "reverse",
-        "dimension": "time-period",
-        "constraints": {
-            "indicator-group": "indicator-group",
-            "indicator": "indicator",
-            "breakdown-group": "breakdown-group",
-            "unit-measure": "unit-measure"
-        }
-    },
-    {
-        "type": "multiple_select",
-        "name": "ref-area",
-        "label": "Select the countries",
-        "dimension": "ref-area",
-        "default_value": ["EU27", "#random"],
-        "constraints": {
-            "unit-measure": "unit-measure",
-            "breakdown-group": "breakdown-group",
-            "time-period": "time-period",
-            "indicator-group": "indicator-group",
-            "indicator": "indicator"
-        }
-    },
-    {
-        "type": "all-values",
-        "dimension": "breakdown",
-        "label": "Breakdown",
-        "name": "breakdown",
-        "constraints": {
-            "unit-measure": "unit-measure",
-            "breakdown-group": "breakdown-group",
-            "time-period": "time-period",
-            "indicator-group": "indicator-group",
-            "indicator": "indicator"
-        }
-    },
-    {
-        "type": "all-values",
-        "dimension": "value"
-    }],
-    "category_facet": "ref-area",
-    "multiple_series": "breakdown",
     "annotations": {
-        "filters": [{
+        "filters": [
+        {
             "name": "indicator"
         },
         {
@@ -113,20 +16,110 @@ App.scenario7_filters_schema = {
         },
         {
             "name": "unit-measure"
-        }],
-                "title": "Definitions and scopes"
+        }
+        ],
+        "title": "Definitions and scopes"
     },
+    "category_facet": "ref-area",
     "chart_type": "columns",
-    "tooltips": {
-        "unit-measure": true,
-        "flag": true,
-        "note": true
+    "facets": [
+    {
+        "constraints": {},
+        "dimension": "indicator-group",
+        "include_wildcard": true,
+        "label": "Indicator group",
+        "name": "indicator-group",
+        "sortBy": "nosort",
+        "sortOrder": "asc",
+        "default_value": "#random",
+        "type": "select"
     },
-    "labels": {
-        "title": {
-            "facet": "indicator",
-            "field": "short_label"
+    {
+        "constraints": {
+            "indicator-group": "indicator-group"
         },
+        "default_value": "#random",
+        "dimension": "indicator",
+        "label": "Indicator",
+        "name": "indicator",
+        "sortBy": "inner_order",
+        "sortOrder": "asc",
+        "type": "select"
+    },
+    {
+        "constraints": {
+            "indicator-group": "indicator-group",
+            "indicator": "indicator"
+        },
+        "default_value": "#random",
+        "dimension": "breakdown-group",
+        "include_wildcard": false,
+        "label": "Breakdown group",
+        "name": "breakdown-group",
+        "sortBy": "nosort",
+        "sortOrder": "asc",
+        "type": "select"
+    },
+    {
+        "constraints": {
+            "indicator-group": "indicator-group",
+            "indicator": "indicator",
+            "breakdown-group": "breakdown-group"
+        },
+        "default_value": "#random",
+        "dimension": "unit-measure",
+        "label": "Unit of measure",
+        "name": "unit-measure",
+        "type": "select"
+    },
+    {
+        "constraints": {
+            "indicator-group": "indicator-group",
+            "indicator": "indicator",
+            "breakdown-group": "breakdown-group",
+            "unit-measure": "unit-measure"
+        },
+        "dimension": "time-period",
+        "label": "Period",
+        "name": "time-period",
+        "sortBy": "label",
+        "sortOrder": "reverse",
+        "type": "select"
+    },
+    {
+        "constraints": {
+            "indicator-group": "indicator-group",
+            "indicator": "indicator",
+            "breakdown-group": "breakdown-group",
+            "unit-measure": "unit-measure",
+            "time-period": "time-period"
+        },
+        "default_value": ["EU27", "#random"],
+        "dimension": "ref-area",
+        "label": "Select the countries",
+        "name": "ref-area",
+        "type": "multiple_select"
+    },
+    {
+        "constraints": {
+            "indicator-group": "indicator-group",
+            "indicator": "indicator",
+            "breakdown-group": "breakdown-group",
+            "unit-measure": "unit-measure",
+            "time-period": "time-period"
+        },
+        "dimension": "breakdown",
+        "label": "Breakdown",
+        "name": "breakdown",
+        "type": "all-values"
+    },
+    {
+        "name": "value",
+        "type": "all-values",
+        "dimension": "value"
+    }
+    ],
+    "labels": {
         "ordinate": {
             "facet": "unit-measure",
             "field": "short_label"
@@ -135,17 +128,27 @@ App.scenario7_filters_schema = {
             "facet": "time-period",
             "field": "label"
         },
+        "title": {
+            "facet": "indicator",
+            "field": "short_label"
+        },
         "title2": {
             "facet": "breakdown-group",
             "field": "label"
         }
     },
+    "multiple_series": "breakdown",
     "series-legend-label": "long",
     "series-point-label": "long",
     "sort": {
         "by": "value",
-        "order": -1,
-        "each_series": false
+        "each_series": false,
+        "order": -1
+    },
+    "tooltips": {
+        "flag": true,
+        "note": true,
+        "unit-measure": true
     }
 };
 

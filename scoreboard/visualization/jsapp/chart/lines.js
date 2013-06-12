@@ -27,7 +27,7 @@ App.chart_library['lines'] = function(view, options) {
                   verticalAlign: 'middle',
                   formatter: function() {
                     if (options['series-ending-label'] == 'long') {
-                        return this.series.name;
+                        return this.series.options.ending_label;
                     } else if (options['series-ending-label'] == 'short') {
                         return this.series.options.notation;
                     }

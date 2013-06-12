@@ -71,24 +71,25 @@ App.scenario8_filters_schema = {
         "indicator": "indicator",
         "breakdown-group": "breakdown-group"
       },
+      "dimension": "unit-measure",
+      "label": "Unit of measure",
+      "name": "unit-measure",
+      "default_value": "#random",
+      "type": "select"
+    },
+    {
+      "constraints": {
+        "indicator-group": "indicator-group",
+        "indicator": "indicator",
+        "breakdown-group": "breakdown-group",
+        "unit-measure": "unit-measure"
+      },
       "dimension": "breakdown",
       "label": "Breakdown",
       "name": "breakdown",
       "sortBy": "nosort",
       "sortOrder": "asc",
       "type": "all-values"
-    },
-    {
-      "constraints": {
-        "indicator-group": "indicator-group",
-        "indicator": "indicator",
-        "breakdown-group": "breakdown-group"
-      },
-      "dimension": "unit-measure",
-      "label": "Unit of measure",
-      "name": "unit-measure",
-      "default_value": "#random",
-      "type": "select"
     },
     {
       "constraints": {

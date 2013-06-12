@@ -125,6 +125,7 @@ App.format_series = function (data, sort, multidim, percent, category, highlight
             var point = _.object([['name', series_item[category]['label']],
                                  ['code', series_item[category]['notation']],
                                  ['order', series_item[category]['inner_order']],
+                                 ['ending_label', series_item[category]['ending_label']],
                                  ['attributes', _(series_item).omit('value')],
                                  ['y', value]]);
             var color = null;
@@ -159,8 +160,8 @@ App.format_series = function (data, sort, multidim, percent, category, highlight
               uniq(diffs_collection).
               value();
             return _.object(
-                    ['name', 'notation', 'order', 'color', 'data'],
-                    [item['label'], item['notation'], item['order'],countrycolor(item['notation']), data]);
+                    ['name', 'ending_label', 'notation', 'order', 'color', 'data'],
+                    [item['label'], item['ending_label'], item['notation'], item['order'],countrycolor(item['notation']), data]);
         }).map(function(item){
             var serie = item['data'];
             _.chain(diffs_collection).
@@ -172,6 +173,7 @@ App.format_series = function (data, sort, multidim, percent, category, highlight
                   _(serie).push(
                       _.object([['code', data['notation']],
                                 ['name', data['label']],
+                                ['ending_label', data['ending_label']],
                                 ['order', data['inner_order']],
                                 ['attributes', attributes],
                                 ['y', null]])
@@ -207,8 +209,8 @@ App.format_series = function (data, sort, multidim, percent, category, highlight
                 })
             }
             return _.object(
-                    ['name', 'notation', 'order', 'color', 'data'],
-                    [item['name'], item['notation'], item['order'], countrycolor(item['notation']), serie]);
+                    ['name', 'ending_label', 'notation', 'order', 'color', 'data'],
+                    [item['name'], item['ending_label'], item['notation'], item['order'], countrycolor(item['notation']), serie]);
         }).value();
     }
     return _(series).sortBy('name');

@@ -49,7 +49,7 @@ App.scenario2_filters_schema = {
       "dimension": "indicator",
       "label": "Indicator",
       "name": "indicator",
-      "sortBy": "nosort",
+      "sortBy": "inner_order",
       "sortOrder": "asc",
       "default_value": "#random",
       "type": "select"
@@ -77,7 +77,7 @@ App.scenario2_filters_schema = {
       "dimension": "breakdown",
       "label": "Breakdown",
       "name": "breakdown",
-      "sortBy": "nosort",
+      "sortBy": "inner_order",
       "sortOrder": "asc",
       "default_value": "#random",
       "type": "select"
@@ -148,7 +148,7 @@ App.scenario2_filters_schema = {
     }
   },
   "multiple_series": "ref-area",
-  "series-legend-label": "long",
+  "series-legend-label": "none",
   "series-ending-label": "long",
   "series-point-label": "long",
   "sort": {

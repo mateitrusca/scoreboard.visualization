@@ -137,7 +137,6 @@ App.scenario3_bubbles_animation_filters_schema = {
          label: 'Country / Countries',
          dimension: 'ref-area',
          default_value: ['BE', 'BG', 'CZ', 'DK', 'DE', 'EE', 'IE', 'EL', 'ES', 'FR', 'IT', 'CY', 'LV', 'LT', 'LU', 'HU', 'MT', 'NL', 'AT', 'PL', 'PT', 'RO', 'SI', 'SK', 'FI', 'SE', 'UK'],
-         position: '.right_column',
          constraints: {
              'x-indicator':    'x-indicator',
              'x-breakdown':    'x-breakdown',

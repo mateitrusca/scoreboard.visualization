@@ -40,7 +40,7 @@ App.scenario6_filters_schema = {
       },
       "dimension": "indicator",
       "label": "Indicator",
-      "sortBy": "nosort",
+      "sortBy": "inner_order",
       "sortOrder": "asc",
       "name": "indicator",
       "default_value": "#random",
@@ -69,7 +69,7 @@ App.scenario6_filters_schema = {
       "dimension": "breakdown",
       "label": "Breakdown",
       "name": "breakdown",
-      "sortBy": "nosort",
+      "sortBy": "inner_order",
       "sortOrder": "asc",
       "default_value": "#random",
       "type": "select"
