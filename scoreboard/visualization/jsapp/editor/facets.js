@@ -12,6 +12,9 @@ App.FacetEditorField = Backbone.View.extend({
     template: App.get_template('editor/facet-field.html'),
 
     events: {
+        'input [name="name"]': 'on_input_name',
+        'keyup [name="name"]': 'on_input_name',
+        'focusout [name="name"]': 'on_focusout_name',
         'change [name="position"]': 'on_change_position',
         'change [name="type"]': 'on_change_type',
         'click .facet-sort': 'on_click_sort',
@@ -85,6 +88,7 @@ App.FacetEditorField = Backbone.View.extend({
 
     render: function() {
         var context = _({
+            facet_name: this.model.get('name') || this.model.get('dimension'),
             facet_options: _(this.facet_options).map(function(opt) {
                 if (_(this.model.get('default_value')).contains(opt['value'])) {
                     return _({default: true}).extend(opt);
@@ -131,6 +135,20 @@ App.FacetEditorField = Backbone.View.extend({
             params['maximumSelectionSize'] = 1;
         }
         this.$el.find('[name="default_value"]').select2(params);
+    },
+
+    on_input_name: function(evt) {
+        if (this.facet_name == this.$el.find('[name="name"]').val()){
+            return;
+        }
+        this.facet_name = this.$el.find('[name="name"]').val() ||
+                          this.model.get('dimension');
+    },
+
+    on_focusout_name: function(evt) {
+        this.model.set({
+            name: this.facet_name
+        });
     },
 
     on_change_position: function(evt) {

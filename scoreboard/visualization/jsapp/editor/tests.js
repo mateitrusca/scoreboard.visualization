@@ -104,13 +104,38 @@ describe('FacetsEditor', function() {
             ]);
         });
 
-        it('should save filter name same as dimension', function() {
+        it('should save filter name same as dimension by default', function() {
             var model = new App.EditorConfiguration({}, {
                 dimensions: [{type_label: 'dimension', notation: 'time-period'}]
             });
             var view = new App.FacetsEditor({model: model});
             expect(model.get('facets')[0]['name']).to.equal('time-period');
             expect(model.get('facets')[0]['dimension']).to.equal('time-period');
+        });
+
+        it('should save the provided filter name', function() {
+            var model = new App.EditorConfiguration({}, {
+                dimensions: [{type_label: 'dimension', notation: 'indicator'},
+                             {type_label: 'dimension', notation: 'time-period'}]
+            });
+            var view = new App.FacetsEditor({model: model});
+            view.$el.find('[name="name"]:eq(0)').val('ind').trigger('input');
+            view.$el.find('[name="name"]:eq(1)').val('period').trigger('keyup');
+            view.$el.find('[name="name"]:eq(0)').trigger('focusout');
+            view.$el.find('[name="name"]:eq(1)').trigger('focusout');
+            expect(model.get('facets')[0]['name']).to.equal('ind');
+            expect(model.get('facets')[1]['name']).to.equal('period');
+            expect(model.get('facets')[0]['dimension']).to.equal('indicator');
+            expect(model.get('facets')[1]['dimension']).to.equal('time-period');
+        });
+
+        it('should save filter name same as dimension when empty', function() {
+            var model = new App.EditorConfiguration({}, {
+                dimensions: [{type_label: 'dimension', notation: 'indicator'}]});
+            var view = new App.FacetsEditor({model: model});
+            view.$el.find('[name="name"]:eq(0)').val('').trigger('input');
+            view.$el.find('[name="name"]:eq(0)').trigger('focusout');
+            expect(model.get('facets')[0]['name']).to.equal('indicator');
         });
 
         it('should save filter type', function() {
