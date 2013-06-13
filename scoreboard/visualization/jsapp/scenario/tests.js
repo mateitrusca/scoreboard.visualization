@@ -836,6 +836,56 @@ describe('ScenarioChartView', function() {
         expect(series[0]['data'].length).to.equal(2);
     });
 
+    describe('title formatter', function() {
+        it('should use the default separator', function() {
+            var chart = new App.ScenarioChartView({
+                model:  new Backbone.Model(),
+                schema: {},
+                scenario_chart: sinon.mock()
+            });
+            var title = chart.title_formatter([
+                            'part1',
+                            'part2']);
+            expect(title).to.equal('part1, part2');
+        });
+
+        it('should use the specified separator', function() {
+            var chart = new App.ScenarioChartView({
+                model:  new Backbone.Model(),
+                schema: {},
+                scenario_chart: sinon.mock()
+            });
+            var title = chart.title_formatter([
+                            'part1',
+                            ['-', 'part2']]);
+            expect(title).to.equal('part1-part2');
+        });
+
+        it('should ignore "Total" with separator', function() {
+            var chart = new App.ScenarioChartView({
+                model:  new Backbone.Model(),
+                schema: {},
+                scenario_chart: sinon.mock()
+            });
+            var title = chart.title_formatter([
+                            'part1',
+                            ['-', 'Total']]);
+            expect(title).to.equal('part1');
+        });
+
+        it('should ignore "Total" without separator', function() {
+            var chart = new App.ScenarioChartView({
+                model:  new Backbone.Model(),
+                schema: {},
+                scenario_chart: sinon.mock()
+            });
+
+            var title = chart.title_formatter([
+                            'part1',
+                            'Total']);
+            expect(title).to.equal('part1');
+        });
+    })
 });
 
 
