@@ -68,6 +68,7 @@ describe('FacetsEditor', function() {
 
     beforeEach(function() {
         this.sandbox = sinon.sandbox.create();
+        this.sandbox.useFakeServer();
     });
 
     afterEach(function () {
@@ -97,7 +98,6 @@ describe('FacetsEditor', function() {
                 ]
             });
             var view = new App.FacetsEditor({model: model});
-
             expect(_(model.get('facets')).pluck('dimension')).to.deep.equal([
                 'indicator-group', 'indicator', 'breakdown-group', 'breakdown',
                 'unit-measure', 'ref-area', 'time-period', 'value'
@@ -176,7 +176,6 @@ describe('FacetsEditor', function() {
 
     describe('facet ignore values', function() {
         it('should update model with values selected', function() {
-            this.sandbox.useFakeServer();
             var model = new App.EditorConfiguration({
                     facets: [
                         {name: 'dim1', type: 'select'},
