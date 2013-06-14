@@ -5,6 +5,20 @@
 "use strict";
 
 
+App.TitleComposer = Backbone.View.extend({
+    template: App.get_template('editor/title.html'),
+
+    initialize: function(options) {
+        this.render();
+    },
+
+    render: function(){
+        var context = {};
+        this.$el.html(this.template(context));
+    },
+});
+
+
 App.AxesEditor = Backbone.View.extend({
 
     tagName: 'form',
@@ -47,6 +61,9 @@ App.AxesEditor = Backbone.View.extend({
     ],
 
     initialize: function(options) {
+        this.title_composer = new App.TitleComposer({
+            model: new Backbone.Model()
+        });
         this.render();
         this.set_axis_labels();
         this.model.on('change facets', this.set_axis_labels, this);
@@ -119,6 +136,7 @@ App.AxesEditor = Backbone.View.extend({
             })
         };
         this.$el.html(this.template(context));
+        this.$el.find('[name="chart-titles"]').append(this.title_composer.el);
     },
 
     on_change: function() {

@@ -1,0 +1,8 @@
+<label>Title</label>
+<select class="span2" name="chart-title">
+{{# facets }}
+  <option value="{{ value }}"
+    {{# if selected }}selected{{/ if }}
+    >{{ label }}</option>
+{{/ facets }}
+</select>
