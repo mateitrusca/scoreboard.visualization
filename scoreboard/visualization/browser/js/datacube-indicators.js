@@ -57,7 +57,7 @@ scoreboard.visualization.datacube.indicators = {
             if(!caption.length){
                 self.addTableCaption(groupId, indicator, tbody);
             }
-            self.addTableRow(indicator, groupId);
+            self.addTableRow(table, indicator, groupId);
         });
         return tbody;
     },
@@ -85,12 +85,14 @@ scoreboard.visualization.datacube.indicators = {
         tr.append(td);
         tbody.append(tr);
     },
-    addTableRow: function(indicator, groupId){
+    addTableRow: function(table, indicator, groupId){
         var tr = jQuery('<tr>');
         tr.append('<td class="even">' + indicator.altlabel + '</td>');
         tr.append('<td class="odd">' + indicator.longlabel + '</td>');
-        var definition = '<td class="even">' +
-                    '<strong class="definition">Definition: </strong>' + indicator.definition;
+        var definition = '<td class="even">';
+        if ( indicator.definition) {
+            definition = definition.concat('<strong class="definition">Definition: </strong>' + indicator.definition);
+        }
         if ( indicator.notes ) {
             definition = definition.concat('<br /><strong class="notes">Notes: </strong>' + indicator.notes);
         }
@@ -104,7 +106,8 @@ scoreboard.visualization.datacube.indicators = {
           source.text(indicator.sourcelabel);
         }
         tr.append(source);
-        jQuery('tr#' + groupId).after(tr);
+        //jQuery('tr#' + groupId).after(tr);
+        table.append(tr);
     },
     addNavigation: function(){
       var locationPath = window.location.href.split('/');
