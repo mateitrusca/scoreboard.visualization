@@ -6,18 +6,40 @@
 
 
 App.TitleComposer = Backbone.View.extend({
+
     template: App.get_template('editor/title.html'),
 
+    events: {
+        'change [name="title"]': 'on_change'
+    },
+
     initialize: function(options) {
+        this.model.on('change titles', this.render, this);
         this.render();
+    },
+
+    on_change: function(){
+        var value = this.$el.find('[name="title"]').val();
+        this.model.set('titles', [value]);
     },
 
     render: function(){
         var context = {
-            facets: _(this.model.get('facets')).where({type: "select"})
+            facets: _.chain(this.model.get('facets'))
+                     .where({type: "select"})
+                     .map(function(facet){
+                        var option = _.object([
+                            ['label', facet.label],
+                            ['value', facet.name]
+                        ]);
+                        if(_(this.model.get('titles')).contains(facet.name)) {
+                            option['selected'] = true;
+                        }
+                        return option;
+                     }, this).value()
         };
         this.$el.html(this.template(context));
-    },
+    }
 });
 
 
@@ -139,6 +161,7 @@ App.AxesEditor = Backbone.View.extend({
         };
         this.$el.html(this.template(context));
         this.$el.find('[name="chart-titles"]').append(this.title_composer.el);
+        this.title_composer.delegateEvents();
     },
 
     on_change: function() {

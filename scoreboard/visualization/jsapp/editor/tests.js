@@ -736,9 +736,27 @@ describe('AxesEditor', function() {
                 ]
             });
             var view = new App.AxesEditor({model: model});
-            var options = view.title_composer.$el.find('option', '[name="chart-title"]');
+            var options = view.title_composer.$el.find('option', '[name="title"]');
             expect(options.length).to.equal(2);
-        })
+        });
+
+        it('should save selected title to model', function(){
+            var model = new Backbone.Model({
+                facets: [
+                    {name: 'indicator', type: 'select', value: 'indicator'},
+                    {name: 'breakdown', type: 'select', value: 'breakdown'},
+                    {name: 'ref-area', type: 'multiple_select', value: 'ref-area'}
+                ]
+            });
+            var view = new App.AxesEditor({model: model});
+            var select = view.title_composer.$el.find('[name="title"]');
+            select.val('indicator').change();
+
+            var selected = view.title_composer.$el.find(
+                'option:eq(0)', select);
+            expect(selected.attr('selected')).to.equal('selected');
+            expect(view.model.get('titles')).to.deep.equal(['indicator']);
+        });
     });
 
     it('should set vertical title in model', function() {
