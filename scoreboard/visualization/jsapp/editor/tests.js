@@ -726,6 +726,21 @@ describe('FacetsEditor', function() {
 
 describe('AxesEditor', function() {
 
+    describe('TitleComposer', function(){
+        it('should present title choices to user', function(){
+            var model = new Backbone.Model({
+                facets: [
+                    {name: 'indicator', type: 'select'},
+                    {name: 'breakdown', type: 'select'},
+                    {name: 'ref-area', type: 'multiple_select'}
+                ]
+            });
+            var view = new App.AxesEditor({model: model});
+            var options = view.title_composer.$el.find('option', '[name="chart-title"]');
+            expect(options.length).to.equal(2);
+        })
+    });
+
     it('should set vertical title in model', function() {
         var model = new Backbone.Model({
             facets: [{name: 'unit-measure', type: 'select'}]

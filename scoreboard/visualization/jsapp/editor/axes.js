@@ -13,7 +13,9 @@ App.TitleComposer = Backbone.View.extend({
     },
 
     render: function(){
-        var context = {};
+        var context = {
+            facets: _(this.model.get('facets')).where({type: "select"})
+        };
         this.$el.html(this.template(context));
     },
 });
@@ -62,7 +64,7 @@ App.AxesEditor = Backbone.View.extend({
 
     initialize: function(options) {
         this.title_composer = new App.TitleComposer({
-            model: new Backbone.Model()
+            model: this.model
         });
         this.render();
         this.set_axis_labels();
