@@ -7,13 +7,14 @@
 App.TitlePartView = Backbone.View.extend({
 
     events: {
-        'change [name="title-part"]': 'on_change_facet_name'
+        'change select': 'on_change_facet_name'
     },
 
     template: App.get_template('editor/title-part.html'),
 
     initialize: function(options){
         this.facets = options.facets;
+        this.model.on('change', this.render, this);
         this.render();
     },
 
@@ -24,6 +25,7 @@ App.TitlePartView = Backbone.View.extend({
 
     render: function(){
         var context = {
+            id: this.model.cid,
             facets: _.chain(this.facets)
                        .where({type: "select"})
                        .map(function(facet){
@@ -50,15 +52,15 @@ App.TitlePartsCollection = Backbone.Collection.extend({
 
     get_values: function(){
         var titles = [];
-        this.forEach(function(part_model){
-            if (part_model.get('separator')){
+        this.forEach(function(part_model, idx){
+            if (idx == 0){
+                titles.push(part_model.get('facet_name'));
+            }
+            else{
                 var part = [];
                 part.push(part_model.get('separator'));
                 part.push(part_model.get('facet_name'));
                 titles.push(part);
-            }
-            else{
-                titles.push(part_model.get('facet_name'));
             }
         });
         return titles;
@@ -68,12 +70,16 @@ App.TitlePartsCollection = Backbone.Collection.extend({
 
 App.TitleComposer = Backbone.View.extend({
 
+    events: {
+        'click [name="add-title-part"]': 'on_add_part'
+    },
+
     template: App.get_template('editor/title.html'),
 
     initialize: function(options) {
         this.part_models = new App.TitlePartsCollection([new Backbone.Model()]);
         this.model.set('titles', this.part_models.get_values());
-        this.part_models.on('change titles', this.on_change, this);
+        this.part_models.on('change', this.on_change, this);
         this.part_views = _.object(this.part_models.map(function(part_model) {
             var part_view = new App.TitlePartView({
                 model: part_model,
@@ -89,12 +95,28 @@ App.TitleComposer = Backbone.View.extend({
         this.model.set('titles', this.part_models.get_values());
     },
 
+    on_add_part: function(){
+        var part_view = new App.TitlePartView({
+            model: new Backbone.Model({
+                separator: ''
+            }),
+            facets: this.model.get('facets'),
+            composer: this
+        });
+        this.part_models.add(part_view.model);
+        this.part_views[part_view.model.cid] = part_view;
+        this.render();
+    },
+
     render: function(){
         this.$el.html(this.template());
+        this.$el.find('[name="title-parts"]').empty();
         this.part_models.forEach(function(model){
             var part_view = this.part_views[model.cid];
-            this.$el.find('[name="title-parts"]').empty().append(part_view.el);
-            part_view.delegateEvents();
+            if (part_view){
+                this.$el.find('[name="title-parts"]').append(part_view.el);
+                part_view.delegateEvents();
+            }
         }, this);
     }
 });

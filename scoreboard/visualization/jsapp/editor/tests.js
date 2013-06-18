@@ -750,9 +750,47 @@ describe('AxesEditor', function() {
             });
             var view = new App.AxesEditor({model: model});
             var select = view.title_composer.$el.find('[name="title-part"]');
-            select.val('indicator').change();
+            select.val('ind').change();
             var selected = select.find('option:eq(0)');
             expect(view.model.get('titles')).to.deep.equal(['ind']);
+        });
+
+        it('should render a new title part', function(){
+            var model = new Backbone.Model({
+                facets: [
+                    {name: 'ind', type: 'select', value: 'indicator'},
+                    {name: 'brk', type: 'select', value: 'breakdown'},
+                ]
+            });
+            var view = new App.AxesEditor({model: model});
+            var add_button = view.title_composer.$el.find('[name="add-title-part"]');
+            add_button.click();
+            var models = view.title_composer.part_models.models;
+            var views = view.title_composer.part_views;
+            expect(_(models).pluck('cid')).to.deep.equal(_(views).keys());
+            var select = view.title_composer.$el.find('[name="title-part"]');
+            expect(select.length).to.deep.equal(2);
+        });
+
+        it('should save all title parts to model', function(){
+            var model = new Backbone.Model({
+                facets: [
+                    {name: 'ind', type: 'select', value: 'indicator'},
+                    {name: 'brk', type: 'select', value: 'breakdown'},
+                ]
+            });
+            var view = new App.AxesEditor({model: model});
+            var select = view.title_composer.$el.find('[name="title-part"]:eq(0)');
+            var add_button = view.title_composer.$el.find('[name="add-title-part"]');
+            select.val('ind').change();
+            add_button.click();
+            var models = view.title_composer.part_models.models;
+            var views = view.title_composer.part_views;
+            expect(_(models).pluck('cid')).to.deep.equal(_(views).keys());
+            var select = view.title_composer.$el.find('[name="title-part"]:eq(1)');
+            select.val('brk').change();
+            expect(view.model.get('titles')).to.deep.equal(
+                ['ind', ['', 'brk']]);
         });
     });
 
