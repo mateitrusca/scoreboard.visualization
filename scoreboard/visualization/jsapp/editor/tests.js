@@ -743,19 +743,16 @@ describe('AxesEditor', function() {
         it('should save selected title to model', function(){
             var model = new Backbone.Model({
                 facets: [
-                    {name: 'indicator', type: 'select', value: 'indicator'},
-                    {name: 'breakdown', type: 'select', value: 'breakdown'},
+                    {name: 'ind', type: 'select', value: 'indicator'},
+                    {name: 'brk', type: 'select', value: 'breakdown'},
                     {name: 'ref-area', type: 'multiple_select', value: 'ref-area'}
                 ]
             });
             var view = new App.AxesEditor({model: model});
-            var select = view.title_composer.$el.find('[name="title"]');
+            var select = view.title_composer.$el.find('[name="title-part"]');
             select.val('indicator').change();
-
-            var selected = view.title_composer.$el.find(
-                'option:eq(0)', select);
-            expect(selected.attr('selected')).to.equal('selected');
-            expect(view.model.get('titles')).to.deep.equal(['indicator']);
+            var selected = select.find('option:eq(0)');
+            expect(view.model.get('titles')).to.deep.equal(['ind']);
         });
     });
 
