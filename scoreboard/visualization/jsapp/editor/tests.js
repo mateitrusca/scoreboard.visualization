@@ -863,7 +863,53 @@ describe('AxesEditor', function() {
             expect(select1.val()).to.equal('ind');
             expect(separator.val()).to.equal(',');
             expect(select2.val()).to.equal('brk');
+        });
+
+        it('should validate existing title parts', function(){
+            var model = new Backbone.Model({
+                facets: [
+                    {name: 'ind', type: 'select', value: 'indicator'},
+                    {name: 'brk', type: 'multiple_select', value: 'breakdown'},
+                ],
+                titles: [
+                    "ind",
+                    [',', "brk"]
+                ]
+            });
+            var view = new App.AxesEditor({model: model});
+            var select1 = view.title_composer.$el.find('[name="title-part"]:eq(0)');
+            var separator = view.title_composer.$el.find(
+                '[name="title-part-separator"]');
+            var select2 = view.title_composer.$el.find('[name="title-part"]:eq(1)');
+            expect(select1.val()).to.equal('ind');
+            expect(separator.length).to.equal(0);
+            expect(select2.length).to.equal(0);
+            expect(view.model.get('titles')).to.deep.equal(
+                ['ind']);
         })
+
+        it('should never add separator to the first title part', function(){
+            var model = new Backbone.Model({
+                facets: [
+                    {name: 'ind', type: 'multiple_select', value: 'indicator'},
+                    {name: 'brk', type: 'select', value: 'breakdown'},
+                ],
+                titles: [
+                    "ind",
+                    [',', "brk"]
+                ]
+            });
+            var view = new App.AxesEditor({model: model});
+            var select1 = view.title_composer.$el.find('[name="title-part"]:eq(0)');
+            var separator = view.title_composer.$el.find(
+                '[name="title-part-separator"]');
+            var select2 = view.title_composer.$el.find('[name="title-part"]:eq(1)');
+            expect(select1.val()).to.equal('brk');
+            expect(separator.length).to.equal(0);
+            expect(select2.length).to.equal(0);
+            expect(view.model.get('titles')).to.deep.equal(
+                ['brk']);
+        });
     });
 
     it('should set vertical title in model', function() {

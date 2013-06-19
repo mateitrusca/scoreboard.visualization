@@ -76,17 +76,23 @@ App.TitlePartView = Backbone.View.extend({
 
 App.TitlePartsCollection = Backbone.Collection.extend({
 
-    constructor: function(parts) {
+    constructor: function(options) {
         var part_models = [];
-        if (parts){
-            part_models.push(new App.TitlePart({
-                facet_name: parts[0]
-            }));
-            _(parts.slice(1)).each(function(part){
+        if (options.parts){
+            var name = options.parts[0];
+            if (_(options.valid_facets).contains(name)){
                 part_models.push(new App.TitlePart({
-                    separator: part[0] || "",
-                    facet_name: part[1]
+                    facet_name: options.parts[0]
                 }));
+            }
+            _(options.parts.slice(1)).each(function(part){
+                var name = part[1];
+                if (_(options.valid_facets).contains(name)){
+                    part_models.push(new App.TitlePart({
+                        separator: (part_models.length==0)?null:part[0] || "",
+                        facet_name: part[1]
+                    }));
+                }
             })
         }
         Backbone.Collection.apply(this, [part_models]);
@@ -125,8 +131,13 @@ App.TitleComposer = Backbone.View.extend({
         if (!a_facet){
             return;
         }
-        this.part_models = new App.TitlePartsCollection(this.model.get('titles') ||
-                                                        [a_facet.name]);
+        this.part_models = new App.TitlePartsCollection({
+            parts: this.model.get('titles') || [a_facet.name],
+            valid_facets: _.chain(this.model.get('facets'))
+                           .where({type: 'select'})
+                           .pluck('name')
+                           .value()
+        });
         this.model.set('titles', this.part_models.get_values());
         this.part_models.on('change', this.on_change, this);
         this.part_views = _.object(this.part_models.map(function(part_model) {
