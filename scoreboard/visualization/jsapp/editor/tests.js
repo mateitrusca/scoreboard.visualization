@@ -730,14 +730,27 @@ describe('AxesEditor', function() {
         it('should present title choices to user', function(){
             var model = new Backbone.Model({
                 facets: [
-                    {name: 'indicator', type: 'select'},
                     {name: 'breakdown', type: 'select'},
+                    {name: 'indicator', type: 'select', dimension: 'indicator'},
                     {name: 'ref-area', type: 'multiple_select'}
                 ]
             });
             var view = new App.AxesEditor({model: model});
-            var options = view.title_composer.$el.find('option', '[name="title"]');
+            var select = view.title_composer.$el.find('[name="title-part"]');
+            var options = select.find('option', '[name="title"]');
             expect(options.length).to.equal(3);
+            expect(select.val()).to.equal('indicator');
+        });
+
+        it('should not present title choices to user', function(){
+            var model = new Backbone.Model({
+                facets: [
+                    {name: 'ref-area', type: 'multiple_select'}
+                ]
+            });
+            var view = new App.AxesEditor({model: model});
+            var select = view.title_composer.$el.find('[name="title-part"]');
+            expect(select.val()).to.equal(undefined);
         });
 
         it('should save selected title to model', function(){
@@ -830,6 +843,27 @@ describe('AxesEditor', function() {
             expect(view.model.get('titles')).to.deep.equal(
                 ['ind', ['by', 'brk']]);
         });
+
+        it('should display existing title parts', function(){
+            var model = new Backbone.Model({
+                facets: [
+                    {name: 'ind', type: 'select', value: 'indicator'},
+                    {name: 'brk', type: 'select', value: 'breakdown'},
+                ],
+                titles: [
+                    "ind",
+                    [',', "brk"]
+                ]
+            });
+            var view = new App.AxesEditor({model: model});
+            var select1 = view.title_composer.$el.find('[name="title-part"]:eq(0)');
+            var separator = view.title_composer.$el.find(
+                '[name="title-part-separator"]');
+            var select2 = view.title_composer.$el.find('[name="title-part"]:eq(1)');
+            expect(select1.val()).to.equal('ind');
+            expect(separator.val()).to.equal(',');
+            expect(select2.val()).to.equal('brk');
+        })
     });
 
     it('should set vertical title in model', function() {

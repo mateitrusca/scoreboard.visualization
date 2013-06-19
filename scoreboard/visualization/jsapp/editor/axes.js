@@ -4,6 +4,15 @@
 (function($) {
 "use strict";
 
+App.TitlePart = Backbone.Model.extend({
+    initialize: function(options){
+        this.facet_name = options.facet_name;
+        if (options.separator){
+            this.separator = options.separator;
+        }
+    }
+});
+
 App.TitlePartView = Backbone.View.extend({
 
     events: {
@@ -68,7 +77,19 @@ App.TitlePartView = Backbone.View.extend({
 App.TitlePartsCollection = Backbone.Collection.extend({
 
     constructor: function(parts) {
-        Backbone.Collection.apply(this, parts);
+        var part_models = [];
+        if (parts){
+            part_models.push(new App.TitlePart({
+                facet_name: parts[0]
+            }));
+            _(parts.slice(1)).each(function(part){
+                part_models.push(new App.TitlePart({
+                    separator: part[0] || "",
+                    facet_name: part[1]
+                }));
+            })
+        }
+        Backbone.Collection.apply(this, [part_models]);
     },
 
     get_values: function(){
@@ -98,7 +119,14 @@ App.TitleComposer = Backbone.View.extend({
     template: App.get_template('editor/title.html'),
 
     initialize: function(options) {
-        this.part_models = new App.TitlePartsCollection([new Backbone.Model()]);
+        var a_facet = _.chain(this.model.get('facets')).where({type: 'select'});
+        a_facet = a_facet.findWhere({dimension: 'indicator'}).value() ||
+                  a_facet.first().value();
+        if (!a_facet){
+            return;
+        }
+        this.part_models = new App.TitlePartsCollection(this.model.get('titles') ||
+                                                        [a_facet.name]);
         this.model.set('titles', this.part_models.get_values());
         this.part_models.on('change', this.on_change, this);
         this.part_views = _.object(this.part_models.map(function(part_model) {
@@ -262,10 +290,12 @@ App.AxesEditor = Backbone.View.extend({
         this.$el.html(this.template(context));
         this.$el.find('[name="chart-titles"]').append(this.title_composer.el);
         this.title_composer.delegateEvents();
-        this.title_composer.part_models.forEach(function(model){
-            var part_view = this.title_composer.part_views[model.cid];
-            part_view.delegateEvents();
-        }, this);
+        if(this.title_composer.part_models){
+            this.title_composer.part_models.forEach(function(model){
+                var part_view = this.title_composer.part_views[model.cid];
+                part_view.delegateEvents();
+            }, this);
+        };
     },
 
     on_change: function() {
