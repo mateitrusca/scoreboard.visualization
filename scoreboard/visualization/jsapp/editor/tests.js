@@ -736,7 +736,7 @@ describe('AxesEditor', function() {
                 ]
             });
             var view = new App.AxesEditor({model: model});
-            var select = view.title_composer.$el.find('[name="title-part"]');
+            var select = view.composers_views.title.$el.find('[name="title-part"]');
             var options = select.find('option', '[name="title"]');
             expect(options.length).to.equal(3);
             expect(select.val()).to.equal('indicator');
@@ -749,8 +749,21 @@ describe('AxesEditor', function() {
                 ]
             });
             var view = new App.AxesEditor({model: model});
-            var select = view.title_composer.$el.find('[name="title-part"]');
+            var select = view.composers_views.title.$el.find('[name="title-part"]');
             expect(select.val()).to.equal(undefined);
+        });
+
+        it('should save default title to model', function(){
+            var model = new Backbone.Model({
+                facets: [
+                    {name: 'ind', type: 'select', value: 'indicator'},
+                    {name: 'brk', type: 'select', value: 'breakdown'},
+                    {name: 'ref-area', type: 'multiple_select', value: 'ref-area'}
+                ]
+            });
+            var view = new App.AxesEditor({model: model});
+            var select = view.composers_views.title.$el.find('[name="title-part"]');
+            expect(view.model.get('titles')['title']).to.deep.equal(['ind']);
         });
 
         it('should save selected title to model', function(){
@@ -762,10 +775,9 @@ describe('AxesEditor', function() {
                 ]
             });
             var view = new App.AxesEditor({model: model});
-            var select = view.title_composer.$el.find('[name="title-part"]');
-            select.val('ind').change();
-            var selected = select.find('option:eq(0)');
-            expect(view.model.get('titles')).to.deep.equal(['ind']);
+            var select = view.composers_views.title.$el.find('[name="title-part"]');
+            select.val('brk').change();
+            expect(view.model.get('titles')['title']).to.deep.equal(['brk']);
         });
 
         it('should render a new title part', function(){
@@ -776,12 +788,12 @@ describe('AxesEditor', function() {
                 ]
             });
             var view = new App.AxesEditor({model: model});
-            var add_button = view.title_composer.$el.find('[name="add-title-part"]');
+            var add_button = view.composers_views.title.$el.find('[name="add-title-part"]');
             add_button.click();
-            var models = view.title_composer.part_models.models;
-            var views = view.title_composer.part_views;
+            var models = view.composers_views.title.parts.models;
+            var views = view.composers_views.title.part_views;
             expect(_(models).pluck('cid')).to.deep.equal(_(views).keys());
-            var select = view.title_composer.$el.find('[name="title-part"]');
+            var select = view.composers_views.title.$el.find('[name="title-part"]');
             expect(select.length).to.deep.equal(2);
         });
 
@@ -793,16 +805,16 @@ describe('AxesEditor', function() {
                 ]
             });
             var view = new App.AxesEditor({model: model});
-            var select = view.title_composer.$el.find('[name="title-part"]:eq(0)');
-            var add_button = view.title_composer.$el.find('[name="add-title-part"]');
+            var select = view.composers_views.title.$el.find('[name="title-part"]:eq(0)');
+            var add_button = view.composers_views.title.$el.find('[name="add-title-part"]');
             select.val('ind').change();
             add_button.click();
-            var models = view.title_composer.part_models.models;
-            var views = view.title_composer.part_views;
+            var models = view.composers_views.title.parts.models;
+            var views = view.composers_views.title.part_views;
             expect(_(models).pluck('cid')).to.deep.equal(_(views).keys());
-            var select = view.title_composer.$el.find('[name="title-part"]:eq(1)');
+            var select = view.composers_views.title.$el.find('[name="title-part"]:eq(1)');
             select.val('brk').change();
-            expect(view.model.get('titles')).to.deep.equal(
+            expect(view.model.get('titles')['title']).to.deep.equal(
                 ['ind', ['', 'brk']]);
         });
 
@@ -814,9 +826,9 @@ describe('AxesEditor', function() {
                 ]
             });
             var view = new App.AxesEditor({model: model});
-            var add_button = view.title_composer.$el.find('[name="add-title-part"]');
+            var add_button = view.composers_views.title.$el.find('[name="add-title-part"]');
             add_button.click();
-            var separator = view.title_composer.$el.find(
+            var separator = view.composers_views.title.$el.find(
                 '[name="title-part-separator"]');
             var opts = separator.find('option');
             expect(opts.length).to.equal(4);
@@ -831,16 +843,16 @@ describe('AxesEditor', function() {
                 ]
             });
             var view = new App.AxesEditor({model: model});
-            var add_button = view.title_composer.$el.find('[name="add-title-part"]');
-            var select = view.title_composer.$el.find('[name="title-part"]:eq(0)');
+            var add_button = view.composers_views.title.$el.find('[name="add-title-part"]');
+            var select = view.composers_views.title.$el.find('[name="title-part"]:eq(0)');
             select.val('ind').change();
             add_button.click();
-            var separator = view.title_composer.$el.find(
+            var separator = view.composers_views.title.$el.find(
                 '[name="title-part-separator"]');
             separator.val('by').change();
-            var select = view.title_composer.$el.find('[name="title-part"]:eq(1)');
+            var select = view.composers_views.title.$el.find('[name="title-part"]:eq(1)');
             select.val('brk').change();
-            expect(view.model.get('titles')).to.deep.equal(
+            expect(view.model.get('titles')['title']).to.deep.equal(
                 ['ind', ['by', 'brk']]);
         });
 
@@ -850,16 +862,15 @@ describe('AxesEditor', function() {
                     {name: 'ind', type: 'select', value: 'indicator'},
                     {name: 'brk', type: 'select', value: 'breakdown'},
                 ],
-                titles: [
-                    "ind",
-                    [',', "brk"]
-                ]
+                titles: {
+                    title: [ "ind", [',', "brk"] ]
+                }
             });
             var view = new App.AxesEditor({model: model});
-            var select1 = view.title_composer.$el.find('[name="title-part"]:eq(0)');
-            var separator = view.title_composer.$el.find(
+            var select1 = view.composers_views.title.$el.find('[name="title-part"]:eq(0)');
+            var separator = view.composers_views.title.$el.find(
                 '[name="title-part-separator"]');
-            var select2 = view.title_composer.$el.find('[name="title-part"]:eq(1)');
+            var select2 = view.composers_views.title.$el.find('[name="title-part"]:eq(1)');
             expect(select1.val()).to.equal('ind');
             expect(separator.val()).to.equal(',');
             expect(select2.val()).to.equal('brk');
@@ -871,20 +882,19 @@ describe('AxesEditor', function() {
                     {name: 'ind', type: 'select', value: 'indicator'},
                     {name: 'brk', type: 'multiple_select', value: 'breakdown'},
                 ],
-                titles: [
-                    "ind",
-                    [',', "brk"]
-                ]
+                titles: {
+                    title: [ "ind", [',', "brk"] ]
+                }
             });
             var view = new App.AxesEditor({model: model});
-            var select1 = view.title_composer.$el.find('[name="title-part"]:eq(0)');
-            var separator = view.title_composer.$el.find(
+            var select1 = view.composers_views.title.$el.find('[name="title-part"]:eq(0)');
+            var separator = view.composers_views.title.$el.find(
                 '[name="title-part-separator"]');
-            var select2 = view.title_composer.$el.find('[name="title-part"]:eq(1)');
+            var select2 = view.composers_views.title.$el.find('[name="title-part"]:eq(1)');
             expect(select1.val()).to.equal('ind');
             expect(separator.length).to.equal(0);
             expect(select2.length).to.equal(0);
-            expect(view.model.get('titles')).to.deep.equal(
+            expect(view.model.get('titles')['title']).to.deep.equal(
                 ['ind']);
         })
 
@@ -894,20 +904,20 @@ describe('AxesEditor', function() {
                     {name: 'ind', type: 'multiple_select', value: 'indicator'},
                     {name: 'brk', type: 'select', value: 'breakdown'},
                 ],
-                titles: [
-                    "ind",
-                    [',', "brk"]
-                ]
+                titles: {
+                    title: [ "ind", [',', "brk"] ],
+                    subtitle: [ "ind", [',', "brk"] ]
+                }
             });
             var view = new App.AxesEditor({model: model});
-            var select1 = view.title_composer.$el.find('[name="title-part"]:eq(0)');
-            var separator = view.title_composer.$el.find(
+            var select1 = view.composers_views.title.$el.find('[name="title-part"]:eq(0)');
+            var separator = view.composers_views.title.$el.find(
                 '[name="title-part-separator"]');
-            var select2 = view.title_composer.$el.find('[name="title-part"]:eq(1)');
+            var select2 = view.composers_views.title.$el.find('[name="title-part"]:eq(1)');
             expect(select1.val()).to.equal('brk');
             expect(separator.length).to.equal(0);
             expect(select2.length).to.equal(0);
-            expect(view.model.get('titles')).to.deep.equal(
+            expect(view.model.get('titles')['title']).to.deep.equal(
                 ['brk']);
         });
     });

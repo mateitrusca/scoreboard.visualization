@@ -77,46 +77,60 @@ App.TitlePartView = Backbone.View.extend({
 App.TitlePartsCollection = Backbone.Collection.extend({
 
     constructor: function(options) {
-        var part_models = [];
+        var parts = [];
         if (options.parts){
-            var name = options.parts[0];
-            if (_(options.valid_facets).contains(name)){
-                part_models.push(new App.TitlePart({
-                    facet_name: options.parts[0]
+            _(options.parts).each(function(part){
+                parts.push(new App.TitlePart({
+                    separator: part.separator || null,
+                    facet_name: part.facet_name
                 }));
-            }
-            _(options.parts.slice(1)).each(function(part){
-                var name = part[1];
-                if (_(options.valid_facets).contains(name)){
-                    part_models.push(new App.TitlePart({
-                        separator: (part_models.length==0)?null:part[0] || "",
-                        facet_name: part[1]
-                    }));
-                }
             })
         }
-        Backbone.Collection.apply(this, [part_models]);
+        Backbone.Collection.apply(this, [parts]);
     },
 
     get_values: function(){
-        var titles = [];
-        this.forEach(function(part_model, idx){
-            if (idx == 0){
-                titles.push(part_model.get('facet_name'));
-            }
-            else{
-                var part = [];
-                part.push(part_model.get('separator'));
-                part.push(part_model.get('facet_name'));
-                titles.push(part);
-            }
+        return this.map(function(part_model){
+            return part_model.toJSON();
         });
-        return titles;
     }
 });
 
+App.TitleComposerModel = Backbone.Model.extend({
 
-App.TitleComposer = Backbone.View.extend({
+    initialize: function(options){
+        this.name = options.name;
+        var parts = [];
+        var valid_names = _(this.get('facets')).pluck('name');
+        if (options.init_value){
+            var name = options.init_value[0];
+            if (_(valid_names).contains(name)){
+                parts.push({ facet_name: name });
+            }
+            _(options.init_value.slice(1)).each(function(part){
+                var name = part[1];
+                if (_(valid_names).contains(name)){
+                    parts.push({
+                        facet_name: name,
+                        separator: parts.length==0?null:part[0]
+                    });
+                }
+            })
+        }
+        else{
+            var a_facet = _.chain(this.get('facets')).where({type: 'select'});
+            //try to find an indicator
+            a_facet = a_facet.findWhere({dimension: 'indicator'}).value() ||
+                      a_facet.first().value();
+            if (a_facet){
+                parts.push({ facet_name: a_facet.name });
+            }
+        }
+        this.set('parts', parts);
+    },
+});
+
+App.TitleComposerView = Backbone.View.extend({
 
     events: {
         'click [name="add-title-part"]': 'on_add_part'
@@ -125,22 +139,11 @@ App.TitleComposer = Backbone.View.extend({
     template: App.get_template('editor/title.html'),
 
     initialize: function(options) {
-        var a_facet = _.chain(this.model.get('facets')).where({type: 'select'});
-        a_facet = a_facet.findWhere({dimension: 'indicator'}).value() ||
-                  a_facet.first().value();
-        if (!a_facet){
-            return;
-        }
-        this.part_models = new App.TitlePartsCollection({
-            parts: this.model.get('titles') || [a_facet.name],
-            valid_facets: _.chain(this.model.get('facets'))
-                           .where({type: 'select'})
-                           .pluck('name')
-                           .value()
+        this.parts = new App.TitlePartsCollection({
+            parts: this.model.get('parts'),
         });
-        this.model.set('titles', this.part_models.get_values());
-        this.part_models.on('change', this.on_change, this);
-        this.part_views = _.object(this.part_models.map(function(part_model) {
+        this.parts.on('change', this.on_change, this);
+        this.part_views = _.object(this.parts.map(function(part_model) {
             var part_view = new App.TitlePartView({
                 model: part_model,
                 facets: this.model.get('facets'),
@@ -152,7 +155,7 @@ App.TitleComposer = Backbone.View.extend({
     },
 
     on_change: function(){
-        this.model.set('titles', this.part_models.get_values());
+        this.model.set('parts', this.parts.get_values());
     },
 
     on_add_part: function(){
@@ -163,15 +166,18 @@ App.TitleComposer = Backbone.View.extend({
             facets: this.model.get('facets'),
             composer: this
         });
-        this.part_models.add(part_view.model);
+        this.parts.add(part_view.model);
         this.part_views[part_view.model.cid] = part_view;
         this.render();
     },
 
     render: function(){
-        this.$el.html(this.template());
+        var context = {
+            name: this.model.get('name')
+        };
+        this.$el.html(this.template(context));
         this.$el.find('[name="title-parts"]').empty();
-        this.part_models.forEach(function(model){
+        this.parts.forEach(function(model){
             var part_view = this.part_views[model.cid];
             if (part_view){
                 this.$el.find('[name="title-parts"]').append(part_view.el);
@@ -180,6 +186,39 @@ App.TitleComposer = Backbone.View.extend({
         }, this);
     }
 });
+
+App.TitleComposers = Backbone.Collection.extend({
+
+    constructor: function(options) {
+        var composers = _(options.names).map(function(name){
+            return new App.TitleComposerModel({
+                name: name,
+                facets: _(options.facets).where({type: 'select'}),
+                init_value: options.init_value[name] || null
+            });
+        }, this);
+        Backbone.Collection.apply(this, [composers]);
+    },
+
+    get_values: function(){
+        var value = _.object(_(this.models).map(function(composer){
+            var parts = _(composer.get('parts')).map(function(item, idx){
+                var result;
+                if (idx == 0){
+                    return item.facet_name
+                }
+                else{
+                    result = []
+                    result.push(item.separator);
+                    result.push(item.facet_name);
+                    return result;
+                }
+            });
+            return [composer.name, parts]
+        }));
+        return value;
+    }
+})
 
 
 App.AxesEditor = Backbone.View.extend({
@@ -224,12 +263,26 @@ App.AxesEditor = Backbone.View.extend({
     ],
 
     initialize: function(options) {
-        this.title_composer = new App.TitleComposer({
-            model: this.model
+        this.composers = new App.TitleComposers({
+            names: ['title', 'subtitle'],
+            init_value: this.model.get('titles') || {},
+            facets: this.model.get('facets')
         });
+        this.composers_views = _.object(this.composers.map(function(composer){
+            var composer_view = new App.TitleComposerView({
+                model: composer
+            });
+            return [composer.get('name'), composer_view];
+        }, this));
+        this.model.set('titles', this.composers.get_values());
+        this.composers.on('change', this.save_titles, this);
         this.render();
         this.set_axis_labels();
         this.model.on('change facets', this.set_axis_labels, this);
+    },
+
+    save_titles: function(){
+        this.model.set('titles', this.composers.get_values());
     },
 
     set_axis_labels: function() {
@@ -299,14 +352,16 @@ App.AxesEditor = Backbone.View.extend({
             })
         };
         this.$el.html(this.template(context));
-        this.$el.find('[name="chart-titles"]').append(this.title_composer.el);
-        this.title_composer.delegateEvents();
-        if(this.title_composer.part_models){
-            this.title_composer.part_models.forEach(function(model){
-                var part_view = this.title_composer.part_views[model.cid];
-                part_view.delegateEvents();
-            }, this);
-        };
+        _(this.composers_views).each(function(composer_view){
+            this.$el.find('[name="chart-titles"]').append(composer_view.el);
+            composer_view.delegateEvents();
+            if(composer_view.parts){
+                composer_view.parts.forEach(function(model){
+                    var part_view = composer_view.part_views[model.cid];
+                    part_view.delegateEvents();
+                }, this);
+            };
+        }, this);
     },
 
     on_change: function() {
