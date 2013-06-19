@@ -1,4 +1,14 @@
+{{#if show_sep}}
+<select class="span1" name="title-part-separator">
+{{# separator_options }}
+  <option value="{{ value }}"
+    {{# if selected }}selected{{/ if }}
+    >{{ label }}</option>
+{{/ separator_options }}
+</select>
+{{/if}}
 <select name="title-part" id="{{ id }}">
+  <option value="">--</option>
 {{# facets }}
   <option value="{{ value }}"
     {{# if selected }}selected{{/ if }}

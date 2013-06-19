@@ -7,10 +7,18 @@
 App.TitlePartView = Backbone.View.extend({
 
     events: {
-        'change select': 'on_change_facet_name'
+        'change [name="title-part"]': 'on_change_facet_name',
+        'change [name="title-part-separator"]': 'on_change_separator'
     },
 
     template: App.get_template('editor/title-part.html'),
+
+    separator_options:[
+        {value: '', label: '--'},
+        {value: ',', label: ','},
+        {value: 'by', label: 'by'},
+        {value: '-', label: '-'}
+    ],
 
     initialize: function(options){
         this.facets = options.facets;
@@ -23,9 +31,22 @@ App.TitlePartView = Backbone.View.extend({
         this.model.set('facet_name', value);
     },
 
+    on_change_separator: function(){
+        var value = this.$el.find('[name="title-part-separator"]').val();
+        this.model.set('separator', value);
+    },
+
     render: function(){
         var context = {
             id: this.model.cid,
+            show_sep: this.model.has('separator'),
+            separator_options: _(this.separator_options).map(function(opt){
+                delete opt['selected'];
+                if(this.model.get('separator') == opt.value) {
+                    opt['selected'] = true;
+                }
+                return opt;
+            }, this),
             facets: _.chain(this.facets)
                        .where({type: "select"})
                        .map(function(facet){
