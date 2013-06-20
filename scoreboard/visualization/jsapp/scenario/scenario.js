@@ -79,32 +79,26 @@ App.ScenarioChartView = Backbone.View.extend({
         return $.getJSON(url, relevant_args);
     },
 
-    title_formatter: function(){
-        if (arguments){
-            var title = '';
-            if (_(arguments[0]).isArray()){
-                title = arguments[0][0].text;
-                _(arguments[0].slice(1)).each(function(item, idx){
-                    var sep = item.separator || ', ';
-                    var part = (item.text != 'Total')?item.text:null;
-                    if (idx >= 0 && part){
-                        title += sep;
-                        title += part;
-                    }
-                });
-                return title;
+    title_formatter: function(parts, meta_data){
+        parts = _(parts).map(function(part){
+            if(!part.separator){
+                part = _(part).omit('separator');
             }
-
-            for (var i = 0; i < arguments.length; i++) {
-                if (arguments[i] && arguments[i] != 'Total') {
-                    title += arguments[i];
-                }
+            part.text = meta_data[part.facet_name];
+            return part;
+        });
+        var title = '';
+        _(parts).each(function(item, idx){
+            var sep = item.separator || ', ';
+            var part = (item.text != 'Total')?item.text:null;
+            if (idx > 0 && part){
+                title += sep;
             }
-            return title;
-        }
-        else{
-            return '';
-        }
+            if (part){
+                title += part;
+            }
+        });
+        return title;
     },
 
     load_chart: function() {
@@ -250,10 +244,8 @@ App.ScenarioChartView = Backbone.View.extend({
                 }
                 return this.value;
             },
-            'title_formatter': this.title_formatter,
             'series_names': {},
-            'series_ending_labels': {},
-            'unit_is_pc': unit_is_pc,
+            'series_ending_labels': {}, 'unit_is_pc': unit_is_pc,
             'plotlines': this.schema['plotlines'] || false,
             'animation': this.schema['animation'] || false,
             'series-legend-label': this.schema['series-legend-label'] || 'none',
@@ -375,6 +367,12 @@ App.ScenarioChartView = Backbone.View.extend({
                     'data': datapoints
                 };
             }, this);
+            chart_data['titles'] = _.object(
+                _(this.schema.titles).map(function(parts, type){
+                    return [type, this.title_formatter(parts,
+                                                       chart_data.meta_data)];
+                }, this)
+            );
             this.data = chart_data;
             this.render();
         }, this));

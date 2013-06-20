@@ -843,10 +843,15 @@ describe('ScenarioChartView', function() {
                 schema: {},
                 scenario_chart: sinon.mock()
             });
-            var title = chart.title_formatter([
-                {text: 'part1'},
-                {text: 'part2'}
-            ]);
+            var parts = [
+                {facet_name: 'ind'},
+                {facet_name: 'brk'}
+            ];
+            var meta_data = {
+                ind: 'part1',
+                brk: 'part2'
+            }
+            var title = chart.title_formatter(parts, meta_data);
             expect(title).to.equal('part1, part2');
         });
 
@@ -856,9 +861,15 @@ describe('ScenarioChartView', function() {
                 schema: {},
                 scenario_chart: sinon.mock()
             });
-            var title = chart.title_formatter([
-                {text:'part1'},
-                {separator:'-', text:'part2'}]);
+            var parts = [
+                {facet_name: 'ind'},
+                {separator: '-', facet_name: 'brk'}
+            ];
+            var meta_data = {
+                ind: 'part1',
+                brk: 'part2'
+            }
+            var title = chart.title_formatter(parts, meta_data);
             expect(title).to.equal('part1-part2');
         });
 
@@ -868,9 +879,15 @@ describe('ScenarioChartView', function() {
                 schema: {},
                 scenario_chart: sinon.mock()
             });
-            var title = chart.title_formatter([
-                {text: 'part1'},
-                {separator:'-', text:'Total'}]);
+            var parts = [
+                {facet_name: 'ind'},
+                {separator: '-', facet_name: 'brk'}
+            ];
+            var meta_data = {
+                ind: 'part1',
+                brk: 'Total'
+            }
+            var title = chart.title_formatter(parts, meta_data);
             expect(title).to.equal('part1');
         });
 
@@ -880,10 +897,15 @@ describe('ScenarioChartView', function() {
                 schema: {},
                 scenario_chart: sinon.mock()
             });
-
-            var title = chart.title_formatter([
-                {text: 'part1'},
-                {text: 'Total'}]);
+            var parts = [
+                {facet_name: 'ind'},
+                {facet_name: 'brk'}
+            ];
+            var meta_data = {
+                ind: 'part1',
+                brk: 'Total'
+            }
+            var title = chart.title_formatter(parts, meta_data);
             expect(title).to.equal('part1');
         });
     })

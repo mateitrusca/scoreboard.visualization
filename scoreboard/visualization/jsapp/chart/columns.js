@@ -45,10 +45,7 @@ App.chart_library['columns'] = function(view, options) {
             }
         },
         title: {
-            text: options['title_formatter'](
-                        options.meta_data['title'],
-                        ', ',
-                        options.meta_data['title2']), 
+            text: options.titles.title,
             style: {
                 color: '#000000',
                 fontWeight: 'bold',
@@ -57,7 +54,7 @@ App.chart_library['columns'] = function(view, options) {
             }
         },
         subtitle: {
-            text: options.meta_data['subtitle'],
+            text: options.titles.subtitle,
             style: {
                 fontWeight: 'bold',
                 fontSize: '16px'
