@@ -7,11 +7,18 @@
 {{/ separator_options }}
 </select>
 {{/if}}
-<select name="title-part" id="{{ id }}">
+<select name="title-part">
   <option value="">--</option>
 {{# facets }}
   <option value="{{ value }}"
     {{# if selected }}selected{{/ if }}
     >{{ label }}</option>
 {{/ facets }}
+</select>
+<select name="title-part-format">
+{{# format_options }}
+  <option value="{{ value }}"
+    {{# if selected }}selected{{/ if }}
+    >{{ label }}</option>
+{{/ format_options }}
 </select>

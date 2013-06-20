@@ -6,12 +6,10 @@
 
 App.TitlePart = Backbone.Model.extend({
     initialize: function(options){
-        if (options && options.facet_name){
-            this.facet_name = options.facet_name;
-        }
-        if (options && options.separator){
-            this.separator = options.separator;
-        }
+        options['facet_name'] = options['facet_name'] || null;
+        options['separator'] = options['separator'] || null;
+        options['format'] = options['format'] || 'short_label';
+        this.set(options);
     }
 });
 
@@ -19,7 +17,8 @@ App.TitlePartView = Backbone.View.extend({
 
     events: {
         'change [name="title-part"]': 'on_change_facet_name',
-        'change [name="title-part-separator"]': 'on_change_separator'
+        'change [name="title-part-separator"]': 'on_change_separator',
+        'change [name="title-part-format"]': 'on_change_format'
     },
 
     template: App.get_template('editor/title-part.html'),
@@ -29,6 +28,11 @@ App.TitlePartView = Backbone.View.extend({
         {value: ', ', label: ','},
         {value: ' by ', label: 'by'},
         {value: ' - ', label: '-'}
+    ],
+
+    format_options: [
+        {value: 'short_label', label: 'short label'},
+        {value: 'label', label: 'label'}
     ],
 
     initialize: function(options){
@@ -48,10 +52,22 @@ App.TitlePartView = Backbone.View.extend({
         this.model.set('separator', value);
     },
 
+    on_change_format: function(){
+        var value = this.$el.find('[name="title-part-format"]').val();
+        this.model.set('format', value);
+    },
+
     render: function(){
         var context = {
             id: this.model.cid,
             show_sep: this.parts.indexOf(this.model)!=0,
+            format_options: _(this.format_options).map(function(opt){
+                delete opt['selected'];
+                if(this.model.get('format') == opt.value) {
+                    opt['selected'] = true;
+                }
+                return opt;
+            }, this),
             separator_options: _(this.separator_options).map(function(opt){
                 delete opt['selected'];
                 if(this.model.get('separator') == opt.value) {
@@ -140,6 +156,7 @@ App.TitleComposerView = Backbone.View.extend({
         this.parts = new App.TitlePartsCollection({
             parts: this.model.get('parts'),
         });
+        this.model.set('parts', this.parts.get_values());
         this.parts.on('change', this.on_change, this);
         this.part_views = _.object(this.parts.map(function(part_model) {
             var part_view = new App.TitlePartView({
@@ -167,7 +184,7 @@ App.TitleComposerView = Backbone.View.extend({
 
     on_add_part: function(){
         var part_view = new App.TitlePartView({
-            model: new App.TitlePart(),
+            model: new App.TitlePart({}),
             facets: this.model.get('facets'),
             parts: this.parts,
             composer: this

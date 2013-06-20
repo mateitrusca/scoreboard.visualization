@@ -764,7 +764,7 @@ describe('AxesEditor', function() {
             var view = new App.AxesEditor({model: model});
             var select = view.composers_views.title.$el.find('[name="title-part"]');
             expect(view.model.get('titles')['title']).to.deep.equal([
-                {facet_name: 'ind'}]);
+                {facet_name: 'ind', separator: null, format: 'short_label'}]);
         });
 
         it('should save selected title to model', function(){
@@ -779,7 +779,7 @@ describe('AxesEditor', function() {
             var select = view.composers_views.title.$el.find('[name="title-part"]');
             select.val('brk').change();
             expect(view.model.get('titles')['title']).to.deep.equal([
-                {facet_name: 'brk', separator: null}
+                {facet_name: 'brk', separator: null, format: 'short_label'}
             ]);
         });
 
@@ -818,8 +818,8 @@ describe('AxesEditor', function() {
             var select = view.composers_views.title.$el.find('[name="title-part"]:eq(1)');
             select.val('brk').change();
             expect(view.model.get('titles')['title']).to.deep.equal(
-                [{facet_name: 'ind', separator: null},
-                 {facet_name: 'brk'}]);
+                [{facet_name: 'ind', separator: null, format: 'short_label'},
+                 {facet_name: 'brk', separator: null, format: 'short_label'}]);
         });
 
         it('should render separator options', function(){
@@ -857,8 +857,8 @@ describe('AxesEditor', function() {
             var select = view.composers_views.title.$el.find('[name="title-part"]:eq(1)');
             select.val('brk').change();
             expect(view.model.get('titles')['title']).to.deep.equal(
-                [ {facet_name: 'ind', separator: null},
-                  {separator: ' by ', facet_name: 'brk'}]);
+                [ {facet_name: 'ind', separator: null, format: 'short_label'},
+                  {separator: ' by ', facet_name: 'brk', format: 'short_label'}]);
         });
 
         it('should display existing title parts', function(){
@@ -902,7 +902,7 @@ describe('AxesEditor', function() {
             expect(separator.length).to.equal(0);
             expect(select2.length).to.equal(0);
             expect(view.model.get('titles')['title']).to.deep.equal(
-                [{facet_name: 'ind'}]);
+                [{facet_name: 'ind', separator: null, format: 'short_label'}]);
         })
 
         it('should never add separator to the first title part', function(){
@@ -925,7 +925,7 @@ describe('AxesEditor', function() {
             expect(separator.length).to.equal(0);
             expect(select2.length).to.equal(0);
             expect(view.model.get('titles')['title']).to.deep.equal(
-                [{facet_name: 'brk'}]);
+                [{facet_name: 'brk', separator: null, format: 'short_label'}]);
         });
 
         it('should remove title part when empty facet name', function(){
@@ -948,7 +948,7 @@ describe('AxesEditor', function() {
             select2.val("").change();
             select3.val("").change();
             expect(view.model.get('titles')['title']).to.deep.equal(
-                [{facet_name: 'ind', separator: null}]);
+                [{facet_name: 'ind', separator: null, format: 'short_label'}]);
         })
 
         it('should update labels section on model', function(){
@@ -970,8 +970,8 @@ describe('AxesEditor', function() {
             var select = view.composers_views.title.$el.find('[name="title-part"]:eq(1)');
             select.val('brk').change();
             expect(view.model.get('titles').title).to.deep.equal([
-                {facet_name: 'ind', separator: null},
-                {facet_name: 'brk', separator: ' by '}
+                {facet_name: 'ind', separator: null, format: 'short_label'},
+                {facet_name: 'brk', separator: ' by ', format: 'short_label'}
             ]);
             expect(view.model.get('labels')).to.deep.equal({
                 "ind": {
@@ -984,6 +984,20 @@ describe('AxesEditor', function() {
                 },
             })
         })
+
+        it('should save parts with default format', function(){
+            var model = new Backbone.Model({
+                facets: [
+                    {name: 'ind', type: 'select', value: 'indicator'}
+                ],
+            });
+            var view = new App.AxesEditor({model: model});
+            var select = view.composers_views.title.$el.find('[name="title-part"]:eq(0)');
+            select.val('ind').change();
+            expect(view.model.get('titles').title).to.deep.equal([
+                {facet_name: 'ind', format: 'short_label', separator: null}
+            ]);
+        });
     });
 
     it('should set vertical title in model', function() {
