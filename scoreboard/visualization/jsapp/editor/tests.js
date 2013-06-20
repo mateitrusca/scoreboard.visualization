@@ -950,6 +950,40 @@ describe('AxesEditor', function() {
             expect(view.model.get('titles')['title']).to.deep.equal(
                 [{facet_name: 'ind', separator: null}]);
         })
+
+        it('should update labels section on model', function(){
+            var model = new Backbone.Model({
+                facets: [
+                    {name: 'ind', type: 'select', value: 'indicator'},
+                    {name: 'brk', type: 'select', value: 'breakdown'},
+                    {name: 'area', type: 'select', value: 'ref-area'}
+                ],
+            });
+            var view = new App.AxesEditor({model: model});
+            var add_button = view.composers_views.title.$el.find('[name="add-title-part"]');
+            var select = view.composers_views.title.$el.find('[name="title-part"]:eq(0)');
+            select.val('ind').change();
+            add_button.click();
+            var separator = view.composers_views.title.$el.find(
+                '[name="title-part-separator"]');
+            separator.val('by').change();
+            var select = view.composers_views.title.$el.find('[name="title-part"]:eq(1)');
+            select.val('brk').change();
+            expect(view.model.get('titles').title).to.deep.equal([
+                {facet_name: 'ind', separator: null},
+                {facet_name: 'brk', separator: 'by'}
+            ]);
+            expect(view.model.get('labels')).to.deep.equal({
+                "ind": {
+                  "facet": "ind",
+                  "field": "short_label"
+                },
+                "brk": {
+                  "facet": "brk",
+                  "field": "short_label"
+                },
+            })
+        })
     });
 
     it('should set vertical title in model', function() {

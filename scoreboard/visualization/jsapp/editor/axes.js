@@ -211,6 +211,27 @@ App.TitleComposers = Backbone.Collection.extend({
             return [composer.name, composer.get('parts')]
         }));
         return value;
+    },
+
+    append_labels: function(options){
+        var ok_to_append = function(label, labels){
+            return !_(labels).has(label.facet);
+        };
+        var labels = options.current || {};
+        this.forEach(function(composer){
+            _(composer.get('parts')).each(function(part){
+                if(part.facet_name){
+                    var label = _.object([
+                        ['facet', part.facet_name],
+                        ['field', 'short_label']
+                    ]);
+                    if (ok_to_append(label, labels)){
+                        labels[label.facet] = label;
+                    }
+                }
+            });
+        });
+        return labels;
     }
 })
 
@@ -268,7 +289,7 @@ App.AxesEditor = Backbone.View.extend({
             });
             return [composer.get('name'), composer_view];
         }, this));
-        this.model.set('titles', this.composers.get_values());
+        this.save_titles();
         this.composers.on('change', this.save_titles, this);
         this.render();
         this.set_axis_labels();
@@ -277,6 +298,9 @@ App.AxesEditor = Backbone.View.extend({
 
     save_titles: function(){
         this.model.set('titles', this.composers.get_values());
+        this.model.set('labels', this.composers.append_labels({
+            current: this.model.get('labels')
+        }));
     },
 
     set_axis_labels: function() {
