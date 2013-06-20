@@ -763,7 +763,8 @@ describe('AxesEditor', function() {
             });
             var view = new App.AxesEditor({model: model});
             var select = view.composers_views.title.$el.find('[name="title-part"]');
-            expect(view.model.get('titles')['title']).to.deep.equal(['ind']);
+            expect(view.model.get('titles')['title']).to.deep.equal([
+                {facet_name: 'ind'}]);
         });
 
         it('should save selected title to model', function(){
@@ -777,7 +778,9 @@ describe('AxesEditor', function() {
             var view = new App.AxesEditor({model: model});
             var select = view.composers_views.title.$el.find('[name="title-part"]');
             select.val('brk').change();
-            expect(view.model.get('titles')['title']).to.deep.equal(['brk']);
+            expect(view.model.get('titles')['title']).to.deep.equal([
+                {facet_name: 'brk', separator: null}
+            ]);
         });
 
         it('should render a new title part', function(){
@@ -815,7 +818,8 @@ describe('AxesEditor', function() {
             var select = view.composers_views.title.$el.find('[name="title-part"]:eq(1)');
             select.val('brk').change();
             expect(view.model.get('titles')['title']).to.deep.equal(
-                ['ind', ['', 'brk']]);
+                [{facet_name: 'ind', separator: null},
+                 {separator: '', facet_name: 'brk'}]);
         });
 
         it('should render separator options', function(){
@@ -853,7 +857,8 @@ describe('AxesEditor', function() {
             var select = view.composers_views.title.$el.find('[name="title-part"]:eq(1)');
             select.val('brk').change();
             expect(view.model.get('titles')['title']).to.deep.equal(
-                ['ind', ['by', 'brk']]);
+                [ {facet_name: 'ind', separator: null},
+                  {separator: 'by', facet_name: 'brk'}]);
         });
 
         it('should display existing title parts', function(){
@@ -863,7 +868,8 @@ describe('AxesEditor', function() {
                     {name: 'brk', type: 'select', value: 'breakdown'},
                 ],
                 titles: {
-                    title: [ "ind", [',', "brk"] ]
+                    title: [{facet_name: "ind"},
+                            {separator: ',', facet_name: "brk"} ]
                 }
             });
             var view = new App.AxesEditor({model: model});
@@ -883,7 +889,8 @@ describe('AxesEditor', function() {
                     {name: 'brk', type: 'multiple_select', value: 'breakdown'},
                 ],
                 titles: {
-                    title: [ "ind", [',', "brk"] ]
+                    title: [{facet_name: "ind"},
+                            {separator: ',', facet_name: "brk"} ]
                 }
             });
             var view = new App.AxesEditor({model: model});
@@ -895,7 +902,7 @@ describe('AxesEditor', function() {
             expect(separator.length).to.equal(0);
             expect(select2.length).to.equal(0);
             expect(view.model.get('titles')['title']).to.deep.equal(
-                ['ind']);
+                [{facet_name: 'ind'}]);
         })
 
         it('should never add separator to the first title part', function(){
@@ -905,8 +912,8 @@ describe('AxesEditor', function() {
                     {name: 'brk', type: 'select', value: 'breakdown'},
                 ],
                 titles: {
-                    title: [ "ind", [',', "brk"] ],
-                    subtitle: [ "ind", [',', "brk"] ]
+                    title: [{facet_name: "ind"},
+                            {separator: ',', facet_name: "brk"}]
                 }
             });
             var view = new App.AxesEditor({model: model});
@@ -918,7 +925,7 @@ describe('AxesEditor', function() {
             expect(separator.length).to.equal(0);
             expect(select2.length).to.equal(0);
             expect(view.model.get('titles')['title']).to.deep.equal(
-                ['brk']);
+                [{facet_name: 'brk'}]);
         });
 
         it('should remove title part when empty facet name', function(){
@@ -929,7 +936,8 @@ describe('AxesEditor', function() {
                     {name: 'area', type: 'select', value: 'ref-area'}
                 ],
                 titles: {
-                    title: [ "ind", [',', "brk"] ],
+                    title: [{facet_name: "ind"},
+                            {separator: ',', facet_name: "brk"} ],
                 }
             });
             var view = new App.AxesEditor({model: model});
@@ -940,7 +948,7 @@ describe('AxesEditor', function() {
             select2.val("").change();
             select3.val("").change();
             expect(view.model.get('titles')['title']).to.deep.equal(
-                ['ind']);
+                [{facet_name: 'ind', separator: null}]);
         })
     });
 

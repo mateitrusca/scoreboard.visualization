@@ -103,17 +103,12 @@ App.TitleComposerModel = Backbone.Model.extend({
         var parts = [];
         var valid_names = _(this.get('facets')).pluck('name');
         if (options.init_value){
-            var name = options.init_value[0];
-            if (_(valid_names).contains(name)){
-                parts.push({ facet_name: name });
-            }
-            _(options.init_value.slice(1)).each(function(part){
-                var name = part[1];
-                if (_(valid_names).contains(name)){
-                    parts.push({
-                        facet_name: name,
-                        separator: parts.length==0?null:part[0]
-                    });
+            _(options.init_value).each(function(part){
+                if (_(valid_names).contains(part.facet_name)){
+                    if (parts.length == 0){
+                        part = _(part).omit('separator');
+                    }
+                    parts.push(part);
                 }
             })
         }
@@ -210,19 +205,7 @@ App.TitleComposers = Backbone.Collection.extend({
 
     get_values: function(){
         var value = _.object(_(this.models).map(function(composer){
-            var parts = _(composer.get('parts')).map(function(item, idx){
-                var result;
-                if (idx == 0){
-                    return item.facet_name
-                }
-                else{
-                    result = []
-                    result.push(item.separator);
-                    result.push(item.facet_name);
-                    return result;
-                }
-            });
-            return [composer.name, parts]
+            return [composer.name, composer.get('parts')]
         }));
         return value;
     }
