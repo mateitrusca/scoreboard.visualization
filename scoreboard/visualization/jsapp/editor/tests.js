@@ -920,6 +920,28 @@ describe('AxesEditor', function() {
             expect(view.model.get('titles')['title']).to.deep.equal(
                 ['brk']);
         });
+
+        it('should remove title part when empty facet name', function(){
+            var model = new Backbone.Model({
+                facets: [
+                    {name: 'ind', type: 'select', value: 'indicator'},
+                    {name: 'brk', type: 'select', value: 'breakdown'},
+                    {name: 'area', type: 'select', value: 'ref-area'}
+                ],
+                titles: {
+                    title: [ "ind", [',', "brk"] ],
+                }
+            });
+            var view = new App.AxesEditor({model: model});
+            var select2 = view.composers_views.title.$el.find(
+                                '[name="title-part"]:eq(1)');
+            var select3 = view.composers_views.title.$el.find(
+                                '[name="title-part"]:eq(2)');
+            select2.val("").change();
+            select3.val("").change();
+            expect(view.model.get('titles')['title']).to.deep.equal(
+                ['ind']);
+        })
     });
 
     it('should set vertical title in model', function() {

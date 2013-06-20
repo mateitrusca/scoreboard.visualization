@@ -155,7 +155,15 @@ App.TitleComposerView = Backbone.View.extend({
     },
 
     on_change: function(){
+        var to_remove = [];
+        this.parts.forEach(function(part){
+            if (part.get('facet_name') == ""){
+                to_remove.push(part);
+            }
+        });
+        this.parts.remove(to_remove);
         this.model.set('parts', this.parts.get_values());
+        this.render();
     },
 
     on_add_part: function(){
