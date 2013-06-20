@@ -853,12 +853,12 @@ describe('AxesEditor', function() {
             add_button.click();
             var separator = view.composers_views.title.$el.find(
                 '[name="title-part-separator"]');
-            separator.val('by').change();
+            separator.val(' by ').change();
             var select = view.composers_views.title.$el.find('[name="title-part"]:eq(1)');
             select.val('brk').change();
             expect(view.model.get('titles')['title']).to.deep.equal(
                 [ {facet_name: 'ind', separator: null},
-                  {separator: 'by', facet_name: 'brk'}]);
+                  {separator: ' by ', facet_name: 'brk'}]);
         });
 
         it('should display existing title parts', function(){
@@ -869,7 +869,7 @@ describe('AxesEditor', function() {
                 ],
                 titles: {
                     title: [{facet_name: "ind"},
-                            {separator: ',', facet_name: "brk"} ]
+                            {separator: ', ', facet_name: "brk"} ]
                 }
             });
             var view = new App.AxesEditor({model: model});
@@ -878,7 +878,7 @@ describe('AxesEditor', function() {
                 '[name="title-part-separator"]');
             var select2 = view.composers_views.title.$el.find('[name="title-part"]:eq(1)');
             expect(select1.val()).to.equal('ind');
-            expect(separator.val()).to.equal(',');
+            expect(separator.val()).to.equal(', ');
             expect(select2.val()).to.equal('brk');
         });
 
@@ -966,12 +966,12 @@ describe('AxesEditor', function() {
             add_button.click();
             var separator = view.composers_views.title.$el.find(
                 '[name="title-part-separator"]');
-            separator.val('by').change();
+            separator.val(' by ').change();
             var select = view.composers_views.title.$el.find('[name="title-part"]:eq(1)');
             select.val('brk').change();
             expect(view.model.get('titles').title).to.deep.equal([
                 {facet_name: 'ind', separator: null},
-                {facet_name: 'brk', separator: 'by'}
+                {facet_name: 'brk', separator: ' by '}
             ]);
             expect(view.model.get('labels')).to.deep.equal({
                 "ind": {

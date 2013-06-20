@@ -26,9 +26,9 @@ App.TitlePartView = Backbone.View.extend({
 
     separator_options:[
         {value: '', label: '--'},
-        {value: ',', label: ','},
-        {value: 'by', label: 'by'},
-        {value: '-', label: '-'}
+        {value: ', ', label: ','},
+        {value: ' by ', label: 'by'},
+        {value: ' - ', label: '-'}
     ],
 
     initialize: function(options){
