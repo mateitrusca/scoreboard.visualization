@@ -36,7 +36,12 @@ App.Visualization = Backbone.View.extend({
         if((App.initial_hash || '').substr(0, 7) == '#chart=') {
             var url_filters = {};
             try {
-                url_filters = JSON.parse(decodeURIComponent(App.initial_hash.substr(7)))
+                var uri = decodeURIComponent(App.initial_hash.substr(7));
+                if (uri.indexOf('"') == -1) {
+                    var rgx = /([^\[\]\{\},:]+)/g;
+                    uri = uri.replace(rgx, '"$1"');
+                }
+                url_filters = JSON.parse(uri);
             } catch(e) {}
             var keep_filters = {};
             _(filters_schema).forEach(function(item) {
