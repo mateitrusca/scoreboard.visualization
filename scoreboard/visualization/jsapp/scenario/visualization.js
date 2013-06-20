@@ -16,6 +16,8 @@ App.Visualization = Backbone.View.extend({
 
         var filters_schema = [];
         var values_schema = [];
+        var filters_in_url = [];
+
         _(options['schema']['facets']).forEach(function(item) {
             if(item['type'] == 'ignore') {
                 return;
@@ -25,7 +27,11 @@ App.Visualization = Backbone.View.extend({
                 return;
             }
             filters_schema.push(item);
+            if(item['type'] != 'all-values') {
+                filters_in_url.push(item['name']);
+            }
         });
+        this.filters_in_url = filters_in_url;
 
         if((App.initial_hash || '').substr(0, 7) == '#chart=') {
             var url_filters = {};
@@ -115,7 +121,8 @@ App.Visualization = Backbone.View.extend({
     },
 
     update_hashcfg: function() {
-        var hashcfg = 'chart=' + JSON.stringify(this.filters);
+        // do not include all-values and ignore
+        var hashcfg = 'chart=' + JSON.stringify(_.pick(this.filters.attributes, this.filters_in_url));
         this.navigation.update_hashcfg(hashcfg);
         this.share.update_url(App.SCENARIO_URL + '#' + hashcfg);
         App.update_url_hash(hashcfg);
