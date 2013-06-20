@@ -60,6 +60,9 @@ App.SelectFilter = Backbone.View.extend({
 
     adjust_value: function() {
         var range = _(this.dimension_options).pluck('notation');
+        if (typeof this.model.get(this.name) == 'object' && this.model.get(this.name) && this.model.get(this.name)[0]) {
+            this.model.set(this.name, this.model.get(this.name)[0]);
+        }
         if(! _(range).contains(this.model.get(this.name))) {
             var default_value = this.default_value || range[0];
             if ( default_value == '#random' ) {
@@ -230,6 +233,10 @@ App.MultipleSelectFilter = App.SelectFilter.extend({
 
     adjust_value: function() {
         var current_value = this.model.get(this.name);
+        if ( typeof current_value == "string" ) {
+            current_value = [current_value];
+            this.model.set(this.name, current_value);
+        }
         var range = _(this.dimension_options).pluck('notation');
         if(_.intersection(range, current_value).length == 0){
             if(this.default_all){
