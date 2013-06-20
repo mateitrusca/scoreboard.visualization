@@ -83,14 +83,10 @@ App.ScenarioChartView = Backbone.View.extend({
         if (arguments){
             var title = '';
             if (_(arguments[0]).isArray()){
-                title = arguments[0][0];
+                title = arguments[0][0].text;
                 _(arguments[0].slice(1)).each(function(item, idx){
-                    var sep = ', ';
-                    var part = (item != 'Total')?item:null;
-                    if (_(part).isArray()){
-                        sep = item[0];
-                        part = (item[1] != 'Total')?item[1]:null;
-                    }
+                    var sep = item.separator || ', ';
+                    var part = (item.text != 'Total')?item.text:null;
                     if (idx >= 0 && part){
                         title += sep;
                         title += part;

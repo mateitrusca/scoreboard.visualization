@@ -844,8 +844,9 @@ describe('ScenarioChartView', function() {
                 scenario_chart: sinon.mock()
             });
             var title = chart.title_formatter([
-                            'part1',
-                            'part2']);
+                {text: 'part1'},
+                {text: 'part2'}
+            ]);
             expect(title).to.equal('part1, part2');
         });
 
@@ -856,8 +857,8 @@ describe('ScenarioChartView', function() {
                 scenario_chart: sinon.mock()
             });
             var title = chart.title_formatter([
-                            'part1',
-                            ['-', 'part2']]);
+                {text:'part1'},
+                {separator:'-', text:'part2'}]);
             expect(title).to.equal('part1-part2');
         });
 
@@ -868,8 +869,8 @@ describe('ScenarioChartView', function() {
                 scenario_chart: sinon.mock()
             });
             var title = chart.title_formatter([
-                            'part1',
-                            ['-', 'Total']]);
+                {text: 'part1'},
+                {separator:'-', text:'Total'}]);
             expect(title).to.equal('part1');
         });
 
@@ -881,8 +882,8 @@ describe('ScenarioChartView', function() {
             });
 
             var title = chart.title_formatter([
-                            'part1',
-                            'Total']);
+                {text: 'part1'},
+                {text: 'Total'}]);
             expect(title).to.equal('part1');
         });
     })
