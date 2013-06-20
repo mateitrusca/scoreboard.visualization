@@ -108,7 +108,7 @@ App.SelectFilter = Backbone.View.extend({
         this.ajax.done(_.bind(function(data) {
             this.ajax = null;
             if (this.options.include_wildcard){
-                _(data['options']).push(
+                _(data['options']).unshift(
                     _.object([
                         ['group_notation', null],
                         ['label', 'Any'],
