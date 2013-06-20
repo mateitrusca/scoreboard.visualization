@@ -819,7 +819,7 @@ describe('AxesEditor', function() {
             select.val('brk').change();
             expect(view.model.get('titles')['title']).to.deep.equal(
                 [{facet_name: 'ind', separator: null},
-                 {separator: '', facet_name: 'brk'}]);
+                 {facet_name: 'brk'}]);
         });
 
         it('should render separator options', function(){
