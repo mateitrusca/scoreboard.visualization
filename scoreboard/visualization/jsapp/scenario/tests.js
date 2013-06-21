@@ -838,14 +838,14 @@ describe('ScenarioChartView', function() {
     });
 
     describe('title formatter', function() {
-        it('should use the default separator', function() {
+        it('should use the default prefix', function() {
             var chart = new App.ScenarioChartView({
                 model:  new Backbone.Model(),
                 schema: {},
                 scenario_chart: sinon.mock()
             });
             var parts = [
-                {facet_name: 'ind', separator: null, format: "short_label"},
+                {facet_name: 'ind', prefix: null, format: "short_label"},
                 {facet_name: 'brk', format: "label"}
             ];
             var meta_data = {
@@ -856,7 +856,7 @@ describe('ScenarioChartView', function() {
             expect(title).to.equal('short1, label2');
         });
 
-        it('should use the specified separator', function() {
+        it('should use the specified prefix', function() {
             var chart = new App.ScenarioChartView({
                 model:  new Backbone.Model(),
                 schema: {},
@@ -864,7 +864,7 @@ describe('ScenarioChartView', function() {
             });
             var parts = [
                 {facet_name: 'ind', format: 'label'},
-                {separator: '-', facet_name: 'brk', format: 'label'}
+                {prefix: '-', facet_name: 'brk', format: 'label'}
             ];
             var meta_data = {
                 ind: {'label': 'label1', 'short_label': 'short1'},
@@ -874,7 +874,7 @@ describe('ScenarioChartView', function() {
             expect(title).to.equal('label1-label2');
         });
 
-        it('should ignore "Total" with separator', function() {
+        it('should ignore "Total" with prefix', function() {
             var chart = new App.ScenarioChartView({
                 model:  new Backbone.Model(),
                 schema: {},
@@ -882,7 +882,7 @@ describe('ScenarioChartView', function() {
             });
             var parts = [
                 {facet_name: 'ind', format: 'short_label'},
-                {separator: '-', facet_name: 'brk'}
+                {prefix: '-', facet_name: 'brk'}
             ];
             var meta_data = {
                 ind: {'label': 'label1', 'short_label': 'short1'},
@@ -892,7 +892,7 @@ describe('ScenarioChartView', function() {
             expect(title).to.equal('short1');
         });
 
-        it('should ignore "Total" without separator', function() {
+        it('should ignore "Total" without prefix', function() {
             var chart = new App.ScenarioChartView({
                 model:  new Backbone.Model(),
                 schema: {},

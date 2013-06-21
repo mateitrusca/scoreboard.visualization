@@ -81,15 +81,15 @@ App.ScenarioChartView = Backbone.View.extend({
 
     title_formatter: function(parts, meta_data){
         parts = _(parts).map(function(part){
-            if(!part.separator){
-                part = _(part).omit('separator');
+            if(!part.prefix){
+                part = _(part).omit('prefix');
             }
             part.text = meta_data[part.facet_name][part.format];
             return part;
         });
         var title = '';
         _(parts).each(function(item, idx){
-            var sep = item.separator || ', ';
+            var sep = item.prefix || ', ';
             var part = (item.text != 'Total')?item.text:null;
             if (idx > 0 && part){
                 title += sep;
