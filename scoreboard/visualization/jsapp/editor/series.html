@@ -25,6 +25,16 @@
 </select>
 
 <br>
+<label>Series ending label</label>
+<select class="span2" name="ending-label">
+{{# ending_label_options }}
+  <option value="{{ value }}"
+    {{# if selected }}selected{{/ if }}
+    >{{ label }}</option>
+{{/ ending_label_options }}
+</select>
+
+<br>
 <label>Tooltips:</label>
 <ul>
 {{# tooltips }}

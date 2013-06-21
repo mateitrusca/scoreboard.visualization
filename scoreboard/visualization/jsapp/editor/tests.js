@@ -1260,6 +1260,18 @@ describe('SeriesEditor', function() {
         expect(view.$el.find('[name="point-label"]').val()).to.equal('long');
     });
 
+    it('should save ending label choice', function() {
+        var view = new App.SeriesEditor({model: this.model});
+        view.$el.find('[name="ending-label"]').val('long').change();
+        expect(this.model.get('series-ending-label')).to.equal('long');
+    });
+
+    it('should show existing ending label choice', function() {
+        this.model.set('series-ending-label', 'long');
+        var view = new App.SeriesEditor({model: this.model});
+        expect(view.$el.find('[name="ending-label"]').val()).to.equal('long');
+    });
+
 });
 
 
