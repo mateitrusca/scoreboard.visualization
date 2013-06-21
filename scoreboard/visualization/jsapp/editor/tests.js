@@ -1011,7 +1011,6 @@ describe('AxesEditor', function() {
         var view = new App.AxesEditor({model: model});
         var ordinate_label = model.get('labels')['ordinate'];
         expect(ordinate_label['facet']).to.equal('unit-measure');
-        expect(ordinate_label['field']).to.equal('short_label');
     });
 
     it('should save axes sort criteria choice', function() {

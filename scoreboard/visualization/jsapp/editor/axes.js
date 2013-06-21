@@ -295,7 +295,7 @@ App.AxesEditor = Backbone.View.extend({
 
     initialize: function(options) {
         this.composers = new App.TitleComposers({
-            names: ['title', 'subtitle'],
+            names: ['title', 'subtitle', 'xAxisTitle', 'yAxisTitle'],
             init_value: this.model.get('titles') || {},
             facets: this.model.get('facets')
         });
@@ -325,8 +325,8 @@ App.AxesEditor = Backbone.View.extend({
         if(unit_measure && unit_measure['type'] == 'select') {
             var labels = _({}).extend(this.model.get('labels'));
             _(labels).extend({
-                ordinate: {facet: 'unit-measure', field: 'short_label'},
-                'unit-measure': {facet: 'unit-measure', field: 'short_label'}
+                ordinate: {facet: 'unit-measure'},
+                'unit-measure': {facet: 'unit-measure'}
             });
             this.model.set('labels', labels);
         }

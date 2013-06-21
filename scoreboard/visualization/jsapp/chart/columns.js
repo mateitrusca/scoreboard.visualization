@@ -78,7 +78,7 @@ App.chart_library['columns'] = function(view, options) {
             min: 0,
             max: options['unit_is_pc'][0]?100:null,
             title: {
-                text: options.meta_data['ordinate'],
+                text: options.titles.yAxisTitle,
                 style: {
                     color: '#000000',
                     fontWeight: 'bold'
