@@ -29,14 +29,16 @@ App.TitlePartView = Backbone.View.extend({
         {value: '', label: '--'},
         {value: ', ', label: ','},
         {value: ' by ', label: 'by'},
-        {value: ' - ', label: '-'}
+        {value: ' - ', label: '-'},
+        {value: ' ( ', label: '('}
     ],
 
     sufix_options:[
         {value: '', label: '--'},
         {value: ', ', label: ','},
         {value: ' by ', label: 'by'},
-        {value: ' - ', label: '-'}
+        {value: ' - ', label: '-'},
+        {value: ' ) ', label: ')'}
     ],
 
     format_options: [

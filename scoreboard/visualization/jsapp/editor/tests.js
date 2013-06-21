@@ -835,7 +835,7 @@ describe('AxesEditor', function() {
             var prefix = view.composers_views.title.$el.find(
                 '[name="title-part-prefix"]');
             var opts = prefix.find('option');
-            expect(opts.length).to.equal(4);
+            expect(opts.length).to.equal(5);
             expect(prefix.val()).to.equal("");
         });
 
@@ -852,7 +852,7 @@ describe('AxesEditor', function() {
             var sufix = view.composers_views.title.$el.find(
                 '[name="title-part-sufix"]');
             var opts = sufix.find('option');
-            expect(opts.length).to.equal(4);
+            expect(opts.length).to.equal(5);
             expect(sufix.val()).to.equal("");
         });
 
