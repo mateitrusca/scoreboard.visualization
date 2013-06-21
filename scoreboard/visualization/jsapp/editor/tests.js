@@ -960,27 +960,31 @@ describe('AxesEditor', function() {
                 ],
             });
             var view = new App.AxesEditor({model: model});
-            var add_button = view.composers_views.title.$el.find('[name="add-title-part"]');
-            var select = view.composers_views.title.$el.find('[name="title-part"]:eq(0)');
+            var add_button = view.composers_views.title.$el.find(
+                                    '[name="add-title-part"]');
+            var format_select = view.composers_views.title.$el.find(
+                                    '[name="title-part-format"]');
+            var select = view.composers_views.title.$el.find(
+                                    '[name="title-part"]:eq(0)');
             select.val('ind').change();
             add_button.click();
+            format_select.val('label').change();
             var separator = view.composers_views.title.$el.find(
                 '[name="title-part-separator"]');
             separator.val(' by ').change();
-            var select = view.composers_views.title.$el.find('[name="title-part"]:eq(1)');
+            var select = view.composers_views.title.$el.find(
+                                    '[name="title-part"]:eq(1)');
             select.val('brk').change();
             expect(view.model.get('titles').title).to.deep.equal([
-                {facet_name: 'ind', separator: null, format: 'short_label'},
+                {facet_name: 'ind', separator: null, format: 'label'},
                 {facet_name: 'brk', separator: ' by ', format: 'short_label'}
             ]);
             expect(view.model.get('labels')).to.deep.equal({
                 "ind": {
-                  "facet": "ind",
-                  "field": "short_label"
+                  "facet": "ind"
                 },
                 "brk": {
-                  "facet": "brk",
-                  "field": "short_label"
+                  "facet": "brk"
                 },
             })
         })

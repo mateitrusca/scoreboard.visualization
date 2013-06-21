@@ -59,7 +59,7 @@ App.ScenarioChartView = Backbone.View.extend({
             };
             var ajax = $.getJSON(this.cube_url + '/dimension_labels', args);
             ajax.done(function(data) {
-                meta_data[label_name] = data[label_spec['field']];
+                meta_data[label_name] = data;
             });
             requests.push(ajax);
         }, this);
@@ -84,7 +84,7 @@ App.ScenarioChartView = Backbone.View.extend({
             if(!part.separator){
                 part = _(part).omit('separator');
             }
-            part.text = meta_data[part.facet_name];
+            part.text = meta_data[part.facet_name][part.format];
             return part;
         });
         var title = '';

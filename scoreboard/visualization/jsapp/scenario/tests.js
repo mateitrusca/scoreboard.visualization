@@ -529,9 +529,9 @@ describe('ScenarioChartViewParameters', function() {
             schema: {
                 facets: [],
                 labels: {
-                    label1: {facet: 'indicator', field: 'label'},
-                    label2: {facet: 'indicator', field: 'short_label'},
-                    label3: {facet: 'indicator', field: 'short_label'}
+                    label1: {facet: 'indicator'},
+                    label2: {facet: 'indicator'},
+                    label3: {facet: 'indicator'}
                 }
             },
             scenario_chart: this.scenario_chart
@@ -541,9 +541,9 @@ describe('ScenarioChartViewParameters', function() {
         App.respond_json(server.requests[1], label_resp);
         App.respond_json(server.requests[2], label_resp);
         App.respond_json(server.requests[3], label_resp);
-        expect(chart.data.meta_data.label1).to.equal('normal_label');
-        expect(chart.data.meta_data.label2).to.equal('short_label');
-        expect(chart.data.meta_data.label3).to.equal('short_label');
+        expect(chart.data.meta_data.label1).to.deep.equal(label_resp);
+        expect(chart.data.meta_data.label2).to.deep.equal(label_resp);
+        expect(chart.data.meta_data.label3).to.deep.equal(label_resp);
     });
 
 
@@ -769,7 +769,8 @@ describe('ScenarioChartView', function() {
         App.respond_json(server.requests[3],
             {'label': 'Year 2003', 'short_label': 'lbl 2'});
         expect(this.scenario_chart.calledOnce).to.equal(true);
-        expect(this.chart.data.meta_data['extra_label']).to.equal('Year 2003');
+        expect(this.chart.data.meta_data['extra_label']).to.deep.equal(
+            {'label': 'Year 2003', 'short_label': 'lbl 2'});
     });
 
     it('should fetch data from server', function() {
@@ -844,15 +845,15 @@ describe('ScenarioChartView', function() {
                 scenario_chart: sinon.mock()
             });
             var parts = [
-                {facet_name: 'ind'},
-                {facet_name: 'brk'}
+                {facet_name: 'ind', separator: null, format: "short_label"},
+                {facet_name: 'brk', format: "label"}
             ];
             var meta_data = {
-                ind: 'part1',
-                brk: 'part2'
+                ind: {'label': 'label1', 'short_label': 'short1'},
+                brk: {'label': 'label2', 'short_label': 'short2'},
             }
             var title = chart.title_formatter(parts, meta_data);
-            expect(title).to.equal('part1, part2');
+            expect(title).to.equal('short1, label2');
         });
 
         it('should use the specified separator', function() {
@@ -862,15 +863,15 @@ describe('ScenarioChartView', function() {
                 scenario_chart: sinon.mock()
             });
             var parts = [
-                {facet_name: 'ind'},
-                {separator: '-', facet_name: 'brk'}
+                {facet_name: 'ind', format: 'label'},
+                {separator: '-', facet_name: 'brk', format: 'label'}
             ];
             var meta_data = {
-                ind: 'part1',
-                brk: 'part2'
+                ind: {'label': 'label1', 'short_label': 'short1'},
+                brk: {'label': 'label2', 'short_label': 'short2'},
             }
             var title = chart.title_formatter(parts, meta_data);
-            expect(title).to.equal('part1-part2');
+            expect(title).to.equal('label1-label2');
         });
 
         it('should ignore "Total" with separator', function() {
@@ -880,15 +881,15 @@ describe('ScenarioChartView', function() {
                 scenario_chart: sinon.mock()
             });
             var parts = [
-                {facet_name: 'ind'},
+                {facet_name: 'ind', format: 'short_label'},
                 {separator: '-', facet_name: 'brk'}
             ];
             var meta_data = {
-                ind: 'part1',
-                brk: 'Total'
+                ind: {'label': 'label1', 'short_label': 'short1'},
+                brk: {'label': 'label2', 'short_label': 'short2'},
             }
             var title = chart.title_formatter(parts, meta_data);
-            expect(title).to.equal('part1');
+            expect(title).to.equal('short1');
         });
 
         it('should ignore "Total" without separator', function() {
@@ -898,15 +899,15 @@ describe('ScenarioChartView', function() {
                 scenario_chart: sinon.mock()
             });
             var parts = [
-                {facet_name: 'ind'},
+                {facet_name: 'ind', format: 'short_label'},
                 {facet_name: 'brk'}
             ];
             var meta_data = {
-                ind: 'part1',
-                brk: 'Total'
+                ind: {'label': 'label1', 'short_label': 'short1'},
+                brk: {'label': 'label2', 'short_label': 'short2'},
             }
             var title = chart.title_formatter(parts, meta_data);
-            expect(title).to.equal('part1');
+            expect(title).to.equal('short1');
         });
     })
 });

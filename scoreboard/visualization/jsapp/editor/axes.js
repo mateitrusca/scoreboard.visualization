@@ -231,7 +231,7 @@ App.TitleComposers = Backbone.Collection.extend({
     },
 
     append_labels: function(options){
-        var ok_to_append = function(label, labels){
+        var ok_to_insert = function(label, labels){
             return !_(labels).has(label.facet);
         };
         var labels = options.current || {};
@@ -239,10 +239,9 @@ App.TitleComposers = Backbone.Collection.extend({
             _(composer.get('parts')).each(function(part){
                 if(part.facet_name){
                     var label = _.object([
-                        ['facet', part.facet_name],
-                        ['field', 'short_label']
+                        ['facet', part.facet_name]
                     ]);
-                    if (ok_to_append(label, labels)){
+                    if (ok_to_insert(label, labels)){
                         labels[label.facet] = label;
                     }
                 }
