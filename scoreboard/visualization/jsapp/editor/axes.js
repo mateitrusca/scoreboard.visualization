@@ -7,7 +7,7 @@
 App.TitlePart = Backbone.Model.extend({
     initialize: function(options){
         options['facet_name'] = options['facet_name'] || null;
-        options['separator'] = options['separator'] || null;
+        options['prefix'] = options['prefix'] || null;
         options['format'] = options['format'] || 'short_label';
         this.set(options);
     }
@@ -17,13 +17,13 @@ App.TitlePartView = Backbone.View.extend({
 
     events: {
         'change [name="title-part"]': 'on_change_facet_name',
-        'change [name="title-part-separator"]': 'on_change_separator',
+        'change [name="title-part-prefix"]': 'on_change_prefix',
         'change [name="title-part-format"]': 'on_change_format'
     },
 
     template: App.get_template('editor/title-part.html'),
 
-    separator_options:[
+    prefix_options:[
         {value: '', label: '--'},
         {value: ', ', label: ','},
         {value: ' by ', label: 'by'},
@@ -47,9 +47,9 @@ App.TitlePartView = Backbone.View.extend({
         this.model.set('facet_name', value);
     },
 
-    on_change_separator: function(){
-        var value = this.$el.find('[name="title-part-separator"]').val();
-        this.model.set('separator', value);
+    on_change_prefix: function(){
+        var value = this.$el.find('[name="title-part-prefix"]').val();
+        this.model.set('prefix', value);
     },
 
     on_change_format: function(){
@@ -68,9 +68,9 @@ App.TitlePartView = Backbone.View.extend({
                 }
                 return opt;
             }, this),
-            separator_options: _(this.separator_options).map(function(opt){
+            prefix_options: _(this.prefix_options).map(function(opt){
                 delete opt['selected'];
-                if(this.model.get('separator') == opt.value) {
+                if(this.model.get('prefix') == opt.value) {
                     opt['selected'] = true;
                 }
                 return opt;
@@ -100,7 +100,7 @@ App.TitlePartsCollection = Backbone.Collection.extend({
         if (options.parts){
             _(options.parts).each(function(part){
                 parts.push(new App.TitlePart({
-                    separator: part.separator || null,
+                    prefix: part.prefix || null,
                     facet_name: part.facet_name
                 }));
             })
@@ -125,7 +125,7 @@ App.TitleComposerModel = Backbone.Model.extend({
             _(options.init_value).each(function(part){
                 if (_(valid_names).contains(part.facet_name)){
                     if (parts.length == 0){
-                        part = _(part).omit('separator');
+                        part = _(part).omit('prefix');
                     }
                     parts.push(part);
                 }

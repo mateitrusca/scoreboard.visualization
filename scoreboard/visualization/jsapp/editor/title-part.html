@@ -1,10 +1,10 @@
 {{#if show_sep}}
-<select class="span1" name="title-part-separator">
-{{# separator_options }}
+<select class="span1" name="title-part-prefix">
+{{# prefix_options }}
   <option value="{{ value }}"
     {{# if selected }}selected{{/ if }}
     >{{ label }}</option>
-{{/ separator_options }}
+{{/ prefix_options }}
 </select>
 {{/if}}
 <select name="title-part">
