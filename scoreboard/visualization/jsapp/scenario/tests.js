@@ -874,6 +874,24 @@ describe('ScenarioChartView', function() {
             expect(title).to.equal('label1-label2');
         });
 
+        it('should use the specified sufix', function() {
+            var chart = new App.ScenarioChartView({
+                model:  new Backbone.Model(),
+                schema: {},
+                scenario_chart: sinon.mock()
+            });
+            var parts = [
+                {facet_name: 'ind', format: 'label'},
+                {sufix: '-', facet_name: 'brk', format: 'label'}
+            ];
+            var meta_data = {
+                ind: {'label': 'label1', 'short_label': 'short1'},
+                brk: {'label': 'label2', 'short_label': 'short2'},
+            }
+            var title = chart.title_formatter(parts, meta_data);
+            expect(title).to.equal('label1, label2-');
+        });
+
         it('should ignore "Total" with prefix', function() {
             var chart = new App.ScenarioChartView({
                 model:  new Backbone.Model(),
