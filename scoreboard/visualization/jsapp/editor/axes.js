@@ -8,6 +8,7 @@ App.TitlePart = Backbone.Model.extend({
     initialize: function(options){
         options['facet_name'] = options['facet_name'] || null;
         options['prefix'] = options['prefix'] || null;
+        options['sufix'] = options['sufix'] || null;
         options['format'] = options['format'] || 'short_label';
         this.set(options);
     }
@@ -18,12 +19,20 @@ App.TitlePartView = Backbone.View.extend({
     events: {
         'change [name="title-part"]': 'on_change_facet_name',
         'change [name="title-part-prefix"]': 'on_change_prefix',
+        'change [name="title-part-sufix"]': 'on_change_sufix',
         'change [name="title-part-format"]': 'on_change_format'
     },
 
     template: App.get_template('editor/title-part.html'),
 
     prefix_options:[
+        {value: '', label: '--'},
+        {value: ', ', label: ','},
+        {value: ' by ', label: 'by'},
+        {value: ' - ', label: '-'}
+    ],
+
+    sufix_options:[
         {value: '', label: '--'},
         {value: ', ', label: ','},
         {value: ' by ', label: 'by'},
@@ -52,6 +61,11 @@ App.TitlePartView = Backbone.View.extend({
         this.model.set('prefix', value);
     },
 
+    on_change_sufix: function(){
+        var value = this.$el.find('[name="title-part-sufix"]').val();
+        this.model.set('sufix', value);
+    },
+
     on_change_format: function(){
         var value = this.$el.find('[name="title-part-format"]').val();
         this.model.set('format', value);
@@ -71,6 +85,13 @@ App.TitlePartView = Backbone.View.extend({
             prefix_options: _(this.prefix_options).map(function(opt){
                 delete opt['selected'];
                 if(this.model.get('prefix') == opt.value) {
+                    opt['selected'] = true;
+                }
+                return opt;
+            }, this),
+            sufix_options: _(this.sufix_options).map(function(opt){
+                delete opt['selected'];
+                if(this.model.get('sufix') == opt.value) {
                     opt['selected'] = true;
                 }
                 return opt;
@@ -101,6 +122,7 @@ App.TitlePartsCollection = Backbone.Collection.extend({
             _(options.parts).each(function(part){
                 parts.push(new App.TitlePart({
                     prefix: part.prefix || null,
+                    sufix: part.sufix || null,
                     facet_name: part.facet_name
                 }));
             })

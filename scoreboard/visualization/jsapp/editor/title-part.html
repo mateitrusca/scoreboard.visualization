@@ -22,3 +22,12 @@
     >{{ label }}</option>
 {{/ format_options }}
 </select>
+{{#if show_sep}}
+<select class="span1" name="title-part-sufix">
+{{# sufix_options }}
+  <option value="{{ value }}"
+    {{# if selected }}selected{{/ if }}
+    >{{ label }}</option>
+{{/ sufix_options }}
+</select>
+{{/if}}
