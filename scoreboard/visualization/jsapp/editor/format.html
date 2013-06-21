@@ -5,6 +5,12 @@
 <label>Height</label>
 <input class="span1" name="height" value="{{ height }}">px
 
+<h5>Filters area descriptions</h5>
+{{# descriptions }}
+  <label>{{ label }}</label>
+  <textarea name="description-text" id="{{position}}">{{ value }}</textarea>
+{{/ descriptions }}
+
 <h5>Credits</h5>
 
 <label>Text</label>

@@ -1330,6 +1330,32 @@ describe('FormatEditor', function() {
         expect(view.$el.find('[name="height"]').val()).to.equal('123');
     });
 
+    it('should display 4 textareas', function() {
+        var view = new App.FormatEditor({model: new Backbone.Model()});
+        var textareas = view.$el.find('textarea[name$="text"]');
+        expect(textareas.length).to.equal(4);
+    });
+
+    it('should save filters area text', function() {
+        var view = new App.FormatEditor({model: new Backbone.Model()});
+        var textarea = view.$el.find('textarea[id="upper-left"]:eq(0)')
+        textarea.val('blah').trigger('change');
+        var text = view.model.get('text');
+        expect(text[0]).to.deep.equal(
+            {value: "blah",
+             position: "upper-left"}
+        );
+    });
+
+    it('should load filters area text', function() {
+        var view = new App.FormatEditor({model: new Backbone.Model({
+            text: [{value: "blah",
+                    position: "upper-left"}]
+        })});
+        var textarea = view.$el.find('textarea[id="upper-left"]:eq(0)')
+        expect(textarea.val()).to.deep.equal("blah");
+    });
+
     it('should save chart credits', function() {
         var view = new App.FormatEditor({model: new Backbone.Model()});
         view.$el.find('[name="credits-text"]').val('blah one').change();

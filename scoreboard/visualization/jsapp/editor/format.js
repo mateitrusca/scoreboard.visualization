@@ -53,6 +53,42 @@ App.LabelEditor = Backbone.View.extend({
 });
 
 
+App.TextsCollection = Backbone.Collection.extend({
+    constructor: function(options){
+        var models = [];
+        if (options.init){
+            models = _(options.init).map(function(desc, idx){
+                desc['label'] = options.positions[idx].label;
+                var model =  new Backbone.Model(desc);
+                return model;
+            });
+        }
+        else{
+            models = _(options.positions).map(function(pos){
+                var model = new Backbone.Model({
+                    position: pos.value,
+                    label: pos.label,
+                    value: ""
+                });
+                return model;
+            });
+        }
+        Backbone.Collection.apply(this, [models]);
+    },
+
+    get_values: function(){
+        var output = [];
+        this.forEach(function(text){
+            output.push( _.object([
+                ['value', text.get('value')],
+                ['position', text.get('position')]
+            ]))
+        });
+        return output;
+    }
+});
+
+
 App.FormatEditor = Backbone.View.extend({
 
     tagName: 'form',
@@ -63,10 +99,18 @@ App.FormatEditor = Backbone.View.extend({
     title: "Format",
 
     events: {
+        'change [name="description-text"]': 'on_change_text',
         'change [name="height"]': 'on_change_height',
         'change [name="credits-text"]': 'on_change_credits',
         'change [name="credits-link"]': 'on_change_credits'
     },
+
+    position_options:[
+        {value: 'upper-left', label: "upper left"},
+        {value: 'upper-right', label: "upper right"},
+        {value: 'bottom-left', label: "lower left"},
+        {value: 'bottom-right', label: "lower right"},
+    ],
 
     initialize: function(options) {
         this.facets = new Backbone.Collection(this.model.get('facets'));
@@ -78,6 +122,11 @@ App.FormatEditor = Backbone.View.extend({
             }));
         }, this);
         update_facets();
+        this.texts = new App.TextsCollection({
+            init: this.model.get('text'),
+            positions: this.position_options
+        });
+        this.texts.on('change', this.save_text, this);
         this.model.on('change:facets', update_facets);
 
         this.title_label = new App.LabelEditor({
@@ -126,6 +175,9 @@ App.FormatEditor = Backbone.View.extend({
     render: function() {
         var context = {
             height: this.model.get('height') || '500',
+            descriptions: this.texts.map(function(text){
+                return text.toJSON();
+            }),
             credits: _({
                 text: "European Commission, Digital Agenda Scoreboard",
                 link: "http://ec.europa.eu/digital-agenda/en/graphs/"
@@ -151,6 +203,17 @@ App.FormatEditor = Backbone.View.extend({
             text: this.$el.find('[name="credits-text"]').val(),
             link: this.$el.find('[name="credits-link"]').val()
         });
+    },
+
+    save_text: function(){
+        this.model.set('text', this.texts.get_values());
+    },
+
+    on_change_text: function(evt){
+        var id = $(evt.target).attr('id');
+        var value = $(evt.target).val();
+        var model = this.texts.findWhere({position: id});
+        model.set('value', value);
     }
 
 });
