@@ -51,7 +51,7 @@ App.chart_library['scatter'] = function(view, options) {
             }
         },
         title: {
-            text: options.meta_data['period_label'],
+            text: options.titles.title,
             align: 'center',
             style: {
                 color: '#000000',
@@ -63,10 +63,7 @@ App.chart_library['scatter'] = function(view, options) {
             endOnTick: true,
             title: {
                 enabled: true,
-                text: options['title_formatter'](
-                        options.meta_data['title_x'], ', by ',
-                        options.meta_data['breakdown_x'], ' (',
-                        options.meta_data['unit_x'], ')'),
+                text: options.titles.xAxisTitle,
                 style: {
                     color: '#000000',
                     fontWeight: 'bold',
@@ -87,10 +84,7 @@ App.chart_library['scatter'] = function(view, options) {
             startOnTick: true,
             endOnTick: true,
             title: {
-                text: options['title_formatter'](
-                        options.meta_data['title_y'], '<br>by ',
-                        options.meta_data['breakdown_y'], '<br>(',
-                        options.meta_data['unit_y'], ')'),
+                text: options.titles.yAxisTitle,
                 style: {
                     color: '#000000',
                     fontWeight: 'bold',

@@ -62,10 +62,7 @@ App.chart_library['lines'] = function(view, options) {
             }
         },
         title: {
-            text: options['title_formatter'](
-                        options.meta_data['title'],
-                        options.meta_data['title2']&&options.meta_data['title2']!='Total'?', by ':'',
-                        options.meta_data['title2']),
+            text: options.titles.title,
             style: {
                 color: '#000000',
                 fontWeight: 'bold',
@@ -87,7 +84,7 @@ App.chart_library['lines'] = function(view, options) {
             min:0,
             max: options['unit_is_pc'][0]?100:null,
             title: {
-                text: options.meta_data['ordinate'],
+                text: options.titles.xAxisTitle,
                 style: {
                     color: '#000000',
                     fontWeight: 'bold'

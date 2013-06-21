@@ -53,7 +53,7 @@ App.chart_library['bubbles'] = function(view, options) {
             }
         },
         title: {
-            text: options.meta_data['period_label'],
+            text: options.titles.title,
             align: 'center',
             style: {
                 color: '#000000',
@@ -61,9 +61,7 @@ App.chart_library['bubbles'] = function(view, options) {
             }
         },
         subtitle: {
-            text: options['title_formatter'](
-                    'Bubbles size (Z): ', options.meta_data['title_z'],
-                    '<br>', options.meta_data['breakdown_z']),
+            text: options.titles.subtitle,
             style: {
                 color: '#000000',
                 width: 600,
@@ -75,10 +73,7 @@ App.chart_library['bubbles'] = function(view, options) {
             maxPadding: 0.1,
             title: {
                 enabled: true,
-                text: options['title_formatter'](
-                        options.meta_data['title_x'],
-                        '<br>',
-                        options.meta_data['breakdown_x']),
+                text: options.titles.xAxisTitle,
                 style: {
                     color: '#000000',
                     width: 500,
@@ -101,10 +96,7 @@ App.chart_library['bubbles'] = function(view, options) {
             minPadding: 0.1,
             maxPadding: 0.1,
             title: {
-                text: options['title_formatter'](
-                        options.meta_data['title_y'],
-                        '<br>',
-                        options.meta_data['breakdown_y']),
+                text: options.titles.yAxisTitle,
                 style: {
                     color: '#000000',
                     fontWeight: 'bold',
