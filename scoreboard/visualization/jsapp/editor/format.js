@@ -128,45 +128,6 @@ App.FormatEditor = Backbone.View.extend({
         });
         this.texts.on('change', this.save_text, this);
         this.model.on('change:facets', update_facets);
-
-        this.title_label = new App.LabelEditor({
-            name: 'title',
-            title: "Title",
-            facets: this.facets,
-            model: new Backbone.Model(
-                (this.model.get('labels') || {})['title'])
-        });
-        this.title_label.model.on('change', function() {
-            var labels = _({}).extend(this.model.get('labels'));
-            var title = this.title_label.model.toJSON();
-            if(title['facet']) {
-                labels['title'] = title;
-            }
-            else {
-                delete labels['title'];
-            }
-            this.model.set('labels', labels);
-        }, this);
-
-        this.subtitle_label = new App.LabelEditor({
-            name: 'subtitle',
-            title: "Subtitle",
-            facets: this.facets,
-            model: new Backbone.Model(
-                (this.model.get('labels') || {})['subtitle'])
-        });
-        this.subtitle_label.model.on('change', function() {
-            var labels = _({}).extend(this.model.get('labels'));
-            var subtitle = this.subtitle_label.model.toJSON();
-            if(subtitle['facet']) {
-                labels['subtitle'] = subtitle;
-            }
-            else {
-                delete labels['subtitle'];
-            }
-            this.model.set('labels', labels);
-        }, this);
-
         this.render();
         this.on_change_height();
         this.on_change_credits();
@@ -184,14 +145,6 @@ App.FormatEditor = Backbone.View.extend({
             }).extend(this.model.get('credits'))
         };
         this.$el.html(this.template(context));
-        this.title_label.render();
-        this.$el.find('[data-marker="title-label"]').replaceWith(
-            this.title_label.el);
-        this.title_label.delegateEvents();
-        this.subtitle_label.render();
-        this.$el.find('[data-marker="subtitle-label"]').replaceWith(
-            this.subtitle_label.el);
-        this.subtitle_label.delegateEvents();
     },
 
     on_change_height: function() {
