@@ -6,16 +6,6 @@
 <td>
   <label>name</label>
   <input type="text" name="name" title="{{ label }}" value="{{ facet_name }}" />
-
-  <label>position</label>
-  <select name="position" class="span2">
-  {{# position_options }}
-    <option value="{{ value }}"
-      {{# if selected }}selected{{/ if }}
-      >{{ label }}</option>
-  {{/ position_options }}
-  </select>
-
 </td>
 
 <td>
@@ -32,9 +22,16 @@
     <input type="checkbox" name="include_wildcard"
         {{# if include_wildcard }}checked{{/ if }}>
   {{/ if }}
-</td>
 
-<td>
+  <label>position</label>
+  <select name="position" class="span2">
+  {{# position_options }}
+    <option value="{{ value }}"
+      {{# if selected }}selected{{/ if }}
+      >{{ label }}</option>
+  {{/ position_options }}
+  </select>
+
   <label>sort</label>
   <select name="sort-by" class="span2">
   {{# sort_by_options }}
@@ -51,6 +48,7 @@
       >{{ label }}</option>
   {{/ sort_order_options }}
   </select>
+
   <label>default value</label>
   <select name="default_value" multiple>
   {{# facet_options }}
@@ -70,8 +68,7 @@
   </select>
 
 {{# if chart_is_multidim }}
-<td>
+  <label>multidim</label>
   <input type="checkbox" name="multidim"
       {{# if multidim }}checked{{/ if }}>
-</td>
 {{/ if }}
