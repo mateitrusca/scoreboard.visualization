@@ -27,6 +27,8 @@ App.scenario9_table_filters_schema = {
       label: "Country",
       dimension: "ref-area",
       "default_value": "#random",
+      sortBy: "label",
+      sortOrder: "asc",
       constraints: {
         "indicator-group": "indicator-group"
       }

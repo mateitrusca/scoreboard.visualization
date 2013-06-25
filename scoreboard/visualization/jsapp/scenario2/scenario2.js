@@ -107,6 +107,8 @@ App.scenario2_filters_schema = {
       "default_value": ["EU27", "#random"],
       "label": "Select the countries",
       "name": "ref-area",
+      "sortBy": "label",
+      "sortOrder": "asc",
       "type": "multiple_select"
     },
     {
