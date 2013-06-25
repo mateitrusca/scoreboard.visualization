@@ -16,6 +16,8 @@ App.Visualization = Backbone.View.extend({
 
         var filters_schema = [];
         var values_schema = [];
+        var filters_in_url = [];
+
         _(options['schema']['facets']).forEach(function(item) {
             if(item['type'] == 'ignore') {
                 return;
@@ -25,12 +27,21 @@ App.Visualization = Backbone.View.extend({
                 return;
             }
             filters_schema.push(item);
+            if(item['type'] != 'all-values') {
+                filters_in_url.push(item['name']);
+            }
         });
+        this.filters_in_url = filters_in_url;
 
         if((App.initial_hash || '').substr(0, 7) == '#chart=') {
             var url_filters = {};
             try {
-                url_filters = JSON.parse(decodeURIComponent(App.initial_hash.substr(7)))
+                var uri = decodeURIComponent(App.initial_hash.substr(7));
+                if (uri.indexOf('"') == -1) {
+                    var rgx = /([^\[\]\{\},:]+)/g;
+                    uri = uri.replace(rgx, '"$1"');
+                }
+                url_filters = JSON.parse(uri);
             } catch(e) {}
             var keep_filters = {};
             _(filters_schema).forEach(function(item) {
@@ -62,7 +73,8 @@ App.Visualization = Backbone.View.extend({
             data_revision: options['data_revision'],
             schema: options['schema'],
             filters_schema: filters_schema,
-            multidim: options['schema']['multidim']
+            multidim: options['schema']['multidim'],
+            dimensions: App.CUBE_DIMENSIONS
         });
 
         this.metadata = new App.AnnotationsView({
@@ -94,7 +106,8 @@ App.Visualization = Backbone.View.extend({
             schema: options['schema'],
             filters_schema: filters_schema,
             values_schema: values_schema,
-            scenario_chart: App.chart_library[chart_type]
+            scenario_chart: App.chart_library[chart_type],
+            dimensions: App.CUBE_DIMENSIONS
         });
         this.$el.addClass(chart_type+'-chart');
         var chart_type = options['schema']['chart_type'];
@@ -113,7 +126,8 @@ App.Visualization = Backbone.View.extend({
     },
 
     update_hashcfg: function() {
-        var hashcfg = 'chart=' + JSON.stringify(this.filters);
+        // do not include all-values and ignore
+        var hashcfg = 'chart=' + JSON.stringify(_.pick(this.filters.attributes, this.filters_in_url));
         this.navigation.update_hashcfg(hashcfg);
         this.share.update_url(App.SCENARIO_URL + '#' + hashcfg);
         App.update_url_hash(hashcfg);

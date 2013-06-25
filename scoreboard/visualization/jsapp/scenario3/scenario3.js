@@ -67,6 +67,7 @@ App.scenario3_filters_schema = {
         "name": "x-breakdown-group",
         "label": "(X) breakdown group",
         "constraints": {
+            "indicator-group": "x-indicator-group",
             "indicator": "x-indicator"
         },
         "dimension": "breakdown-group",
@@ -78,6 +79,7 @@ App.scenario3_filters_schema = {
         "name": "x-breakdown",
         "label": "(X) breakdown",
         "constraints": {
+            "indicator-group": "x-indicator-group",
             "indicator": "x-indicator"
         },
         "default_value": "#random",
@@ -90,6 +92,7 @@ App.scenario3_filters_schema = {
         "name": "x-unit-measure",
         "label": "(X) unit of measure",
         "constraints": {
+            "indicator-group": "x-indicator-group",
             "indicator": "x-indicator",
             "breakdown": "x-breakdown"
         },
@@ -126,6 +129,7 @@ App.scenario3_filters_schema = {
         "name": "y-breakdown-group",
         "label": "(Y) breakdown group",
         "constraints": {
+            "indicator-group": "y-indicator-group",
             "indicator": "y-indicator"
         },
         "dimension": "breakdown-group",
@@ -138,6 +142,7 @@ App.scenario3_filters_schema = {
         "name": "y-breakdown",
         "label": "(Y) breakdown",
         "constraints": {
+            "indicator-group": "y-indicator-group",
             "indicator": "y-indicator"
         },
         "default_value": "#random",
@@ -151,6 +156,7 @@ App.scenario3_filters_schema = {
         "name": "y-unit-measure",
         "label": "(Y) unit of measure",
         "constraints": {
+            "indicator-group": "y-indicator-group",
             "indicator": "y-indicator",
             "breakdown": "y-breakdown"
         },
@@ -161,9 +167,11 @@ App.scenario3_filters_schema = {
     },
     {
         "constraints": {
+            "x-indicator-group": "x-indicator-group",
             "x-indicator": "x-indicator",
             "x-breakdown": "x-breakdown",
             "x-unit-measure": "x-unit-measure",
+            "y-indicator-group": "y-indicator-group",
             "y-indicator": "y-indicator",
             "y-breakdown": "y-breakdown",
             "y-unit-measure": "y-unit-measure"
@@ -178,9 +186,11 @@ App.scenario3_filters_schema = {
     },
     {
         "constraints": {
+            "x-indicator-group": "x-indicator-group",
             "x-indicator": "x-indicator",
             "x-breakdown": "x-breakdown",
             "x-unit-measure": "x-unit-measure",
+            "y-indicator-group": "y-indicator-group",
             "y-indicator": "y-indicator",
             "y-breakdown": "y-breakdown",
             "y-unit-measure": "y-unit-measure",

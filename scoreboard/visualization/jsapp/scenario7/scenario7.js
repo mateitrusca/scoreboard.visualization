@@ -98,6 +98,8 @@ App.scenario7_filters_schema = {
         "dimension": "ref-area",
         "label": "Select the countries",
         "name": "ref-area",
+        "sortBy": "label",
+        "sortOrder": "asc",
         "type": "multiple_select"
     },
     {

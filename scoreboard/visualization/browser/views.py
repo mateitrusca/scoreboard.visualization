@@ -19,6 +19,7 @@ class TestsView(BrowserView):
                 DATASOURCE_URL='',
                 SCENARIO_URL='',
                 DATA_REVISION='',
+                CUBE_DIMENSIONS=[],
                 JSAPP_URL=self.JSAPP_URL)
 
 class EuropeanUnion(BrowserView):
@@ -81,5 +82,6 @@ class CacheView(BrowserView):
                 DATASOURCE_URL='',
                 SCENARIO_URL='',
                 DATA_REVISION='',
+                CUBE_DIMENSIONS=[],
                 JSAPP_URL=self.JSAPP_URL)
 

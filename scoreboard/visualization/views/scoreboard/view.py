@@ -26,6 +26,7 @@ def jsapp_html_for_visualization(visualization):
     return jsapp.jsapp_html(DATASOURCE_URL=source.absolute_url(),
                             SCENARIO_URL=visualization.absolute_url(),
                             DATA_REVISION=cube.get_revision(),
+                            CUBE_DIMENSIONS=cube.get_dimensions(flat=True),
                             JSAPP_URL=JSAPP_URL)
 
 def source_workflow_state(visualization):

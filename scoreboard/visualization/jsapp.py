@@ -25,12 +25,14 @@ def getZopeState():
     import Globals; return Globals.DevelopmentMode
 
 
-def jsapp_html(DATASOURCE_URL, SCENARIO_URL, DATA_REVISION, JSAPP_URL):
+def jsapp_html(DATASOURCE_URL, SCENARIO_URL, DATA_REVISION,
+               CUBE_DIMENSIONS, JSAPP_URL):
     tmpl = jinja_env.from_string((MODULE_PATH / 'jsapp.html').text('utf-8'))
     return tmpl.render(**{
         'URL': DATASOURCE_URL,
         'SCENARIO_URL': SCENARIO_URL,
         'DATA_REVISION': DATA_REVISION,
+        'CUBE_DIMENSIONS': CUBE_DIMENSIONS,
         'JSAPP': JSAPP_URL,
         'DEBUG': getZopeState(),
     })

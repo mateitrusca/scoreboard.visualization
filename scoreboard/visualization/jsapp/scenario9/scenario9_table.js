@@ -27,6 +27,8 @@ App.scenario9_table_filters_schema = {
       label: "Country",
       dimension: "ref-area",
       "default_value": "#random",
+      sortBy: "label",
+      sortOrder: "asc",
       constraints: {
         "indicator-group": "indicator-group"
       }
@@ -42,17 +44,6 @@ App.scenario9_table_filters_schema = {
         "indicator-group": "indicator-group",
         "ref-area": "ref-area"
       }
-    },
-    {
-      constraints: {
-        "indicator-group": "indicator-group",
-        "ref-area": "ref-area",
-        "time-period": "time-period"
-      },
-      dimension: "indicator",
-      name: "indicator",
-      type: "all-values",
-      label: "Indicator"
     },
     {
       type: "all-values",

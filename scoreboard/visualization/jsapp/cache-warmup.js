@@ -20,27 +20,19 @@ var depth = parseInt(urlParam('depth')) || 0;
     * dimension_options?dimension=indicator
     * dimension_options_cp?dimension=ref-area&indicator-group
   3) in addition to 2), will preload the third filter: 
-    * dimension_options?dimension=breakdown-group&indicator&indicator-group
     * dimension_options?dimension=breakdown-group&indicator
-    * dimension_options?dimension=breakdown&indicator&indicator-group
     * dimension_options?dimension=breakdown&indicator
     * dimension_options_cp?dimension=time-period&indicator-group&ref-area&subtype
   4) in addition to 3), will preload the fourth filter:
     * indicators for country profile - only the latest year
     * //disabled, crashes the server // datapoints for country profile - only the latest year
   5) in addition to 4), will preload the fourth filter:
-    * dimension_options?dimension=breakdown&indicator=&indicator-group=&breakdown-group=
     * dimension_options?dimension=breakdown&indicator=&breakdown-group=
-    * dimension_options?dimension=breakdown&indicator=&indicator-group=
     * dimension_options?dimension=breakdown&indicator=
-    * dimension_options?dimension=unit-measure&indicator=&indicator-group=&breakdown=
-    * dimension_options?dimension=unit-measure&indicator=&breakdown=
-    * dimension_options?dimension=unit-measure&indicator=&indicator-group=&breakdown-group=
-    * dimension_options?dimension=unit-measure&indicator=&indicator-group=
-    * dimension_options?dimension=unit-measure&indicator=&breakdown-group=
-    * dimension_options?dimension=unit-measure&indicator=
    6) in addition to 5), will preload the fifth filter
-    * dimension_options?dimension=unit-measure&indicator=&indicator-group=&breakdown-group=&breakdown=
+    * dimension_options?dimension=unit-measure&indicator=&breakdown-group=
+    * dimension_options?dimension=unit-measure&indicator=&breakdown=
+    * dimension_options?dimension=unit-measure&indicator=
 
 */
 var DATA_REVISION;
@@ -126,7 +118,7 @@ App.dimension_options_indicators = function(indicator_group) {
     };
     App.getJSON("dimension_options", args, function(data){
         _.each(data.options, function(option) {
-            if ( depth > 2 ) {
+            if ( depth > 2 && !indicator_group) {
                 App.dimension_options_breakdown_group(indicator_group, option.notation);
                 // get breakdowns without breakdown-group (scatter and bubble)
                 App.dimension_options_breakdown(indicator_group, option.notation);
@@ -138,7 +130,7 @@ App.dimension_options_indicators = function(indicator_group) {
 App.dimension_options_breakdown_group = function(indicator_group, indicator) {
     var args = {
         'dimension': 'breakdown-group',
-        'indicator-group': indicator_group,
+        //'indicator-group': indicator_group,
         'indicator': indicator,
         'rev': DATA_REVISION
     };
@@ -157,7 +149,7 @@ App.dimension_options_breakdown_group = function(indicator_group, indicator) {
 App.dimension_options_breakdown = function(indicator_group, indicator, breakdown_group) {
     var args = {
         'dimension': 'breakdown',
-        'indicator-group': indicator_group,
+        //'indicator-group': indicator_group,
         'indicator': indicator,
         'breakdown-group': breakdown_group,
         'rev': DATA_REVISION
@@ -174,7 +166,7 @@ App.dimension_options_breakdown = function(indicator_group, indicator, breakdown
 App.dimension_options_unit_measure = function(indicator_group, indicator, breakdown_group, breakdown) {
     var args = {
         'dimension': 'unit-measure',
-        'indicator-group': indicator_group,
+        //'indicator-group': indicator_group,
         'indicator': indicator,
         'breakdown-group': breakdown_group,
         'breakdown': breakdown,
@@ -235,7 +227,7 @@ App.dimension_options_time_period_cp = function(indicator_group, ref_area, subty
             } else {
                 log('Undefined:' + JSON.stringify(data.options));
             }
-            //App.datapoints_cp(indicator_group, ref_area, _.last(data.options).notation, subtype);
+            App.datapoints_cp(indicator_group, ref_area, _.last(data.options).notation, subtype);
         };
     });
 }

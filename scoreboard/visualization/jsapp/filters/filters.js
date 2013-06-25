@@ -48,6 +48,9 @@ App.SelectFilter = Backbone.View.extend({
         this.ignore_values = options['ignore_values'];
         this.default_all = options['default_all'] || false;
         this.loadstate = options['loadstate'] || new Backbone.Model();
+        this.dimension_group_map = _.object(
+            _(options['dimensions']).pluck('notation'),
+            _(options['dimensions']).pluck('group_notation'));
         _(this.constraints).forEach(function(other_name, other_dimension) {
             this.model.on('change:' + other_name, this.update, this);
             this.loadstate.on('change:' + other_name, this.update, this);
@@ -57,6 +60,9 @@ App.SelectFilter = Backbone.View.extend({
 
     adjust_value: function() {
         var range = _(this.dimension_options).pluck('notation');
+        if (typeof this.model.get(this.name) == 'object' && this.model.get(this.name) && this.model.get(this.name)[0]) {
+            this.model.set(this.name, this.model.get(this.name)[0]);
+        }
         if(! _(range).contains(this.model.get(this.name))) {
             var default_value = this.default_value || range[0];
             if ( default_value == '#random' ) {
@@ -100,11 +106,12 @@ App.SelectFilter = Backbone.View.extend({
         }
         this.$el.removeClass('on-hold');
         this.$el.html("");
+        App.trim_dimension_group_args(args, this.dimension_group_map);
         this.ajax = this.fetch_options(args);
         this.ajax.done(_.bind(function(data) {
             this.ajax = null;
             if (this.options.include_wildcard){
-                _(data['options']).push(
+                _(data['options']).unshift(
                     _.object([
                         ['group_notation', null],
                         ['label', 'Any'],
@@ -226,6 +233,10 @@ App.MultipleSelectFilter = App.SelectFilter.extend({
 
     adjust_value: function() {
         var current_value = this.model.get(this.name);
+        if ( typeof current_value == "string" ) {
+            current_value = [current_value];
+            this.model.set(this.name, current_value);
+        }
         var range = _(this.dimension_options).pluck('notation');
         if(_.intersection(range, current_value).length == 0){
             if(this.default_all){
@@ -331,6 +342,7 @@ App.FiltersBox = Backbone.View.extend({
                 ignore_values: item['ignore_values'],
                 default_all: default_all,
                 dimension: item['dimension'],
+                dimensions: options['dimensions'],
                 include_wildcard: item['include_wildcard'],
                 constraints: item['constraints']
             });
@@ -359,6 +371,18 @@ App.FiltersBox = Backbone.View.extend({
     }
 
 });
+
+
+App.trim_dimension_group_args = function(args, dimension_group_map) {
+    _(dimension_group_map).forEach(function(group_name, name) {
+        if(! group_name) return;
+        _(['', 'x-', 'y-', 'z-']).forEach(function(prefix) {
+            if(args[prefix + name] && args[prefix + group_name]) {
+                delete args[prefix + group_name];
+            }
+        });
+    });
+};
 
 
 })(App.jQuery);
