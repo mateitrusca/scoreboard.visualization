@@ -289,10 +289,7 @@ App.AxesEditor = Backbone.View.extend({
         'change [name="axis-sort-by"]': 'on_change',
         'change [name="axis-sort-order"]': 'on_change',
         'change [name="axis-sort-each-series"]': 'on_change',
-        'change [name="axis-horizontal-title"]': 'on_change',
-        'change [name="axis-horizontal-rotated"]': 'on_change',
         'change [name="axis-horizontal-plotline"]': 'on_change',
-        'change [name="axis-vertical-title"]': 'on_change',
         'change [name="axis-vertical-plotline"]': 'on_change'
     },
 
@@ -439,9 +436,6 @@ App.AxesEditor = Backbone.View.extend({
                 order: Number(val('[name="axis-sort-order"]:checked')) || 0,
                 each_series: checked('[name="axis-sort-each-series"]')
             },
-            'axis-horizontal-title': val('[name="axis-horizontal-title"]'),
-            'axis-horizontal-rotated': checked('[name="axis-horizontal-rotated"]'),
-            'axis-vertical-title': val('[name="axis-vertical-title"]'),
             'plotlines': plotlines
         });
     }
