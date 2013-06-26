@@ -38,7 +38,7 @@ App.FacetEditorField = Backbone.View.extend({
         {value: 'upper-left', label: "upper left"},
         {value: 'upper-right', label: "upper right"},
         {value: 'bottom-left', label: "lower left"},
-        {value: 'bottom-right', label: "lower right"},
+        {value: 'bottom-right', label: "lower right"}
     ],
 
     type_options: [
@@ -96,7 +96,7 @@ App.FacetEditorField = Backbone.View.extend({
                 return opt;
             }, this),
             position_options:_(this.position_options).map(function(opt) {
-                var selected = this.model.get('position') == opt['value'];
+                var selected = (this.model.get('position') == opt['value']);
                 return _({
                     selected: selected
                 }).extend(opt);
@@ -406,7 +406,7 @@ App.FacetsEditor = Backbone.View.extend({
             return view.model.get('name') == this.model.get('category_facet');
         }, this);
         if (category_facet && category_facet.facet_options){
-            category_facet.facet_options.forEach(function(cat){
+            _(category_facet.facet_options).each(function(cat){
                 cat.highlight = false;
                 if (_(this.model.get('highlights')).contains(cat.value)){
                     cat.highlight = true;

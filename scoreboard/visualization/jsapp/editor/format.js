@@ -109,7 +109,7 @@ App.FormatEditor = Backbone.View.extend({
         {value: 'upper-left', label: "upper left"},
         {value: 'upper-right', label: "upper right"},
         {value: 'bottom-left', label: "lower left"},
-        {value: 'bottom-right', label: "lower right"},
+        {value: 'bottom-right', label: "lower right"}
     ],
 
     initialize: function(options) {
