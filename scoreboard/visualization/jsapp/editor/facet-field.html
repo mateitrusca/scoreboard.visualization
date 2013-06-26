@@ -17,10 +17,13 @@
       >{{ label }}</option>
   {{/ type_options }}
   </select>
+  </br>
+
   {{# if is_single_select }}
     <label>allow "any" value</label>
     <input type="checkbox" name="include_wildcard"
         {{# if include_wildcard }}checked{{/ if }}>
+    </br>
   {{/ if }}
 
   <label>position</label>
@@ -31,6 +34,7 @@
       >{{ label }}</option>
   {{/ position_options }}
   </select>
+  </br>
 
   <label>sort</label>
   <select name="sort-by" class="span2">
@@ -48,6 +52,7 @@
       >{{ label }}</option>
   {{/ sort_order_options }}
   </select>
+  </br>
 
   <label>default value</label>
   <select name="default_value" multiple>
@@ -57,6 +62,7 @@
       >{{ label }}</option>
   {{/ facet_options }}
   </select>
+  </br>
 
   <label>ignore values</label>
   <select name="ignore_values" multiple>
@@ -66,9 +72,11 @@
       >{{ label }}</option>
   {{/ facet_options }}
   </select>
+  </br>
 
 {{# if chart_is_multidim }}
   <label>multidim</label>
   <input type="checkbox" name="multidim"
       {{# if multidim }}checked{{/ if }}>
+  </br>
 {{/ if }}
