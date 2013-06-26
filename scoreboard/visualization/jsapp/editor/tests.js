@@ -113,29 +113,30 @@ describe('FacetsEditor', function() {
             expect(model.get('facets')[0]['dimension']).to.equal('time-period');
         });
 
-        it('should save the provided filter name', function() {
+        it('should save the provided filter label', function() {
             var model = new App.EditorConfiguration({}, {
                 dimensions: [{type_label: 'dimension', notation: 'indicator'},
                              {type_label: 'dimension', notation: 'time-period'}]
             });
             var view = new App.FacetsEditor({model: model});
-            view.$el.find('[name="name"]:eq(0)').val('ind').trigger('input');
-            view.$el.find('[name="name"]:eq(1)').val('period').trigger('keyup');
-            view.$el.find('[name="name"]:eq(0)').trigger('focusout');
-            view.$el.find('[name="name"]:eq(1)').trigger('focusout');
-            expect(model.get('facets')[0]['name']).to.equal('ind');
-            expect(model.get('facets')[1]['name']).to.equal('period');
+            view.$el.find('[name="label"]:eq(0)').val('ind').trigger('input');
+            view.$el.find('[name="label"]:eq(1)').val('period').trigger('keyup');
+            view.$el.find('[name="label"]:eq(0)').trigger('focusout');
+            view.$el.find('[name="label"]:eq(1)').trigger('focusout');
+            expect(model.get('facets')[0]['label']).to.equal('ind');
+            expect(model.get('facets')[1]['label']).to.equal('period');
             expect(model.get('facets')[0]['dimension']).to.equal('indicator');
             expect(model.get('facets')[1]['dimension']).to.equal('time-period');
         });
 
-        it('should save filter name same as dimension when empty', function() {
+        it('should save old filter label when empty', function() {
             var model = new App.EditorConfiguration({}, {
                 dimensions: [{type_label: 'dimension', notation: 'indicator'}]});
+            model.facets.models[0].set('label', 'Indicator');
             var view = new App.FacetsEditor({model: model});
-            view.$el.find('[name="name"]:eq(0)').val('').trigger('input');
-            view.$el.find('[name="name"]:eq(0)').trigger('focusout');
-            expect(model.get('facets')[0]['name']).to.equal('indicator');
+            view.$el.find('[name="label"]:eq(0)').val('').trigger('input');
+            view.$el.find('[name="label"]:eq(0)').trigger('focusout');
+            expect(model.get('facets')[0]['label']).to.equal('Indicator');
         });
 
         it('should save filter type', function() {
