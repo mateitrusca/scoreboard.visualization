@@ -91,7 +91,7 @@ App.FacetEditorField = Backbone.View.extend({
             facet_name: this.model.get('name') || this.model.get('dimension'),
             facet_options: _(this.facet_options).map(function(opt) {
                 if (_(this.model.get('default_value')).contains(opt['value'])) {
-                    return _({default: true}).extend(opt);
+                    return _({"default": true}).extend(opt);
                 }
                 return opt;
             }, this),
