@@ -397,6 +397,7 @@ App.FacetsEditor = Backbone.View.extend({
             return [facet_model.cid, facet_view];
         }, this));
         this.apply_changes();
+        this.render();
         this.model.facets.on('change sort', this.apply_changes, this);
     },
 
@@ -490,7 +491,6 @@ App.FacetsEditor = Backbone.View.extend({
     apply_changes: function() {
         this.compute_facet_roles();
         this.save_value();
-        this.render();
     },
 
     on_highlights_change: function(){
