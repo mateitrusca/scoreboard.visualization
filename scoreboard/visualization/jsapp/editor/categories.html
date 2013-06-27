@@ -1,0 +1,27 @@
+{{# if err_too_few }}
+  <div class="alert alert-error">
+    too few facets remaining for categories
+  </div>
+{{/ if }}
+
+{{# if err_too_many }}
+  <div class="alert alert-error">
+    too many facets remaining for categories
+  </div>
+{{/ if }}
+
+{{# if category_facet }}
+    <div class="alert alert-success">
+      Categories by {{ category_facet.label }}
+    </div>
+    {{category_facet.label}} highlights
+    <select name="highlights" multiple>
+      <option value="">--</option>
+      {{# category_options }}
+        <option value="{{ value }}"
+          {{# if highlight }}selected{{/ if }}
+          >{{ label }}</option>
+      {{/ category_options }}
+    </select>
+  </label>
+{{/ if }}

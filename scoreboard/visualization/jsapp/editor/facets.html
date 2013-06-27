@@ -21,26 +21,7 @@
     </select>
   </label>
 
-  {{# if err_too_few }}
-    too few facets remaining for categories
-  {{/ if }}
+<div class="categories-by">
+</div>
 
-  {{# if err_too_many }}
-    too many facets remaining for categories
-  {{/ if }}
-
-  {{# if category_facet }}
-    categories by {{ category_facet.label }}
-    <label>
-      {{category_facet.label}} highlights
-      <select name="highlights" multiple>
-        <option value="">--</option>
-        {{# category_options }}
-          <option value="{{ value }}"
-            {{# if highlight }}selected{{/ if }}
-            >{{ label }}</option>
-        {{/ category_options }}
-      </select>
-    </label>
-  {{/ if }}
 </div>

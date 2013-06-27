@@ -506,6 +506,18 @@ describe('FacetsEditor', function() {
             expect(view.facet_roles.err_too_few).to.be.true;
         });
 
+        it('should update category facet section', function() {
+            var model = new App.EditorConfiguration({
+                facets: [{name: 'dim3', type: 'select'}]
+            }, {dimensions: four_dimensions});
+            var view = new App.FacetsEditor({model: model});
+            sinon.spy(view.categoryby, 'render');
+            expect(view.categoryby.model.get('err_too_few')).to.be.true;
+            view.$el.find('[data-name="dim3"] [name="type"]').val('all-values').change();
+            expect(view.categoryby.model.get('err_too_few')).to.be.false;
+            expect(view.categoryby.render.calledOnce).to.equal(true);
+        });
+
         it('should warn if there is more than one category', function() {
             var model = new App.EditorConfiguration({
                 facets: [
