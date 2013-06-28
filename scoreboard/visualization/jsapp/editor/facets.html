@@ -9,18 +9,8 @@
 </table>
 
 <div class="editor-facets-axes">
-  <label>
-    Multiple series by
-    <select name="multiple_series">
-      <option value="">--</option>
-      {{# series_options }}
-        <option value="{{ name }}"
-          {{# if selected }}selected{{/ if }}
-          >{{ label }}</option>
-      {{/ series_options }}
-    </select>
-  </label>
-
+  <div name="multiple-series-slot">
+  </div>
   <div class="categories-by">
   </div>
 

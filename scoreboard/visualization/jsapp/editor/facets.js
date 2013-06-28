@@ -385,7 +385,11 @@ App.FacetsEditor = Backbone.View.extend({
     },
 
     update_model: function(){
-        this.model.set(this.categoryby.get_values());
+        var values = {};
+        _(values).extend(this.categoryby.get_values());
+        _(values).extend(this.multipleseries.get_values());
+        this.model.set(values);
+        this.apply_changes();
     },
 
     initialize: function(options) {
@@ -394,7 +398,12 @@ App.FacetsEditor = Backbone.View.extend({
                 'highlights': this.model.get('highlights')
             })
         });
+        this.multipleseries = new App.MultipleSeriesView({
+            model: new Backbone.Model()
+        });
+        this.multipleseries.model.on('change', this.update_model, this);
         this.categoryby.model.on('change', this.update_model, this);
+
         if(! this.model.has('multiple_series')) {
             this.model.set('multiple_series', null);
         }
@@ -440,11 +449,12 @@ App.FacetsEditor = Backbone.View.extend({
                              : null);
         var category_config = {};
         if(category_facet) {
-            this.model.set('category_facet', category_facet['name']);
-            category_config['category_facet'] =  category_facet.name;
+            category_config['category_facet'] =  category_facet['name'];
+            category_config['category_facet_object'] = category_facet;
         }
         else{
             category_config['category_facet'] = null;
+            category_config['category_facet_object'] = null;
         }
         _(category_config).extend({
             err_too_few: (free_dimensions.length < 1),
@@ -452,6 +462,13 @@ App.FacetsEditor = Backbone.View.extend({
         });
         this.categoryby.model.set(category_config);
         this.categoryby.render();
+
+        this.multipleseries.model.set({
+            series_options: series_options,
+            chart_is_multidim: this.chart_is_multidim()
+        });
+        this.multipleseries.render();
+
         this.facet_roles = {
             series_options: series_options,
             err_too_few: (free_dimensions.length < 1),
@@ -461,12 +478,9 @@ App.FacetsEditor = Backbone.View.extend({
     },
 
     render: function() {
-        var context = {
-            series_options: this.facet_roles.series_options,
-            chart_is_multidim: this.chart_is_multidim()
-        };
-        this.$el.html(this.template(context));
+        this.$el.html(this.template());
         this.$el.find('.categories-by').html(this.categoryby.el);
+        this.$el.find('[name="multiple-series-slot"]').html(this.multipleseries.el);
         this.model.facets.forEach(function(facet_model) {
             var facet_view = this.facet_views[facet_model.cid];
             facet_view.render();
@@ -489,18 +503,31 @@ App.FacetsEditor = Backbone.View.extend({
         this.save_value();
     },
 
-    on_highlights_change: function(){
-        var select = this.$el.find('[name="highlights"]');
-        this.model.set('highlights', select.val() || null);
-        this.apply_changes();
+});
+
+App.MultipleSeriesView = Backbone.View.extend({
+    template: App.get_template('editor/multipleseries.html'),
+
+    events: {
+        'change [name="multiple_series"]': 'on_change_multiple_series'
     },
 
-    on_multiple_series_change: function() {
+    initialize: function(){
+        this.render();
+    },
+
+    render: function(){
+        this.$el.html(this.template(this.model.toJSON()));
+    },
+
+    on_change_multiple_series: function() {
         var select = this.$el.find('[name="multiple_series"]');
         this.model.set('multiple_series', select.val() || null);
-        this.apply_changes();
-    }
+    },
 
+    get_values: function(){
+        return _(this.model.toJSON()).pick('multiple_series');
+    }
 });
 
 App.CategoriesView = Backbone.View.extend({

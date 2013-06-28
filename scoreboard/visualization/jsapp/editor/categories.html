@@ -10,11 +10,11 @@
   </div>
 {{/ if }}
 
-{{# if category_facet }}
+{{# if category_facet_object }}
     <div class="alert alert-success">
-      Categories by {{ category_facet.label }}
+      Categories by {{ category_facet_object.label }}
     </div>
-    {{category_facet.label}} highlights
+    {{category_facet_object.label}} highlights
     <select name="highlights" multiple>
       <option value="">--</option>
       {{# category_options }}

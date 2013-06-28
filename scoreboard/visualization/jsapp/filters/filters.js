@@ -109,7 +109,6 @@ App.SelectFilter = Backbone.View.extend({
         App.trim_dimension_group_args(args, this.dimension_group_map);
         this.ajax = this.fetch_options(args);
         this.ajax.done(_.bind(function(data) {
-            console.log(this.name);
             this.ajax = null;
             if (this.options.include_wildcard){
                 _(data['options']).unshift(

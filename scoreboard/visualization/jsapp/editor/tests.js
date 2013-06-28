@@ -508,14 +508,16 @@ describe('FacetsEditor', function() {
 
         it('should update category facet section', function() {
             var model = new App.EditorConfiguration({
-                facets: [{name: 'dim3', type: 'select'}]
+                facets: [{name: 'dim3', type: 'select', label:'dimension3'}]
             }, {dimensions: four_dimensions});
             var view = new App.FacetsEditor({model: model});
             sinon.spy(view.categoryby, 'render');
             expect(view.categoryby.model.get('err_too_few')).to.be.true;
             view.$el.find('[data-name="dim3"] [name="type"]').val('all-values').change();
             expect(view.categoryby.model.get('err_too_few')).to.be.false;
-            expect(view.categoryby.render.calledOnce).to.equal(true);
+            expect(view.categoryby.render.called).to.equal(true);
+            expect(view.$el.find('.categories-by .alert').text().trim()).to.equal(
+            'Categories by dimension3');
         });
 
         it('should warn if there is more than one category', function() {
