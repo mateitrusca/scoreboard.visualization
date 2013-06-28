@@ -7,7 +7,7 @@
 
 App.FacetEditorField = Backbone.View.extend({
 
-    tagName: 'tr',
+    tagName: 'div',
     className: 'editor-facets',
     template: App.get_template('editor/facet-field.html'),
 
@@ -49,10 +49,10 @@ App.FacetEditorField = Backbone.View.extend({
     ],
 
     sort_by_options: [
-        {value: 'nosort', label: "order field"},
-        {value: 'label', label: "label"},
-        {value: 'short_label', label: "short label"},
-        {value: 'notation', label: "code"}
+        {value: 'nosort', label: "by order within the code list"},
+        {value: 'label', label: "by value - long label"},
+        {value: 'short_label', label: "by value - short label"},
+        {value: 'notation', label: "by value - notation"}
     ],
 
     sort_order_options: [
@@ -142,7 +142,7 @@ App.FacetEditorField = Backbone.View.extend({
         this.$el.html(this.template(context));
         this.$el.attr('data-name', this.model.get('name'));
         var params = {
-            placeholder: "Select value",
+            placeholder: "Click to select values",
             allowClear: true
         }
         this.$el.find('[name="ignore_values"]').select2(params);
@@ -402,7 +402,7 @@ App.FacetsEditor = Backbone.View.extend({
 
     template: App.get_template('editor/facets.html'),
 
-    title: "Facets",
+    title: "Filter settings",
 
     events: {
         'change [name="multiple_series"]': 'on_multiple_series_change'
@@ -493,7 +493,7 @@ App.FacetsEditor = Backbone.View.extend({
         this.model.facets.forEach(function(facet_model) {
             var facet_view = this.facet_views[facet_model.cid];
             facet_view.render();
-            this.$el.find('tbody').append(facet_view.el);
+            this.$el.find('div.facets').append(facet_view.el);
             facet_view.delegateEvents();
         }, this);
     },
@@ -624,7 +624,7 @@ App.CategoriesView = Backbone.View.extend({
         }).extend(this.model.toJSON(), this.parent_view.facet_roles);
         this.$el.html(this.template(context));
         var params = {
-            placeholder: "Select value",
+            placeholder: "Click to select values",
             allowClear: true,
         }
         this.$el.find('[name="highlights"]').select2(params);

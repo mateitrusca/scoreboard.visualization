@@ -1,15 +1,10 @@
-<td>
-  <a href="#" class="facet-sort" data-sort-direction="up">&uarr;</a>
-  <a href="#" class="facet-sort" data-sort-direction="down">&darr;</a>
-</td>
-
-<td>
-  <label>label</label>
+<p class="editor-facet-name">Settings for dimension "{{ name }}"</p>
+<div class="editor-facet-field">
+  <label>Enter the label of the filter, as it will appear on the visualisation page</label>
   <input type="text" name="label" title="{{ name }}" value="{{ label }}" />
-</td>
-
-<td>
-  <label>type</label>
+</div>
+<div class="editor-facet-field">
+  <label>Select type of filter. Choose "ignore" to hide this filter and "all values" when this dimension is displayed on the axes or triggers multiple series </label>
   <select name="type">
   {{# type_options }}
     <option value="{{ value }}"
@@ -17,44 +12,49 @@
       >{{ label }}</option>
   {{/ type_options }}
   </select>
-  </br>
+</div>
 
-  {{# if is_single_select }}
-    <label>allow "any" value</label>
-    <input type="checkbox" name="include_wildcard"
+{{# if is_single_select }}
+<div class="editor-facet-field checkbox">
+    <label for="include_wildcard">
+      <input type="checkbox" name="include_wildcard" id="include_wildcard"
         {{# if include_wildcard }}checked{{/ if }}>
-    </br>
-  {{/ if }}
+      Check this box to have the "Any" value in the selection list
+    </label>
+</div>
+{{/ if }}
 
-  <label>position</label>
-  <select name="position" class="span2">
+<div class="editor-facet-field">
+  <label>Choose the location of the current filter within the filters panel</label>
+  <select name="position">
   {{# position_options }}
     <option value="{{ value }}"
       {{# if selected }}selected{{/ if }}
       >{{ label }}</option>
   {{/ position_options }}
   </select>
-  </br>
+</div>
 
-  <label>sort</label>
-  <select name="sort-by" class="span2">
+<div class="editor-facet-field">
+  <label>Choose how the values of the filter are be sorted</label>
+  <select name="sort-by">
   {{# sort_by_options }}
     <option value="{{ value }}"
       {{# if selected }}selected{{/ if }}
       >{{ label }}</option>
   {{/ sort_by_options }}
   </select>
-
-  <select name="sort-order" class="span2">
+  <select name="sort-order">
   {{# sort_order_options }}
     <option value="{{ value }}"
       {{# if selected }}selected{{/ if }}
       >{{ label }}</option>
   {{/ sort_order_options }}
   </select>
-  </br>
+</div>
 
-  <label>default value</label>
+<div class="editor-facet-field">
+  <label>Choose the default value of this filter</label>
   {{# if options_received}}
   <select name="default_value" multiple>
   {{# facet_options }}
@@ -67,8 +67,10 @@
     <span class="label label-important">-- loading options --</span>
   {{/ if}}
   </br>
+</div>
 
-  <label>ignore values</label>
+<div class="editor-facet-field">
+  <label>Choose values that will be hidden in the selection list</label>
   {{# if options_received}}
   <select name="ignore_values" multiple>
   {{# facet_options }}
@@ -81,10 +83,13 @@
     <span class="label label-important">-- loading options --</span>
   {{/ if}}
   </br>
+</div>
 
 {{# if chart_is_multidim }}
+<div class="editor-facet-field">
   <label>multidim</label>
   <input type="checkbox" name="multidim"
       {{# if multidim }}checked{{/ if }}>
   </br>
+</div>
 {{/ if }}
