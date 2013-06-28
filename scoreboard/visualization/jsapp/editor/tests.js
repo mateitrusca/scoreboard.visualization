@@ -388,7 +388,7 @@ describe('FacetsEditor', function() {
 
     describe('highlights', function() {
 
-        it('should display existing values', function() {
+        it('should display existing highlights', function() {
             this.sandbox.useFakeServer();
             var view = new App.FacetsEditor({
                 model: new App.EditorConfiguration({
@@ -515,7 +515,6 @@ describe('FacetsEditor', function() {
             expect(view.categoryby.model.get('err_too_few')).to.be.true;
             view.$el.find('[data-name="dim3"] [name="type"]').val('all-values').change();
             expect(view.categoryby.model.get('err_too_few')).to.be.false;
-            expect(view.categoryby.render.called).to.equal(true);
             expect(view.$el.find('.categories-by .alert').text().trim()).to.equal(
             'Categories by dimension3');
         });

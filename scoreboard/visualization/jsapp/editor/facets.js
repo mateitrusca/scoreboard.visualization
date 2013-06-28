@@ -396,10 +396,12 @@ App.FacetsEditor = Backbone.View.extend({
         this.categoryby = new App.CategoriesView({
             model: new Backbone.Model({
                 'highlights': this.model.get('highlights')
-            })
+            }),
+            parent_view: this
         });
         this.multipleseries = new App.MultipleSeriesView({
-            model: new Backbone.Model()
+            model: new Backbone.Model(),
+            parent_view: this
         });
         this.multipleseries.model.on('change', this.update_model, this);
         this.categoryby.model.on('change', this.update_model, this);
@@ -447,34 +449,15 @@ App.FacetsEditor = Backbone.View.extend({
         var category_facet = (free_dimensions.length == 1
                              ? free_dimensions[0]
                              : null);
-        var category_config = {};
-        if(category_facet) {
-            category_config['category_facet'] =  category_facet['name'];
-            category_config['category_facet_object'] = category_facet;
-        }
-        else{
-            category_config['category_facet'] = null;
-            category_config['category_facet_object'] = null;
-        }
-        _(category_config).extend({
-            err_too_few: (free_dimensions.length < 1),
-            err_too_many: (free_dimensions.length > 1)
-        });
-        this.categoryby.model.set(category_config);
-        this.categoryby.render();
-
-        this.multipleseries.model.set({
-            series_options: series_options,
-            chart_is_multidim: this.chart_is_multidim()
-        });
-        this.multipleseries.render();
-
         this.facet_roles = {
             series_options: series_options,
             err_too_few: (free_dimensions.length < 1),
             err_too_many: (free_dimensions.length > 1),
             category_facet: category_facet
         }
+        this.categoryby.update();
+        this.multipleseries.update();
+
     },
 
     render: function() {
@@ -512,7 +495,17 @@ App.MultipleSeriesView = Backbone.View.extend({
         'change [name="multiple_series"]': 'on_change_multiple_series'
     },
 
-    initialize: function(){
+    initialize: function(options){
+        this.parent_view = options.parent_view;
+        this.model.on('change', this.render, this);
+        this.render();
+    },
+
+    update: function(){
+        this.model.set({
+            series_options: this.parent_view.facet_roles.series_options,
+            chart_is_multidim: this.parent_view.chart_is_multidim()
+        });
         this.render();
     },
 
@@ -538,7 +531,30 @@ App.CategoriesView = Backbone.View.extend({
         'change [name="highlights"]': 'on_change_highlights',
     },
 
-    initialize: function(){
+    initialize: function(options){
+        this.parent_view = options.parent_view;
+        this.update();
+    },
+
+    update: function(){
+        var category_config = {};
+        if(this.parent_view.facet_roles) {
+            if (this.parent_view.facet_roles.category_facet){
+                category_config['category_facet'] = this.parent_view.facet_roles.category_facet['name'];
+            }
+            _(category_config).extend({
+                err_too_few: this.parent_view.facet_roles.err_too_few,
+                err_too_many: this.parent_view.facet_roles.err_too_many
+            });
+        }
+        else{
+            _(category_config).extend({
+                category_facet: null,
+                err_too_few: null,
+                err_too_many: null
+            });
+        }
+        this.model.set(category_config);
         this.render();
     },
 
@@ -575,9 +591,9 @@ App.CategoriesView = Backbone.View.extend({
         };
     },
 
-
     render: function(){
-        this.$el.html(this.template(this.model.toJSON()));
+        var context = _({}).extend(this.model.toJSON(), this.parent_view.facet_roles);
+        this.$el.html(this.template(context));
         var params = {
             placeholder: "Select value",
             allowClear: true,
