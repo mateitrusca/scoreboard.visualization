@@ -515,8 +515,24 @@ describe('FacetsEditor', function() {
             expect(view.categoryby.model.get('err_too_few')).to.be.true;
             view.$el.find('[data-name="dim3"] [name="type"]').val('all-values').change();
             expect(view.categoryby.model.get('err_too_few')).to.be.false;
+
             expect(view.$el.find('.categories-by .alert').text().trim()).to.equal(
             'Categories by dimension3');
+        });
+
+        it('should update category section when selecting multipleseries', function(){
+            var model = new App.EditorConfiguration({
+                facets: [{name: 'dim1', type: 'select', label: 'dimension1'},
+                         {name: 'dim3', type: 'select'}]
+            }, {dimensions: four_dimensions});
+            var view = new App.FacetsEditor({model: model});
+            view.$el.find('[data-name="dim3"] [name="type"]').val('all-values').change();
+            view.$el.find('[data-name="dim4"] [name="type"]').val('all-values').change();
+            view.$el.find('[name="multiple_series"]').val('dim3').change();
+            expect(view.model.attributes.multiple_series).to.equal('dim3');
+            expect(view.model.attributes.category_facet).to.equal('dim4');
+            expect(view.categoryby.$el.find('.alert').text().trim()).to.equal(
+            'Categories by Dim 4');
         });
 
         it('should warn if there is more than one category', function() {

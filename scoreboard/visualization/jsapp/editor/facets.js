@@ -464,6 +464,8 @@ App.FacetsEditor = Backbone.View.extend({
         this.$el.html(this.template());
         this.$el.find('.categories-by').html(this.categoryby.el);
         this.$el.find('[name="multiple-series-slot"]').html(this.multipleseries.el);
+        this.categoryby.delegateEvents();
+        this.multipleseries.delegateEvents();
         this.model.facets.forEach(function(facet_model) {
             var facet_view = this.facet_views[facet_model.cid];
             facet_view.render();
