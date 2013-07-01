@@ -55,6 +55,7 @@
   </br>
 
   <label>default value</label>
+  {{# if options_received}}
   <select name="default_value" multiple>
   {{# facet_options }}
     <option value="{{ value }}"
@@ -62,6 +63,9 @@
       >{{ label }}</option>
   {{/ facet_options }}
   </select>
+  {{ else }}
+    <span class="label label-important">-- loading options --</span>
+  {{/ if}}
   </br>
 
   <label>ignore values</label>

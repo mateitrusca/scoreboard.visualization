@@ -15,13 +15,17 @@
       Categories by {{ category_facet.label }}
     </div>
     {{category_facet.label}} highlights
-    <select name="highlights" multiple>
-      <option value="">--</option>
-      {{# category_options }}
-        <option value="{{ value }}"
-          {{# if highlight }}selected{{/ if }}
-          >{{ label }}</option>
-      {{/ category_options }}
-    </select>
+    {{# if options_received}}
+      <select name="highlights" multiple>
+        <option value="">--</option>
+        {{# category_options }}
+          <option value="{{ value }}"
+            {{# if highlight }}selected{{/ if }}
+            >{{ label }}</option>
+        {{/ category_options }}
+      </select>
+    {{ else }}
+      <span class="label label-important">-- loading options --</span>
+    {{/ if}}
   </label>
 {{/ if }}

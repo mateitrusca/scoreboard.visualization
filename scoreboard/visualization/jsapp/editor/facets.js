@@ -77,15 +77,15 @@ App.FacetEditorField = Backbone.View.extend({
             });
             this.facet_options = options;
             this.trigger('options_received', this);
+            this.options_received = true;
             this.render();
         },this));
-
-        this.render();
     },
 
     render: function() {
         var context = _({
             is_refarea: (this.model.get('dimension') == 'ref-area')?true:false,
+            options_received: this.options_received || false,
             facet_label: this.model.get('label'),
             facet_options: _.chain(this.facet_options)
                 .map(function(opt, idx, list) {
@@ -181,13 +181,13 @@ App.FacetEditorField = Backbone.View.extend({
                 opt['default'] = true;
                 result.push(opt.value);
             }
-            if (_(value).contains('#random')){
-                result.push('#random');
-            }
-            if (_(value).contains('#eu27')){
-                result = _.union(result, App.EU27);
-            }
         });
+        if (_(value).contains('#random')){
+            result.push('#random');
+        }
+        if (_(value).contains('#eu27')){
+            result = _.union(result, App.EU27);
+        }
         if (result.length > 0){
             if (this.model.get('type') == 'select'){
                 this.model.set({default_value: result[0]});
@@ -613,12 +613,15 @@ App.CategoriesView = Backbone.View.extend({
                 return cat;
             }, this);
             this.model.set('category_options', options);
+            this.options_received = true;
             this.render();
         };
     },
 
     render: function(){
-        var context = _({}).extend(this.model.toJSON(), this.parent_view.facet_roles);
+        var context = _({
+            options_received: this.options_received || false
+        }).extend(this.model.toJSON(), this.parent_view.facet_roles);
         this.$el.html(this.template(context));
         var params = {
             placeholder: "Select value",
