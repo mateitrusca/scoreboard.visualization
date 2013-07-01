@@ -86,38 +86,49 @@ App.FacetEditorField = Backbone.View.extend({
     render: function() {
         var context = _({
             facet_label: this.model.get('label'),
-            facet_options: _(this.facet_options).map(function(opt) {
-                if (_(this.model.get('default_value')).contains(opt['value'])) {
-                    return _({"default": true}).extend(opt);
-                }
-                return opt;
-            }, this),
+            facet_options: _.chain(this.facet_options)
+                .map(function(opt, idx, list) {
+                        if (_(this.model.get('default_value')).contains(opt['value']) ||
+                            this.model.get('default_value') == opt['value']) {
+                            return _({"default": true}).extend(opt);
+                        }
+                        return opt;
+                    }, this)
+                .tap(_.bind(function(object, interceptor){
+                        var random = { 'label': '#random',
+                                       'value': '#random' }
+                        if (this.model.get('default_value') == '#random'){
+                            random['default'] = true;
+                        }
+                        object.push(random);
+                    }, this))
+                .value(),
             position_options:_(this.position_options).map(function(opt) {
-                var selected = (this.model.get('position') == opt['value']);
-                return _({
-                    selected: selected
-                }).extend(opt);
-            }, this),
+                    var selected = (this.model.get('position') == opt['value']);
+                    return _({
+                        selected: selected
+                    }).extend(opt);
+                }, this),
             type_options: _(this.type_options).map(function(opt) {
-                var selected = this.model.get('type') == opt['value'];
-                return _({
-                    selected: selected
-                }).extend(opt);
-            }, this),
+                    var selected = this.model.get('type') == opt['value'];
+                    return _({
+                        selected: selected
+                    }).extend(opt);
+                }, this),
             sort_by_options: _(this.sort_by_options).map(function(spec) {
-                var opt = _({}).extend(spec);
-                if(spec['value'] == this.model.get('sortBy')) {
-                    opt['selected'] = true;
-                }
-                return opt;
-            }, this),
+                    var opt = _({}).extend(spec);
+                    if(spec['value'] == this.model.get('sortBy')) {
+                        opt['selected'] = true;
+                    }
+                    return opt;
+                }, this),
             sort_order_options: _(this.sort_order_options).map(function(spec) {
-                var opt = _({}).extend(spec);
-                if(spec['value'] == this.model.get('sortOrder')) {
-                    opt['selected'] = true;
-                }
-                return opt;
-            }, this),
+                    var opt = _({}).extend(spec);
+                    if(spec['value'] == this.model.get('sortOrder')) {
+                        opt['selected'] = true;
+                    }
+                    return opt;
+                }, this),
             is_single_select: (this.model.get('type') == 'select'),
             chart_is_multidim: this.facets_editor.chart_is_multidim()
         }).extend(this.model.toJSON());
@@ -163,7 +174,10 @@ App.FacetEditorField = Backbone.View.extend({
                 opt['default'] = true;
                 result.push(opt.value);
             }
-        })
+            if (_(value).contains('#random')){
+                result.push('#random');
+            }
+        });
         if (result.length > 0){
             if (this.model.get('type') == 'select'){
                 this.model.set({default_value: result[0]});

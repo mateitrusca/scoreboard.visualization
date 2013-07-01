@@ -326,6 +326,27 @@ describe('FacetsEditor', function() {
             expect(model.facets.models[0].get('default_value')).to.be.undefined;
         });
 
+        it('should have "#random" option', function(){
+            this.sandbox.useFakeServer();
+            var model = new App.EditorConfiguration({
+                    facets: [
+                        {name: 'dim1', type: 'select'}
+                    ]
+                }, {
+                    dimensions: [
+                        {type_label: 'dimension', notation: 'dim1'}
+                    ]
+                });
+            var view = new App.FacetsEditor({model: model});
+            var server = this.sandbox.server;
+            var options = [{'label': "Option One", 'notation': 'one'},
+                           {'label': "Option Two", 'notation': 'two'}];
+            App.respond_json(server.requests[0], {'options': options});
+            var select = view.$el.find('[name="default_value"]:first');
+            select.val(['#random']).change();
+            expect(model.facets.models[0].get('default_value')).to.equal('#random');
+        });
+
     });
 
     describe('facet position', function() {
