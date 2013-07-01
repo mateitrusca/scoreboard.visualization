@@ -168,6 +168,7 @@ App.chart_library['country_profile'] = function(view, options) {
                 align: 'center',
                 style: {
                     color: '#000000',
+                    fontFamily: 'Arial',
                     fontWeight: 'bold',
                     fontSize:'1.2em',
                     width: '600'
@@ -177,6 +178,7 @@ App.chart_library['country_profile'] = function(view, options) {
                 y:50,
                 text: options.meta_data['subtitle'],
                 style: {
+                    fontFamily: 'Arial',
                     fontWeight: 'bold',
                     fontSize: '16px'
                 },
@@ -189,7 +191,8 @@ App.chart_library['country_profile'] = function(view, options) {
                     rotation: 0,
                     align: 'right',
                     style: {
-                        color: '#000000'
+                        color: '#000000',
+                        fontFamily: 'Arial'
                     }
                  }
             },
