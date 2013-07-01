@@ -85,6 +85,7 @@ App.FacetEditorField = Backbone.View.extend({
 
     render: function() {
         var context = _({
+            is_refarea: (this.model.get('dimension') == 'ref-area')?true:false,
             facet_label: this.model.get('label'),
             facet_options: _.chain(this.facet_options)
                 .map(function(opt, idx, list) {
@@ -96,11 +97,17 @@ App.FacetEditorField = Backbone.View.extend({
                     }, this)
                 .tap(_.bind(function(object, interceptor){
                         var random = { 'label': '#random',
-                                       'value': '#random' }
+                                       'value': '#random' };
                         if (this.model.get('default_value') == '#random'){
                             random['default'] = true;
                         }
                         object.push(random);
+                        if (this.model.get('type') == 'multiple_select' &&
+                            this.model.get('dimension') == 'ref-area'){
+                            var eu27 = { 'label': '#eu27',
+                                         'value': '#eu27' };
+                            object.push(eu27);
+                        }
                     }, this))
                 .value(),
             position_options:_(this.position_options).map(function(opt) {
@@ -176,6 +183,9 @@ App.FacetEditorField = Backbone.View.extend({
             }
             if (_(value).contains('#random')){
                 result.push('#random');
+            }
+            if (_(value).contains('#eu27')){
+                result = _.union(result, App.EU27);
             }
         });
         if (result.length > 0){

@@ -347,6 +347,73 @@ describe('FacetsEditor', function() {
             expect(model.facets.models[0].get('default_value')).to.equal('#random');
         });
 
+        it('should have "#eu27" option for country multiple_select', function(){
+            this.sandbox.useFakeServer();
+            var model = new App.EditorConfiguration({
+                    facets: [
+                        {name: 'ref-area', type: 'multiple_select', dimension: 'ref-area'},
+                        {name: 'ref-area1', type: 'multiple_select', dimension: 'other'},
+                        {name: 'ref-area2', type: 'select', dimension: 'ref-area'},
+                    ]
+                }, {
+                    dimensions: [
+                        {type_label: 'dimension', notation: 'ref-area'},
+                        {type_label: 'dimension', notation: 'other'}
+                    ]
+                });
+            var view = new App.FacetsEditor({model: model});
+            var server = this.sandbox.server;
+            var options = [{'label': "Option One", 'notation': 'one'},
+                           {'label': "Option Two", 'notation': 'two'}];
+            App.respond_json(server.requests[0], {'options': options});
+            App.respond_json(server.requests[1], {'options': options});
+            var select = view.$el.find('[name="default_value"]:eq(0)');
+            select.val(['#eu27']).change();
+            expect(model.facets.models[0].get('default_value')).to.deep.equal(App.EU27);
+            var select = view.$el.find('[name="default_value"]:eq(1)');
+            expect(select.find('option[value="#eu27"]').toArray()).to.deep.equal([]);
+        });
+
+        it('should not have "#eu27" option for country single select', function(){
+            this.sandbox.useFakeServer();
+            var model = new App.EditorConfiguration({
+                    facets: [
+                        {name: 'ref-area', type: 'select', dimension: 'ref-area'},
+                    ]
+                }, {
+                    dimensions: [
+                        {type_label: 'dimension', notation: 'ref-area'}
+                    ]
+                });
+            var view = new App.FacetsEditor({model: model});
+            var server = this.sandbox.server;
+            var options = [{'label': "Option One", 'notation': 'one'},
+                           {'label': "Option Two", 'notation': 'two'}];
+            App.respond_json(server.requests[0], {'options': options});
+            var select = view.$el.find('[name="default_value"]:eq(0)');
+            expect(select.find('option[value="#eu27"]').toArray()).to.deep.equal([]);
+        });
+
+        it('should not have "#eu27" option for non country dimension', function(){
+            this.sandbox.useFakeServer();
+            var model = new App.EditorConfiguration({
+                    facets: [
+                        {name: 'ref-area', type: 'multiple_select', dimension: 'other'}
+                    ]
+                }, {
+                    dimensions: [
+                        {type_label: 'dimension', notation: 'other'}
+                    ]
+                });
+            var view = new App.FacetsEditor({model: model});
+            var server = this.sandbox.server;
+            var options = [{'label': "Option One", 'notation': 'one'},
+                           {'label': "Option Two", 'notation': 'two'}];
+            App.respond_json(server.requests[0], {'options': options});
+            var select = view.$el.find('[name="default_value"]:eq(0)');
+            expect(select.find('option[value="#eu27"]').toArray()).to.deep.equal([]);
+        });
+
     });
 
     describe('facet position', function() {
