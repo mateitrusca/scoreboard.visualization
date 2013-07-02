@@ -1,4 +1,3 @@
-{{#if not_first}}
 <select class="span1" name="title-part-prefix">
 {{# prefix_options }}
   <option value="{{ value }}"
@@ -6,7 +5,6 @@
     >{{ label }}</option>
 {{/ prefix_options }}
 </select>
-{{/if}}
 <select name="title-part">
   <option value="">--</option>
 {{# facets }}
@@ -22,7 +20,6 @@
     >{{ label }}</option>
 {{/ format_options }}
 </select>
-{{#if not_first}}
 <select class="span1" name="title-part-suffix">
 {{# suffix_options }}
   <option value="{{ value }}"
@@ -30,7 +27,6 @@
     >{{ label }}</option>
 {{/ suffix_options }}
 </select>
-{{/if}}
 {{#if not_first}}
 <button name="remove-title-part" id="{{ id }}">
   <span class="ui-icon ui-icon-minusthick"></span>

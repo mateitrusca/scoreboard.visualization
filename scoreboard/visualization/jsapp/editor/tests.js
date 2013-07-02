@@ -963,13 +963,10 @@ describe('AxesEditor', function() {
         it('should render prefix options', function(){
             var model = new Backbone.Model({
                 facets: [
-                    {name: 'ind', type: 'select', value: 'indicator'},
-                    {name: 'brk', type: 'select', value: 'breakdown'},
+                    {name: 'ind', type: 'select', value: 'indicator'}
                 ]
             });
             var view = new App.AxesEditor({model: model});
-            var add_button = view.composers_views.title.$el.find('[name="add-title-part"]');
-            add_button.click();
             var prefix = view.composers_views.title.$el.find(
                 '[name="title-part-prefix"]');
             var opts = prefix.find('option');
@@ -980,13 +977,10 @@ describe('AxesEditor', function() {
         it('should render suffix options', function(){
             var model = new Backbone.Model({
                 facets: [
-                    {name: 'ind', type: 'select', value: 'indicator'},
-                    {name: 'brk', type: 'select', value: 'breakdown'},
+                    {name: 'ind', type: 'select', value: 'indicator'}
                 ]
             });
             var view = new App.AxesEditor({model: model});
-            var add_button = view.composers_views.title.$el.find('[name="add-title-part"]');
-            add_button.click();
             var suffix = view.composers_views.title.$el.find(
                 '[name="title-part-suffix"]');
             var opts = suffix.find('option');
@@ -994,7 +988,7 @@ describe('AxesEditor', function() {
             expect(suffix.val()).to.equal("");
         });
 
-        it('should save selected prefixes', function(){
+        it('should save selected prefixes and suffixes', function(){
             var model = new Backbone.Model({
                 facets: [
                     {name: 'ind', type: 'select', value: 'indicator'},
@@ -1007,35 +1001,16 @@ describe('AxesEditor', function() {
             select.val('ind').change();
             add_button.click();
             var prefix = view.composers_views.title.$el.find(
-                '[name="title-part-prefix"]');
-            prefix.val(' by ').change();
+                '[name="title-part-prefix"]:eq(0)');
+            prefix.val(' ( ').change();
             var select = view.composers_views.title.$el.find('[name="title-part"]:eq(1)');
             select.val('brk').change();
-            expect(view.model.get('titles')['title']).to.deep.equal(
-                [ {facet_name: 'ind', prefix: null, suffix: null, format: 'short_label'},
-                  {prefix: ' by ', suffix: null, facet_name: 'brk', format: 'short_label'}]);
-        });
-
-        it('should save selected suffixes', function(){
-            var model = new Backbone.Model({
-                facets: [
-                    {name: 'ind', type: 'select', value: 'indicator'},
-                    {name: 'brk', type: 'select', value: 'breakdown'},
-                ]
-            });
-            var view = new App.AxesEditor({model: model});
-            var add_button = view.composers_views.title.$el.find('[name="add-title-part"]');
-            var select = view.composers_views.title.$el.find('[name="title-part"]:eq(0)');
-            select.val('ind').change();
-            add_button.click();
             var suffix = view.composers_views.title.$el.find(
-                '[name="title-part-suffix"]');
-            suffix.val(' by ').change();
-            var select = view.composers_views.title.$el.find('[name="title-part"]:eq(1)');
-            select.val('brk').change();
+                '[name="title-part-suffix"]:eq(1)');
+            suffix.val(' ) ').change();
             expect(view.model.get('titles')['title']).to.deep.equal(
-                [ {facet_name: 'ind', prefix: null, suffix: null, format: 'short_label'},
-                  {prefix: null, suffix: ' by ', facet_name: 'brk', format: 'short_label'}]);
+                [ {facet_name: 'ind', prefix: ' ( ', suffix: null, format: 'short_label'},
+                  {prefix: null, suffix: ' ) ', facet_name: 'brk', format: 'short_label'}]);
         });
 
         it('should display existing title parts', function(){
@@ -1052,9 +1027,9 @@ describe('AxesEditor', function() {
             var view = new App.AxesEditor({model: model});
             var select1 = view.composers_views.title.$el.find('[name="title-part"]:eq(0)');
             var prefix = view.composers_views.title.$el.find(
-                '[name="title-part-prefix"]');
+                '[name="title-part-prefix"]:eq(1)');
             var suffix = view.composers_views.title.$el.find(
-                '[name="title-part-suffix"]');
+                '[name="title-part-suffix"]:eq(1)');
             var select2 = view.composers_views.title.$el.find('[name="title-part"]:eq(1)');
             expect(select1.val()).to.equal('ind');
             expect(prefix.val()).to.equal(', ');
@@ -1076,9 +1051,9 @@ describe('AxesEditor', function() {
             var view = new App.AxesEditor({model: model});
             var select1 = view.composers_views.title.$el.find('[name="title-part"]:eq(0)');
             var prefix = view.composers_views.title.$el.find(
-                '[name="title-part-prefix"]');
+                '[name="title-part-prefix"]:eq(1)');
             var suffix = view.composers_views.title.$el.find(
-                '[name="title-part-suffix"]');
+                '[name="title-part-suffix"]:eq(1)');
             var select2 = view.composers_views.title.$el.find('[name="title-part"]:eq(1)');
             expect(select1.val()).to.equal('ind');
             expect(prefix.length).to.equal(0);
@@ -1087,32 +1062,6 @@ describe('AxesEditor', function() {
             expect(view.model.get('titles')['title']).to.deep.equal(
                 [{facet_name: 'ind', prefix: null, suffix: null, format: 'short_label'}]);
         })
-
-        it('should never add prefix & suffix to the first title part', function(){
-            var model = new Backbone.Model({
-                facets: [
-                    {name: 'ind', type: 'multiple_select', value: 'indicator'},
-                    {name: 'brk', type: 'select', value: 'breakdown'},
-                ],
-                titles: {
-                    title: [{facet_name: "ind"},
-                            {prefix: ',', suffix: null, facet_name: "brk"}]
-                }
-            });
-            var view = new App.AxesEditor({model: model});
-            var select1 = view.composers_views.title.$el.find('[name="title-part"]:eq(0)');
-            var prefix = view.composers_views.title.$el.find(
-                '[name="title-part-prefix"]');
-            var suffix = view.composers_views.title.$el.find(
-                '[name="title-part-suffix"]');
-            var select2 = view.composers_views.title.$el.find('[name="title-part"]:eq(1)');
-            expect(select1.val()).to.equal('brk');
-            expect(prefix.length).to.equal(0);
-            expect(suffix.length).to.equal(0);
-            expect(select2.length).to.equal(0);
-            expect(view.model.get('titles')['title']).to.deep.equal(
-                [{facet_name: 'brk', prefix: null, suffix: null, format: 'short_label'}]);
-        });
 
         it('should remove title part when empty facet name', function(){
             var model = new Backbone.Model({
@@ -1175,7 +1124,7 @@ describe('AxesEditor', function() {
             add_button.click();
             format_select.val('label').change();
             var prefix = view.composers_views.title.$el.find(
-                '[name="title-part-prefix"]');
+                '[name="title-part-prefix"]:eq(1)');
             prefix.val(' by ').change();
             var select = view.composers_views.title.$el.find(
                                     '[name="title-part"]:eq(1)');
