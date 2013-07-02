@@ -1135,7 +1135,26 @@ describe('AxesEditor', function() {
             select3.val("").change();
             expect(view.model.get('titles')['title']).to.deep.equal(
                 [{facet_name: 'ind', prefix: null, sufix: null, format: 'short_label'}]);
-        })
+        });
+
+        it('should remove title part when clicking remove button', function(){
+            var model = new Backbone.Model({
+                facets: [
+                    {name: 'ind', type: 'select', value: 'indicator'},
+                    {name: 'brk', type: 'select', value: 'breakdown'}
+                ],
+                titles: {
+                    title: [{facet_name: "ind"},
+                            {prefix: ',', sufix: null, facet_name: "brk"} ]
+                }
+            });
+            var view = new App.AxesEditor({model: model});
+            var remove_button = view.composers_views.title.$el.find(
+                                '[name="remove-title-part"]:eq(0)');
+            remove_button.click();
+            expect(view.model.get('titles')['title']).to.deep.equal(
+                [{facet_name: 'ind', prefix: null, sufix: null, format: 'short_label'}]);
+        });
 
         it('should update labels section on model', function(){
             var model = new Backbone.Model({

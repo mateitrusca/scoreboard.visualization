@@ -171,7 +171,8 @@ App.TitleComposerModel = Backbone.Model.extend({
 App.TitleComposerView = Backbone.View.extend({
 
     events: {
-        'click [name="add-title-part"]': 'on_add_part'
+        'click [name="add-title-part"]': 'on_add_part',
+        'click [name="remove-title-part"]': 'on_remove_part'
     },
 
     template: App.get_template('editor/title.html'),
@@ -215,6 +216,14 @@ App.TitleComposerView = Backbone.View.extend({
         });
         this.parts.add(part_view.model);
         this.part_views[part_view.model.cid] = part_view;
+        this.render();
+    },
+
+    on_remove_part: function(){
+        var cid = this.$el.find('[name="remove-title-part"]').attr('id');
+        var part = this.parts.get(cid);
+        this.parts.remove(part);
+        this.model.set('parts', this.parts.get_values());
         this.render();
     },
 
