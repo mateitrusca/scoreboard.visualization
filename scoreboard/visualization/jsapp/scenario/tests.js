@@ -863,7 +863,7 @@ describe('ScenarioChartView', function() {
                 scenario_chart: sinon.mock()
             });
             var parts = [
-                {facet_name: 'ind', prefix: '(', sufix: ')', format: "short_label"},
+                {facet_name: 'ind', prefix: '(', suffix: ')', format: "short_label"},
             ];
             var meta_data = {
                 ind: {'label': 'label1', 'short_label': 'short1'}
@@ -890,7 +890,7 @@ describe('ScenarioChartView', function() {
             expect(title).to.equal('label1-label2');
         });
 
-        it('should use the specified sufix', function() {
+        it('should use the specified suffix', function() {
             var chart = new App.ScenarioChartView({
                 model:  new Backbone.Model(),
                 schema: {},
@@ -898,7 +898,7 @@ describe('ScenarioChartView', function() {
             });
             var parts = [
                 {facet_name: 'ind', format: 'label'},
-                {sufix: '-', facet_name: 'brk', format: 'label'}
+                {suffix: '-', facet_name: 'brk', format: 'label'}
             ];
             var meta_data = {
                 ind: {'label': 'label1', 'short_label': 'short1'},

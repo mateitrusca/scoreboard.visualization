@@ -23,12 +23,12 @@
 {{/ format_options }}
 </select>
 {{#if not_first}}
-<select class="span1" name="title-part-sufix">
-{{# sufix_options }}
+<select class="span1" name="title-part-suffix">
+{{# suffix_options }}
   <option value="{{ value }}"
     {{# if selected }}selected{{/ if }}
     >{{ label }}</option>
-{{/ sufix_options }}
+{{/ suffix_options }}
 </select>
 {{/if}}
 {{#if not_first}}
