@@ -93,17 +93,14 @@ App.ScenarioChartView = Backbone.View.extend({
         });
         var title = '';
         _(parts).each(function(item, idx){
-            var prefix = item.prefix || ', ';
+            var prefix = item.prefix || '';
+            if (idx > 0 && !parts[idx-1].sufix && !prefix){
+                prefix = ' ';
+            }
             var sufix = item.sufix || '';
             var part = (item.text != 'Total')?item.text:null;
-            if (idx > 0 && part){
-                title += prefix;
-            }
             if (part){
-                title += part;
-            }
-            if (idx > 0 && part){
-                title += sufix;
+                title += (prefix + part + sufix);
             }
         });
         return title;

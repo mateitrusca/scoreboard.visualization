@@ -838,7 +838,7 @@ describe('ScenarioChartView', function() {
     });
 
     describe('title formatter', function() {
-        it('should use the default prefix', function() {
+        it('should avoid sticking parts together', function() {
             var chart = new App.ScenarioChartView({
                 model:  new Backbone.Model(),
                 schema: {},
@@ -853,7 +853,23 @@ describe('ScenarioChartView', function() {
                 brk: {'label': 'label2', 'short_label': 'short2'},
             }
             var title = chart.title_formatter(parts, meta_data);
-            expect(title).to.equal('short1, label2');
+            expect(title).to.equal('short1 label2');
+        });
+
+        it('should allow prefix and suffix for the first title part', function() {
+            var chart = new App.ScenarioChartView({
+                model:  new Backbone.Model(),
+                schema: {},
+                scenario_chart: sinon.mock()
+            });
+            var parts = [
+                {facet_name: 'ind', prefix: '(', sufix: ')', format: "short_label"},
+            ];
+            var meta_data = {
+                ind: {'label': 'label1', 'short_label': 'short1'}
+            }
+            var title = chart.title_formatter(parts, meta_data);
+            expect(title).to.equal('(short1)');
         });
 
         it('should use the specified prefix', function() {
@@ -889,7 +905,7 @@ describe('ScenarioChartView', function() {
                 brk: {'label': 'label2', 'short_label': 'short2'},
             }
             var title = chart.title_formatter(parts, meta_data);
-            expect(title).to.equal('label1, label2-');
+            expect(title).to.equal('label1 label2-');
         });
 
         it('should ignore "Total" with prefix', function() {
