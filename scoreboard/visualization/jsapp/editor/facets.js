@@ -91,7 +91,7 @@ App.FacetEditorField = Backbone.View.extend({
                 .map(function(opt, idx, list) {
                         if (_(this.model.get('default_value')).contains(opt['value']) ||
                             this.model.get('default_value') == opt['value']) {
-                            return _({"default": true}).extend(opt);
+                            opt['default'] = true;
                         }
                         return opt;
                     }, this)
