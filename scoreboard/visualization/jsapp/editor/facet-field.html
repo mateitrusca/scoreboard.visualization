@@ -69,6 +69,7 @@
   </br>
 
   <label>ignore values</label>
+  {{# if options_received}}
   <select name="ignore_values" multiple>
   {{# facet_options }}
     <option value="{{ value }}"
@@ -76,6 +77,9 @@
       >{{ label }}</option>
   {{/ facet_options }}
   </select>
+  {{ else }}
+    <span class="label label-important">-- loading options --</span>
+  {{/ if}}
   </br>
 
 {{# if chart_is_multidim }}
