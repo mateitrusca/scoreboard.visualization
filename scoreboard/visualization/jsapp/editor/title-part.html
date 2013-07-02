@@ -1,10 +1,4 @@
-<select class="span1" name="title-part-prefix">
-{{# prefix_options }}
-  <option value="{{ value }}"
-    {{# if selected }}selected{{/ if }}
-    >{{ label }}</option>
-{{/ prefix_options }}
-</select>
+<input type="text" name="title-part-prefix" class="span1" value="{{ prefix }}"/>
 <select name="title-part">
   <option value="">--</option>
 {{# facets }}
@@ -20,15 +14,7 @@
     >{{ label }}</option>
 {{/ format_options }}
 </select>
-<select class="span1" name="title-part-suffix">
-{{# suffix_options }}
-  <option value="{{ value }}"
-    {{# if selected }}selected{{/ if }}
-    >{{ label }}</option>
-{{/ suffix_options }}
-</select>
-{{#if not_first}}
+<input type="text" name="title-part-suffix" class="span1" value="{{ suffix }}"/>
 <button name="remove-title-part" id="{{ id }}">
   <span class="ui-icon ui-icon-minusthick"></span>
 </button>
-{{/if}}

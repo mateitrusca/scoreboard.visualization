@@ -969,8 +969,6 @@ describe('AxesEditor', function() {
             var view = new App.AxesEditor({model: model});
             var prefix = view.composers_views.title.$el.find(
                 '[name="title-part-prefix"]');
-            var opts = prefix.find('option');
-            expect(opts.length).to.equal(5);
             expect(prefix.val()).to.equal("");
         });
 
@@ -983,8 +981,6 @@ describe('AxesEditor', function() {
             var view = new App.AxesEditor({model: model});
             var suffix = view.composers_views.title.$el.find(
                 '[name="title-part-suffix"]');
-            var opts = suffix.find('option');
-            expect(opts.length).to.equal(5);
             expect(suffix.val()).to.equal("");
         });
 
@@ -1099,7 +1095,7 @@ describe('AxesEditor', function() {
             });
             var view = new App.AxesEditor({model: model});
             var remove_button = view.composers_views.title.$el.find(
-                                '[name="remove-title-part"]:eq(0)');
+                                '[name="remove-title-part"]:eq(1)');
             remove_button.click();
             expect(view.model.get('titles')['title']).to.deep.equal(
                 [{facet_name: 'ind', prefix: null, suffix: null, format: 'short_label'}]);

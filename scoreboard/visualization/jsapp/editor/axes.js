@@ -91,20 +91,8 @@ App.TitlePartView = Backbone.View.extend({
                 }
                 return opt;
             }, this),
-            prefix_options: _(this.prefix_options).map(function(opt){
-                delete opt['selected'];
-                if(this.model.get('prefix') == opt.value) {
-                    opt['selected'] = true;
-                }
-                return opt;
-            }, this),
-            suffix_options: _(this.suffix_options).map(function(opt){
-                delete opt['selected'];
-                if(this.model.get('suffix') == opt.value) {
-                    opt['selected'] = true;
-                }
-                return opt;
-            }, this),
+            prefix: this.model.get('prefix') || '',
+            suffix: this.model.get('suffix') || '',
             facets: _.chain(this.facets)
                        .where({type: "select"})
                        .map(function(facet){
