@@ -20,7 +20,8 @@ App.TitlePartView = Backbone.View.extend({
         'change [name="title-part"]': 'on_change_facet_name',
         'change [name="title-part-prefix"]': 'on_change_prefix',
         'change [name="title-part-suffix"]': 'on_change_suffix',
-        'change [name="title-part-format"]': 'on_change_format'
+        'change [name="title-part-format"]': 'on_change_format',
+        'click [name="remove-title-part"]': 'on_remove_part'
     },
 
     template: App.get_template('editor/title-part.html'),
@@ -72,6 +73,12 @@ App.TitlePartView = Backbone.View.extend({
         var value = this.$el.find('[name="title-part-format"]').val();
         this.model.set('format', value);
     },
+
+    on_remove_part: function(){
+        this.model.collection.remove(this.model);
+        this.remove();
+    },
+
 
     render: function(){
         var context = {
@@ -171,8 +178,7 @@ App.TitleComposerModel = Backbone.Model.extend({
 App.TitleComposerView = Backbone.View.extend({
 
     events: {
-        'click [name="add-title-part"]': 'on_add_part',
-        'click [name="remove-title-part"]': 'on_remove_part'
+        'click [name="add-title-part"]': 'on_add_part'
     },
 
     template: App.get_template('editor/title.html'),
@@ -183,6 +189,7 @@ App.TitleComposerView = Backbone.View.extend({
         });
         this.model.set('parts', this.parts.get_values());
         this.parts.on('change', this.on_change, this);
+        this.parts.on('remove', this.on_remove_part, this);
         this.part_views = _.object(this.parts.map(function(part_model) {
             var part_view = new App.TitlePartView({
                 model: part_model,
@@ -207,6 +214,11 @@ App.TitleComposerView = Backbone.View.extend({
         this.render();
     },
 
+    on_remove_part: function(){
+        this.model.set('parts', this.parts.get_values());
+        this.render();
+    },
+
     on_add_part: function(){
         var part_view = new App.TitlePartView({
             model: new App.TitlePart({}),
@@ -216,14 +228,6 @@ App.TitleComposerView = Backbone.View.extend({
         });
         this.parts.add(part_view.model);
         this.part_views[part_view.model.cid] = part_view;
-        this.render();
-    },
-
-    on_remove_part: function(){
-        var cid = this.$el.find('[name="remove-title-part"]').attr('id');
-        var part = this.parts.get(cid);
-        this.parts.remove(part);
-        this.model.set('parts', this.parts.get_values());
         this.render();
     },
 
