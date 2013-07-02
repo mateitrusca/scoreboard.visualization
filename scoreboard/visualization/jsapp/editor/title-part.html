@@ -1,4 +1,4 @@
-{{#if show_sep}}
+{{#if not_first}}
 <select class="span1" name="title-part-prefix">
 {{# prefix_options }}
   <option value="{{ value }}"
@@ -22,7 +22,7 @@
     >{{ label }}</option>
 {{/ format_options }}
 </select>
-{{#if show_sep}}
+{{#if not_first}}
 <select class="span1" name="title-part-sufix">
 {{# sufix_options }}
   <option value="{{ value }}"
@@ -31,7 +31,7 @@
 {{/ sufix_options }}
 </select>
 {{/if}}
-{{#if show_sep}}
+{{#if not_first}}
 <button name="remove-title-part" id="{{ id }}">
   <span class="ui-icon ui-icon-minusthick"></span>
 </button>

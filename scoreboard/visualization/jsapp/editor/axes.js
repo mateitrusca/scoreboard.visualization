@@ -76,7 +76,7 @@ App.TitlePartView = Backbone.View.extend({
     render: function(){
         var context = {
             id: this.model.cid,
-            show_sep: this.parts.indexOf(this.model)!=0,
+            not_first: this.parts.indexOf(this.model)!=0,
             format_options: _(this.format_options).map(function(opt){
                 delete opt['selected'];
                 if(this.model.get('format') == opt.value) {
