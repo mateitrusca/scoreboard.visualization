@@ -205,7 +205,8 @@ App.TitleComposerView = Backbone.View.extend({
 
     render: function(){
         var context = {
-            name: this.model.get('name')
+            name: this.model.get('name'),
+            preview: App.title_formatter(this.parts.get_values())
         };
         this.$el.html(this.template(context));
         this.$el.find('[name="title-parts"]').empty();
