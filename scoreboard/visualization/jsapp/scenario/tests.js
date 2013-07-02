@@ -839,11 +839,6 @@ describe('ScenarioChartView', function() {
 
     describe('title formatter', function() {
         it('should avoid sticking parts together', function() {
-            var chart = new App.ScenarioChartView({
-                model:  new Backbone.Model(),
-                schema: {},
-                scenario_chart: sinon.mock()
-            });
             var parts = [
                 {facet_name: 'ind', prefix: null, format: "short_label"},
                 {facet_name: 'brk', format: "label"}
@@ -852,32 +847,22 @@ describe('ScenarioChartView', function() {
                 ind: {'label': 'label1', 'short_label': 'short1'},
                 brk: {'label': 'label2', 'short_label': 'short2'},
             }
-            var title = chart.title_formatter(parts, meta_data);
+            var title = App.title_formatter(parts, meta_data);
             expect(title).to.equal('short1 label2');
         });
 
         it('should allow prefix and suffix for the first title part', function() {
-            var chart = new App.ScenarioChartView({
-                model:  new Backbone.Model(),
-                schema: {},
-                scenario_chart: sinon.mock()
-            });
             var parts = [
                 {facet_name: 'ind', prefix: '(', suffix: ')', format: "short_label"},
             ];
             var meta_data = {
                 ind: {'label': 'label1', 'short_label': 'short1'}
             }
-            var title = chart.title_formatter(parts, meta_data);
+            var title = App.title_formatter(parts, meta_data);
             expect(title).to.equal('(short1)');
         });
 
         it('should use the specified prefix', function() {
-            var chart = new App.ScenarioChartView({
-                model:  new Backbone.Model(),
-                schema: {},
-                scenario_chart: sinon.mock()
-            });
             var parts = [
                 {facet_name: 'ind', format: 'label'},
                 {prefix: '-', facet_name: 'brk', format: 'label'}
@@ -886,16 +871,11 @@ describe('ScenarioChartView', function() {
                 ind: {'label': 'label1', 'short_label': 'short1'},
                 brk: {'label': 'label2', 'short_label': 'short2'},
             }
-            var title = chart.title_formatter(parts, meta_data);
+            var title = App.title_formatter(parts, meta_data);
             expect(title).to.equal('label1-label2');
         });
 
         it('should use the specified suffix', function() {
-            var chart = new App.ScenarioChartView({
-                model:  new Backbone.Model(),
-                schema: {},
-                scenario_chart: sinon.mock()
-            });
             var parts = [
                 {facet_name: 'ind', format: 'label'},
                 {suffix: '-', facet_name: 'brk', format: 'label'}
@@ -904,16 +884,11 @@ describe('ScenarioChartView', function() {
                 ind: {'label': 'label1', 'short_label': 'short1'},
                 brk: {'label': 'label2', 'short_label': 'short2'},
             }
-            var title = chart.title_formatter(parts, meta_data);
+            var title = App.title_formatter(parts, meta_data);
             expect(title).to.equal('label1 label2-');
         });
 
         it('should ignore "Total" with prefix', function() {
-            var chart = new App.ScenarioChartView({
-                model:  new Backbone.Model(),
-                schema: {},
-                scenario_chart: sinon.mock()
-            });
             var parts = [
                 {facet_name: 'ind', format: 'short_label'},
                 {prefix: '-', facet_name: 'brk'}
@@ -922,16 +897,11 @@ describe('ScenarioChartView', function() {
                 ind: {'label': 'label1', 'short_label': 'short1'},
                 brk: {'label': 'label2', 'short_label': 'short2'},
             }
-            var title = chart.title_formatter(parts, meta_data);
+            var title = App.title_formatter(parts, meta_data);
             expect(title).to.equal('short1');
         });
 
         it('should ignore "Total" without prefix', function() {
-            var chart = new App.ScenarioChartView({
-                model:  new Backbone.Model(),
-                schema: {},
-                scenario_chart: sinon.mock()
-            });
             var parts = [
                 {facet_name: 'ind', format: 'short_label'},
                 {facet_name: 'brk'}
@@ -940,7 +910,7 @@ describe('ScenarioChartView', function() {
                 ind: {'label': 'label1', 'short_label': 'short1'},
                 brk: {'label': 'label2', 'short_label': 'short2'},
             }
-            var title = chart.title_formatter(parts, meta_data);
+            var title = App.title_formatter(parts, meta_data);
             expect(title).to.equal('short1');
         });
     })

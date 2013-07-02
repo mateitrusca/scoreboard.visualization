@@ -289,6 +289,29 @@ App.tick_labels_formatter = function(max100) {
     return this.value;
 }
 
+App.title_formatter = function(parts, meta_data){
+    parts = _(parts).map(function(part){
+        if(!part.prefix){
+            part = _(part).omit('prefix');
+        }
+        part.text = meta_data[part.facet_name][part.format];
+        return part;
+    });
+    var title = '';
+    _(parts).each(function(item, idx){
+        var prefix = item.prefix || '';
+        if (idx > 0 && !parts[idx-1].suffix && !prefix){
+            prefix = ' ';
+        }
+        var suffix = item.suffix || '';
+        var part = (item.text != 'Total')?item.text:null;
+        if (part){
+            title += (prefix + part + suffix);
+        }
+    });
+    return title;
+}
+
 
 })();
 

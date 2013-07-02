@@ -83,29 +83,6 @@ App.ScenarioChartView = Backbone.View.extend({
         return $.getJSON(url, relevant_args);
     },
 
-    title_formatter: function(parts, meta_data){
-        parts = _(parts).map(function(part){
-            if(!part.prefix){
-                part = _(part).omit('prefix');
-            }
-            part.text = meta_data[part.facet_name][part.format];
-            return part;
-        });
-        var title = '';
-        _(parts).each(function(item, idx){
-            var prefix = item.prefix || '';
-            if (idx > 0 && !parts[idx-1].suffix && !prefix){
-                prefix = ' ';
-            }
-            var suffix = item.suffix || '';
-            var part = (item.text != 'Total')?item.text:null;
-            if (part){
-                title += (prefix + part + suffix);
-            }
-        });
-        return title;
-    },
-
     load_chart: function() {
         _(this.requests_in_flight).forEach(function(req) { req.abort(); });
         this.requests_in_flight = [];
@@ -374,7 +351,7 @@ App.ScenarioChartView = Backbone.View.extend({
             }, this);
             chart_data['titles'] = _.object(
                 _(this.schema.titles).map(function(parts, type){
-                    return [type, this.title_formatter(parts,
+                    return [type, App.title_formatter(parts,
                                                        chart_data.meta_data)];
                 }, this)
             );
