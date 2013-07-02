@@ -26,22 +26,6 @@ App.TitlePartView = Backbone.View.extend({
 
     template: App.get_template('editor/title-part.html'),
 
-    prefix_options:[
-        {value: '', label: '--'},
-        {value: ', ', label: ','},
-        {value: ' by ', label: 'by'},
-        {value: ' - ', label: '-'},
-        {value: ' ( ', label: '('}
-    ],
-
-    suffix_options:[
-        {value: '', label: '--'},
-        {value: ', ', label: ','},
-        {value: ' by ', label: 'by'},
-        {value: ' - ', label: '-'},
-        {value: ' ) ', label: ')'}
-    ],
-
     format_options: [
         {value: 'short_label', label: 'short label'},
         {value: 'label', label: 'label'}
