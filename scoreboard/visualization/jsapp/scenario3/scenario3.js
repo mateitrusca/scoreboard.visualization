@@ -254,15 +254,21 @@ App.scenario3_filters_schema = {
     },
     "text": [
       {
-        "label": "upper left",
         "position": "upper-left",
         "value": "Horizontal axis"
       },
       {
-        "label": "upper right",
         "position": "upper-right",
         "value": "Vertical axis"
-      }
+      },
+      {
+        "value": "",
+        "position": "bottom-left"
+      },
+      {
+        "value": "",
+        "position": "bottom-right"
+      }      
     ],
     "titles": {
         "title": [
