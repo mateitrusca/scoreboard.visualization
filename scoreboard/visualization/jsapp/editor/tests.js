@@ -1365,7 +1365,7 @@ describe('SeriesEditor', function() {
 
 describe('FormatEditor', function() {
 
-    it('should save chart height', function() {
+    /*it('should save chart height', function() {
         var view = new App.FormatEditor({model: new Backbone.Model()});
         view.$el.find('[name="height"]').val('123').change();
         expect(view.model.get('height')).to.equal('123');
@@ -1377,6 +1377,7 @@ describe('FormatEditor', function() {
         })});
         expect(view.$el.find('[name="height"]').val()).to.equal('123');
     });
+    */
 
     it('should display 4 textareas', function() {
         var view = new App.FormatEditor({model: new Backbone.Model()});

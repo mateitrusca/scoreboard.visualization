@@ -100,7 +100,6 @@ App.FormatEditor = Backbone.View.extend({
 
     events: {
         'change [name="description-text"]': 'on_change_text',
-        'change [name="height"]': 'on_change_height',
         'change [name="credits-text"]': 'on_change_credits',
         'change [name="credits-link"]': 'on_change_credits'
     },
@@ -129,13 +128,11 @@ App.FormatEditor = Backbone.View.extend({
         this.texts.on('change', this.save_text, this);
         this.model.on('change:facets', update_facets);
         this.render();
-        this.on_change_height();
         this.on_change_credits();
     },
 
     render: function() {
         var context = {
-            height: this.model.get('height') || '500',
             descriptions: this.texts.map(function(text){
                 return text.toJSON();
             }),
@@ -145,10 +142,6 @@ App.FormatEditor = Backbone.View.extend({
             }).extend(this.model.get('credits'))
         };
         this.$el.html(this.template(context));
-    },
-
-    on_change_height: function() {
-        this.model.set('height', this.$el.find('[name="height"]').val());
     },
 
     on_change_credits: function() {
