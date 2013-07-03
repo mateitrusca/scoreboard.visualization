@@ -143,7 +143,7 @@ App.ScenarioChartView = Backbone.View.extend({
         var chart_data = {
             'tooltip_formatter': function() {
                 var attrs = this.point.attributes;
-                var out = '<b>' + attrs[category_facet].label + '</b>';
+                var out = '<b>' + attrs[category_facet.name].label + '</b>';
                 // point value(s) and unit-measure
                 if (_.contains(tooltip_attributes, 'value')) {
                     if ( multidim ) {
