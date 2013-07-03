@@ -1016,20 +1016,26 @@ describe('AxesEditor', function() {
                 ]
             });
             var view = new App.AxesEditor({model: model});
-            var add_button = view.composers_views.title.$el.find('[name="add-title-part"]');
             var select = view.composers_views.title.$el.find('[name="title-part"]:eq(0)');
+            var selectFormat = view.composers_views.title.$el.find('[name="title-part-format"]:eq(0)');
             select.val('ind').change();
+            selectFormat.val('label').change();
+            var add_button = view.composers_views.title.$el.find('[name="add-title-part"]');
             add_button.click();
             var prefix = view.composers_views.title.$el.find(
                 '[name="title-part-prefix"]:eq(0)');
             prefix.val(' ( ').change();
             var select = view.composers_views.title.$el.find('[name="title-part"]:eq(1)');
             select.val('brk').change();
+            var selectFormat = view.composers_views.title.$el.find('[name="title-part-format"]:eq(1)');
+            selectFormat.val('label').change();
+            var selectFormat = view.composers_views.title.$el.find('[name="title-part-format"]:eq(1)');
+            selectFormat.val('short-label').change();
             var suffix = view.composers_views.title.$el.find(
                 '[name="title-part-suffix"]:eq(1)');
             suffix.val(' ) ').change();
             expect(view.model.get('titles')['title']).to.deep.equal(
-                [ {facet_name: 'ind', prefix: ' ( ', suffix: null, format: 'short_label'},
+                [ {facet_name: 'ind', prefix: ' ( ', suffix: null, format: 'label'},
                   {prefix: null, suffix: ' ) ', facet_name: 'brk', format: 'short_label'}]);
         });
 
@@ -1040,18 +1046,20 @@ describe('AxesEditor', function() {
                     {name: 'brk', type: 'select', value: 'breakdown'},
                 ],
                 titles: {
-                    title: [{facet_name: "ind"},
+                    title: [{facet_name: "ind", format: "label"},
                             {prefix: ', ', suffix: ' - ', facet_name: "brk"} ]
                 }
             });
             var view = new App.AxesEditor({model: model});
             var select1 = view.composers_views.title.$el.find('[name="title-part"]:eq(0)');
+            var select1format = view.composers_views.title.$el.find('[name="title-part-format"]:eq(0)');
             var prefix = view.composers_views.title.$el.find(
                 '[name="title-part-prefix"]:eq(1)');
             var suffix = view.composers_views.title.$el.find(
                 '[name="title-part-suffix"]:eq(1)');
             var select2 = view.composers_views.title.$el.find('[name="title-part"]:eq(1)');
             expect(select1.val()).to.equal('ind');
+            expect(select1format.val()).to.equal('label');
             expect(prefix.val()).to.equal(', ');
             expect(suffix.val()).to.equal(' - ');
             expect(select2.val()).to.equal('brk');
