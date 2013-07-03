@@ -17,8 +17,14 @@ App.chart_library['lines'] = function(view, options) {
                     options['category_facet'],
                     options['highlights']);
 	_.map(series, function(elem) {
-        if ( elem.data.length > 0 ) {
-            _(_.last(elem.data)).extend({
+        var lastElem;
+        _(elem.data).each(function(item){
+            if (item.y) {
+                lastElem = item;
+            }
+        });
+        if (lastElem) {
+            _(lastElem).extend({
                 dataLabels: {
                   enabled: true,
                   crop: false,
