@@ -1,0 +1,17 @@
+<div class="editor-structure-field">
+    <label>{{ name }}:</label>
+    <select name="type">
+    {{# type_options }}
+    <option value="{{ value }}"
+      {{# if selected }}selected{{/ if }}
+      >{{ label }}</option>
+    {{/ type_options }}
+    </select>
+{{# if chart_is_multidim }}
+    <label class="checkbox">
+        <input type="checkbox" name="multidim"
+            {{# if multidim }} {{ else }}checked{{/ if }}>
+        Common value on all axes
+    </label>
+{{/ if }}
+</div>

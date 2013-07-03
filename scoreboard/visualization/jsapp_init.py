@@ -34,6 +34,7 @@ js_bundles = [
             'scenario/visualization.js',
             'editor/editor.js',
             'editor/chart_type.js',
+            'editor/structure.js',
             'editor/facets.js',
             'editor/axes.js',
             'editor/series.js',

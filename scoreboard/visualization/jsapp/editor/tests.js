@@ -60,8 +60,7 @@ describe('ChartTypeEditor', function() {
 
 });
 
-
-describe('FacetsEditor', function() {
+describe('StructureEditor', function() {
     "use strict";
 
     var $ = App.jQuery;
@@ -97,7 +96,7 @@ describe('FacetsEditor', function() {
                     {type_label: 'dimension', notation: 'time-period'}
                 ]
             });
-            var view = new App.FacetsEditor({model: model});
+            var view = new App.StructureEditor({model: model});
             expect(_(model.get('facets')).pluck('dimension')).to.deep.equal([
                 'indicator-group', 'indicator', 'breakdown-group', 'breakdown',
                 'unit-measure', 'ref-area', 'time-period', 'value'
@@ -108,42 +107,16 @@ describe('FacetsEditor', function() {
             var model = new App.EditorConfiguration({}, {
                 dimensions: [{type_label: 'dimension', notation: 'time-period'}]
             });
-            var view = new App.FacetsEditor({model: model});
+            var view = new App.StructureEditor({model: model});
             expect(model.get('facets')[0]['name']).to.equal('time-period');
             expect(model.get('facets')[0]['dimension']).to.equal('time-period');
-        });
-
-        it('should save the provided filter label', function() {
-            var model = new App.EditorConfiguration({}, {
-                dimensions: [{type_label: 'dimension', notation: 'indicator'},
-                             {type_label: 'dimension', notation: 'time-period'}]
-            });
-            var view = new App.FacetsEditor({model: model});
-            view.$el.find('[name="label"]:eq(0)').val('ind').trigger('input');
-            view.$el.find('[name="label"]:eq(1)').val('period').trigger('keyup');
-            view.$el.find('[name="label"]:eq(0)').trigger('focusout');
-            view.$el.find('[name="label"]:eq(1)').trigger('focusout');
-            expect(model.get('facets')[0]['label']).to.equal('ind');
-            expect(model.get('facets')[1]['label']).to.equal('period');
-            expect(model.get('facets')[0]['dimension']).to.equal('indicator');
-            expect(model.get('facets')[1]['dimension']).to.equal('time-period');
-        });
-
-        it('should save old filter label when empty', function() {
-            var model = new App.EditorConfiguration({}, {
-                dimensions: [{type_label: 'dimension', notation: 'indicator'}]});
-            model.facets.models[0].set('label', 'Indicator');
-            var view = new App.FacetsEditor({model: model});
-            view.$el.find('[name="label"]:eq(0)').val('').trigger('input');
-            view.$el.find('[name="label"]:eq(0)').trigger('focusout');
-            expect(model.get('facets')[0]['label']).to.equal('Indicator');
         });
 
         it('should save filter type', function() {
             var model = new App.EditorConfiguration({}, {
                 dimensions: [{type_label: 'dimension', notation: 'time-period'}]
             });
-            var view = new App.FacetsEditor({model: model});
+            var view = new App.StructureEditor({model: model});
             view.$el.find('select[name="type"]').val('multiple_select').change();
             expect(model.get('facets')[0]['type']).to.equal('multiple_select');
         });
@@ -159,7 +132,7 @@ describe('FacetsEditor', function() {
                     {type_label: 'dimension', notation: 'time-period'}
                 ]
             });
-            var view = new App.FacetsEditor({model: model});
+            var view = new App.StructureEditor({model: model});
             expect(_(model.get('facets')).pluck('dimension')).to.deep.equal(
                 ['time-period', 'indicator', 'value']);
         });
@@ -168,13 +141,372 @@ describe('FacetsEditor', function() {
             var model = new App.EditorConfiguration({
                 facets: [{name: 'time-period', type: 'multiple_select'}]
             }, {dimensions: []});
-            var view = new App.FacetsEditor({model: model});
+            var view = new App.StructureEditor({model: model});
             expect(_(model.get('facets')).pluck('dimension')).to.deep.equal(
                 ['value']);
         });
 
     });
+    describe('facet type', function() {
 
+        it('should default to "select"', function() {
+            var model = new App.EditorConfiguration({}, {
+                    dimensions: [{type_label: 'dimension', notation: 'dim1'}]
+                });
+            var view = new App.StructureEditor({model: model});
+            var facet0 = view.model.toJSON()['facets'][0];
+            expect(facet0['type']).to.equal('select');
+        });
+
+        it('should select existing filter type', function() {
+            var model = new App.EditorConfiguration({
+                facets: [{name: 'time-period', type: 'multiple_select'}]
+            }, {
+                dimensions: [{type_label: 'dimension', notation: 'time-period'}]
+            });
+            var view = new App.StructureEditor({model: model});
+            var select = view.$el.find('select[name="type"]');
+            expect(select.val()).to.equal('multiple_select');
+        });
+
+    });
+
+
+    describe('multiple series', function() {
+
+        it('should display list of series options', function() {
+            var view = new App.StructureEditor({
+                model: new App.EditorConfiguration({
+                    facets: [
+                        {name: 'dim3', type: 'all-values'},
+                        {name: 'dim4', type: 'all-values'}
+                    ]
+                }, {dimensions: four_dimensions}),
+            });
+            var options = view.$el.find('[name="multiple_series"] option');
+            var series_options = _(options).map(function(opt) {
+                return $(opt).attr('value');
+            });
+            expect(series_options).to.deep.equal(['', 'dim3', 'dim4']);
+        });
+
+        it('should update model with selection', function() {
+            var model = new App.EditorConfiguration({
+                facets: [
+                    {name: 'dim3', type: 'all-values'},
+                    {name: 'dim4', type: 'all-values'}
+                ]
+            }, {dimensions: four_dimensions});
+            var view = new App.StructureEditor({model: model});
+            expect(model.get('multiple_series')).to.be.null;
+            view.$el.find('[name="multiple_series"]').val('dim3').change();
+            expect(model.get('multiple_series')).to.equal('dim3');
+        });
+
+        it('should render multiple_series with selected value', function() {
+            var model = new App.EditorConfiguration({
+                facets: [
+                    {name: 'dim3', type: 'all-values'},
+                    {name: 'dim4', type: 'all-values'}
+                ],
+                multiple_series: 'dim3'
+            }, {dimensions: four_dimensions});
+            var view = new App.StructureEditor({model: model});
+            var select = view.$el.find('[name="multiple_series"]');
+            expect(select.val()).to.equal('dim3');
+        });
+
+    });
+
+    describe('hidden facet', function() {
+
+        it('should not include ignore facet in constraints', function() {
+            var model = new App.EditorConfiguration({
+                'facets': [{name: 'dim2', type: 'ignore'}]
+            }, {dimensions: four_dimensions});
+            var view = new App.StructureEditor({model: model});
+            expect(model.get('facets')[3]['constraints']).to.deep.equal(
+                {'dim1': 'dim1', 'dim3': 'dim3'});
+        });
+
+    });
+
+    describe('facet verification', function() {
+
+        it('should warn if there is no category facet', function() {
+            var model = new App.EditorConfiguration({
+                facets: [{name: 'dim3', type: 'all-values'}]
+            }, {dimensions: four_dimensions});
+            var view = new App.StructureEditor({model: model});
+            expect(view.facet_roles.err_too_few).to.be.false;
+            view.$el.find('[name="multiple_series"]').val('dim3').change();
+            expect(view.facet_roles.err_too_few).to.be.true;
+        });
+
+        it('should update category facet section', function() {
+            var model = new App.EditorConfiguration({
+                facets: [{name: 'dim3', type: 'select', label:'dimension3'}]
+            }, {dimensions: four_dimensions});
+            var view = new App.StructureEditor({model: model});
+            sinon.spy(view.categoryby, 'render');
+            expect(view.categoryby.model.get('err_too_few')).to.be.true;
+            view.$el.find('[data-name="dim3"] [name="type"]').val('all-values').change();
+            expect(view.categoryby.model.get('err_too_few')).to.be.false;
+
+            expect(view.$el.find('[name="categories-by"] .alert').text().trim()).to.equal(
+            'Categories by dim3');
+        });
+
+        it('should update category section when selecting multipleseries', function(){
+            var model = new App.EditorConfiguration({
+                facets: [{name: 'dim1', type: 'select', label: 'dimension1'},
+                         {name: 'dim3', type: 'select'}]
+            }, {dimensions: four_dimensions});
+            var view = new App.StructureEditor({model: model});
+            view.$el.find('[data-name="dim3"] [name="type"]').val('all-values').change();
+            view.$el.find('[data-name="dim4"] [name="type"]').val('all-values').change();
+            view.$el.find('[name="multiple_series"]').val('dim3').change();
+            expect(view.model.attributes.multiple_series).to.equal('dim3');
+            expect(view.model.attributes.category_facet).to.equal('dim4');
+            expect(view.categoryby.$el.find('.alert').text().trim()).to.equal(
+            'Categories by dim4');
+        });
+
+        it('should warn if there is more than one category', function() {
+            var model = new App.EditorConfiguration({
+                facets: [
+                    {name: 'dim3', type: 'all-values'},
+                    {name: 'dim4', type: 'all-values'}
+                ],
+                multiple_series: 'dim3'
+            }, {dimensions: four_dimensions});
+            var view = new App.StructureEditor({model: model});
+            expect(view.facet_roles.err_too_many).to.be.false;
+            view.$el.find('[name="multiple_series"]').val('').change();
+            expect(view.facet_roles.err_too_many).to.be.true;
+        });
+
+        it('should mark remaining dimension as category', function() {
+            var model = new App.EditorConfiguration({
+                facets: [
+                    {name: 'dim3', type: 'all-values'},
+                    {name: 'dim4', type: 'all-values'}
+                ],
+                multiple_series: 'dim3'
+            }, {dimensions: four_dimensions});
+            var view = new App.StructureEditor({model: model});
+            expect(view.facet_roles.category_facet['name']).to.equal('dim4');
+        });
+
+        it('should write category facet on model', function() {
+            var model = new App.EditorConfiguration({
+                facets: [
+                    {name: 'dim3', type: 'all-values'},
+                    {name: 'dim4', type: 'all-values'}
+                ],
+                multiple_series: 'dim3'
+            }, {dimensions: four_dimensions});
+            var view = new App.StructureEditor({model: model});
+            expect(model.get('category_facet')).to.equal('dim4');
+        });
+
+    });
+
+    describe('constraints between filters', function() {
+
+        it('should generate no constraints for first filter', function() {
+            var view = new App.StructureEditor({
+                model: new App.EditorConfiguration({}, {
+                    dimensions: four_dimensions})});
+            var constr0 = view.model.toJSON()['facets'][0]['constraints'];
+            expect(constr0).to.deep.equal({});
+        });
+
+        it('should generate 3 constraints for 4th filter', function() {
+            var view = new App.StructureEditor({
+                model: new App.EditorConfiguration({}, {
+                    dimensions: four_dimensions})});
+            var constr3 = view.model.toJSON()['facets'][3]['constraints'];
+            expect(constr3).to.deep.equal({
+                'dim1': 'dim1',
+                'dim2': 'dim2',
+                'dim3': 'dim3'
+            });
+        });
+
+        it('should generate no constraints with multiple_select', function() {
+            var view = new App.StructureEditor({
+                model: new App.EditorConfiguration({
+                    facets: [{name: 'dim2', type: 'multiple_select'}]
+                }, {dimensions: four_dimensions})
+            });
+            var constr3 = view.model.toJSON()['facets'][3]['constraints'];
+            expect(constr3).to.deep.equal({'dim1': 'dim1', 'dim3': 'dim3'});
+        });
+
+        it('should generate no constraints with all-values', function() {
+            var view = new App.StructureEditor({
+                model: new App.EditorConfiguration({
+                    facets: [{name: 'dim2', type: 'all-values'}]
+                }, {dimensions: four_dimensions})
+            });
+            var constr3 = view.model.toJSON()['facets'][3]['constraints'];
+            expect(constr3).to.deep.equal({'dim1': 'dim1', 'dim3': 'dim3'});
+        });
+
+    });
+
+    describe('multidim facets', function() {
+        var facets_by_name = function(facets) {
+            return _.object(_(facets).map(function(facet) {
+                return [facet['name'], facet];
+            }));
+        };
+
+        it('should generate double facets if multidim=2', function() {
+            var model = new App.EditorConfiguration({multidim: 2}, {
+                dimensions: four_dimensions});
+            var view = new App.StructureEditor({model: model});
+            view.$el.find('[data-name="dim1"] [name="multidim"]').click().change();
+            expect(model.get('facets')[0]['name']).to.equal('x-dim1');
+            expect(model.get('facets')[1]['name']).to.equal('y-dim1');
+            expect(model.get('facets')[2]['name']).to.equal('dim2');
+        });
+
+        it('multidim dimensions should depend on their axis only', function() {
+            var model = new App.EditorConfiguration({multidim: 2}, {
+                dimensions: four_dimensions});
+            var view = new App.StructureEditor({model: model});
+            view.$el.find('[data-name="dim1"] [name="multidim"]').click().change();
+            view.$el.find('[data-name="dim2"] [name="multidim"]').click().change();
+            view.$el.find('[data-name="dim3"] [name="multidim"]').click().change();
+            var facets = facets_by_name(model.get('facets'));
+            expect(facets['x-dim2']['constraints']).to.deep.equal(
+                {'dim1': 'x-dim1'});
+            expect(facets['x-dim3']['constraints']).to.deep.equal(
+                {'dim1': 'x-dim1', 'dim2': 'x-dim2'});
+        });
+
+        it('subsequent dimensions depend on all multidim axes', function() {
+            var model = new App.EditorConfiguration({multidim: 2}, {
+                dimensions: four_dimensions});
+            var view = new App.StructureEditor({model: model});
+            view.$el.find('[data-name="dim1"] [name="multidim"]').click().change();
+            view.$el.find('[data-name="dim2"] [name="multidim"]').click().change();
+            var facets = facets_by_name(model.get('facets'));
+            expect(facets['dim3']['constraints']).to.deep.equal({
+                'x-dim1': 'x-dim1', 'x-dim2': 'x-dim2',
+                'y-dim1': 'y-dim1', 'y-dim2': 'y-dim2'});
+            expect(facets['dim4']['constraints']).to.deep.equal({
+                'x-dim1': 'x-dim1', 'x-dim2': 'x-dim2',
+                'y-dim1': 'y-dim1', 'y-dim2': 'y-dim2',
+                'dim3': 'dim3'});
+        });
+
+        it('should set multidim_common on non-multidim facets', function() {
+            var model = new App.EditorConfiguration({multidim: 2}, {
+                dimensions: four_dimensions});
+            var view = new App.StructureEditor({model: model});
+            view.$el.find('[data-name="dim1"] [name="multidim"]').click().change();
+            var facets = facets_by_name(model.get('facets'));
+            expect(facets['x-dim1']['multidim_common']).to.be.undefined;
+            expect(facets['dim3']['multidim_common']).to.be.true;
+        });
+
+        it('should set multidim_value on value facet', function() {
+            var model = new App.EditorConfiguration({multidim: 2}, {
+                dimensions: four_dimensions});
+            var view = new App.StructureEditor({model: model});
+            var facets = facets_by_name(model.get('facets'));
+            expect(facets['value']['multidim_value']).to.be.true;
+        });
+
+        it('should parse multidim facets and preserve labels', function() {
+            var model = new App.EditorConfiguration({
+                multidim: 2,
+                facets: [
+                    {name: 'x-dim1', label: '(X) blah dim1'},
+                    {name: 'y-dim1', label: '(Y) ignored dim1'},
+                    {name: 'x-dim2', label: '(X) blah dim2'},
+                    {name: 'y-dim2', label: '(Y) ignored dim2'},
+                    {name: 'dim3', label: 'blah dim3'},
+                    {name: 'dim4', label: 'blah dim4'}
+                ]
+            }, {dimensions: four_dimensions});
+            var view = new App.StructureEditor({model: model});
+            var facets = facets_by_name(model.get('facets'));
+            expect(facets['x-dim1'].label).to.equal('(X) blah dim1');
+            expect(facets['y-dim1'].label).to.equal('(Y) blah dim1');
+            expect(facets['x-dim2'].label).to.equal('(X) blah dim2');
+            expect(facets['y-dim2'].label).to.equal('(Y) blah dim2');
+            expect(facets['dim3'].label).to.equal('blah dim3');
+            expect(facets['dim4'].label).to.equal('blah dim4');
+        });
+
+        it('should order multidim facets grouped by axis', function() {
+            var model = new App.EditorConfiguration({multidim: 2}, {
+                dimensions: four_dimensions});
+            var view = new App.StructureEditor({model: model});
+            view.$el.find('[data-name="dim1"] [name="multidim"]').click().change();
+            view.$el.find('[data-name="dim2"] [name="multidim"]').click().change();
+            expect(_(model.get('facets')).pluck('name')).to.deep.equal(
+                ['x-dim1', 'x-dim2', 'y-dim1', 'y-dim2',
+                 'dim3', 'dim4', 'value']);
+        });
+
+    });
+});
+
+describe('FacetsEditor', function() {
+    "use strict";
+
+    var $ = App.jQuery;
+
+    beforeEach(function() {
+        this.sandbox = sinon.sandbox.create();
+        this.sandbox.useFakeServer();
+    });
+
+    afterEach(function () {
+        this.sandbox.restore();
+    });
+
+    var four_dimensions = [
+        {type_label: 'dimension', notation: 'dim1', label: "Dim 1"},
+        {type_label: 'dimension', notation: 'dim2', label: "Dim 2"},
+        {type_label: 'dimension', notation: 'dim3', label: "Dim 3"},
+        {type_label: 'dimension', notation: 'dim4', label: "Dim 4"}];
+
+    describe('facet labels', function() {
+        it('should save the provided filter label', function() {
+            var model = new App.EditorConfiguration({}, {
+                dimensions: [{type_label: 'dimension', notation: 'indicator'},
+                             {type_label: 'dimension', notation: 'time-period'}]
+            });
+            var structureView = new App.StructureEditor({model: model});
+            var view = new App.FacetsEditor({model: model});
+            view.$el.find('[name="label"]:eq(0)').val('ind').trigger('input');
+            view.$el.find('[name="label"]:eq(1)').val('period').trigger('keyup');
+            view.$el.find('[name="label"]:eq(0)').trigger('focusout');
+            view.$el.find('[name="label"]:eq(1)').trigger('focusout');
+            expect(model.get('facets')[0]['label']).to.equal('ind');
+            expect(model.get('facets')[1]['label']).to.equal('period');
+            expect(model.get('facets')[0]['dimension']).to.equal('indicator');
+            expect(model.get('facets')[1]['dimension']).to.equal('time-period');
+        });
+
+        it('should save old filter label when empty', function() {
+            var model = new App.EditorConfiguration({}, {
+                dimensions: [{type_label: 'dimension', notation: 'indicator'}]});
+            model.facets.models[0].set('label', 'Indicator');
+            var structureView = new App.StructureEditor({model: model});
+            var view = new App.FacetsEditor({model: model});
+            view.$el.find('[name="label"]:eq(0)').val('').trigger('input');
+            view.$el.find('[name="label"]:eq(0)').trigger('focusout');
+            expect(model.get('facets')[0]['label']).to.equal('Indicator');
+        });
+    });
+    
     describe('facet ignore values', function() {
         it('should update model with values selected', function() {
             var model = new App.EditorConfiguration({
@@ -361,6 +693,7 @@ describe('FacetsEditor', function() {
                         {type_label: 'dimension', notation: 'other'}
                     ]
                 });
+            var structureView = new App.StructureEditor({model: model});
             var view = new App.FacetsEditor({model: model});
             var server = this.sandbox.server;
             var options = [{'label': "Option One", 'notation': 'one'},
@@ -385,6 +718,7 @@ describe('FacetsEditor', function() {
                         {type_label: 'dimension', notation: 'ref-area'}
                     ]
                 });
+            var structureView = new App.StructureEditor({model: model});
             var view = new App.FacetsEditor({model: model});
             var server = this.sandbox.server;
             var options = [{'label': "Option One", 'notation': 'one'},
@@ -405,6 +739,7 @@ describe('FacetsEditor', function() {
                         {type_label: 'dimension', notation: 'other'}
                     ]
                 });
+            var structureView = new App.StructureEditor({model: model});
             var view = new App.FacetsEditor({model: model});
             var server = this.sandbox.server;
             var options = [{'label': "Option One", 'notation': 'one'},
@@ -427,51 +762,27 @@ describe('FacetsEditor', function() {
                     dimensions: [
                         {type_label: 'dimension', notation: 'time-period'}]
                 });
+            var structureView = new App.StructureEditor({model: model});
             var view = new App.FacetsEditor({model: model});
-            expect(model.facets.first().get('position')).to.be.undefined;
+            expect(model.facets.first().get('position')).to.equal('upper-left');
             view.$el.find('[name="position"]').val('upper-right').change();
             expect(model.facets.first().get('position')).to.equal(
                 'upper-right');
         });
 
         it('should select existing filter position', function(){
-            var view = new App.FacetsEditor({
-                    model: new App.EditorConfiguration({
-                        facets: [
-                            {name: 'time-period', position: 'upper-left'}]
+            var model = new App.EditorConfiguration({
+                    facets: [
+                            {name: 'time-period', position: 'lower-left'}]
                     }, {
                         dimensions: [
                             {type_label: 'dimension', notation: 'time-period'}]
-                    })
-            });
-            var facet0 = view.model.toJSON()['facets'][0];
-            expect(facet0['position']).to.equal('upper-left');
-        });
-    });
-
-    describe('facet type', function() {
-
-        it('should default to "select"', function() {
-            var view = new App.FacetsEditor({
-                model: new App.EditorConfiguration({}, {
-                    dimensions: [{type_label: 'dimension', notation: 'dim1'}]
-                })
-            });
-            var facet0 = view.model.toJSON()['facets'][0];
-            expect(facet0['type']).to.equal('select');
-        });
-
-        it('should select existing filter type', function() {
-            var model = new App.EditorConfiguration({
-                facets: [{name: 'time-period', type: 'multiple_select'}]
-            }, {
-                dimensions: [{type_label: 'dimension', notation: 'time-period'}]
-            });
+                    });
+            var structureView = new App.StructureEditor({model: model});
             var view = new App.FacetsEditor({model: model});
-            var select = view.$el.find('select[name="type"]');
-            expect(select.val()).to.equal('multiple_select');
+            var facet0 = view.model.toJSON()['facets'][0];
+            expect(facet0['position']).to.equal('lower-left');
         });
-
     });
 
     describe('highlights', function() {
@@ -523,196 +834,11 @@ describe('FacetsEditor', function() {
         });
     });
 
-    describe('multiple series', function() {
-
-        it('should display list of series options', function() {
-            var view = new App.FacetsEditor({
-                model: new App.EditorConfiguration({
-                    facets: [
-                        {name: 'dim3', type: 'all-values'},
-                        {name: 'dim4', type: 'all-values'}
-                    ]
-                }, {dimensions: four_dimensions}),
-            });
-            var options = view.$el.find('[name="multiple_series"] option');
-            var series_options = _(options).map(function(opt) {
-                return $(opt).attr('value');
-            });
-            expect(series_options).to.deep.equal(['', 'dim3', 'dim4']);
-        });
-
-        it('should update model with selection', function() {
-            var model = new App.EditorConfiguration({
-                facets: [
-                    {name: 'dim3', type: 'all-values'},
-                    {name: 'dim4', type: 'all-values'}
-                ]
-            }, {dimensions: four_dimensions});
-            var view = new App.FacetsEditor({model: model});
-            expect(model.get('multiple_series')).to.be.null;
-            view.$el.find('[name="multiple_series"]').val('dim3').change();
-            expect(model.get('multiple_series')).to.equal('dim3');
-        });
-
-        it('should render multiple_series with selected value', function() {
-            var model = new App.EditorConfiguration({
-                facets: [
-                    {name: 'dim3', type: 'all-values'},
-                    {name: 'dim4', type: 'all-values'}
-                ],
-                multiple_series: 'dim3'
-            }, {dimensions: four_dimensions});
-            var view = new App.FacetsEditor({model: model});
-            var select = view.$el.find('[name="multiple_series"]');
-            expect(select.val()).to.equal('dim3');
-        });
-
-    });
-
-    describe('hidden facet', function() {
-
-        it('should not include ignore facet in constraints', function() {
-            var model = new App.EditorConfiguration({
-                'facets': [{name: 'dim2', type: 'ignore'}]
-            }, {dimensions: four_dimensions});
-            var view = new App.FacetsEditor({model: model});
-            expect(model.get('facets')[3]['constraints']).to.deep.equal(
-                {'dim1': 'dim1', 'dim3': 'dim3'});
-        });
-
-    });
-
-    describe('facet verification', function() {
-
-        it('should warn if there is no category facet', function() {
-            var model = new App.EditorConfiguration({
-                facets: [{name: 'dim3', type: 'all-values'}]
-            }, {dimensions: four_dimensions});
-            var view = new App.FacetsEditor({model: model});
-            expect(view.facet_roles.err_too_few).to.be.false;
-            view.$el.find('[name="multiple_series"]').val('dim3').change();
-            expect(view.facet_roles.err_too_few).to.be.true;
-        });
-
-        it('should update category facet section', function() {
-            var model = new App.EditorConfiguration({
-                facets: [{name: 'dim3', type: 'select', label:'dimension3'}]
-            }, {dimensions: four_dimensions});
-            var view = new App.FacetsEditor({model: model});
-            sinon.spy(view.categoryby, 'render');
-            expect(view.categoryby.model.get('err_too_few')).to.be.true;
-            view.$el.find('[data-name="dim3"] [name="type"]').val('all-values').change();
-            expect(view.categoryby.model.get('err_too_few')).to.be.false;
-
-            expect(view.$el.find('.categories-by .alert').text().trim()).to.equal(
-            'Categories by dimension3');
-        });
-
-        it('should update category section when selecting multipleseries', function(){
-            var model = new App.EditorConfiguration({
-                facets: [{name: 'dim1', type: 'select', label: 'dimension1'},
-                         {name: 'dim3', type: 'select'}]
-            }, {dimensions: four_dimensions});
-            var view = new App.FacetsEditor({model: model});
-            view.$el.find('[data-name="dim3"] [name="type"]').val('all-values').change();
-            view.$el.find('[data-name="dim4"] [name="type"]').val('all-values').change();
-            view.$el.find('[name="multiple_series"]').val('dim3').change();
-            expect(view.model.attributes.multiple_series).to.equal('dim3');
-            expect(view.model.attributes.category_facet).to.equal('dim4');
-            expect(view.categoryby.$el.find('.alert').text().trim()).to.equal(
-            'Categories by Dim 4');
-        });
-
-        it('should warn if there is more than one category', function() {
-            var model = new App.EditorConfiguration({
-                facets: [
-                    {name: 'dim3', type: 'all-values'},
-                    {name: 'dim4', type: 'all-values'}
-                ],
-                multiple_series: 'dim3'
-            }, {dimensions: four_dimensions});
-            var view = new App.FacetsEditor({model: model});
-            expect(view.facet_roles.err_too_many).to.be.false;
-            view.$el.find('[name="multiple_series"]').val('').change();
-            expect(view.facet_roles.err_too_many).to.be.true;
-        });
-
-        it('should mark remaining dimension as category', function() {
-            var model = new App.EditorConfiguration({
-                facets: [
-                    {name: 'dim3', type: 'all-values'},
-                    {name: 'dim4', type: 'all-values'}
-                ],
-                multiple_series: 'dim3'
-            }, {dimensions: four_dimensions});
-            var view = new App.FacetsEditor({model: model});
-            expect(view.facet_roles.category_facet['name']).to.equal('dim4');
-        });
-
-        it('should write category facet on model', function() {
-            var model = new App.EditorConfiguration({
-                facets: [
-                    {name: 'dim3', type: 'all-values'},
-                    {name: 'dim4', type: 'all-values'}
-                ],
-                multiple_series: 'dim3'
-            }, {dimensions: four_dimensions});
-            var view = new App.FacetsEditor({model: model});
-            expect(model.get('category_facet')).to.equal('dim4');
-        });
-
-    });
-
-    describe('constraints between filters', function() {
-
-        it('should generate no constraints for first filter', function() {
-            var view = new App.FacetsEditor({
-                model: new App.EditorConfiguration({}, {
-                    dimensions: four_dimensions})});
-            var constr0 = view.model.toJSON()['facets'][0]['constraints'];
-            expect(constr0).to.deep.equal({});
-        });
-
-        it('should generate 3 constraints for 4th filter', function() {
-            var view = new App.FacetsEditor({
-                model: new App.EditorConfiguration({}, {
-                    dimensions: four_dimensions})});
-            var constr3 = view.model.toJSON()['facets'][3]['constraints'];
-            expect(constr3).to.deep.equal({
-                'dim1': 'dim1',
-                'dim2': 'dim2',
-                'dim3': 'dim3'
-            });
-        });
-
-        it('should generate no constraints with multiple_select', function() {
-            var view = new App.FacetsEditor({
-                model: new App.EditorConfiguration({
-                    facets: [{name: 'dim2', type: 'multiple_select'}]
-                }, {dimensions: four_dimensions})
-            });
-            var constr3 = view.model.toJSON()['facets'][3]['constraints'];
-            expect(constr3).to.deep.equal({'dim1': 'dim1', 'dim3': 'dim3'});
-        });
-
-        it('should generate no constraints with all-values', function() {
-            var view = new App.FacetsEditor({
-                model: new App.EditorConfiguration({
-                    facets: [{name: 'dim2', type: 'all-values'}]
-                }, {dimensions: four_dimensions})
-            });
-            var constr3 = view.model.toJSON()['facets'][3]['constraints'];
-            expect(constr3).to.deep.equal({'dim1': 'dim1', 'dim3': 'dim3'});
-        });
-
-    });
-
     describe('include_wildcard option', function() {
-
         it('should be controlled by checkbox', function() {
-            var view = new App.FacetsEditor({
-                model: new App.EditorConfiguration({}, {
-                    dimensions: four_dimensions})});
+            var model = new App.EditorConfiguration({}, {dimensions: four_dimensions});
+            var structureView = new App.StructureEditor({model: model});
+            var view = new App.FacetsEditor({model:model});
             var facet0 = function() { return view.model.get('facets')[0]; };
             view.$el.find('[name="include_wildcard"]').click().change();
             expect(facet0()['include_wildcard']).to.be.true;
@@ -724,112 +850,10 @@ describe('FacetsEditor', function() {
             var model = new App.EditorConfiguration({
                 facets: [{name: 'dim2', type: 'select', include_wildcard: true}]
             }, {dimensions: four_dimensions});
-            var view = new App.FacetsEditor({model: model});
+            var view = new App.StructureEditor({model: model});
             view.$el.find('[name="type"]').val('multiple_select').change();
             expect(model.get('facets')[0]['include_wildcard']).to.be.undefined;
         });
-
-    });
-
-    describe('multidim facets', function() {
-
-        var facets_by_name = function(facets) {
-            return _.object(_(facets).map(function(facet) {
-                return [facet['name'], facet];
-            }));
-        };
-
-        it('should generate double facets if multidim=2', function() {
-            var model = new App.EditorConfiguration({multidim: 2}, {
-                dimensions: four_dimensions});
-            var view = new App.FacetsEditor({model: model});
-            view.$el.find('[data-name="dim1"] [name="multidim"]').click().change();
-            expect(model.get('facets')[0]['name']).to.equal('x-dim1');
-            expect(model.get('facets')[1]['name']).to.equal('y-dim1');
-            expect(model.get('facets')[2]['name']).to.equal('dim2');
-        });
-
-        it('multidim dimensions should depend on their axis only', function() {
-            var model = new App.EditorConfiguration({multidim: 2}, {
-                dimensions: four_dimensions});
-            var view = new App.FacetsEditor({model: model});
-            view.$el.find('[data-name="dim1"] [name="multidim"]').click().change();
-            view.$el.find('[data-name="dim2"] [name="multidim"]').click().change();
-            view.$el.find('[data-name="dim3"] [name="multidim"]').click().change();
-            var facets = facets_by_name(model.get('facets'));
-            expect(facets['x-dim2']['constraints']).to.deep.equal(
-                {'dim1': 'x-dim1'});
-            expect(facets['x-dim3']['constraints']).to.deep.equal(
-                {'dim1': 'x-dim1', 'dim2': 'x-dim2'});
-        });
-
-        it('subsequent dimensions depend on all multidim axes', function() {
-            var model = new App.EditorConfiguration({multidim: 2}, {
-                dimensions: four_dimensions});
-            var view = new App.FacetsEditor({model: model});
-            view.$el.find('[data-name="dim1"] [name="multidim"]').click().change();
-            view.$el.find('[data-name="dim2"] [name="multidim"]').click().change();
-            var facets = facets_by_name(model.get('facets'));
-            expect(facets['dim3']['constraints']).to.deep.equal({
-                'x-dim1': 'x-dim1', 'x-dim2': 'x-dim2',
-                'y-dim1': 'y-dim1', 'y-dim2': 'y-dim2'});
-            expect(facets['dim4']['constraints']).to.deep.equal({
-                'x-dim1': 'x-dim1', 'x-dim2': 'x-dim2',
-                'y-dim1': 'y-dim1', 'y-dim2': 'y-dim2',
-                'dim3': 'dim3'});
-        });
-
-        it('should set multidim_common on non-multidim facets', function() {
-            var model = new App.EditorConfiguration({multidim: 2}, {
-                dimensions: four_dimensions});
-            var view = new App.FacetsEditor({model: model});
-            view.$el.find('[data-name="dim1"] [name="multidim"]').click().change();
-            var facets = facets_by_name(model.get('facets'));
-            expect(facets['x-dim1']['multidim_common']).to.be.undefined;
-            expect(facets['dim3']['multidim_common']).to.be.true;
-        });
-
-        it('should set multidim_value on value facet', function() {
-            var model = new App.EditorConfiguration({multidim: 2}, {
-                dimensions: four_dimensions});
-            var view = new App.FacetsEditor({model: model});
-            var facets = facets_by_name(model.get('facets'));
-            expect(facets['value']['multidim_value']).to.be.true;
-        });
-
-        it('should parse multidim facets and preserve labels', function() {
-            var model = new App.EditorConfiguration({
-                multidim: 2,
-                facets: [
-                    {name: 'x-dim1', label: '(X) blah dim1'},
-                    {name: 'y-dim1', label: '(Y) ignored dim1'},
-                    {name: 'x-dim2', label: '(X) blah dim2'},
-                    {name: 'y-dim2', label: '(Y) ignored dim2'},
-                    {name: 'dim3', label: 'blah dim3'},
-                    {name: 'dim4', label: 'blah dim4'}
-                ]
-            }, {dimensions: four_dimensions});
-            var view = new App.FacetsEditor({model: model});
-            var facets = facets_by_name(model.get('facets'));
-            expect(facets['x-dim1'].label).to.equal('(X) blah dim1');
-            expect(facets['y-dim1'].label).to.equal('(Y) blah dim1');
-            expect(facets['x-dim2'].label).to.equal('(X) blah dim2');
-            expect(facets['y-dim2'].label).to.equal('(Y) blah dim2');
-            expect(facets['dim3'].label).to.equal('blah dim3');
-            expect(facets['dim4'].label).to.equal('blah dim4');
-        });
-
-        it('should order multidim facets grouped by axis', function() {
-            var model = new App.EditorConfiguration({multidim: 2}, {
-                dimensions: four_dimensions});
-            var view = new App.FacetsEditor({model: model});
-            view.$el.find('[data-name="dim1"] [name="multidim"]').click().change();
-            view.$el.find('[data-name="dim2"] [name="multidim"]').click().change();
-            expect(_(model.get('facets')).pluck('name')).to.deep.equal(
-                ['x-dim1', 'x-dim2', 'y-dim1', 'y-dim2',
-                 'dim3', 'dim4', 'value']);
-        });
-
     });
 
     describe('sort facet options', function() {
@@ -837,6 +861,7 @@ describe('FacetsEditor', function() {
         it('should save selected values', function() {
             var model = new App.EditorConfiguration({}, {
                 dimensions: four_dimensions});
+            var structureView = new App.StructureEditor({model: model});
             var view = new App.FacetsEditor({model: model});
             var $dim2_el = view.$el.find('[data-name="dim2"]');
             $dim2_el.find('[name="sort-by"]').val('notation').change();
@@ -851,12 +876,12 @@ describe('FacetsEditor', function() {
                 facets: [
                     {name: 'dim2', sortBy: 'notation', sortOrder: 'reverse'}]
             }, {dimensions: four_dimensions});
+            var structureView = new App.StructureEditor({model: model});
             var view = new App.FacetsEditor({model: model});
             var $dim2_el = view.$el.find('[data-name="dim2"]');
             expect($dim2_el.find('[name="sort-by"]').val()).to.equal('notation');
             expect($dim2_el.find('[name="sort-order"]').val()).to.equal('reverse');
         });
-
     });
 
 });

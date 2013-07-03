@@ -1,20 +1,20 @@
 {{# if err_too_few }}
   <div class="alert alert-error">
-    too few facets remaining for categories
+    Choose one more "multiple selection" or "all values" dimensions
   </div>
 {{/ if }}
 
 {{# if err_too_many }}
   <div class="alert alert-error">
-    too many facets remaining for categories
+    Choose a value in "Multiple series by" or set less "multiple selection" / "all values" dimensions
   </div>
 {{/ if }}
 
 {{# if category_facet }}
     <div class="alert alert-success">
-      Categories by {{ category_facet.label }}
+      Categories by {{ category_facet.name }}
     </div>
-    {{category_facet.label}} highlights
+    {{category_facet.name}} highlights
     {{# if options_received}}
       <select name="highlights" multiple>
         <option value="">--</option>

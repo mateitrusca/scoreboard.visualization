@@ -3,16 +3,6 @@
   <label>Enter the label of the filter, as it will appear on the visualisation page</label>
   <input type="text" name="label" title="{{ name }}" value="{{ label }}" />
 </div>
-<div class="editor-facet-field">
-  <label>Select type of filter. Choose "ignore" to hide this filter and "all values" when this dimension is displayed on the axes or triggers multiple series </label>
-  <select name="type">
-  {{# type_options }}
-    <option value="{{ value }}"
-      {{# if selected }}selected{{/ if }}
-      >{{ label }}</option>
-  {{/ type_options }}
-  </select>
-</div>
 
 {{# if is_single_select }}
 <div class="editor-facet-field checkbox">
@@ -85,11 +75,3 @@
   </br>
 </div>
 
-{{# if chart_is_multidim }}
-<div class="editor-facet-field">
-  <label>multidim</label>
-  <input type="checkbox" name="multidim"
-      {{# if multidim }}checked{{/ if }}>
-  </br>
-</div>
-{{/ if }}

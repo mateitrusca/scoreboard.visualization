@@ -19,7 +19,6 @@ App.FacetEditorField = Backbone.View.extend({
         'change [name="type"]': 'on_change_type',
         'click .facet-sort': 'on_click_sort',
         'change [name="include_wildcard"]': 'on_change_wildcard',
-        'change [name="multidim"]': 'on_change_multidim',
         'change [name="sort-by"]': 'on_change_sorting',
         'change [name="sort-order"]': 'on_change_sorting',
         'change [name="default_value"]': 'on_change_default_value',
@@ -41,13 +40,6 @@ App.FacetEditorField = Backbone.View.extend({
         {value: 'bottom-right', label: "lower right"}
     ],
 
-    type_options: [
-        {value: 'select', label: "single selection"},
-        {value: 'multiple_select', label: "multiple selection"},
-        {value: 'all-values', label: "all values"},
-        {value: 'ignore', label: "ignore"}
-    ],
-
     sort_by_options: [
         {value: 'nosort', label: "by order within the code list"},
         {value: 'label', label: "by value - long label"},
@@ -63,6 +55,15 @@ App.FacetEditorField = Backbone.View.extend({
     initialize: function(options) {
         if(! this.model.has('type')) {
             this.model.set('type', this.type_options[0]['value']);
+        }        
+        if (! this.model.has('position')) {
+            this.model.set('position', this.position_options[0]['value']);
+        }
+        if (! this.model.has('sortBy')) {
+            this.model.set('sortBy', this.sort_by_options[0]['value']);
+        }
+        if (! this.model.has('sortOrder')) {
+            this.model.set('sortOrder', this.sort_order_options[0]['value']);
         }
         this.facets_editor = options['facets_editor'];
         var ajax = this.fetch_options();
@@ -112,12 +113,6 @@ App.FacetEditorField = Backbone.View.extend({
                 .value(),
             position_options:_(this.position_options).map(function(opt) {
                     var selected = (this.model.get('position') == opt['value']);
-                    return _({
-                        selected: selected
-                    }).extend(opt);
-                }, this),
-            type_options: _(this.type_options).map(function(opt) {
-                    var selected = this.model.get('type') == opt['value'];
                     return _({
                         selected: selected
                     }).extend(opt);
@@ -244,15 +239,6 @@ App.FacetEditorField = Backbone.View.extend({
             this.model.unset('include_wildcard');
         }
         this.check_constraints();
-    },
-
-    on_change_multidim: function(evt) {
-        if($(evt.target).is(':checked')) {
-            this.model.set('multidim', true);
-        }
-        else {
-            this.model.unset('multidim');
-        }
     },
 
     check_constraints: function() {
@@ -410,26 +396,11 @@ App.FacetsEditor = Backbone.View.extend({
 
     update_model: function(){
         var values = {};
-        _(values).extend(this.categoryby.get_values());
-        _(values).extend(this.multipleseries.get_values());
         this.model.set(values);
         this.apply_changes();
     },
 
     initialize: function(options) {
-        this.categoryby = new App.CategoriesView({
-            model: new Backbone.Model({
-                'highlights': this.model.get('highlights')
-            }),
-            parent_view: this
-        });
-        this.multipleseries = new App.MultipleSeriesView({
-            model: new Backbone.Model(),
-            parent_view: this
-        });
-        this.multipleseries.model.on('change', this.update_model, this);
-        this.categoryby.model.on('change', this.update_model, this);
-
         if(! this.model.has('multiple_series')) {
             this.model.set('multiple_series', null);
         }
@@ -438,8 +409,6 @@ App.FacetsEditor = Backbone.View.extend({
                 model: facet_model,
                 facets_editor: this
             });
-            facet_view.on('options_received',
-                          this.categoryby.listen_on_categories, this.categoryby);
             return [facet_model.cid, facet_view];
         }, this));
         this.apply_changes();
@@ -479,17 +448,10 @@ App.FacetsEditor = Backbone.View.extend({
             err_too_many: (free_dimensions.length > 1),
             category_facet: category_facet
         }
-        this.categoryby.update();
-        this.multipleseries.update();
-
     },
 
     render: function() {
         this.$el.html(this.template());
-        this.$el.find('.categories-by').html(this.categoryby.el);
-        this.$el.find('[name="multiple-series-slot"]').html(this.multipleseries.el);
-        this.categoryby.delegateEvents();
-        this.multipleseries.delegateEvents();
         this.model.facets.forEach(function(facet_model) {
             var facet_view = this.facet_views[facet_model.cid];
             facet_view.render();
@@ -512,123 +474,6 @@ App.FacetsEditor = Backbone.View.extend({
         this.save_value();
     },
 
-});
-
-App.MultipleSeriesView = Backbone.View.extend({
-    template: App.get_template('editor/multipleseries.html'),
-
-    events: {
-        'change [name="multiple_series"]': 'on_change_multiple_series'
-    },
-
-    initialize: function(options){
-        this.parent_view = options.parent_view;
-        this.model.on('change', this.render, this);
-        this.render();
-    },
-
-    update: function(){
-        this.model.set({
-            series_options: this.parent_view.facet_roles.series_options,
-            chart_is_multidim: this.parent_view.chart_is_multidim()
-        });
-        this.render();
-    },
-
-    render: function(){
-        this.$el.html(this.template(this.model.toJSON()));
-    },
-
-    on_change_multiple_series: function() {
-        var select = this.$el.find('[name="multiple_series"]');
-        this.model.set('multiple_series', select.val() || null);
-    },
-
-    get_values: function(){
-        return _(this.model.toJSON()).pick('multiple_series');
-    }
-});
-
-App.CategoriesView = Backbone.View.extend({
-
-    template: App.get_template('editor/categories.html'),
-
-    events: {
-        'change [name="highlights"]': 'on_change_highlights',
-    },
-
-    initialize: function(options){
-        this.parent_view = options.parent_view;
-        this.update();
-    },
-
-    update: function(){
-        var category_config = {};
-        if(this.parent_view.facet_roles) {
-            if (this.parent_view.facet_roles.category_facet){
-                category_config['category_facet'] = this.parent_view.facet_roles.category_facet['name'];
-            }
-            _(category_config).extend({
-                err_too_few: this.parent_view.facet_roles.err_too_few,
-                err_too_many: this.parent_view.facet_roles.err_too_many
-            });
-        }
-        else{
-            _(category_config).extend({
-                category_facet: null,
-                err_too_few: null,
-                err_too_many: null
-            });
-        }
-        this.model.set(category_config);
-        this.render();
-    },
-
-    get_values: function(){
-        return _(this.model.toJSON()).pick(
-            'highlights',
-            'category_facet');
-    },
-
-    on_change_highlights: function(){
-        var select = this.$el.find('[name="highlights"]');
-        this.model.set('highlights', select.val() || null);
-    },
-
-    listen_on_categories: function(facet_view){
-        var cond = false;
-        try{
-            cond = (this.model.get('category_facet') ==
-                    facet_view.model.get('name'));
-        }
-        catch(err){
-            return;
-        }
-        if (cond){
-            var options = _(facet_view.facet_options).map(function(cat){
-                cat.highlight = false;
-                if (_(this.model.get('highlights')).contains(cat.value)){
-                    cat.highlight = true;
-                }
-                return cat;
-            }, this);
-            this.model.set('category_options', options);
-            this.options_received = true;
-            this.render();
-        };
-    },
-
-    render: function(){
-        var context = _({
-            options_received: this.options_received || false
-        }).extend(this.model.toJSON(), this.parent_view.facet_roles);
-        this.$el.html(this.template(context));
-        var params = {
-            placeholder: "Click to select values",
-            allowClear: true,
-        }
-        this.$el.find('[name="highlights"]').select2(params);
-    }
 });
 
 
