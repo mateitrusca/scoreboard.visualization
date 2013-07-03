@@ -75,3 +75,20 @@
   </br>
 </div>
 
+{{# if is_category_facet }}
+<div class="editor-facet-field">
+  <label>Choose highlighted values</label>
+  {{# if options_received}}
+      <select name="highlights" multiple>
+        {{# facet_options }}
+          <option value="{{ value }}"
+            {{# if highlight }}selected{{/ if }}
+            >{{ label }}</option>
+        {{/ facet_options }}
+      </select>
+  {{ else }}
+      <span class="label label-important">-- loading options --</span>
+  {{/ if}}
+  </br>
+</div>
+{{/ if }}

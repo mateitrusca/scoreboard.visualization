@@ -136,6 +136,10 @@ App.ScenarioChartView = Backbone.View.extend({
             tooltip_attributes.push(this.multiple_series);
         }
         var multidim = this.schema['multidim'];
+        var category_facet = _(this.schema.facets).findWhere({name:this.schema['category_facet']});
+        if ( category_facet ) {
+            var highlights = category_facet.highlights;
+        }
         var chart_data = {
             'tooltip_formatter': function() {
                 var attrs = this.point.attributes;
@@ -235,7 +239,7 @@ App.ScenarioChartView = Backbone.View.extend({
             'multiseries': this.multiple_series,
             'category_facet': this.schema['category_facet'],
             'subtype': this.schema.chart_subtype,
-            'highlights': this.schema.highlights,
+            'highlights': highlights,
             'sort': this.schema['sort'],
             'multidim': this.schema['multidim'],
             'chart_type': this.schema['chart_type']

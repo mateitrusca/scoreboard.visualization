@@ -102,7 +102,6 @@ App.StructureEditor = Backbone.View.extend({
     initialize: function(options) {
         this.categoryby = new App.CategoriesView({
             model: new Backbone.Model({
-                'highlights': this.model.get('highlights')
             }),
             parent_view: this
         });
@@ -239,7 +238,6 @@ App.CategoriesView = Backbone.View.extend({
     template: App.get_template('editor/categories.html'),
 
     events: {
-        'change [name="highlights"]': 'on_change_highlights',
     },
 
     initialize: function(options){
@@ -275,44 +273,10 @@ App.CategoriesView = Backbone.View.extend({
             'category_facet');
     },
 
-    on_change_highlights: function(){
-        var select = this.$el.find('[name="highlights"]');
-        this.model.set('highlights', select.val() || null);
-    },
-
-    listen_on_categories: function(facet_view){
-        var cond = false;
-        try{
-            cond = (this.model.get('category_facet') ==
-                    facet_view.model.get('name'));
-        }
-        catch(err){
-            return;
-        }
-        if (cond){
-            var options = _(facet_view.facet_options).map(function(cat){
-                cat.highlight = false;
-                if (_(this.model.get('highlights')).contains(cat.value)){
-                    cat.highlight = true;
-                }
-                return cat;
-            }, this);
-            this.model.set('category_options', options);
-            this.options_received = true;
-            this.render();
-        };
-    },
-
     render: function(){
         var context = _({
-            options_received: this.options_received || false
         }).extend(this.model.toJSON(), this.parent_view.facet_roles);
         this.$el.html(this.template(context));
-        var params = {
-            placeholder: "Click to select values",
-            allowClear: true,
-        }
-        this.$el.find('[name="highlights"]').select2(params);
     }
 });
 

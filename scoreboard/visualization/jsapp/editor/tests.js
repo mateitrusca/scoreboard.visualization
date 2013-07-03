@@ -791,12 +791,10 @@ describe('FacetsEditor', function() {
             this.sandbox.useFakeServer();
             var view = new App.FacetsEditor({
                 model: new App.EditorConfiguration({
+                    category_facet: 'dim1',
                     facets: [
-                        {name: 'dim1', type: 'multiple_select'},
+                        {name: 'dim1', type: 'multiple_select', highlights: ['two']},
                     ],
-                    highlights: [
-                        'two'
-                    ]
                 }, {
                     dimensions: [
                         {type_label: 'dimension', notation: 'dim1'}
@@ -815,6 +813,7 @@ describe('FacetsEditor', function() {
             this.sandbox.useFakeServer();
             var view = new App.FacetsEditor({
                 model: new App.EditorConfiguration({
+                    category_facet: 'dim1',
                     facets: [
                         {name: 'dim1', type: 'multiple_select'},
                     ],
@@ -829,8 +828,8 @@ describe('FacetsEditor', function() {
                            {'label': "Option Two", 'notation': 'two'}];
             App.respond_json(server.requests[0], {'options': options});
             var select = view.$el.find('[name="highlights"]');
-            select.val(['one']).change();
-            expect(view.model.attributes.highlights).to.deep.equal(['one']);
+            select.val(['two']).change();
+            expect(view.model.facets.models[0].get('highlights')).to.deep.equal(['two']);
         });
     });
 
