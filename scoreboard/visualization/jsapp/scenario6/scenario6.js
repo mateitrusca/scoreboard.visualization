@@ -25,40 +25,43 @@ App.scenario6_filters_schema = {
   "facets": [
     {
       "constraints": {},
+      "default_value": "#random",
       "dimension": "indicator-group",
       "include_wildcard": true,
       "label": "Indicator group",
       "name": "indicator-group",
-      "type": "select",
-      "default_value": "#random",
+      "position": "upper-left",
       "sortBy": "nosort",
-      "sortOrder": "asc"
+      "sortOrder": "asc",
+      "type": "select"
     },
     {
       "constraints": {
         "indicator-group": "indicator-group"
       },
+      "default_value": "#random",
       "dimension": "indicator",
       "label": "Indicator",
+      "name": "indicator",
+      "position": "upper-left",
       "sortBy": "inner_order",
       "sortOrder": "asc",
-      "name": "indicator",
-      "default_value": "#random",
       "type": "select"
     },
     {
-      "name": "breakdown-group",
-      "dimension": "breakdown-group",
-      "include_wildcard": true,
-      "label": "Breakdown group",
-      "sortBy": "nosort",
-      "sortOrder": "asc",
-      "default_value": "#random",
-      "type": "select",
       "constraints": {
         "indicator-group": "indicator-group",
         "indicator": "indicator"
-      }
+      },
+      "default_value": "#random",
+      "dimension": "breakdown-group",
+      "include_wildcard": true,
+      "label": "Breakdown group",
+      "name": "breakdown-group",
+      "position": "upper-left",
+      "sortBy": "nosort",
+      "sortOrder": "asc",
+      "type": "select"
     },
     {
       "constraints": {
@@ -66,12 +69,13 @@ App.scenario6_filters_schema = {
         "indicator": "indicator",
         "breakdown-group": "breakdown-group"
       },
+      "default_value": "#random",
       "dimension": "breakdown",
       "label": "Breakdown",
       "name": "breakdown",
+      "position": "upper-left",
       "sortBy": "inner_order",
       "sortOrder": "asc",
-      "default_value": "#random",
       "type": "select"
     },
     {
@@ -81,10 +85,13 @@ App.scenario6_filters_schema = {
         "breakdown-group": "breakdown-group",
         "breakdown": "breakdown"
       },
+      "default_value": "#random",
       "dimension": "unit-measure",
       "label": "Unit of measure",
       "name": "unit-measure",
-      "default_value": "#random",
+      "position": "upper-left",
+      "sortBy": "nosort",
+      "sortOrder": "asc",
       "type": "select"
     },
     {
@@ -101,8 +108,12 @@ App.scenario6_filters_schema = {
         "PT","RO","SI","SK","FI","SE","UK","EU27"
       ],
       "dimension": "ref-area",
+      "highlights": [
+        "EU27"
+      ],
       "label": "Select the countries",
       "name": "ref-area",
+      "position": "upper-right",
       "sortBy": "label",
       "sortOrder": "asc",
       "type": "multiple_select"
@@ -116,7 +127,11 @@ App.scenario6_filters_schema = {
         "unit-measure": "unit-measure"
       },
       "dimension": "time-period",
+      "label": "Period",
       "name": "time-period",
+      "position": "upper-left",
+      "sortBy": "nosort",
+      "sortOrder": "asc",
       "type": "all-values"
     },
     {
@@ -125,27 +140,21 @@ App.scenario6_filters_schema = {
       "dimension": "value"
     }
   ],
-  "highlights": ["EU27"],
+  "highlights": [
+    "EU27"
+  ],
   "labels": {
-    "ordinate": {
-      "facet": "unit-measure",
-      "field": "short_label"
+    "breakdown": {
+      "facet": "breakdown"
     },
-    "title": {
-      "facet": "indicator",
-      "field": "label"
+    "indicator": {
+      "facet": "indicator"
     },
     "unit-measure": {
-      "facet": "unit-measure",
-      "field": "short_label"
-    },
-    "title2": {
-      "facet": "breakdown",
-      "field": "label"
+      "facet": "unit-measure"
     }
   },
   "multiple_series": "time-period",
-  "height": 450,
   "credits": {
     "text": "European Commission, Digital Agenda Scoreboard",
     "link": "http://ec.europa.eu/digital-agenda/en/graphs/"
@@ -161,7 +170,34 @@ App.scenario6_filters_schema = {
     "note": true
   },
   "series-legend-label": "none",
-  "series-point-label": "long"
+  "series-point-label": "none",
+  "titles": {
+    "title": [
+      {
+        "prefix": null,
+        "suffix": null,
+        "facet_name": "indicator",
+        "format": "label"
+      },
+      {
+        "facet_name": "breakdown",
+        "prefix": ", ",
+        "suffix": null,
+        "format": "label"
+      }
+    ],
+    "subtitle": [],
+    "xAxisTitle": [],
+    "yAxisTitle": [
+      {
+        "prefix": null,
+        "suffix": null,
+        "facet_name": "unit-measure",
+        "format": "short_label"
+      }
+    ]
+  },
+  "plotlines": {}
 };
 
 
