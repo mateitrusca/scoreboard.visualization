@@ -66,11 +66,15 @@ App.scenario9_filters_schema = {
     }
   ],
   labels: {
-    title: {facet: 'ref-area', field: 'label'},
-    subtitle: {facet: 'time-period', field: 'short_label'},
-    'indicator-group': {facet: 'indicator-group', field: 'label'},
-    'ref-area': {facet: 'ref-area', field: 'label'},
-    'time-period': {facet: 'time-period', field: 'short_label'}
+    "indicator-group": {
+      "facet": "indicator-group"
+    },
+    "ref-area": {
+      "facet": "ref-area"
+    },
+    "time-period": {
+      "facet": "time-period"
+    }
   },
   "sort": {
     "by": "order",
@@ -81,7 +85,33 @@ App.scenario9_filters_schema = {
     {"value": "The bars present the relative position of a country on all the key indicators of a thematic group, compared on a common scale with the lowest, average and highest European countries values.",
      "position": "upper-right"
     }
-  ]
+  ],
+  "titles": {
+    "title": [
+      {
+        "prefix": "Country profile for ",
+        "suffix": null,
+        "facet_name": "ref-area",
+        "format": "label"
+      },
+      {
+        "prefix": ", ",
+        "suffix": "indicators ",
+        "facet_name": "indicator-group",
+        "format": "label"
+      }
+    ],
+    "subtitle": [
+      {
+        "prefix": null,
+        "suffix": null,
+        "facet_name": "time-period",
+        "format": "short_label"
+      }
+    ],
+    "xAxisTitle": [],
+    "yAxisTitle": []
+  }
 };
 
 
