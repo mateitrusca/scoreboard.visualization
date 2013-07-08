@@ -104,6 +104,7 @@ App.TitlePartsCollection = Backbone.Collection.extend({
                 parts.push(new App.TitlePart({
                     prefix: part.prefix || null,
                     suffix: part.suffix || null,
+                    format: part.format || null,
                     facet_name: part.facet_name
                 }));
             })
