@@ -15,7 +15,6 @@ App.FacetEditorField = Backbone.View.extend({
         'input [name="label"]': 'on_input_label',
         'keyup [name="label"]': 'on_input_label',
         'focusout [name="label"]': 'on_focusout_label',
-        'change [name="position"]': 'on_change_position',
         'change [name="type"]': 'on_change_type',
         'click .facet-sort': 'on_click_sort',
         'change [name="include_wildcard"]': 'on_change_wildcard',
@@ -34,13 +33,6 @@ App.FacetEditorField = Backbone.View.extend({
         return $.getJSON(App.URL + '/' + view_name, args);
     },
 
-    position_options:[
-        {value: 'upper-left', label: "upper left"},
-        {value: 'upper-right', label: "upper right"},
-        {value: 'bottom-left', label: "lower left"},
-        {value: 'bottom-right', label: "lower right"}
-    ],
-
     sort_by_options: [
         {value: 'nosort', label: "by order within the code list"},
         {value: 'label', label: "by value - long label"},
@@ -56,9 +48,6 @@ App.FacetEditorField = Backbone.View.extend({
     initialize: function(options) {
         if(! this.model.has('type')) {
             this.model.set('type', this.type_options[0]['value']);
-        }        
-        if (! this.model.has('position')) {
-            this.model.set('position', this.position_options[0]['value']);
         }
         if (! this.model.has('sortBy')) {
             this.model.set('sortBy', this.sort_by_options[0]['value']);
@@ -120,12 +109,6 @@ App.FacetEditorField = Backbone.View.extend({
                         }
                     }, this))
                 .value(),
-            position_options:_(this.position_options).map(function(opt) {
-                    var selected = (this.model.get('position') == opt['value']);
-                    return _({
-                        selected: selected
-                    }).extend(opt);
-                }, this),
             sort_by_options: _(this.sort_by_options).map(function(spec) {
                     var opt = _({}).extend(spec);
                     if(spec['value'] == this.model.get('sortBy')) {
@@ -172,12 +155,6 @@ App.FacetEditorField = Backbone.View.extend({
     on_focusout_label: function(evt) {
         this.model.set({
             label: this.facet_label || this.model.get('label')
-        });
-    },
-
-    on_change_position: function(evt) {
-        this.model.set({
-            position: this.$el.find('[name="position"]').val()
         });
     },
 

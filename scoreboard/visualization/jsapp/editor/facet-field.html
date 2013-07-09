@@ -15,17 +15,6 @@
 {{/ if }}
 
 <div class="editor-facet-field">
-  <label>Choose the location of the current filter within the filters panel</label>
-  <select name="position">
-  {{# position_options }}
-    <option value="{{ value }}"
-      {{# if selected }}selected{{/ if }}
-      >{{ label }}</option>
-  {{/ position_options }}
-  </select>
-</div>
-
-<div class="editor-facet-field">
   <label>Choose how the values of the filter are be sorted</label>
   <select name="sort-by">
   {{# sort_by_options }}

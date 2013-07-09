@@ -813,40 +813,6 @@ describe('FacetsEditor', function() {
 
     });
 
-    describe('facet position', function() {
-
-        it('should update model with selection', function() {
-            var model = new App.EditorConfiguration({
-                    facets: [
-                        {name: 'dim1', type: 'select'}
-                    ]
-                }, {
-                    dimensions: [
-                        {type_label: 'dimension', notation: 'time-period'}]
-                });
-            var structureView = new App.StructureEditor({model: model});
-            var view = new App.FacetsEditor({model: model});
-            expect(model.facets.first().get('position')).to.equal('upper-left');
-            view.$el.find('[name="position"]').val('upper-right').change();
-            expect(model.facets.first().get('position')).to.equal(
-                'upper-right');
-        });
-
-        it('should select existing filter position', function(){
-            var model = new App.EditorConfiguration({
-                    facets: [
-                            {name: 'time-period', position: 'lower-left'}]
-                    }, {
-                        dimensions: [
-                            {type_label: 'dimension', notation: 'time-period'}]
-                    });
-            var structureView = new App.StructureEditor({model: model});
-            var view = new App.FacetsEditor({model: model});
-            var facet0 = view.model.toJSON()['facets'][0];
-            expect(facet0['position']).to.equal('lower-left');
-        });
-    });
-
     describe('highlights', function() {
 
         it('should display existing highlights', function() {
