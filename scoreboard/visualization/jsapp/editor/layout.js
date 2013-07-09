@@ -7,7 +7,7 @@
 App.LayoutEditorField = Backbone.View.extend({
     template: App.get_template('editor/layout-field.html'),
 
-    initialize: function() {
+    initialize: function(options) {
         this.render();
     },
 
@@ -20,7 +20,12 @@ App.LayoutEditorField = Backbone.View.extend({
 
     render: function() {
         var context = _({
-            position_options: this.position_options
+            position_options: _(this.position_options).map(function(pos){
+                var selected = this.model.get('position') == pos['value'];
+                return _({
+                    selected: selected
+                }).extend(pos);
+            }, this)
         }).extend(this.model.toJSON());
         this.$el.html(this.template(context));
     }
