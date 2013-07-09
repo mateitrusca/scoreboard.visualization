@@ -499,6 +499,24 @@ describe('LayoutEditor', function() {
         var view = new App.LayoutEditor({model: model});
         expect(model.facets.first().get('position')).to.equal('upper-left');
     });
+
+    it('should update model with selected position', function() {
+        var model = new App.EditorConfiguration({
+                facets: [
+                    {name: 'dim1', type: 'select'}
+                ]
+            }, {
+                dimensions: [
+                    {type_label: 'dimension', notation: 'time-period'}]
+            });
+        var structureView = new App.StructureEditor({model: model});
+        var view = new App.LayoutEditor({model: model});
+        expect(model.facets.first().get('position')).to.equal('upper-left');
+        view.$el.find('[name="position"]').val('upper-right').change();
+        expect(model.facets.first().get('position')).to.equal(
+            'upper-right');
+    });
+
 });
 
 describe('FacetsEditor', function() {

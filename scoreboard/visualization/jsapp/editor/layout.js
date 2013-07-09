@@ -7,6 +7,10 @@
 App.LayoutEditorField = Backbone.View.extend({
     template: App.get_template('editor/layout-field.html'),
 
+    events: {
+        'change [name="position"]': 'on_change_position'
+    },
+
     initialize: function(options) {
         if(!this.model.has('position')){
             this.model.set('position', this.position_options[0]['value']);
@@ -31,7 +35,13 @@ App.LayoutEditorField = Backbone.View.extend({
             }, this)
         }).extend(this.model.toJSON());
         this.$el.html(this.template(context));
-    }
+    },
+
+    on_change_position: function(evt) {
+        this.model.set({
+            position: this.$el.find('[name="position"]').val()
+        });
+    },
 });
 
 App.LayoutEditor = Backbone.View.extend({
