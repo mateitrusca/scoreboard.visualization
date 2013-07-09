@@ -518,7 +518,23 @@ describe('LayoutEditor', function() {
 
     it('should display separate position controls for multidim facets', function() {
         var model = new App.EditorConfiguration({
-                multidom: 2,
+                multidim: 2,
+                facets: [
+                    {name: 'x-indicator', type: 'select'},
+                    {name: 'y-indicator', type: 'select'}
+                ]
+            }, {
+                dimensions: [
+                    {type_label: 'dimension', notation: 'x-indicator'},
+                    {type_label: 'dimension', notation: 'y-indicator'}]
+            });
+        var structureView = new App.StructureEditor({model: model});
+        var view = new App.LayoutEditor({model: model});
+    });
+
+    it('should rebuild layout facets collection when facets change', function() {
+        var model = new App.EditorConfiguration({
+                multidim: 2,
                 facets: [
                     {name: 'indicator', type: 'select'}
                 ]
@@ -528,6 +544,13 @@ describe('LayoutEditor', function() {
             });
         var structureView = new App.StructureEditor({model: model});
         var view = new App.LayoutEditor({model: model});
+        expect(view.layout_collection.length).to.equal(2);
+        structureView.$el.find('[name="multidim"]').click().change();
+        expect(view.layout_collection.length).to.equal(3);
+        expect(view.layout_collection.models[0].get('name')).to.equal(
+            'x-indicator');
+        expect(view.layout_collection.models[1].get('name')).to.equal(
+            'y-indicator');
     });
 
 });
