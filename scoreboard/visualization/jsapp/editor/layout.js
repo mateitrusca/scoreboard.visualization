@@ -44,12 +44,6 @@ App.LayoutEditorField = Backbone.View.extend({
     },
 });
 
-App.LayoutCollection = Backbone.Collection.extend({
-    constructor: function(value) {
-        Backbone.Collection.apply(this, [value]);
-    }
-});
-
 App.LayoutEditor = Backbone.View.extend({
 
     template: App.get_template('editor/layout.html'),
@@ -57,23 +51,12 @@ App.LayoutEditor = Backbone.View.extend({
     title: "Layout",
 
     initialize: function(options) {
-        this.layout_collection = new App.LayoutCollection(this.model.get('facets'));
-        this.model.facets.on('change', this.rebuild_collection, this)
         this.render();
-    },
-
-    rebuild_collection: function(){
-        this.layout_collection = new App.LayoutCollection(this.model.get('facets'));
-    },
-
-    save_facets: function(){
-        this.model.set('facets', this.layout_collection.toJSON());
     },
 
     render: function() {
         this.$el.html(this.template());
-        this.facet_views = _.object(this.layout_collection.map(function(facet_model) {
-            facet_model.on('change', this.save_facets, this);
+        this.facet_views = _.object(this.model.layout_collection.map(function(facet_model) {
             var facet_view = new App.LayoutEditorField({
                 model: facet_model
             });

@@ -544,12 +544,12 @@ describe('LayoutEditor', function() {
             });
         var structureView = new App.StructureEditor({model: model});
         var view = new App.LayoutEditor({model: model});
-        expect(view.layout_collection.length).to.equal(2);
+        expect(view.model.layout_collection.length).to.equal(1);
         structureView.$el.find('[name="multidim"]').click().change();
-        expect(view.layout_collection.length).to.equal(3);
-        expect(view.layout_collection.models[0].get('name')).to.equal(
+        expect(view.model.layout_collection.length).to.equal(3);
+        expect(view.model.layout_collection.models[0].get('name')).to.equal(
             'x-indicator');
-        expect(view.layout_collection.models[1].get('name')).to.equal(
+        expect(view.model.layout_collection.models[1].get('name')).to.equal(
             'y-indicator');
     });
 
