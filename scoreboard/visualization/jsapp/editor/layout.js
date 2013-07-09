@@ -8,6 +8,9 @@ App.LayoutEditorField = Backbone.View.extend({
     template: App.get_template('editor/layout-field.html'),
 
     initialize: function(options) {
+        if(!this.model.has('position')){
+            this.model.set('position', this.position_options[0]['value']);
+        }
         this.render();
     },
 
