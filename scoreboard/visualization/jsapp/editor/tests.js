@@ -800,7 +800,37 @@ describe('FacetsEditor', function() {
             App.respond_json(server.requests[1], {'options': options});
             var select = view.$el.find('[name="default_value"]:eq(0)');
             select.val(['#eu27']).change();
-            expect(model.facets.models[0].get('default_value')).to.deep.equal(App.EU27);
+            expect(model.facets.models[0].get('default_value')).to.deep.equal(
+                _(App.EU27).keys());
+            var select = view.$el.find('[name="default_value"]:eq(1)');
+            expect(select.find('option[value="#eu27"]').toArray()).to.deep.equal([]);
+        });
+
+        it('should replace "#eu27" with the right countries', function(){
+            this.sandbox.useFakeServer();
+            var model = new App.EditorConfiguration({
+                    facets: [
+                        {name: 'ref-area', type: 'multiple_select', dimension: 'ref-area'},
+                        {name: 'ref-area1', type: 'multiple_select', dimension: 'other'},
+                        {name: 'ref-area2', type: 'select', dimension: 'ref-area'},
+                    ]
+                }, {
+                    dimensions: [
+                        {type_label: 'dimension', notation: 'ref-area'},
+                        {type_label: 'dimension', notation: 'other'}
+                    ]
+                });
+            var structureView = new App.StructureEditor({model: model});
+            var view = new App.FacetsEditor({model: model});
+            var server = this.sandbox.server;
+            var options = [{'label': "Option One", 'notation': 'one'},
+                           {'label': "Option Two", 'notation': 'two'}];
+            App.respond_json(server.requests[0], {'options': options});
+            App.respond_json(server.requests[1], {'options': options});
+            var select = view.$el.find('[name="default_value"]:eq(0)');
+            select.val(['#eu27']).change();
+            expect(model.facets.models[0].get('default_value')).to.deep.equal(
+                _(App.EU27).keys());
             var select = view.$el.find('[name="default_value"]:eq(1)');
             expect(select.find('option[value="#eu27"]').toArray()).to.deep.equal([]);
         });

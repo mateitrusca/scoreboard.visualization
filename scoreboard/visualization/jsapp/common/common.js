@@ -50,7 +50,35 @@ App.COUNTRY_COLOR = _.object(_(country_data).pluck('code'),
 App.COUNTRY_NAME = _.object(_(country_data).pluck('code'),
                             _(country_data).pluck('label'));
 
-App.EU27 = _.chain(country_data).pluck('code').without('EU27').value();
+App.EU27 = {
+    BE: "Belgium",
+    FR: "France",
+    BG: "Bulgaria",
+    DK: "Denmark",
+    DE: "Germany",
+    HU: "Hungary",
+    FI: "Finland",
+    NL: "Netherlands",
+    PT: "Portugal",
+    LV: "Latvia",
+    LT: "Lithuania",
+    LU: "Luxembourg",
+    RO: "Romania",
+    PL: "Poland",
+    EL: "Greece",
+    EE: "Estonia",
+    IT: "Italy",
+    CZ: "Czech Republic",
+    CY: "Cyprus",
+    AT: "Austria",
+    IE: "Ireland",
+    ES: "Spain",
+    SK: "Slovakia",
+    MT: "Malta",
+    SI: "Slovenia",
+    UK: "United Kingdom",
+    SE: "Sweden"
+}
 
 App.SERIES_COLOR = ['#63b8ff', '#E41A1C', '#4DAF4A', '#984EA3', '#FF7F00', '#FFFF33', '#A65628', '#F781BF', '#0d233a'];
 

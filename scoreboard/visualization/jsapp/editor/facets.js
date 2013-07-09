@@ -173,7 +173,7 @@ App.FacetEditorField = Backbone.View.extend({
             result.push('#random');
         }
         if (_(value).contains('#eu27')){
-            result = _.union(result, App.EU27);
+            result = _.union(result, _(App.EU27).keys());
         }
         if (result.length > 0){
             if (this.model.get('type') == 'select'){
