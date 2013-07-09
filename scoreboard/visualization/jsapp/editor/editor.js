@@ -23,8 +23,6 @@ App.EditForm = Backbone.View.extend({
     update_form: function() {
         var value = this.model.get_value();
         var sorted = copyObjectWithSortedKeys(value);
-        console.log(sorted);
-        console.log(JSON.stringify(sorted));
         this.input.val(JSON.stringify(sorted, null, 2));  // indent 2 spaces
     },
 
