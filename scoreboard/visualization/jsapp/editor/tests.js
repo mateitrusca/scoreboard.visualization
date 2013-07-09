@@ -497,7 +497,7 @@ describe('LayoutEditor', function() {
             });
         var structureView = new App.StructureEditor({model: model});
         var view = new App.LayoutEditor({model: model});
-        expect(model.facets.first().get('position')).to.equal('upper-left');
+        expect(model.get('facets')[0]['position']).to.equal('upper-left');
     });
 
     it('should update model with selected position', function() {
@@ -511,10 +511,23 @@ describe('LayoutEditor', function() {
             });
         var structureView = new App.StructureEditor({model: model});
         var view = new App.LayoutEditor({model: model});
-        expect(model.facets.first().get('position')).to.equal('upper-left');
+        expect(model.get('facets')[0]['position']).to.equal('upper-left');
         view.$el.find('[name="position"]').val('upper-right').change();
-        expect(model.facets.first().get('position')).to.equal(
-            'upper-right');
+        expect(model.get('facets')[0]['position']).to.equal('upper-right');
+    });
+
+    it('should display separate position controls for multidim facets', function() {
+        var model = new App.EditorConfiguration({
+                multidom: 2,
+                facets: [
+                    {name: 'indicator', type: 'select'}
+                ]
+            }, {
+                dimensions: [
+                    {type_label: 'dimension', notation: 'indicator'}]
+            });
+        var structureView = new App.StructureEditor({model: model});
+        var view = new App.LayoutEditor({model: model});
     });
 
 });
