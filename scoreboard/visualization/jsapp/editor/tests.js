@@ -457,6 +457,25 @@ describe('StructureEditor', function() {
     });
 });
 
+describe('LayoutEditor', function() {
+    "use strict";
+
+    var $ = App.jQuery;
+
+    it('should display the facets and position controls', function(){
+        var model = new App.EditorConfiguration({
+                facets: [
+                        {name: 'time-period', position: 'lower-right'}]
+                }, {
+                    dimensions: [
+                        {type_label: 'dimension', notation: 'time-period'}]
+                });
+        var view = new App.LayoutEditor({model: model});
+        expect(view.$el.find('select').length).to.equal(1);
+    });
+
+});
+
 describe('FacetsEditor', function() {
     "use strict";
 

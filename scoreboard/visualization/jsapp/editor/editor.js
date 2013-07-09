@@ -22,21 +22,9 @@ App.EditForm = Backbone.View.extend({
 
     update_form: function() {
         var value = this.model.get_value();
-        function stringify(obj) {
-          function flatten(obj) {
-            if (_.isObject(obj)) {
-              return _.sortBy(_.map(
-                  _.pairs(obj),
-                  function(p) { return [p[0], flatten(p[1])]; }
-                ),
-                function(p) { return p[0]; }
-              );
-            }
-            return obj;
-          }
-          return JSON.stringify(flatten(obj));
-        };
         var sorted = copyObjectWithSortedKeys(value);
+        console.log(sorted);
+        console.log(JSON.stringify(sorted));
         this.input.val(JSON.stringify(sorted, null, 2));  // indent 2 spaces
     },
 
@@ -75,6 +63,7 @@ App.Editor = Backbone.View.extend({
     step_cls: [
         'ChartTypeEditor',
         'StructureEditor',
+        'LayoutEditor',
         'FacetsEditor',
         'AxesEditor',
         'SeriesEditor',

@@ -1,0 +1,10 @@
+<div class="layout-editor-field">
+    <label>{{ name }}:</label>
+    <select name="position">
+    {{# position_options }}
+    <option value="{{ value }}"
+      {{# if selected }}selected{{/ if }}
+      >{{ label }}</option>
+    {{/ position_options }}
+    </select>
+</div>
