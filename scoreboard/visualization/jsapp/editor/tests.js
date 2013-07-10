@@ -553,6 +553,24 @@ describe('LayoutEditor', function() {
             'y-indicator');
     });
 
+    it('should put "all-values" at the bottom of facets', function() {
+        var model = new App.EditorConfiguration({
+                multidim: 2,
+                facets: [
+                    {name: 'dim1', type: 'all-values'},
+                    {name: 'dim2', type: 'select'}
+                ]
+            }, {
+                dimensions: [
+                    {type_label: 'dimension', notation: 'dim1'},
+                    {type_label: 'dimension', notation: 'dim2'}]
+            });
+        var structureView = new App.StructureEditor({model: model});
+        var view = new App.LayoutEditor({model: model});
+        expect(_(model.get('facets')).last()['name']).to.equal(
+            'dim1');
+    });
+
 });
 
 describe('FacetsEditor', function() {
