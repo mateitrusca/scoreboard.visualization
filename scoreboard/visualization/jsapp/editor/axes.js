@@ -231,6 +231,7 @@ App.TitleComposers = Backbone.Collection.extend({
                 init_value: options.init_value[name] || null
             });
         }, this);
+        this.init_labels = options.init_labels || {};
         Backbone.Collection.apply(this, [composers]);
     },
 
@@ -246,8 +247,11 @@ App.TitleComposers = Backbone.Collection.extend({
             return !_(labels).has(label.facet);
         };
         var labels = options.current || {};
+        var all_parts = [];
         this.forEach(function(composer){
             _(composer.get('parts')).each(function(part){
+                all_parts = _.chain(composer.get('parts'))
+                             .pluck('facet_name').union(all_parts).value();
                 if(part.facet_name){
                     var label = _.object([
                         ['facet', part.facet_name]
@@ -256,8 +260,13 @@ App.TitleComposers = Backbone.Collection.extend({
                         labels[label.facet] = label;
                     }
                 }
-            });
-        });
+            }, this)
+        }, this);
+        var to_remove =  _.chain(_(labels).keys())
+                          .difference(all_parts)
+                          .difference(_(this.init_labels).keys())
+                          .value();
+        labels = _(labels).omit(to_remove);
         return labels;
     }
 })
@@ -305,7 +314,8 @@ App.AxesEditor = Backbone.View.extend({
         this.composers = new App.TitleComposers({
             names: ['title', 'subtitle', 'xAxisTitle', 'yAxisTitle'],
             init_value: this.model.get('titles') || {},
-            facets: this.model.get('facets')
+            facets: this.model.get('facets'),
+            init_labels: this.model.get('labels')
         });
         this.composers_views = _.object(this.composers.map(function(composer){
             var composer_view = new App.TitleComposerView({

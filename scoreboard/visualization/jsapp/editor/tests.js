@@ -1281,7 +1281,81 @@ describe('AxesEditor', function() {
                   "facet": "brk"
                 },
             })
-        })
+        });
+
+        it('should remove own labels in labels section on model', function(){
+            var model = new Backbone.Model({
+                facets: [
+                    {name: 'ind', type: 'select', value: 'indicator'},
+                    {name: 'brk', type: 'select', value: 'breakdown'},
+                    {name: 'area', type: 'select', value: 'ref-area'}
+                ],
+                labels: { ind: { facet: 'ind' } }
+            });
+            var view = new App.AxesEditor({model: model});
+            var add_button = view.composers_views.title.$el.find(
+                                    '[name="add-title-part"]');
+            var format_select = view.composers_views.title.$el.find(
+                                    '[name="title-part-format"]');
+            var select = view.composers_views.title.$el.find(
+                                    '[name="title-part"]:eq(0)');
+            select.val('ind').change();
+            add_button.click();
+            format_select.val('label').change();
+            var select = view.composers_views.title.$el.find(
+                                    '[name="title-part"]:eq(1)');
+            select.val('brk').change();
+            var parts = view.composers_views['title'].parts;
+            parts.remove(parts.last().cid);
+            expect(view.model.get('titles').title).to.deep.equal([
+                {facet_name: 'ind', prefix: null, suffix: null, format: 'label'}
+            ]);
+            expect(view.model.get('labels')).to.deep.equal({
+                "ind": {
+                  "facet": "ind"
+                }
+            })
+        });
+
+        it('should not remove existing labels in labels section on model', function(){
+            var model = new Backbone.Model({
+                facets: [
+                    {name: 'ind', type: 'select', value: 'indicator'},
+                    {name: 'brk', type: 'select', value: 'breakdown'},
+                    {name: 'area', type: 'select', value: 'ref-area'}
+                ],
+                labels: {
+                    ind: { facet: 'ind' },
+                    brk: { facet: 'brk' }
+                }
+            });
+            var view = new App.AxesEditor({model: model});
+            var add_button = view.composers_views.title.$el.find(
+                                    '[name="add-title-part"]');
+            var format_select = view.composers_views.title.$el.find(
+                                    '[name="title-part-format"]');
+            var select = view.composers_views.title.$el.find(
+                                    '[name="title-part"]:eq(0)');
+            select.val('ind').change();
+            add_button.click();
+            format_select.val('label').change();
+            var select = view.composers_views.title.$el.find(
+                                    '[name="title-part"]:eq(1)');
+            select.val('brk').change();
+            var parts = view.composers_views['title'].parts;
+            parts.remove(parts.last().cid);
+            expect(view.model.get('titles').title).to.deep.equal([
+                {facet_name: 'ind', prefix: null, suffix: null, format: 'label'}
+            ]);
+            expect(view.model.get('labels')).to.deep.equal({
+                "ind": {
+                  "facet": "ind"
+                },
+                "brk": {
+                  "facet": "brk"
+                },
+            })
+        });
 
         it('should save parts with default format', function(){
             var model = new Backbone.Model({
