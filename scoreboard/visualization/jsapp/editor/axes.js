@@ -113,9 +113,10 @@ App.TitlePartsCollection = Backbone.Collection.extend({
     },
 
     get_values: function(){
-        return this.map(function(part_model){
+        var result = this.map(function(part_model){
             return part_model.toJSON();
         });
+        return result;
     }
 });
 
@@ -128,9 +129,6 @@ App.TitleComposerModel = Backbone.Model.extend({
         if (options.init_value){
             _(options.init_value).each(function(part){
                 if (_(valid_names).contains(part.facet_name)){
-                    if (parts.length == 0){
-                        part = _(part).omit('prefix');
-                    }
                     parts.push(part);
                 }
             })
@@ -311,11 +309,23 @@ App.AxesEditor = Backbone.View.extend({
     ],
 
     initialize: function(options) {
+        this.init_composers();
+        this.render();
+        this.set_axis_labels();
+        this.model.on('change multidim', this.init_composers, this);
+        this.model.on('change facets', this.set_axis_labels, this);
+    },
+
+    init_composers: function(){
+        var composers = ['title', 'subtitle', 'xAxisTitle', 'yAxisTitle'];
+        if (!_([2,3]).contains(this.model.get('multidim'))){
+            composers = _(composers).without('xAxisTitle');
+        }
         this.composers = new App.TitleComposers({
-            names: ['title', 'subtitle', 'xAxisTitle', 'yAxisTitle'],
+            names: composers,
             init_value: this.model.get('titles') || {},
             facets: this.model.get('facets'),
-            init_labels: this.model.get('labels')
+            init_labels: this.composers?this.composers.init_labels:this.model.get('labels')
         });
         this.composers_views = _.object(this.composers.map(function(composer){
             var composer_view = new App.TitleComposerView({
@@ -326,8 +336,6 @@ App.AxesEditor = Backbone.View.extend({
         this.save_titles();
         this.composers.on('change', this.save_titles, this);
         this.render();
-        this.set_axis_labels();
-        this.model.on('change facets', this.set_axis_labels, this);
     },
 
     save_titles: function(){

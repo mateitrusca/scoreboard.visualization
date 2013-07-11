@@ -1016,6 +1016,27 @@ describe('AxesEditor', function() {
             expect(select.val()).to.equal('indicator');
         });
 
+        it('should have xAxisTitle only for scatter or bubble', function(){
+            var model = new Backbone.Model({
+                multidim: 2
+            });
+            var view = new App.AxesEditor({model: model});
+            expect(view.composers.length).to.equal(4);
+            var model = new Backbone.Model();
+            var view = new App.AxesEditor({model: model});
+            expect(view.composers.length).to.equal(3);
+        });
+
+        it('should update title composers section when chart type changes', function(){
+            var model = new Backbone.Model({
+                multidim: 2
+            });
+            var view = new App.AxesEditor({model: model});
+            expect(view.composers.length).to.equal(4);
+            model.set('multidim', 1);
+            expect(view.composers.length).to.equal(3);
+        });
+
         it('should not present title choices to user', function(){
             var model = new Backbone.Model({
                 facets: [
@@ -1128,27 +1149,56 @@ describe('AxesEditor', function() {
                 ]
             });
             var view = new App.AxesEditor({model: model});
+
             var select = view.composers_views.title.$el.find('[name="title-part"]:eq(0)');
-            var selectFormat = view.composers_views.title.$el.find('[name="title-part-format"]:eq(0)');
             select.val('ind').change();
+
+            var selectFormat = view.composers_views.title.$el.find(
+                '[name="title-part-format"]:eq(0)');
             selectFormat.val('label').change();
-            var add_button = view.composers_views.title.$el.find('[name="add-title-part"]');
-            add_button.click();
+
             var prefix = view.composers_views.title.$el.find(
                 '[name="title-part-prefix"]:eq(0)');
             prefix.val(' ( ').change();
+
+            expect(view.model.get('titles')['title']).to.deep.equal(
+                [ {facet_name: 'ind', prefix: ' ( ', suffix: null, format: 'label'}]);
+
+            var add_button = view.composers_views.title.$el.find('[name="add-title-part"]');
+            add_button.click();
+
             var select = view.composers_views.title.$el.find('[name="title-part"]:eq(1)');
             select.val('brk').change();
-            var selectFormat = view.composers_views.title.$el.find('[name="title-part-format"]:eq(1)');
-            selectFormat.val('label').change();
-            var selectFormat = view.composers_views.title.$el.find('[name="title-part-format"]:eq(1)');
+
+            var selectFormat = view.composers_views.title.$el.find(
+                '[name="title-part-format"]:eq(1)');
             selectFormat.val('short-label').change();
+
             var suffix = view.composers_views.title.$el.find(
                 '[name="title-part-suffix"]:eq(1)');
             suffix.val(' ) ').change();
+
             expect(view.model.get('titles')['title']).to.deep.equal(
                 [ {facet_name: 'ind', prefix: ' ( ', suffix: null, format: 'label'},
                   {prefix: null, suffix: ' ) ', facet_name: 'brk', format: 'short_label'}]);
+        });
+
+        it('should add a new title part when clicking the add button', function(){
+            var model = new Backbone.Model({
+                facets: [
+                    {name: 'ind', type: 'select', value: 'indicator'},
+                    {name: 'brk', type: 'select', value: 'breakdown'},
+                ]
+            });
+            var view = new App.AxesEditor({model: model});
+            var add_button = view.composers_views.title.$el.find('[name="add-title-part"]');
+            add_button.click();
+            var select = view.composers_views.title.$el.find('[name="title-part"]:eq(1)');
+            select.val('brk').change();
+            expect(view.composers_views['title'].model.get('parts').length).to.equal(2);
+            expect(view.model.get('titles')['title']).to.deep.equal(
+                [ {facet_name: 'ind', prefix: null, suffix: null, format: 'short_label'},
+                  {prefix: null, suffix: null, facet_name: 'brk', format: 'short_label'}]);
         });
 
         it('should display existing title parts', function(){
@@ -1254,21 +1304,28 @@ describe('AxesEditor', function() {
                 ],
             });
             var view = new App.AxesEditor({model: model});
-            var add_button = view.composers_views.title.$el.find(
-                                    '[name="add-title-part"]');
-            var format_select = view.composers_views.title.$el.find(
-                                    '[name="title-part-format"]');
+
             var select = view.composers_views.title.$el.find(
                                     '[name="title-part"]:eq(0)');
             select.val('ind').change();
-            add_button.click();
+
+            var format_select = view.composers_views.title.$el.find(
+                                    '[name="title-part-format"]');
             format_select.val('label').change();
-            var prefix = view.composers_views.title.$el.find(
-                '[name="title-part-prefix"]:eq(1)');
-            prefix.val(' by ').change();
+
+            var add_button = view.composers_views.title.$el.find(
+                                    '[name="add-title-part"]');
+            add_button.click();
+
+
             var select = view.composers_views.title.$el.find(
                                     '[name="title-part"]:eq(1)');
             select.val('brk').change();
+
+            var prefix = view.composers_views.title.$el.find(
+                '[name="title-part-prefix"]:eq(1)');
+            prefix.val(' by ').change();
+
             expect(view.model.get('titles').title).to.deep.equal([
                 {facet_name: 'ind', prefix: null, suffix: null, format: 'label'},
                 {facet_name: 'brk', prefix: ' by ', suffix: null, format: 'short_label'}
@@ -1293,20 +1350,26 @@ describe('AxesEditor', function() {
                 labels: { ind: { facet: 'ind' } }
             });
             var view = new App.AxesEditor({model: model});
-            var add_button = view.composers_views.title.$el.find(
-                                    '[name="add-title-part"]');
-            var format_select = view.composers_views.title.$el.find(
-                                    '[name="title-part-format"]');
+
             var select = view.composers_views.title.$el.find(
                                     '[name="title-part"]:eq(0)');
             select.val('ind').change();
-            add_button.click();
+
+            var format_select = view.composers_views.title.$el.find(
+                                    '[name="title-part-format"]');
             format_select.val('label').change();
+
+            var add_button = view.composers_views.title.$el.find(
+                                    '[name="add-title-part"]');
+            add_button.click();
+
             var select = view.composers_views.title.$el.find(
                                     '[name="title-part"]:eq(1)');
             select.val('brk').change();
+
             var parts = view.composers_views['title'].parts;
-            parts.remove(parts.last().cid);
+            parts.remove(parts.last().cid).trigger('remove');
+
             expect(view.model.get('titles').title).to.deep.equal([
                 {facet_name: 'ind', prefix: null, suffix: null, format: 'label'}
             ]);
@@ -1330,19 +1393,23 @@ describe('AxesEditor', function() {
                 }
             });
             var view = new App.AxesEditor({model: model});
-            var add_button = view.composers_views.title.$el.find(
-                                    '[name="add-title-part"]');
-            var format_select = view.composers_views.title.$el.find(
-                                    '[name="title-part-format"]');
             var select = view.composers_views.title.$el.find(
                                     '[name="title-part"]:eq(0)');
             select.val('ind').change();
-            add_button.click();
+
+            var format_select = view.composers_views.title.$el.find(
+                                    '[name="title-part-format"]');
             format_select.val('label').change();
+
+            var add_button = view.composers_views.title.$el.find(
+                                    '[name="add-title-part"]');
+            add_button.click();
+
             var select = view.composers_views.title.$el.find(
                                     '[name="title-part"]:eq(1)');
             select.val('brk').change();
             var parts = view.composers_views['title'].parts;
+
             parts.remove(parts.last().cid);
             expect(view.model.get('titles').title).to.deep.equal([
                 {facet_name: 'ind', prefix: null, suffix: null, format: 'label'}
