@@ -351,7 +351,6 @@ App.AxesEditor = Backbone.View.extend({
         if(unit_measure && unit_measure['type'] == 'select') {
             var labels = _({}).extend(this.model.get('labels'));
             _(labels).extend({
-                ordinate: {facet: 'unit-measure'},
                 'unit-measure': {facet: 'unit-measure'}
             });
             this.model.set('labels', labels);

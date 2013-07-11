@@ -1439,15 +1439,6 @@ describe('AxesEditor', function() {
         });
     });
 
-    it('should set vertical title in model', function() {
-        var model = new Backbone.Model({
-            facets: [{name: 'unit-measure', type: 'select'}]
-        });
-        var view = new App.AxesEditor({model: model});
-        var ordinate_label = model.get('labels')['ordinate'];
-        expect(ordinate_label['facet']).to.equal('unit-measure');
-    });
-
     it('should save axes sort criteria choice', function() {
         var view = new App.AxesEditor({model: new Backbone.Model()});
         view.$el.find('[name="axis-sort-by"][value="category"]').click().change();
