@@ -312,8 +312,8 @@ App.AxesEditor = Backbone.View.extend({
         this.init_composers();
         this.render();
         this.set_axis_labels();
-        this.model.on('change multidim', this.init_composers, this);
-        this.model.on('change facets', this.set_axis_labels, this);
+        this.model.on('change:multidim', this.init_composers, this);
+        this.model.on('change:facets', this.set_axis_labels, this);
     },
 
     init_composers: function(){
