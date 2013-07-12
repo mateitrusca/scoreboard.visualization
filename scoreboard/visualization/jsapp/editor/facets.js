@@ -419,7 +419,9 @@ App.FacetsEditor = Backbone.View.extend({
         }, this));
         this.apply_changes();
         this.render();
-        this.model.facets.on('change sort', this.apply_changes, this);
+        this.model.facets.on(
+            'change:include_wildcard change:label change:sortBy change:sortOrder',
+            this.apply_changes, this);
     },
 
     render: function() {

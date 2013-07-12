@@ -124,7 +124,7 @@ App.StructureEditor = Backbone.View.extend({
         }, this));
         this.apply_changes();
         this.render();
-        this.model.facets.on('change sort', this.apply_changes, this);
+        this.model.facets.on('change:type change:multidim', this.apply_changes, this);
     },
 
     compute_facet_roles: function() {

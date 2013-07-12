@@ -132,7 +132,7 @@ App.EditorConfiguration = Backbone.Model.extend({
         this.layout_collection = new App.LayoutCollection(
             this.get('facets'));
 
-        this.facets.on('change sort', this.rebuild_layout, this);
+        this.facets.on('change:multidim', this.rebuild_layout, this);
         this.layout_collection.on('change', this.save_facets, this);
     },
 
