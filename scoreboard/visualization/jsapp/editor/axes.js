@@ -133,15 +133,6 @@ App.TitleComposerModel = Backbone.Model.extend({
                 }
             })
         }
-        else{
-            var a_facet = _.chain(this.get('facets')).where({type: 'select'});
-            //try to find an indicator
-            a_facet = a_facet.findWhere({dimension: 'indicator'}).value() ||
-                      a_facet.first().value();
-            if (a_facet){
-                parts.push({ facet_name: a_facet.name });
-            }
-        }
         this.set('parts', parts);
     },
 });

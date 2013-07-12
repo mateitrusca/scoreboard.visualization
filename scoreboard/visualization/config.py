@@ -10,6 +10,30 @@ ADD_PERMISSIONS = {
 from zope.i18nmessageid.message import MessageFactory
 _ = MessageFactory('scoreboard')
 
+# This list is used for initializing new visualizations
+DEFAULTS = {
+    "titles":
+        {
+          "title":
+            [
+                { "facet_name": "indicator",
+                  "prefix": None,
+                  "suffix": None,
+                  "format": "label" }
+            ],
+
+          "subtitle": [ ],
+
+          "yAxisTitle":
+            [
+                { "facet_name": "unit-measure",
+                  "prefix": None,
+                  "suffix": None,
+                  "format": "short_label" }
+            ]
+        }
+}
+
 # This list is used by country_profile chart and can be customized within
 # ZMI > portal_properties > scoreboard_properties
 EU = {

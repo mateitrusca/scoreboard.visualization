@@ -1007,13 +1007,18 @@ describe('AxesEditor', function() {
                     {name: 'breakdown', type: 'select'},
                     {name: 'indicator', type: 'select', dimension: 'indicator'},
                     {name: 'ref-area', type: 'multiple_select'}
-                ]
+                ],
+                titles:{
+                    title: [
+                        {facet_name: 'indicator'}
+                    ]
+                }
             });
             var view = new App.AxesEditor({model: model});
             var select = view.composers_views.title.$el.find('[name="title-part"]');
             var options = select.find('option', '[name="title"]');
-            expect(options.length).to.equal(3);
             expect(select.val()).to.equal('indicator');
+            expect(options.length).to.equal(3);
         });
 
         it('should have xAxisTitle only for scatter or bubble', function(){
@@ -1058,8 +1063,7 @@ describe('AxesEditor', function() {
             });
             var view = new App.AxesEditor({model: model});
             var select = view.composers_views.title.$el.find('[name="title-part"]');
-            expect(view.model.get('titles')['title']).to.deep.equal([
-                {facet_name: 'ind', prefix: null, suffix: null, format: 'short_label'}]);
+            expect(view.model.get('titles')['title']).to.deep.equal([ ]);
         });
 
         it('should save selected title to model', function(){
@@ -1068,7 +1072,12 @@ describe('AxesEditor', function() {
                     {name: 'ind', type: 'select', value: 'indicator'},
                     {name: 'brk', type: 'select', value: 'breakdown'},
                     {name: 'ref-area', type: 'multiple_select', value: 'ref-area'}
-                ]
+                ],
+                titles:{
+                    title: [
+                        {facet_name: 'ind'}
+                    ]
+                }
             });
             var view = new App.AxesEditor({model: model});
             var select = view.composers_views.title.$el.find('[name="title-part"]');
@@ -1083,14 +1092,19 @@ describe('AxesEditor', function() {
                 facets: [
                     {name: 'ind', type: 'select', value: 'indicator'},
                     {name: 'brk', type: 'select', value: 'breakdown'},
-                ]
+                ],
+                titles:{
+                    title: [
+                        {facet_name: 'ind'}
+                    ]
+                }
             });
             var view = new App.AxesEditor({model: model});
-            var add_button = view.composers_views.title.$el.find('[name="add-title-part"]');
-            add_button.click();
             var models = view.composers_views.title.parts.models;
             var views = view.composers_views.title.part_views;
             expect(_(models).pluck('cid')).to.deep.equal(_(views).keys());
+            var add_button = view.composers_views.title.$el.find('[name="add-title-part"]');
+            add_button.click();
             var select = view.composers_views.title.$el.find('[name="title-part"]');
             expect(select.length).to.deep.equal(2);
         });
@@ -1100,12 +1114,17 @@ describe('AxesEditor', function() {
                 facets: [
                     {name: 'ind', type: 'select', value: 'indicator'},
                     {name: 'brk', type: 'select', value: 'breakdown'},
-                ]
+                ],
+                titles:{
+                    title: [
+                        {facet_name: 'ind'}
+                    ]
+                }
             });
             var view = new App.AxesEditor({model: model});
             var select = view.composers_views.title.$el.find('[name="title-part"]:eq(0)');
-            var add_button = view.composers_views.title.$el.find('[name="add-title-part"]');
             select.val('ind').change();
+            var add_button = view.composers_views.title.$el.find('[name="add-title-part"]');
             add_button.click();
             var models = view.composers_views.title.parts.models;
             var views = view.composers_views.title.part_views;
@@ -1121,7 +1140,12 @@ describe('AxesEditor', function() {
             var model = new Backbone.Model({
                 facets: [
                     {name: 'ind', type: 'select', value: 'indicator'}
-                ]
+                ],
+                titles:{
+                    title: [
+                        {facet_name: 'ind'}
+                    ]
+                }
             });
             var view = new App.AxesEditor({model: model});
             var prefix = view.composers_views.title.$el.find(
@@ -1133,7 +1157,12 @@ describe('AxesEditor', function() {
             var model = new Backbone.Model({
                 facets: [
                     {name: 'ind', type: 'select', value: 'indicator'}
-                ]
+                ],
+                titles:{
+                    title: [
+                        {facet_name: 'ind'}
+                    ]
+                }
             });
             var view = new App.AxesEditor({model: model});
             var suffix = view.composers_views.title.$el.find(
@@ -1146,7 +1175,12 @@ describe('AxesEditor', function() {
                 facets: [
                     {name: 'ind', type: 'select', value: 'indicator'},
                     {name: 'brk', type: 'select', value: 'breakdown'},
-                ]
+                ],
+                titles:{
+                    title: [
+                        {facet_name: 'ind'}
+                    ]
+                }
             });
             var view = new App.AxesEditor({model: model});
 
@@ -1193,12 +1227,11 @@ describe('AxesEditor', function() {
             var view = new App.AxesEditor({model: model});
             var add_button = view.composers_views.title.$el.find('[name="add-title-part"]');
             add_button.click();
-            var select = view.composers_views.title.$el.find('[name="title-part"]:eq(1)');
+            var select = view.composers_views.title.$el.find('[name="title-part"]:eq(0)');
             select.val('brk').change();
-            expect(view.composers_views['title'].model.get('parts').length).to.equal(2);
+            expect(view.composers_views['title'].model.get('parts').length).to.equal(1);
             expect(view.model.get('titles')['title']).to.deep.equal(
-                [ {facet_name: 'ind', prefix: null, suffix: null, format: 'short_label'},
-                  {prefix: null, suffix: null, facet_name: 'brk', format: 'short_label'}]);
+                [ {prefix: null, suffix: null, facet_name: 'brk', format: 'short_label'}]);
         });
 
         it('should display existing title parts', function(){
@@ -1302,6 +1335,11 @@ describe('AxesEditor', function() {
                     {name: 'brk', type: 'select', value: 'breakdown'},
                     {name: 'area', type: 'select', value: 'ref-area'}
                 ],
+                titles:{
+                    title: [
+                        {facet_name: 'ind'}
+                    ]
+                }
             });
             var view = new App.AxesEditor({model: model});
 
@@ -1347,6 +1385,11 @@ describe('AxesEditor', function() {
                     {name: 'brk', type: 'select', value: 'breakdown'},
                     {name: 'area', type: 'select', value: 'ref-area'}
                 ],
+                titles:{
+                    title: [
+                        {facet_name: 'ind'}
+                    ]
+                },
                 labels: { ind: { facet: 'ind' } }
             });
             var view = new App.AxesEditor({model: model});
@@ -1387,6 +1430,11 @@ describe('AxesEditor', function() {
                     {name: 'brk', type: 'select', value: 'breakdown'},
                     {name: 'area', type: 'select', value: 'ref-area'}
                 ],
+                titles:{
+                    title: [
+                        {facet_name: 'ind'}
+                    ]
+                },
                 labels: {
                     ind: { facet: 'ind' },
                     brk: { facet: 'brk' }
@@ -1429,6 +1477,11 @@ describe('AxesEditor', function() {
                 facets: [
                     {name: 'ind', type: 'select', value: 'indicator'}
                 ],
+                titles:{
+                    title: [
+                        {facet_name: 'ind'}
+                    ]
+                }
             });
             var view = new App.AxesEditor({model: model});
             var select = view.composers_views.title.$el.find('[name="title-part"]:eq(0)');
