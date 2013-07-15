@@ -63,7 +63,7 @@ App.StructureEditorField = Backbone.View.extend({
         });
         this.check_constraints();
     },
-    
+
     check_constraints: function() {
         if(this.model.get('type') != 'select') {
             this.model.unset('include_wildcard');
@@ -124,7 +124,7 @@ App.StructureEditor = Backbone.View.extend({
         }, this));
         this.apply_changes();
         this.render();
-        this.model.facets.on('change sort', this.apply_changes, this);
+        this.model.facets.on('change:type change:multidim', this.apply_changes, this);
     },
 
     compute_facet_roles: function() {

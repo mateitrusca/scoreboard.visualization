@@ -15,7 +15,6 @@ App.FacetEditorField = Backbone.View.extend({
         'input [name="label"]': 'on_input_label',
         'keyup [name="label"]': 'on_input_label',
         'focusout [name="label"]': 'on_focusout_label',
-        'change [name="position"]': 'on_change_position',
         'change [name="type"]': 'on_change_type',
         'click .facet-sort': 'on_click_sort',
         'change [name="include_wildcard"]': 'on_change_wildcard',
@@ -34,15 +33,9 @@ App.FacetEditorField = Backbone.View.extend({
         return $.getJSON(App.URL + '/' + view_name, args);
     },
 
-    position_options:[
-        {value: 'upper-left', label: "upper left"},
-        {value: 'upper-right', label: "upper right"},
-        {value: 'bottom-left', label: "lower left"},
-        {value: 'bottom-right', label: "lower right"}
-    ],
-
     sort_by_options: [
-        {value: 'nosort', label: "by order within the code list"},
+        {value: 'order_in_codelist', label: "by order within the code list"},
+        {value: 'inner_order', label: "by order within the group"},
         {value: 'label', label: "by value - long label"},
         {value: 'short_label', label: "by value - short label"},
         {value: 'notation', label: "by value - notation"}
@@ -56,9 +49,6 @@ App.FacetEditorField = Backbone.View.extend({
     initialize: function(options) {
         if(! this.model.has('type')) {
             this.model.set('type', this.type_options[0]['value']);
-        }        
-        if (! this.model.has('position')) {
-            this.model.set('position', this.position_options[0]['value']);
         }
         if (! this.model.has('sortBy')) {
             this.model.set('sortBy', this.sort_by_options[0]['value']);
@@ -85,47 +75,48 @@ App.FacetEditorField = Backbone.View.extend({
     },
 
     render: function() {
+        var facet_options = _.chain(this.facet_options)
+            .map(function(opt, idx, list) {
+                    opt['default'] = false;
+                    if (_(this.model.get('default_value')).contains(opt['value']) ||
+                        this.model.get('default_value') == opt['value']) {
+                        opt['default'] = true;
+                    }
+                    if (_(this.model.get('ignore_values')).contains(opt['value']) ||
+                        this.model.get('ignore_values') == opt['value']) {
+                        opt['ignore'] = true;
+                    }
+                    if (_(this.model.get('highlights')).contains(opt['value']) ||
+                        this.model.get('highlights') == opt['value']) {
+                        opt['highlight'] = true;
+                    }
+                    return opt;
+                }, this)
+            .tap(_.bind(function(object, interceptor){
+                    var random = { 'label': '#random',
+                                   'value': '#random' };
+                    if (this.model.get('default_value') == '#random'){
+                        random['default'] = true;
+                    }
+                    object.push(random);
+                    if (this.model.get('type') == 'multiple_select' &&
+                        this.model.get('dimension') == 'ref-area'){
+                        var eu27 = { 'label': '#eu27',
+                                     'value': '#eu27' };
+                        object.push(eu27);
+                    }
+                }, this))
+            .value();
+        var highlights_options = _(facet_options).reject(function(item){
+            return item.value == '#random'
+        });
         var context = _({
             is_refarea: (this.model.get('dimension') == 'ref-area')?true:false,
             options_received: this.options_received || false,
             facet_label: this.model.get('label'),
-            facet_options: _.chain(this.facet_options)
-                .map(function(opt, idx, list) {
-                        if (_(this.model.get('default_value')).contains(opt['value']) ||
-                            this.model.get('default_value') == opt['value']) {
-                            opt['default'] = true;
-                        }
-                        if (_(this.model.get('ignore_values')).contains(opt['value']) ||
-                            this.model.get('ignore_values') == opt['value']) {
-                            opt['ignore'] = true;
-                        }
-                        if (_(this.model.get('highlights')).contains(opt['value']) ||
-                            this.model.get('highlights') == opt['value']) {
-                            opt['highlight'] = true;
-                        }
-                        return opt;
-                    }, this)
-                .tap(_.bind(function(object, interceptor){
-                        var random = { 'label': '#random',
-                                       'value': '#random' };
-                        if (this.model.get('default_value') == '#random'){
-                            random['default'] = true;
-                        }
-                        object.push(random);
-                        if (this.model.get('type') == 'multiple_select' &&
-                            this.model.get('dimension') == 'ref-area'){
-                            var eu27 = { 'label': '#eu27',
-                                         'value': '#eu27' };
-                            object.push(eu27);
-                        }
-                    }, this))
-                .value(),
-            position_options:_(this.position_options).map(function(opt) {
-                    var selected = (this.model.get('position') == opt['value']);
-                    return _({
-                        selected: selected
-                    }).extend(opt);
-                }, this),
+            facet_options: facet_options,
+            highlights_options: highlights_options,
+            is_all_values: this.model.get('type') == 'all-values',
             sort_by_options: _(this.sort_by_options).map(function(spec) {
                     var opt = _({}).extend(spec);
                     if(spec['value'] == this.model.get('sortBy')) {
@@ -175,12 +166,6 @@ App.FacetEditorField = Backbone.View.extend({
         });
     },
 
-    on_change_position: function(evt) {
-        this.model.set({
-            position: this.$el.find('[name="position"]').val()
-        });
-    },
-
     on_change_default_value: function(evt) {
         var value = this.$el.find('[name="default_value"]').val();
         var result = [];
@@ -195,7 +180,7 @@ App.FacetEditorField = Backbone.View.extend({
             result.push('#random');
         }
         if (_(value).contains('#eu27')){
-            result = _.union(result, App.EU27);
+            result = _.union(result, _(App.EU27).keys());
         }
         if (result.length > 0){
             if (this.model.get('type') == 'select'){
@@ -283,8 +268,23 @@ App.FacetEditorField = Backbone.View.extend({
 
 });
 
+App.FacetModel = Backbone.Model.extend({
+    initialize: function(options){
+        this.name = options.name;
+        this.on('change:type', this.drop_default_value, this);
+    },
+
+    drop_default_value: function(){
+        if (this.get('type') == 'select'){
+            this.unset('default_value');
+        }
+    }
+})
+
 
 App.FacetCollection = Backbone.Collection.extend({
+
+    model: App.FacetModel,
 
     constructor: function(value, dimensions) {
         Backbone.Collection.apply(this, [value]);
@@ -306,7 +306,7 @@ App.FacetCollection = Backbone.Collection.extend({
                     });
                 }
                 else {
-                    facet_model = new Backbone.Model({'name': name});
+                    facet_model = new App.FacetModel({'name': name});
                     facet_model.set(defaults);
                 }
             }
@@ -441,16 +441,21 @@ App.FacetsEditor = Backbone.View.extend({
         }, this));
         this.apply_changes();
         this.render();
-        this.model.facets.on('change sort', this.apply_changes, this);
+        this.model.facets.on(
+            'change:include_wildcard change:label change:sortBy change:sortOrder change:default_value',
+            this.apply_changes, this);
+        this.model.facets.on('change:type', this.render, this);
     },
 
     render: function() {
         this.$el.html(this.template());
         this.model.facets.forEach(function(facet_model) {
-            var facet_view = this.facet_views[facet_model.cid];
-            facet_view.render();
-            this.$el.find('div.facets').append(facet_view.el);
-            facet_view.delegateEvents();
+            if(facet_model.get('type') != 'ignore'){
+                var facet_view = this.facet_views[facet_model.cid];
+                facet_view.render();
+                this.$el.find('div.facets').append(facet_view.el);
+                facet_view.delegateEvents();
+            }
         }, this);
     },
 

@@ -120,7 +120,7 @@ App.chart_library['map'] = function(view, options) {
                             ? name = "Macedonia, FYR"
                             : feature['name']);
                 var value_text = (value
-                                  ? App.round(value, 3) + ' ' + unit
+                                  ? App.round(value, 3) + ' ' + unit.short_label
                                   : 'n/a');
                 return [name, value_text];
             }
@@ -143,7 +143,7 @@ App.chart_library['map'] = function(view, options) {
         */
         //vertical
         draw_legend(map.paper, colorscale, 10, 10, 0, max_value,
-                {text: unit, is_pc: options.unit_is_pc[0]},
+                {text: unit.short_label, is_pc: options.unit_is_pc[0]},
                 'vertical');
     });
 

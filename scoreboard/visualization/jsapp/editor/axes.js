@@ -104,6 +104,7 @@ App.TitlePartsCollection = Backbone.Collection.extend({
                 parts.push(new App.TitlePart({
                     prefix: part.prefix || null,
                     suffix: part.suffix || null,
+                    format: part.format || null,
                     facet_name: part.facet_name
                 }));
             })
@@ -112,9 +113,10 @@ App.TitlePartsCollection = Backbone.Collection.extend({
     },
 
     get_values: function(){
-        return this.map(function(part_model){
+        var result = this.map(function(part_model){
             return part_model.toJSON();
         });
+        return result;
     }
 });
 
@@ -127,21 +129,9 @@ App.TitleComposerModel = Backbone.Model.extend({
         if (options.init_value){
             _(options.init_value).each(function(part){
                 if (_(valid_names).contains(part.facet_name)){
-                    if (parts.length == 0){
-                        part = _(part).omit('prefix');
-                    }
                     parts.push(part);
                 }
             })
-        }
-        else{
-            var a_facet = _.chain(this.get('facets')).where({type: 'select'});
-            //try to find an indicator
-            a_facet = a_facet.findWhere({dimension: 'indicator'}).value() ||
-                      a_facet.first().value();
-            if (a_facet){
-                parts.push({ facet_name: a_facet.name });
-            }
         }
         this.set('parts', parts);
     },
@@ -230,6 +220,7 @@ App.TitleComposers = Backbone.Collection.extend({
                 init_value: options.init_value[name] || null
             });
         }, this);
+        this.init_labels = options.init_labels || {};
         Backbone.Collection.apply(this, [composers]);
     },
 
@@ -245,8 +236,11 @@ App.TitleComposers = Backbone.Collection.extend({
             return !_(labels).has(label.facet);
         };
         var labels = options.current || {};
+        var all_parts = [];
         this.forEach(function(composer){
             _(composer.get('parts')).each(function(part){
+                all_parts = _.chain(composer.get('parts'))
+                             .pluck('facet_name').union(all_parts).value();
                 if(part.facet_name){
                     var label = _.object([
                         ['facet', part.facet_name]
@@ -255,8 +249,13 @@ App.TitleComposers = Backbone.Collection.extend({
                         labels[label.facet] = label;
                     }
                 }
-            });
-        });
+            }, this)
+        }, this);
+        var to_remove =  _.chain(_(labels).keys())
+                          .difference(all_parts)
+                          .difference(_(this.init_labels).keys())
+                          .value();
+        labels = _(labels).omit(to_remove);
         return labels;
     }
 })
@@ -301,10 +300,23 @@ App.AxesEditor = Backbone.View.extend({
     ],
 
     initialize: function(options) {
+        this.init_composers();
+        this.render();
+        this.set_axis_labels();
+        this.model.on('change:multidim', this.init_composers, this);
+        this.model.on('change:facets', this.set_axis_labels, this);
+    },
+
+    init_composers: function(){
+        var composers = ['title', 'subtitle', 'xAxisTitle', 'yAxisTitle'];
+        if (!_([2,3]).contains(this.model.get('multidim'))){
+            composers = _(composers).without('xAxisTitle');
+        }
         this.composers = new App.TitleComposers({
-            names: ['title', 'subtitle', 'xAxisTitle', 'yAxisTitle'],
+            names: composers,
             init_value: this.model.get('titles') || {},
-            facets: this.model.get('facets')
+            facets: this.model.get('facets'),
+            init_labels: this.composers?this.composers.init_labels:this.model.get('labels')
         });
         this.composers_views = _.object(this.composers.map(function(composer){
             var composer_view = new App.TitleComposerView({
@@ -315,8 +327,6 @@ App.AxesEditor = Backbone.View.extend({
         this.save_titles();
         this.composers.on('change', this.save_titles, this);
         this.render();
-        this.set_axis_labels();
-        this.model.on('change facets', this.set_axis_labels, this);
     },
 
     save_titles: function(){
@@ -332,7 +342,6 @@ App.AxesEditor = Backbone.View.extend({
         if(unit_measure && unit_measure['type'] == 'select') {
             var labels = _({}).extend(this.model.get('labels'));
             _(labels).extend({
-                ordinate: {facet: 'unit-measure'},
                 'unit-measure': {facet: 'unit-measure'}
             });
             this.model.set('labels', labels);

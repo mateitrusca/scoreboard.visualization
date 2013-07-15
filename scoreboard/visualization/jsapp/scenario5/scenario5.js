@@ -25,16 +25,14 @@ App.scenario5_filters_schema = {
         "link": "http://ec.europa.eu/digital-agenda/en/graphs/"
     },
     "facets": [{
-        "constraints": {
-            
-        },
+        "constraints": {},
         "default_value": "#random",
         "dimension": "indicator-group",
         "include_wildcard": true,
         "label": "Indicator group",
         "name": "indicator-group",
         "position": "upper-left",
-        "sortBy": "nosort",
+        "sortBy": "order_in_codelist",
         "sortOrder": "asc",
         "type": "select"
     },
@@ -62,7 +60,7 @@ App.scenario5_filters_schema = {
         "label": "Breakdown group",
         "name": "breakdown-group",
         "position": "upper-left",
-        "sortBy": "nosort",
+        "sortBy": "order_in_codelist",
         "sortOrder": "asc",
         "type": "select"
     },
@@ -92,7 +90,7 @@ App.scenario5_filters_schema = {
         "dimension": "unit-measure",
         "label": "Unit of measure",
         "name": "unit-measure",
-        "sortBy": "nosort",
+        "sortBy": "order_in_codelist",
         "sortOrder": "asc",
         "position": "upper-left",
         "type": "select"
