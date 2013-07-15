@@ -1675,14 +1675,14 @@ describe('SeriesEditor', function() {
 
     it('should save point label choice', function() {
         var view = new App.SeriesEditor({model: this.model});
-        view.$el.find('[name="point-label"]').val('long').change();
-        expect(this.model.get('series-point-label')).to.equal('long');
+        view.$el.find('[name="point-label"]').val('short').change();
+        expect(this.model.get('series-point-label')).to.equal('short');
     });
 
     it('should show existing point label choice', function() {
-        this.model.set('series-point-label', 'long');
+        this.model.set('series-point-label', 'short');
         var view = new App.SeriesEditor({model: this.model});
-        expect(view.$el.find('[name="point-label"]').val()).to.equal('long');
+        expect(view.$el.find('[name="point-label"]').val()).to.equal('short');
     });
 
     it('should save ending label choice', function() {
