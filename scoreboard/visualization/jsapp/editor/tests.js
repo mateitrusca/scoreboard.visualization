@@ -749,6 +749,7 @@ describe('FacetsEditor', function() {
             App.respond_json(server.requests[0], {'options': options});
             view.$el.find('[name="default_value"]:first').val(['two']).change();
             expect(model.facets.models[0].get('default_value')).to.deep.equal('two');
+            expect(model.toJSON()['facets'][0]['default_value']).to.deep.equal('two');
         });
 
         it('should unset default_value from model', function(){
@@ -893,6 +894,38 @@ describe('FacetsEditor', function() {
             App.respond_json(server.requests[0], {'options': options});
             var select = view.$el.find('[name="default_value"]:eq(0)');
             expect(select.find('option[value="#eu27"]').toArray()).to.deep.equal([]);
+        });
+
+        it('should drop default_value when type becomes "select"', function() {
+            this.sandbox.useFakeServer();
+            var model = new App.EditorConfiguration({
+                    facets: [
+                        {name: 'indicator',
+                         type: 'multiple_select',
+                         default_value: ['one', 'two']
+                        }
+                    ]
+                }, {
+                    dimensions: [{type_label: 'dimension', notation: 'indicator'}]
+                }
+            );
+
+            var structure_view = new App.StructureEditor({model: model});
+            var facets_view = new App.FacetsEditor({model: model});
+            var server = this.sandbox.server;
+            var options = [{'label': "Option One", 'notation': 'one'},
+                           {'label': "Option Two", 'notation': 'two'}];
+            App.respond_json(server.requests[0], {'options': options});
+
+            expect(model.toJSON()['facets'][0]['default_value']).to.deep.equal(
+                ['one', 'two']);
+            expect(facets_view.$el.find('[name="default_value"]').val()).to.deep.equal(
+                ['one', 'two']);
+
+            model.facets.first().set({type: 'select'});
+
+            expect(model.toJSON()['facets'][0]['default_value']).to.be.undefined;
+            expect(facets_view.$el.find('[name="default_value"]').val()).to.be.null;
         });
 
     });

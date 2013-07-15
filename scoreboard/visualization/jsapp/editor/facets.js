@@ -81,6 +81,7 @@ App.FacetEditorField = Backbone.View.extend({
             facet_label: this.model.get('label'),
             facet_options: _.chain(this.facet_options)
                 .map(function(opt, idx, list) {
+                        opt['default'] = false;
                         if (_(this.model.get('default_value')).contains(opt['value']) ||
                             this.model.get('default_value') == opt['value']) {
                             opt['default'] = true;
@@ -261,8 +262,23 @@ App.FacetEditorField = Backbone.View.extend({
 
 });
 
+App.FacetModel = Backbone.Model.extend({
+    initialize: function(options){
+        this.name = options.name;
+        this.on('change:type', this.drop_default_value, this);
+    },
+
+    drop_default_value: function(){
+        if (this.get('type') == 'select'){
+            this.unset('default_value');
+        }
+    }
+})
+
 
 App.FacetCollection = Backbone.Collection.extend({
+
+    model: App.FacetModel,
 
     constructor: function(value, dimensions) {
         Backbone.Collection.apply(this, [value]);
@@ -284,7 +300,7 @@ App.FacetCollection = Backbone.Collection.extend({
                     });
                 }
                 else {
-                    facet_model = new Backbone.Model({'name': name});
+                    facet_model = new App.FacetModel({'name': name});
                     facet_model.set(defaults);
                 }
             }
@@ -420,8 +436,9 @@ App.FacetsEditor = Backbone.View.extend({
         this.apply_changes();
         this.render();
         this.model.facets.on(
-            'change:include_wildcard change:label change:sortBy change:sortOrder',
+            'change:include_wildcard change:label change:sortBy change:sortOrder change:default_value',
             this.apply_changes, this);
+        this.model.facets.on('change:type', this.render, this);
     },
 
     render: function() {

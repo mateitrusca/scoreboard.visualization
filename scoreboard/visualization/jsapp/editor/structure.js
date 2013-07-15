@@ -63,7 +63,7 @@ App.StructureEditorField = Backbone.View.extend({
         });
         this.check_constraints();
     },
-    
+
     check_constraints: function() {
         if(this.model.get('type') != 'select') {
             this.model.unset('include_wildcard');
