@@ -12,6 +12,93 @@ _ = MessageFactory('scoreboard')
 
 # This list is used for initializing new visualizations
 DEFAULTS = {
+    "facets": [
+        {
+          "constraints": {},
+          "dimension": "indicator-group",
+          "label": "Indicator group",
+          "name": "indicator-group",
+          "type": "select"
+        },
+        {
+          "constraints": {
+            "indicator-group": "indicator-group"
+          },
+          "dimension": "indicator",
+          "label": "Indicator",
+          "sortBy": "inner_order",
+          "sortOrder": "asc",
+          "name": "indicator",
+          "type": "select"
+        },
+        {
+          "constraints": {
+            "indicator-group": "indicator-group",
+            "indicator": "indicator"
+          },
+          "name": "breakdown-group",
+          "dimension": "breakdown-group",
+          "label": "Breakdown group",
+          "sortOrder": "asc",
+          "type": "select"
+        },
+        {
+          "constraints": {
+            "indicator-group": "indicator-group",
+            "indicator": "indicator",
+            "breakdown-group": "breakdown-group"
+          },
+          "dimension": "breakdown",
+          "label": "Breakdown",
+          "name": "breakdown",
+          "sortBy": "inner_order",
+          "sortOrder": "asc",
+          "type": "select"
+        },
+        {
+          "constraints": {
+            "indicator-group": "indicator-group",
+            "indicator": "indicator",
+            "breakdown-group": "breakdown-group",
+            "breakdown": "breakdown"
+          },
+          "dimension": "unit-measure",
+          "label": "Unit of measure",
+          "name": "unit-measure",
+          "type": "select"
+        },
+        {
+          "constraints": {
+            "indicator-group": "indicator-group",
+            "indicator": "indicator",
+            "breakdown-group": "breakdown-group",
+            "breakdown": "breakdown",
+            "unit-measure": "unit-measure"
+          },
+          "dimension": "ref-area",
+          "label": "Select the countries",
+          "name": "ref-area",
+          "type": "multiple_select"
+        },
+        {
+          "constraints": {
+            "indicator-group": "indicator-group",
+            "indicator": "indicator",
+            "breakdown-group": "breakdown-group",
+            "breakdown": "breakdown",
+            "unit-measure": "unit-measure"
+          },
+          "dimension": "time-period",
+          "label": "Period",
+          "name": "time-period",
+          "type": "select"
+        },
+        {
+          "name": "value",
+          "type": "all-values",
+          "dimension": "value"
+        }
+    ],
     "titles":
         {
           "title":
