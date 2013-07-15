@@ -31,7 +31,13 @@ DEFAULTS = {
                   "suffix": None,
                   "format": "short_label" }
             ]
-        }
+        },
+
+    "sort": {
+        "by": 'category',
+        "order": 1,
+        "each_series": False
+    }
 }
 
 # This list is used by country_profile chart and can be customized within
