@@ -75,42 +75,47 @@ App.FacetEditorField = Backbone.View.extend({
     },
 
     render: function() {
+        var facet_options = _.chain(this.facet_options)
+            .map(function(opt, idx, list) {
+                    opt['default'] = false;
+                    if (_(this.model.get('default_value')).contains(opt['value']) ||
+                        this.model.get('default_value') == opt['value']) {
+                        opt['default'] = true;
+                    }
+                    if (_(this.model.get('ignore_values')).contains(opt['value']) ||
+                        this.model.get('ignore_values') == opt['value']) {
+                        opt['ignore'] = true;
+                    }
+                    if (_(this.model.get('highlights')).contains(opt['value']) ||
+                        this.model.get('highlights') == opt['value']) {
+                        opt['highlight'] = true;
+                    }
+                    return opt;
+                }, this)
+            .tap(_.bind(function(object, interceptor){
+                    var random = { 'label': '#random',
+                                   'value': '#random' };
+                    if (this.model.get('default_value') == '#random'){
+                        random['default'] = true;
+                    }
+                    object.push(random);
+                    if (this.model.get('type') == 'multiple_select' &&
+                        this.model.get('dimension') == 'ref-area'){
+                        var eu27 = { 'label': '#eu27',
+                                     'value': '#eu27' };
+                        object.push(eu27);
+                    }
+                }, this))
+            .value();
+        var highlights_options = _(facet_options).reject(function(item){
+            return item.value == '#random'
+        });
         var context = _({
             is_refarea: (this.model.get('dimension') == 'ref-area')?true:false,
             options_received: this.options_received || false,
             facet_label: this.model.get('label'),
-            facet_options: _.chain(this.facet_options)
-                .map(function(opt, idx, list) {
-                        opt['default'] = false;
-                        if (_(this.model.get('default_value')).contains(opt['value']) ||
-                            this.model.get('default_value') == opt['value']) {
-                            opt['default'] = true;
-                        }
-                        if (_(this.model.get('ignore_values')).contains(opt['value']) ||
-                            this.model.get('ignore_values') == opt['value']) {
-                            opt['ignore'] = true;
-                        }
-                        if (_(this.model.get('highlights')).contains(opt['value']) ||
-                            this.model.get('highlights') == opt['value']) {
-                            opt['highlight'] = true;
-                        }
-                        return opt;
-                    }, this)
-                .tap(_.bind(function(object, interceptor){
-                        var random = { 'label': '#random',
-                                       'value': '#random' };
-                        if (this.model.get('default_value') == '#random'){
-                            random['default'] = true;
-                        }
-                        object.push(random);
-                        if (this.model.get('type') == 'multiple_select' &&
-                            this.model.get('dimension') == 'ref-area'){
-                            var eu27 = { 'label': '#eu27',
-                                         'value': '#eu27' };
-                            object.push(eu27);
-                        }
-                    }, this))
-                .value(),
+            facet_options: facet_options,
+            highlights_options: highlights_options,
             sort_by_options: _(this.sort_by_options).map(function(spec) {
                     var opt = _({}).extend(spec);
                     if(spec['value'] == this.model.get('sortBy')) {

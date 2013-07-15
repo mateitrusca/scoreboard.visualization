@@ -69,11 +69,11 @@
   <label>Choose highlighted values</label>
   {{# if options_received}}
       <select name="highlights" multiple>
-        {{# facet_options }}
+        {{# highlights_options }}
           <option value="{{ value }}"
             {{# if highlight }}selected{{/ if }}
             >{{ label }}</option>
-        {{/ facet_options }}
+        {{/ highlights_options }}
       </select>
   {{ else }}
       <span class="label label-important">-- loading options --</span>
