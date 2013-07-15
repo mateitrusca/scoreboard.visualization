@@ -593,12 +593,14 @@ App.AnnotationsView = Backbone.View.extend({
                 var section_title = this.schema['annotations'] &&
                   this.schema['annotations']['title'] ||
                   'Definition and scopes:';
-                this.$el.html(this.template(
-                    {"description": chart_description,
+                var context = {
+                     "description": chart_description,
                      "section_title": section_title,
                      "indicators_details_url": this.cube_url + '/indicators',
-                     "blocks": blocks}
-                ));
+                     "blocks": blocks
+                };
+                this.trigger('metadata_ready', context);
+                this.$el.html(this.template(context));
             }
             else {
                 this.$el.empty();
@@ -619,6 +621,11 @@ App.ShareOptionsView = Backbone.View.extend({
     initialize: function(options) {
         this.url = App.SCENARIO_URL;
         this.related = $('#viewlet-below-content-body').detach();
+        this.form = App.jQuery('<form>', {
+            'action': App.URL + '/export.csv',
+            'target': '_top',
+            'method': 'POST'
+        });
         this.render();
     },
 
@@ -627,27 +634,39 @@ App.ShareOptionsView = Backbone.View.extend({
         this.$el.find('form').submit();
     },
 
-    chart_ready: function(series, chart_type){
-        var action_url = App.URL + '/export.csv'
-        var form = App.jQuery('<form>', {
-            'action': action_url,
-            'target': '_top',
-            'method': 'POST'
-        }).append(App.jQuery('<input>', {
+    metadata_ready: function(annotations){
+        App.jQuery('input[name="annotations"]', this.form).remove();
+        App.jQuery(this.form).append(App.jQuery('<input>', {
+            'name': 'annotations',
+            'value': JSON.stringify(annotations),
+            'type': 'hidden'
+        }));
+    },
+
+    chart_ready: function(series, metadata, chart_type){
+        App.jQuery('input[name="chart_data"]', this.form).remove();
+        App.jQuery(this.form).append(App.jQuery('<input>', {
             'name': 'chart_data',
             'value': JSON.stringify(series),
             'type': 'hidden'
         }));
-        App.jQuery(form).append(App.jQuery('<input>', {
+        App.jQuery('input[name="metadata"]', this.form).remove();
+        App.jQuery(this.form).append(App.jQuery('<input>', {
+            'name': 'metadata',
+            'value': JSON.stringify(metadata),
+            'type': 'hidden'
+        }));
+        App.jQuery('input[name="chart_type"]', this.form).remove();
+        App.jQuery(this.form).append(App.jQuery('<input>', {
             'name': 'chart_type',
             'value': chart_type,
             'type': 'hidden'
         }));
-        App.jQuery(form).appendTo(this.$el);
     },
 
     render: function() {
         this.$el.html(this.template({'related': this.related.html()}));
+        App.jQuery(this.form).appendTo(this.$el);
         window.addthis.button('#scoreboard-addthis', {}, {url: this.url});
     },
 
