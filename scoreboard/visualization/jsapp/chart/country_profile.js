@@ -273,7 +273,16 @@ App.chart_library['country_profile'] = function(view, options) {
             x_formatter: x_formatter
         });
     }
-    view.trigger('chart_ready', series,
+    var metadata = {
+        'chart-title': options.titles.title,
+        'chart-subtitle': options.titles.subtitle,
+        'chart-xAxisTitle': options.titles.xAxisTitle,
+        'chart-yAxisTitle': options.titles.yAxisTitle,
+        'source-dataset': options.credits.text,
+        'chart-url': document.URL,
+        'filters-applied': _(this.model.attributes).pairs()
+    };
+    view.trigger('chart_ready', series, metadata,
         options['chart_type'] + '_' + options.subtype)
 };
 

@@ -136,7 +136,16 @@ App.chart_library['lines'] = function(view, options) {
 
     var chart = new Highcharts.Chart(chartOptions);
 
-    view.trigger('chart_ready', series);
+    var metadata = {
+        'chart-title': options.titles.title,
+        'chart-subtitle': options.titles.subtitle,
+        'chart-xAxisTitle': options.titles.xAxisTitle,
+        'chart-yAxisTitle': options.titles.yAxisTitle,
+        'source-dataset': options.credits.text,
+        'chart-url': document.URL,
+        'filters-applied': _(this.model.attributes).pairs()
+    };
+    view.trigger('chart_ready', series, metadata);
 
 };
 
