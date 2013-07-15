@@ -116,6 +116,7 @@ App.FacetEditorField = Backbone.View.extend({
             facet_label: this.model.get('label'),
             facet_options: facet_options,
             highlights_options: highlights_options,
+            is_all_values: this.model.get('type') == 'all-values',
             sort_by_options: _(this.sort_by_options).map(function(spec) {
                     var opt = _({}).extend(spec);
                     if(spec['value'] == this.model.get('sortBy')) {
@@ -449,10 +450,12 @@ App.FacetsEditor = Backbone.View.extend({
     render: function() {
         this.$el.html(this.template());
         this.model.facets.forEach(function(facet_model) {
-            var facet_view = this.facet_views[facet_model.cid];
-            facet_view.render();
-            this.$el.find('div.facets').append(facet_view.el);
-            facet_view.delegateEvents();
+            if(facet_model.get('type') != 'ignore'){
+                var facet_view = this.facet_views[facet_model.cid];
+                facet_view.render();
+                this.$el.find('div.facets').append(facet_view.el);
+                facet_view.delegateEvents();
+            }
         }, this);
     },
 
