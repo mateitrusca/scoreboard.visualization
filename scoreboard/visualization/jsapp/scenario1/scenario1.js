@@ -31,7 +31,7 @@ App.scenario1_filters_schema = {
       "name": "indicator-group",
       "type": "select",
       "default_value": "#random",
-      "sortBy": "nosort",
+      "sortBy": "order_in_codelist",
       "sortOrder": "asc"
     },
     {
@@ -41,7 +41,7 @@ App.scenario1_filters_schema = {
       "dimension": "indicator",
       "label": "Indicator",
       "default_value": "#random",
-      "sortBy": "nosort",
+      "sortBy": "order_in_codelist",
       "sortOrder": "asc",
       "name": "indicator",
       "type": "select"
@@ -52,7 +52,7 @@ App.scenario1_filters_schema = {
       "include_wildcard": true,
       "label": "Breakdown group",
       "default_value": "#random",
-      "sortBy": "nosort",
+      "sortBy": "order_in_codelist",
       "sortOrder": "asc",
       "type": "select",
       "constraints": {
@@ -70,7 +70,7 @@ App.scenario1_filters_schema = {
       "label": "Breakdown",
       "name": "breakdown",
       "default_value": "#random",
-      "sortBy": "nosort",
+      "sortBy": "order_in_codelist",
       "sortOrder": "asc",
       "type": "select"
     },

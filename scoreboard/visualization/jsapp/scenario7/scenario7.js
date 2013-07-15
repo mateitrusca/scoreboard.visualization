@@ -35,7 +35,7 @@ App.scenario7_filters_schema = {
         "label": "Indicator group",
         "name": "indicator-group",
         "position": "upper-left",
-        "sortBy": "nosort",
+        "sortBy": "order_in_codelist",
         "sortOrder": "asc",
         "type": "select"
     },
@@ -63,7 +63,7 @@ App.scenario7_filters_schema = {
         "label": "Breakdown group",
         "name": "breakdown-group",
         "position": "upper-left",
-        "sortBy": "nosort",
+        "sortBy": "order_in_codelist",
         "sortOrder": "asc",
         "type": "select"
     },
@@ -78,7 +78,7 @@ App.scenario7_filters_schema = {
         "label": "Unit of measure",
         "name": "unit-measure",
         "position": "upper-left",
-        "sortBy": "nosort",
+        "sortBy": "order_in_codelist",
         "sortOrder": "asc",
         "type": "select"
     },
@@ -127,7 +127,7 @@ App.scenario7_filters_schema = {
         "label": "Breakdown",
         "name": "breakdown",
         "position": "upper-left",
-        "sortBy": "nosort",
+        "sortBy": "order_in_codelist",
         "sortOrder": "asc",
         "type": "all-values"
     },

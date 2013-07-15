@@ -47,7 +47,7 @@ App.scenario3_filters_schema = {
         "constraints": {},
         "dimension": "indicator-group",
         "include_wildcard": true,
-        "sortBy": "nosort",
+        "sortBy": "order_in_codelist",
         "sortOrder": "asc",
         "type": "select"
     },
@@ -71,7 +71,7 @@ App.scenario3_filters_schema = {
             "indicator": "x-indicator"
         },
         "dimension": "breakdown-group",
-        "sortBy": "nosort",
+        "sortBy": "order_in_codelist",
         "sortOrder": "asc",
         "type": "ignore"
     },
@@ -107,7 +107,7 @@ App.scenario3_filters_schema = {
         "default_value": "#random",
         "dimension": "indicator-group",
         "include_wildcard": true,
-        "sortBy": "nosort",
+        "sortBy": "order_in_codelist",
         "sortOrder": "asc",
         "position": "upper-right",
         "type": "select"
@@ -133,7 +133,7 @@ App.scenario3_filters_schema = {
             "indicator": "y-indicator"
         },
         "dimension": "breakdown-group",
-        "sortBy": "nosort",
+        "sortBy": "order_in_codelist",
         "sortOrder": "asc",
         "position": "upper-right",
         "type": "ignore"

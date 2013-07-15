@@ -34,7 +34,7 @@ App.FacetEditorField = Backbone.View.extend({
     },
 
     sort_by_options: [
-        {value: 'nosort', label: "by order within the code list"},
+        {value: 'order_in_codelist', label: "by order within the code list"},
         {value: 'inner_order', label: "by order within the group"},
         {value: 'label', label: "by value - long label"},
         {value: 'short_label', label: "by value - short label"},

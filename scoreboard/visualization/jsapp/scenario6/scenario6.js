@@ -31,7 +31,7 @@ App.scenario6_filters_schema = {
       "label": "Indicator group",
       "name": "indicator-group",
       "position": "upper-left",
-      "sortBy": "nosort",
+      "sortBy": "order_in_codelist",
       "sortOrder": "asc",
       "type": "select"
     },
@@ -59,7 +59,7 @@ App.scenario6_filters_schema = {
       "label": "Breakdown group",
       "name": "breakdown-group",
       "position": "upper-left",
-      "sortBy": "nosort",
+      "sortBy": "order_in_codelist",
       "sortOrder": "asc",
       "type": "select"
     },
@@ -90,7 +90,7 @@ App.scenario6_filters_schema = {
       "label": "Unit of measure",
       "name": "unit-measure",
       "position": "upper-left",
-      "sortBy": "nosort",
+      "sortBy": "order_in_codelist",
       "sortOrder": "asc",
       "type": "select"
     },
@@ -130,7 +130,7 @@ App.scenario6_filters_schema = {
       "label": "Period",
       "name": "time-period",
       "position": "upper-left",
-      "sortBy": "nosort",
+      "sortBy": "order_in_codelist",
       "sortOrder": "asc",
       "type": "all-values"
     },

@@ -124,7 +124,7 @@ App.SelectFilter = Backbone.View.extend({
 
             // Sort items
             var sortBy = this.sortBy;
-            if(this.sortOrder === 'nosort'){
+            if(this.sortOrder === 'order_in_codelist'){
                 this.dimension_options = data[options];
             }else{
                 this.dimension_options = _(data['options']).sortBy(function(item){
