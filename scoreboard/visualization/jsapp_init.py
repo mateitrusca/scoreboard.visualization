@@ -36,6 +36,7 @@ js_bundles = [
             'editor/chart_type.js',
             'editor/structure.js',
             'editor/facets.js',
+            'editor/layout.js',
             'editor/axes.js',
             'editor/series.js',
             'editor/format.js',
