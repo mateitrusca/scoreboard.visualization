@@ -567,8 +567,8 @@ describe('LayoutEditor', function() {
             });
         var structureView = new App.StructureEditor({model: model});
         var view = new App.LayoutEditor({model: model});
-        expect(_(model.get('facets')).last()['name']).to.equal(
-            'dim1');
+        expect(_(model.get('facets')).first()['name']).to.equal(
+            'dim2');
     });
 
 });

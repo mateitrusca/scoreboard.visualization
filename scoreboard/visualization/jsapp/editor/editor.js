@@ -130,7 +130,10 @@ App.EditorConfiguration = Backbone.Model.extend({
         this.facets = new App.FacetCollection(this.get('facets'),
                                               this.dimensions);
         this.layout_collection = new App.LayoutCollection(
-            this.get('facets'));
+            _(this.get('facets')).reject(function(facet){
+                return _(['all-values', 'ignore']).contains(facet.type);
+            })
+        );
 
         this.facets.on('change:multidim', this.rebuild_layout, this);
         this.layout_collection.on('change', this.save_facets, this);
@@ -144,11 +147,7 @@ App.EditorConfiguration = Backbone.Model.extend({
 
     save_facets: function() {
         var value = this.layout_collection.get_value();
-        // put "all-values" facets last
-        var sorted_value = _(value).sortBy(function(val, idx, list){
-            return (val.type == 'all-values')?list.length:idx;
-        });
-        this.set('facets', sorted_value);
+        this.set('facets', value);
     },
 
     get_value: function() {
