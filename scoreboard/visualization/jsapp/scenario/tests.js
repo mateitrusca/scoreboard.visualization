@@ -496,7 +496,8 @@ describe('ScenarioChartViewParameters', function() {
         var chart = new App.ScenarioChartView({
             model: this.model,
             schema: {
-                labels: {title: {facet: 'filter1', field: 'short_label'}}
+                facets: [{name: 'filter1', dimension: 'dim1', label:'Indicator'}],
+                labels: {title: {facet: 'filter1'}}
             },
             scenario_chart: this.scenario_chart,
             filters_schema: [{name: 'filter1', dimension: 'dim1'}]
@@ -527,7 +528,7 @@ describe('ScenarioChartViewParameters', function() {
         var chart = new App.ScenarioChartView({
             model: this.model,
             schema: {
-                facets: [],
+                facets: [{name: 'indicator', dimension: 'dim1', label:'Indicator'}],
                 labels: {
                     label1: {facet: 'indicator'},
                     label2: {facet: 'indicator'},
@@ -552,6 +553,7 @@ describe('ScenarioChartViewParameters', function() {
         var chart = new App.ScenarioChartView({
             model: this.model,
             schema: {
+                facets: [{name: 'indicator', dimension: 'dim1', label:'Indicator'}],
                 multiple_series: 'country',
                 labels: {label1: {facet: 'indicator', field: 'label'}},
                 multidim: 1
@@ -632,6 +634,7 @@ describe('ScenarioChartViewParameters', function() {
             model: this.model,
             schema: {
                 multidim: 3,
+                facets: [{name: 'indicator', dimension: 'dim1', label:'Indicator'}],
                 labels: {label1: {facet: 'indicator', field: 'label'}}
             },
             filters_schema: [
@@ -768,6 +771,7 @@ describe('ScenarioChartView', function() {
         this.chart = new App.ScenarioChartView({
             model: this.model,
             schema: {
+                facets: [{name: 'time-period', dimension: 'dim1', label:'period'}],
                 labels: {extra_label: {facet: 'time-period', field: 'label'}}
             },
             filters_schema: [

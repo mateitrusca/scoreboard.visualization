@@ -55,16 +55,18 @@ App.ScenarioChartView = Backbone.View.extend({
         var requests = [];
 
         _(this.schema['labels']).forEach(function(label_spec, label_name) {
-            var args = {
-                'dimension': this.dimensions_mapping[label_spec['facet']],
-                'value': this.model.get(label_spec['facet']),
-                'rev': this.data_revision
-            };
-            var ajax = $.getJSON(this.cube_url + '/dimension_labels', args);
-            ajax.done(function(data) {
-                meta_data[label_name] = data;
-            });
-            requests.push(ajax);
+            if (_.chain(this.schema.facets).pluck('name').contains(label_spec.facet).value()){
+                var args = {
+                    'dimension': this.dimensions_mapping[label_spec['facet']],
+                    'value': this.model.get(label_spec['facet']),
+                    'rev': this.data_revision
+                };
+                var ajax = $.getJSON(this.cube_url + '/dimension_labels', args);
+                ajax.done(function(data) {
+                    meta_data[label_name] = data;
+                });
+                requests.push(ajax);
+            }
         }, this);
 
         return requests;

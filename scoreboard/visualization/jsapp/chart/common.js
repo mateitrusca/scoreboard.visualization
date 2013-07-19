@@ -297,8 +297,11 @@ App.title_formatter = function(parts, meta_data){
         if (!meta_data){
             part.text = part.facet_name + "(" + part.format + ")";
         }
-        else{
+        else if (_(meta_data).has(part.facet_name)){
             part.text = meta_data[part.facet_name][part.format];
+        }
+        else {
+            part.text = '';
         }
         return part;
     });

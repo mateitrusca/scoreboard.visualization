@@ -337,15 +337,17 @@ App.AxesEditor = Backbone.View.extend({
     },
 
     set_axis_labels: function() {
-        var unit_measure = _(this.model.get('facets')).findWhere(
-            {name: 'unit-measure'});
-        if(unit_measure && unit_measure['type'] == 'select') {
-            var labels = _({}).extend(this.model.get('labels'));
-            _(labels).extend({
-                'unit-measure': {facet: 'unit-measure'}
-            });
-            this.model.set('labels', labels);
-        }
+        var labels = _({}).extend(this.model.get('labels'));
+        _.chain(this.model.get('facets'))
+         .where({dimension: 'unit-measure'})
+         .each( function(unit_measure){
+            if(unit_measure && unit_measure['type'] == 'select') {
+                _(labels).extend(_.object([[
+                    unit_measure['name'], {facet: unit_measure.name}]]
+                ));
+            }
+         });
+        this.model.set('labels', labels);
     },
 
     render: function() {
