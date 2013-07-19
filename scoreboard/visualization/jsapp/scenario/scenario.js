@@ -293,8 +293,8 @@ App.ScenarioChartView = Backbone.View.extend({
                     }
                 }, this);
             }
-            var labels_request = $.getJSON(this.cube_url + '/dimension_options',
-                                       labels_args);
+            var labels_url = '/dimension_options_' + 'xyz'.slice(0, this.schema.multidim);
+            var labels_request = $.getJSON(this.cube_url + labels_url, labels_args);
             var dict = {'short': 'short_label', 'long': 'label', 'none': 'notation'};
             var series_names = 'notation';
             if ( this.schema['series-legend-label'] ) {

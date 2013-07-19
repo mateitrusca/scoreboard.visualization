@@ -547,6 +547,45 @@ describe('ScenarioChartViewParameters', function() {
     });
 
 
+    it('should fetch labels from the right url according to schema.multidim', function() {
+        var server = this.sandbox.server;
+        var chart = new App.ScenarioChartView({
+            model: this.model,
+            schema: {
+                multiple_series: 'country',
+                labels: {label1: {facet: 'indicator', field: 'label'}},
+                multidim: 1
+            },
+            filters_schema: [
+                {type: 'select',
+                 name: 'indicator',
+                 label: 'Select one indicator',
+                 dimension: 'indicator',
+                 constraints: { }
+                }
+            ],
+            values_schema: [
+                 {type: 'all-values', dimension: 'dimension1'},
+                 {type: 'all-values', dimension: 'value1'}
+            ],
+            scenario_chart: this.scenario_chart
+        });
+        this.model.set({
+            'indicator': 'ind1'
+        });
+        var url = server.requests[0].url;
+        expect(url.indexOf('dimension_options_x?')).to.not.eql(-1);
+        chart.schema.multidim = 2;
+        chart.load_chart();
+        var url = server.requests[2].url;
+        expect(url.indexOf('dimension_options_xy?')).to.not.eql(-1);
+        chart.schema.multidim = 3;
+        chart.load_chart();
+        var url = server.requests[4].url;
+        expect(url.indexOf('dimension_options_xyz?')).to.not.eql(-1);
+    });
+
+
     it('should fetch data using init facet dimensions', function() {
         var server = this.sandbox.server;
         var chart = new App.ScenarioChartView({
