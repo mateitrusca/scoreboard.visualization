@@ -113,8 +113,10 @@ App.Visualization = Backbone.View.extend({
         var chart_type = options['schema']['chart_type'];
         var el = this.$el;
         _(options['schema']['text']).forEach(function(item) {
-            var paragraph = el.find("#the-filters ." + item['position'] + " p");
-            paragraph.text(item['value']).removeClass('default-hidden');
+            if (item['value']) {
+                var paragraph = el.find("#the-filters ." + item['position'] + " p");
+                paragraph.text(item['value']).removeClass('default-hidden');
+            }
         });
 
 
