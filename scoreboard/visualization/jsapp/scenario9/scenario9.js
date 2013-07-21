@@ -96,7 +96,7 @@ App.scenario9_filters_schema = {
       },
       {
         "prefix": ", ",
-        "suffix": "indicators ",
+        "suffix": " indicators",
         "facet_name": "indicator-group",
         "format": "label"
       }
