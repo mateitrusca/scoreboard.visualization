@@ -127,21 +127,14 @@ App.scenario8_filters_schema = {
   ],
   "height": 450,
   "labels": {
-    "ordinate": {
-      "facet": "unit-measure",
-      "field": "short_label"
-    },
-    "title": {
-      "facet": "indicator",
-      "field": "label"
-    },
-    "title2": {
-      "facet": "breakdown-group",
-      "field": "label"
+    "indicator": {
+        "facet": "indicator"
     },
     "unit-measure": {
-      "facet": "unit-measure",
-      "field": "short_label"
+        "facet": "unit-measure"
+    },
+    "breakdown-group": {
+        "facet": "breakdown-group"
     }
   },
   "multiple_series": "breakdown",
@@ -152,6 +145,39 @@ App.scenario8_filters_schema = {
     "by": "category",
     "order": 1,
     "each_series": true
+  },
+  "titles": {
+    "title": [
+      {
+        "facet_name": "indicator",
+        "prefix": null,
+        "suffix": null,
+        "format": "label"
+      },
+      {
+        "facet_name": "breakdown-group",
+        "prefix": ", by ",
+        "suffix": null,
+        "format": "label"
+      }
+    ],
+    "subtitle": [
+      {
+        "facet_name": "time-period",
+        "prefix": null,
+        "suffix": null,
+        "format": "label"
+      }
+    ],
+    "xAxisTitle": [],
+    "yAxisTitle": [
+      {
+        "facet_name": "unit-measure",
+        "prefix": null,
+        "suffix": null,
+        "format": "short_label"
+      }
+    ]
   },
   "tooltips": {
     "flag": true,
