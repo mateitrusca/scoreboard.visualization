@@ -532,7 +532,24 @@ describe('LayoutEditor', function() {
         var view = new App.LayoutEditor({model: model});
     });
 
-    it('should rebuild layout facets collection when facets change', function() {
+    it('should filter facets when building layout collection', function() {
+        var model = new App.EditorConfiguration({
+                multidim: 1,
+                facets: [
+                    {name: 'indicator', type: 'select'},
+                    {name: 'breakdown', type: 'ignore'},
+                    {name: 'unit-measure', type: 'all-values'}
+                ]
+            }, {
+                dimensions: [
+                    {type_label: 'dimension', notation: 'indicator'}]
+            });
+        var structureView = new App.StructureEditor({model: model});
+        var view = new App.LayoutEditor({model: model});
+        expect(view.model.layout_collection.length).to.equal(1);
+    });
+
+    it('should rebuild layout collection when facet multidim changes', function() {
         var model = new App.EditorConfiguration({
                 multidim: 2,
                 facets: [
@@ -546,11 +563,28 @@ describe('LayoutEditor', function() {
         var view = new App.LayoutEditor({model: model});
         expect(view.model.layout_collection.length).to.equal(1);
         structureView.$el.find('[name="multidim"]').click().change();
-        expect(view.model.layout_collection.length).to.equal(3);
+        expect(view.model.layout_collection.length).to.equal(2);
         expect(view.model.layout_collection.models[0].get('name')).to.equal(
             'x-indicator');
         expect(view.model.layout_collection.models[1].get('name')).to.equal(
             'y-indicator');
+    });
+
+    it('should rebuild layout collection when facet type changes', function() {
+        var model = new App.EditorConfiguration({
+                multidim: 1,
+                facets: [
+                    {name: 'indicator', type: 'select'}
+                ]
+            }, {
+                dimensions: [
+                    {type_label: 'dimension', notation: 'indicator'}]
+            });
+        var structureView = new App.StructureEditor({model: model});
+        var view = new App.LayoutEditor({model: model});
+        expect(view.model.layout_collection.length).to.equal(1);
+        structureView.$el.find('[name="type"]').val('ignore').change();
+        expect(view.model.layout_collection.length).to.equal(0);
     });
 
     it('should put "all-values" at the bottom of facets', function() {

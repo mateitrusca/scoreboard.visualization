@@ -114,7 +114,10 @@ App.Editor = Backbone.View.extend({
 
 App.LayoutCollection = Backbone.Collection.extend({
     constructor: function(value) {
-        Backbone.Collection.apply(this, [value]);
+        var filtered_value = _(value).reject(function(facet){
+            return _(['all-values', 'ignore']).contains(facet.type);
+        });
+        Backbone.Collection.apply(this, [filtered_value]);
     },
 
     get_value: function(){
@@ -130,18 +133,17 @@ App.EditorConfiguration = Backbone.Model.extend({
         this.facets = new App.FacetCollection(this.get('facets'),
                                               this.dimensions);
         this.layout_collection = new App.LayoutCollection(
-            _(this.get('facets')).reject(function(facet){
-                return _(['all-values', 'ignore']).contains(facet.type);
-            })
+            this.get('facets')
         );
 
-        this.facets.on('change:multidim', this.rebuild_layout, this);
+        this.facets.on('change:multidim change:type', this.rebuild_layout, this);
         this.layout_collection.on('change', this.save_facets, this);
     },
 
     rebuild_layout: function(){
         this.layout_collection = new App.LayoutCollection(
-            this.facets.get_value(this.get('multidim')));
+            this.facets.get_value(this.get('multidim'))
+        );
         this.layout_collection.on('change', this.save_facets, this);
     },
 
