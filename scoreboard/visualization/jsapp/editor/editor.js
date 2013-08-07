@@ -160,8 +160,16 @@ App.EditorConfiguration = Backbone.Model.extend({
     },
 
     save_facets: function() {
-        var value = this.layout_collection.get_value();
-        this.set('facets', value);
+        var value = this.facets.get_value(
+            this.get('multidim'),
+            this.layout_collection.presets())
+
+        // put "all-values" facets last
+        var sorted_value = _(value).sortBy(function(val, idx, list){
+                    return (val.type == 'all-values')?list.length:idx;
+                });
+
+        this.set('facets', sorted_value);
     },
 
     get_value: function() {

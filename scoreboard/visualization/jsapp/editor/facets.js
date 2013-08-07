@@ -388,6 +388,10 @@ App.FacetCollection = Backbone.Collection.extend({
                 } else {
                     delete facet['multidim_common'];
                 }
+                var key = facet.dimension + '/' + facet.name;
+                if (presets && _(presets).has(key)){
+                    facet.position = presets[key]
+                }
                 facets_by_axis['all'].push(facet);
             }
             if(facet['type'] == 'select') {
