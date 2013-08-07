@@ -122,7 +122,17 @@ App.LayoutCollection = Backbone.Collection.extend({
 
     get_value: function(){
         return this.toJSON();
+    },
+
+    presets: function(){
+        var presets = _.object(this.map(function(layout_model){
+            var key = layout_model.get('dimension') + '/' + layout_model.get('name');
+            var position = layout_model.get('position');
+            return [key, position];
+        }));
+        return presets;
     }
+
 });
 
 
@@ -142,7 +152,9 @@ App.EditorConfiguration = Backbone.Model.extend({
 
     rebuild_layout: function(){
         this.layout_collection = new App.LayoutCollection(
-            this.facets.get_value(this.get('multidim'))
+            this.facets.get_value(
+                this.get('multidim'),
+                this.layout_collection.presets())
         );
         this.layout_collection.on('change', this.save_facets, this);
     },
@@ -155,8 +167,7 @@ App.EditorConfiguration = Backbone.Model.extend({
     get_value: function() {
         var value = this.toJSON();
         return value;
-    }
-
+    },
 });
 
 

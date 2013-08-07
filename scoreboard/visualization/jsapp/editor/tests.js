@@ -587,6 +587,60 @@ describe('LayoutEditor', function() {
         expect(view.model.layout_collection.length).to.equal(0);
     });
 
+    it('should keep layout changes when changing structure', function() {
+        var model = new App.EditorConfiguration({
+                multidim: 2,
+                facets: [
+                    {constraints: {},
+                    dimension: "indicator-group",
+                    label: "(X) Indicator group",
+                    name: "x-indicator-group",
+                    position: "upper-left",
+                     multidim_common: true,
+                    sortBy: "order_in_codelist",
+                    sortOrder: "asc",
+                    type: "select"},
+                    {name: "x-indicator",
+                     label: "(X) Indicator",
+                     constraints: {},
+                     dimension: "indicator",
+                     multidim_common: true,
+                     position: "upper-left",
+                     sortBy: "inner_order",
+                     sortOrder: "asc",
+                     type: "select"},
+                    {constraints: {},
+                    dimension: "indicator-group",
+                    label: "(Y) Indicator group",
+                    name: "y-indicator-group",
+                    position: "upper-right",
+                     multidim_common: true,
+                    sortBy: "order_in_codelist",
+                    sortOrder: "asc",
+                    type: "select"},
+                    {name: "y-indicator",
+                     label: "(Y) Indicator",
+                     constraints: {},
+                     dimension: "indicator",
+                     multidim_common: true,
+                     position: "upper-right",
+                     sortBy: "inner_order",
+                     sortOrder: "asc",
+                     type: "select"}
+                ]
+            }, {
+                dimensions: [
+                    {type_label: 'dimension', notation: 'indicator-group'},
+                    {type_label: 'dimension', notation: 'indicator'}
+                ]
+            });
+        var structure_view = new App.StructureEditor({model: model});
+        var layout_view = new App.LayoutEditor({model: model});
+        var ind_gr = structure_view.$el.find('[name="type"]:first');
+        ind_gr.val('ignore').change();
+        expect(model.get('facets')[3].position).to.equal('upper-right');
+    });
+
     it('should put "all-values" at the bottom of facets', function() {
         var model = new App.EditorConfiguration({
                 multidim: 2,

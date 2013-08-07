@@ -333,7 +333,7 @@ App.FacetCollection = Backbone.Collection.extend({
         this.remove(to_remove);
     },
 
-    get_value: function(chart_multidim) {
+    get_value: function(chart_multidim, presets) {
         var multidim_facets = {};
         var all_multidim = _.range(chart_multidim);
         var facets_by_axis = {'all': []};
@@ -357,6 +357,10 @@ App.FacetCollection = Backbone.Collection.extend({
                     });
                     var label = '(' + letter.toUpperCase() + ') '
                               + facet['label'];
+                    var key = facet.dimension + '/' + prefix + facet['name'];
+                    if (presets && _(presets).has(key)){
+                        facet.position = presets[key]
+                    }
                     facets_by_axis[letter].push(_({
                         name: prefix + facet['name'],
                         label: label,
@@ -460,7 +464,9 @@ App.FacetsEditor = Backbone.View.extend({
     },
 
     save_value: function() {
-        var value = this.model.facets.get_value(this.model.get('multidim'));
+        var value = this.model.facets.get_value(
+                this.model.get('multidim'),
+                this.model.layout_collection.presets());
         this.model.set('facets', value);
     },
 
