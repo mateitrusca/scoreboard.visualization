@@ -134,7 +134,7 @@ describe('StructureEditor', function() {
             });
             var view = new App.StructureEditor({model: model});
             expect(_(model.get('facets')).pluck('dimension')).to.deep.equal(
-                ['time-period', 'indicator', 'value']);
+                ['indicator', 'time-period', 'value']);
         });
 
         it('should remove facets with no corresponding dimension', function() {
@@ -352,6 +352,22 @@ describe('StructureEditor', function() {
             });
             expect(_(view.model.attributes.facets).pluck('name')).to.deep.equal(
                 ['dim1', 'dim3', 'dim4', 'dim2', 'value']
+            );
+        });
+
+        it('should move facet to normal position', function() {
+            var view = new App.StructureEditor({
+                model: new App.EditorConfiguration({
+                    facets: [{name: 'dim2', type: 'all-values'}]
+                }, {dimensions: four_dimensions})
+            });
+            expect(_(view.model.attributes.facets).pluck('name')).to.deep.equal(
+                ['dim1', 'dim3', 'dim4', 'dim2', 'value']
+            );
+            var dim2_type = view.$el.find('[name="type"]:last');
+            dim2_type.val('select').change();
+            expect(_(view.model.attributes.facets).pluck('name')).to.deep.equal(
+                ['dim1', 'dim2', 'dim3', 'dim4', 'value']
             );
         });
 

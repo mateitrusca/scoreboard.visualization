@@ -287,15 +287,16 @@ App.FacetCollection = Backbone.Collection.extend({
     model: App.FacetModel,
 
     comparator: function(val){
+        var idx = this.order.indexOf(
+            val.attributes.dimension||val.attributes.name);
         var value = (val.attributes.type == 'all-values')?
-                        this.length+this.indexOf(val.cid):
-                        this.indexOf(val.cid);
+                    this.order.length+idx:idx;
         return value;
     },
 
     constructor: function(value, dimensions) {
+        this.order = _(dimensions).pluck('notation');
         Backbone.Collection.apply(this, [value]);
-
         var facets_to_keep = {};
         var add_model = _.bind(function(name, defaults) {
             var facet_model = this.findWhere({name: name});
@@ -341,6 +342,7 @@ App.FacetCollection = Backbone.Collection.extend({
     },
 
     get_value: function(chart_multidim, presets) {
+        this.sort();
         var multidim_facets = {};
         var all_multidim = _.range(chart_multidim);
         var facets_by_axis = {'all': []};
