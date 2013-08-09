@@ -344,14 +344,32 @@ describe('StructureEditor', function() {
             expect(constr3).to.deep.equal({'dim1': 'dim1', 'dim3': 'dim3'});
         });
 
-        it('should generate no constraints with all-values', function() {
+        it('should move all-value at the end of facets', function() {
             var view = new App.StructureEditor({
                 model: new App.EditorConfiguration({
                     facets: [{name: 'dim2', type: 'all-values'}]
                 }, {dimensions: four_dimensions})
             });
+            expect(_(view.model.attributes.facets).pluck('name')).to.deep.equal(
+                ['dim1', 'dim3', 'dim4', 'dim2', 'value']
+            );
+        });
+
+        it('should add all qualifying facets to the constraints of all-values', function() {
+            var model = new App.EditorConfiguration({
+                facets: [{name: 'dim2', type: 'all-values'}]
+                },
+                {dimensions: four_dimensions}
+            );
+            var view = new App.StructureEditor({
+                model: model
+            });
             var constr3 = view.model.toJSON()['facets'][3]['constraints'];
-            expect(constr3).to.deep.equal({'dim1': 'dim1', 'dim3': 'dim3'});
+            expect(view.model.attributes.facets[3]['name']).to.equal(
+                'dim2'
+            );
+            expect(constr3).to.deep.equal(
+                {'dim1': 'dim1', 'dim3': 'dim3', 'dim4': 'dim4'});
         });
 
     });

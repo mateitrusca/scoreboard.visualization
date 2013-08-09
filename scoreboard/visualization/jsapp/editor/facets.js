@@ -286,6 +286,13 @@ App.FacetCollection = Backbone.Collection.extend({
 
     model: App.FacetModel,
 
+    comparator: function(val){
+        var value = (val.attributes.type == 'all-values')?
+                        this.length+this.indexOf(val.cid):
+                        this.indexOf(val.cid);
+        return value;
+    },
+
     constructor: function(value, dimensions) {
         Backbone.Collection.apply(this, [value]);
 
