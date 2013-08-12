@@ -397,6 +397,12 @@ App.GraphControlsView = Backbone.View.extend({
         this.update_subtitle();
     },
 
+    update_data: function(snapshots_data){
+        this.snapshots_data = snapshots_data;
+        this.model.set({'value': this.snapshots_data.length - 1});
+        this.update_chart();
+    },
+
     update_plotlines: function(new_data){
          if (! this.multiseries){
              new_data = [new_data];
