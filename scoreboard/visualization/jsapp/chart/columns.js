@@ -139,8 +139,7 @@ App.chart_library['columns'] = function(view, options) {
             $('#the-filters .footer').append(App.chart_controls.$el);
         }else{
             App.chart_controls.chart = chart;
-            App.chart_controls.snapshots_data = series;
-            App.chart_controls.update_chart();
+            App.chart_controls.update_data(series);
         };
     }
 };
