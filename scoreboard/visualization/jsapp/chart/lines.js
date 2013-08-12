@@ -132,6 +132,7 @@ App.chart_library['lines'] = function(view, options) {
         series: series
     };
 
+    App.set_default_chart_options(chartOptions);
     App.disable_legend(chartOptions, options);
 
     var chart = new Highcharts.Chart(chartOptions);

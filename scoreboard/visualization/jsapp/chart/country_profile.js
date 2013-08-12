@@ -255,6 +255,7 @@ App.chart_library['country_profile'] = function(view, options) {
             series: stack_series
         };
 
+        App.set_default_chart_options(chartOptions);
         if (!options['legend']){
             App.disable_legend(chartOptions, options);
         }

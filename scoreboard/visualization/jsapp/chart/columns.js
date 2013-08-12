@@ -105,6 +105,7 @@ App.chart_library['columns'] = function(view, options) {
         series: init_series
     };
 
+    App.set_default_chart_options(chartOptions);
     if (!options['legend']){
         App.disable_legend(chartOptions, options);
     }

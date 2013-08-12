@@ -279,6 +279,36 @@ App.disable_legend = function(chartOptions, options){
     }
 }
 
+App.set_default_chart_options = function(chartOptions){
+    var menuItems = _.rest(Highcharts.getOptions().exporting.buttons.contextButton.menuItems, 2);
+    var options = {
+        exporting: {
+            buttons: {
+                contextButton: {
+                    enabled: false
+                },
+                exportButton: {
+                    text: 'Download',
+                    // Use only the download related menu items from the default context button
+                    menuItems: menuItems
+                },
+                printButton: {
+                    text: 'Print Chart',
+                    onclick: function () {
+                        this.print();
+                    }
+                }
+            }
+        },
+        navigation: {
+            buttonOptions: {
+            }
+        }
+    }
+    _(chartOptions).extend(options);
+}
+
+
 App.tick_labels_formatter = function(max100) {
     if (this.value < 0){
         return null;
