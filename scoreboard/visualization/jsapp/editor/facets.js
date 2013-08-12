@@ -295,7 +295,9 @@ App.FacetCollection = Backbone.Collection.extend({
     },
 
     constructor: function(value, dimensions) {
-        this.order = _(dimensions).pluck('notation');
+        this.order = _.chain(dimensions).reject(function(dim){
+            return !_(['dimension group', 'dimension']).contains(dim.type_label);
+        }).pluck('notation').value();
         Backbone.Collection.apply(this, [value]);
         var facets_to_keep = {};
         var add_model = _.bind(function(name, defaults) {
