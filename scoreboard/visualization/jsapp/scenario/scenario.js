@@ -411,7 +411,7 @@ App.GraphControlsView = Backbone.View.extend({
     },
 
     update_subtitle: function(){
-        var subtitle = this.snapshots_data[this.model.get('value')]['name'];
+        var subtitle = this.snapshots_data[this.model.get('value')]['ending_label'];
         this.chart.setTitle(null,
                 {
                     text: subtitle,
