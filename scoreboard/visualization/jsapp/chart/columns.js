@@ -28,7 +28,7 @@ App.chart_library['columns'] = function(view, options) {
             zoomType: 'y',
             marginLeft: 100,
             marginRight: 170,
-            marginTop: 50,
+            marginTop: 80,
             marginBottom: 100,
             height: 450,
             width: 1100
@@ -45,6 +45,7 @@ App.chart_library['columns'] = function(view, options) {
             }
         },
         title: {
+            useHTML:true,
             text: options.titles.title,
             style: {
                 color: '#000000',
