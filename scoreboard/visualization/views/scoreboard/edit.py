@@ -2,6 +2,7 @@
 """
 import simplejson as json
 from zope.formlib.form import Fields
+from scoreboard.visualization import config
 from scoreboard.visualization.views.scoreboard.interfaces import IScoreboardEdit
 from eea.app.visualization.views.edit import EditForm
 from .view import jsapp_html_for_visualization, get_source
@@ -16,7 +17,8 @@ class Edit(EditForm):
 
     @property
     def configuration(self):
-        return self._data.get('configuration', '{}')
+        default = json.dumps(config.DEFAULTS, indent=2, sort_keys=True)
+        return self._data.get('configuration', default)
 
     @property
     def object_url_json(self):

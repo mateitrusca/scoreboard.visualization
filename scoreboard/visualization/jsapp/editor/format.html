@@ -1,9 +1,8 @@
-<span data-marker="title-label"></span>
-<span data-marker="subtitle-label"></span>
-
-<br>
-<label>Height</label>
-<input class="span1" name="height" value="{{ height }}">px
+<h5>Filters area descriptions</h5>
+{{# descriptions }}
+  <label>{{ label }}</label>
+  <textarea name="description-text" id="{{position}}">{{ value }}</textarea>
+{{/ descriptions }}
 
 <h5>Credits</h5>
 
@@ -13,12 +12,3 @@
 <br>
 <label>Link</label>
 <input class="span5" name="credits-link" value="{{ credits.link }}">
-
-<br>
-<label>Position</label>
-<select class="span2">
-  <option>bottom</option>
-</select>
-<select class="span2">
-  <option>right</option>
-</select>

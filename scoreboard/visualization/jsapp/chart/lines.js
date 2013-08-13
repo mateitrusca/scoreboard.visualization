@@ -17,8 +17,14 @@ App.chart_library['lines'] = function(view, options) {
                     options['category_facet'],
                     options['highlights']);
 	_.map(series, function(elem) {
-        if ( elem.data.length > 0 ) {
-            _(_.last(elem.data)).extend({
+        var lastElem;
+        _(elem.data).each(function(item){
+            if (item.y) {
+                lastElem = item;
+            }
+        });
+        if (lastElem) {
+            _(lastElem).extend({
                 dataLabels: {
                   enabled: true,
                   crop: false,
@@ -62,10 +68,7 @@ App.chart_library['lines'] = function(view, options) {
             }
         },
         title: {
-            text: options['title_formatter'](
-                        options.meta_data['title'],
-                        options.meta_data['title2']&&options.meta_data['title2']!='Total'?', by ':'',
-                        options.meta_data['title2']),
+            text: options.titles.title,
             style: {
                 color: '#000000',
                 fontWeight: 'bold',
@@ -87,7 +90,7 @@ App.chart_library['lines'] = function(view, options) {
             min:0,
             max: options['unit_is_pc'][0]?100:null,
             title: {
-                text: options.meta_data['ordinate'],
+                text: options.titles.yAxisTitle,
                 style: {
                     color: '#000000',
                     fontWeight: 'bold'
@@ -129,11 +132,21 @@ App.chart_library['lines'] = function(view, options) {
         series: series
     };
 
+    App.set_default_chart_options(chartOptions);
     App.disable_legend(chartOptions, options);
 
     var chart = new Highcharts.Chart(chartOptions);
 
-    view.trigger('chart_ready', series);
+    var metadata = {
+        'chart-title': options.titles.title,
+        'chart-subtitle': options.titles.subtitle,
+        'chart-xAxisTitle': options.titles.xAxisTitle,
+        'chart-yAxisTitle': options.titles.yAxisTitle,
+        'source-dataset': options.credits.text,
+        'chart-url': document.URL,
+        'filters-applied': _(this.model.attributes).pairs()
+    };
+    view.trigger('chart_ready', series, metadata);
 
 };
 

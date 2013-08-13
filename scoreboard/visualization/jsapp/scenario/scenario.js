@@ -55,16 +55,18 @@ App.ScenarioChartView = Backbone.View.extend({
         var requests = [];
 
         _(this.schema['labels']).forEach(function(label_spec, label_name) {
-            var args = {
-                'dimension': this.dimensions_mapping[label_spec['facet']],
-                'value': this.model.get(label_spec['facet']),
-                'rev': this.data_revision
-            };
-            var ajax = $.getJSON(this.cube_url + '/dimension_labels', args);
-            ajax.done(function(data) {
-                meta_data[label_name] = data[label_spec['field']];
-            });
-            requests.push(ajax);
+            if (_.chain(this.schema.facets).pluck('name').contains(label_spec.facet).value()){
+                var args = {
+                    'dimension': this.dimensions_mapping[label_spec['facet']],
+                    'value': this.model.get(label_spec['facet']),
+                    'rev': this.data_revision
+                };
+                var ajax = $.getJSON(this.cube_url + '/dimension_labels', args);
+                ajax.done(function(data) {
+                    meta_data[label_name] = data;
+                });
+                requests.push(ajax);
+            }
         }, this);
 
         return requests;
@@ -136,10 +138,14 @@ App.ScenarioChartView = Backbone.View.extend({
             tooltip_attributes.push(this.multiple_series);
         }
         var multidim = this.schema['multidim'];
+        var category_facet = _(this.schema.facets).findWhere({name:this.schema['category_facet']});
+        if ( category_facet ) {
+            var highlights = category_facet.highlights;
+        }
         var chart_data = {
             'tooltip_formatter': function() {
                 var attrs = this.point.attributes;
-                var out = '<b>' + attrs[category_facet].label + '</b>';
+                var out = '<b>' + attrs[category_facet.name].label + '</b>';
                 // point value(s) and unit-measure
                 if (_.contains(tooltip_attributes, 'value')) {
                     if ( multidim ) {
@@ -226,40 +232,8 @@ App.ScenarioChartView = Backbone.View.extend({
                 }
                 return this.value;
             },
-            'title_formatter': function(){
-                if (arguments){
-                    var title = '';
-                    if (_(arguments[0]).isArray()){
-                        title = arguments[0][0];
-                        _(arguments[0].slice(1)).each(function(item, idx){
-                            var sep = ', ';
-                            var part = (item != 'Total')?item:null;
-                            if (_(part).isArray()){
-                                sep = item[0];
-                                part = (item[1] != 'Total')?item[1]:null;
-                            }
-                            if (idx >= 0 && part){
-                                title += sep;
-                                title += part;
-                            }
-                        });
-                        return title;
-                    }
-
-                    for (var i = 0; i < arguments.length; i++) {
-                        if (arguments[i] && arguments[i] != 'Total') {
-                            title += arguments[i];
-                        }
-                    }
-                    return title;
-                }
-                else{
-                    return '';
-                }
-            },
             'series_names': {},
-            'series_ending_labels': {},
-            'unit_is_pc': unit_is_pc,
+            'series_ending_labels': {}, 'unit_is_pc': unit_is_pc,
             'plotlines': this.schema['plotlines'] || false,
             'animation': this.schema['animation'] || false,
             'series-legend-label': this.schema['series-legend-label'] || 'none',
@@ -267,7 +241,7 @@ App.ScenarioChartView = Backbone.View.extend({
             'multiseries': this.multiple_series,
             'category_facet': this.schema['category_facet'],
             'subtype': this.schema.chart_subtype,
-            'highlights': this.schema.highlights,
+            'highlights': highlights,
             'sort': this.schema['sort'],
             'multidim': this.schema['multidim'],
             'chart_type': this.schema['chart_type']
@@ -321,8 +295,8 @@ App.ScenarioChartView = Backbone.View.extend({
                     }
                 }, this);
             }
-            var labels_request = $.getJSON(this.cube_url + '/dimension_options',
-                                       labels_args);
+            var labels_url = '/dimension_options_' + 'xyz'.slice(0, this.schema.multidim);
+            var labels_request = $.getJSON(this.cube_url + labels_url, labels_args);
             var dict = {'short': 'short_label', 'long': 'label', 'none': 'notation'};
             var series_names = 'notation';
             if ( this.schema['series-legend-label'] ) {
@@ -381,6 +355,12 @@ App.ScenarioChartView = Backbone.View.extend({
                     'data': datapoints
                 };
             }, this);
+            chart_data['titles'] = _.object(
+                _(this.schema.titles).map(function(parts, type){
+                    return [type, App.title_formatter(parts,
+                                                       chart_data.meta_data)];
+                }, this)
+            );
             this.data = chart_data;
             this.render();
         }, this));
@@ -417,6 +397,12 @@ App.GraphControlsView = Backbone.View.extend({
         this.update_subtitle();
     },
 
+    update_data: function(snapshots_data){
+        this.snapshots_data = snapshots_data;
+        this.model.set({'value': this.snapshots_data.length - 1});
+        this.update_chart();
+    },
+
     update_plotlines: function(new_data){
          if (! this.multiseries){
              new_data = [new_data];
@@ -425,7 +411,7 @@ App.GraphControlsView = Backbone.View.extend({
     },
 
     update_subtitle: function(){
-        var subtitle = this.snapshots_data[this.model.get('value')]['name'];
+        var subtitle = this.snapshots_data[this.model.get('value')]['ending_label'];
         this.chart.setTitle(null,
                 {
                     text: subtitle,
@@ -615,12 +601,14 @@ App.AnnotationsView = Backbone.View.extend({
                 var section_title = this.schema['annotations'] &&
                   this.schema['annotations']['title'] ||
                   'Definition and scopes:';
-                this.$el.html(this.template(
-                    {"description": chart_description,
+                var context = {
+                     "description": chart_description,
                      "section_title": section_title,
                      "indicators_details_url": this.cube_url + '/indicators',
-                     "blocks": blocks}
-                ));
+                     "blocks": blocks
+                };
+                this.trigger('metadata_ready', context);
+                this.$el.html(this.template(context));
             }
             else {
                 this.$el.empty();
@@ -633,7 +621,8 @@ App.AnnotationsView = Backbone.View.extend({
 App.ShareOptionsView = Backbone.View.extend({
 
     events: {
-        'click #csv': 'request_csv'
+        'click #csv': 'request_csv',
+        'click #excel': 'request_excel'
     },
 
     template: App.get_template('scenario/share.html'),
@@ -641,6 +630,11 @@ App.ShareOptionsView = Backbone.View.extend({
     initialize: function(options) {
         this.url = App.SCENARIO_URL;
         this.related = $('#viewlet-below-content-body').detach();
+        this.form = App.jQuery('<form>', {
+            'action': App.URL + '/export.csv',
+            'target': '_top',
+            'method': 'POST'
+        });
         this.render();
     },
 
@@ -649,27 +643,50 @@ App.ShareOptionsView = Backbone.View.extend({
         this.$el.find('form').submit();
     },
 
-    chart_ready: function(series, chart_type){
-        var action_url = App.URL + '/export.csv'
-        var form = App.jQuery('<form>', {
-            'action': action_url,
-            'target': '_top',
-            'method': 'POST'
-        }).append(App.jQuery('<input>', {
+    request_excel: function(ev){
+        ev.preventDefault();
+        App.jQuery(this.$el.find('form')).append(
+            App.jQuery('<input>', {
+                'name': 'format',
+                'value': 'xls',
+                'type': 'hidden'
+            }
+        )).submit();
+    },
+
+    metadata_ready: function(annotations){
+        App.jQuery('input[name="annotations"]', this.form).remove();
+        App.jQuery(this.form).append(App.jQuery('<input>', {
+            'name': 'annotations',
+            'value': JSON.stringify(annotations),
+            'type': 'hidden'
+        }));
+    },
+
+    chart_ready: function(series, metadata, chart_type){
+        App.jQuery('input[name="chart_data"]', this.form).remove();
+        App.jQuery(this.form).append(App.jQuery('<input>', {
             'name': 'chart_data',
             'value': JSON.stringify(series),
             'type': 'hidden'
         }));
-        App.jQuery(form).append(App.jQuery('<input>', {
+        App.jQuery('input[name="metadata"]', this.form).remove();
+        App.jQuery(this.form).append(App.jQuery('<input>', {
+            'name': 'metadata',
+            'value': JSON.stringify(metadata),
+            'type': 'hidden'
+        }));
+        App.jQuery('input[name="chart_type"]', this.form).remove();
+        App.jQuery(this.form).append(App.jQuery('<input>', {
             'name': 'chart_type',
             'value': chart_type,
             'type': 'hidden'
         }));
-        App.jQuery(form).appendTo(this.$el);
     },
 
     render: function() {
         this.$el.html(this.template({'related': this.related.html()}));
+        App.jQuery(this.form).appendTo(this.$el);
         window.addthis.button('#scoreboard-addthis', {}, {url: this.url});
     },
 

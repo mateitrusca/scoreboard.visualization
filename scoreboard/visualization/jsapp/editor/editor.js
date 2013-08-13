@@ -22,7 +22,8 @@ App.EditForm = Backbone.View.extend({
 
     update_form: function() {
         var value = this.model.get_value();
-        this.input.val(JSON.stringify(value, null, 2));  // indent 2 spaces
+        var sorted = copyObjectWithSortedKeys(value);
+        this.input.val(JSON.stringify(sorted, null, 2));  // indent 2 spaces
     },
 
     on_submit: function(evt) {
@@ -59,6 +60,8 @@ App.Editor = Backbone.View.extend({
 
     step_cls: [
         'ChartTypeEditor',
+        'StructureEditor',
+        'LayoutEditor',
         'FacetsEditor',
         'AxesEditor',
         'SeriesEditor',
@@ -109,6 +112,29 @@ App.Editor = Backbone.View.extend({
 
 });
 
+App.LayoutCollection = Backbone.Collection.extend({
+    constructor: function(value) {
+        var filtered_value = _(value).reject(function(facet){
+            return _(['all-values', 'ignore']).contains(facet.type);
+        });
+        Backbone.Collection.apply(this, [filtered_value]);
+    },
+
+    get_value: function(){
+        return this.toJSON();
+    },
+
+    presets: function(){
+        var presets = _.object(this.map(function(layout_model){
+            var key = layout_model.get('dimension') + '/' + layout_model.get('name');
+            var position = layout_model.get('position');
+            return [key, position];
+        }));
+        return presets;
+    }
+
+});
+
 
 App.EditorConfiguration = Backbone.Model.extend({
 
@@ -116,18 +142,34 @@ App.EditorConfiguration = Backbone.Model.extend({
         this.dimensions = options['dimensions'];
         this.facets = new App.FacetCollection(this.get('facets'),
                                               this.dimensions);
-        this.facets.on('change sort', this.save_facets, this);
+        this.layout_collection = new App.LayoutCollection(
+            this.get('facets')
+        );
+
+        this.facets.on('change:multidim change:type', this.rebuild_layout, this);
+        this.layout_collection.on('change', this.save_facets, this);
+    },
+
+    rebuild_layout: function(){
+        this.layout_collection = new App.LayoutCollection(
+            this.facets.get_value(
+                this.get('multidim'),
+                this.layout_collection.presets())
+        );
+        this.layout_collection.on('change', this.save_facets, this);
     },
 
     save_facets: function() {
-        this.set('facets', this.facets.get_value(this.get('multidim')));
+        var value = this.facets.get_value(
+            this.get('multidim'),
+            this.layout_collection.presets())
+        this.set('facets', value);
     },
 
     get_value: function() {
         var value = this.toJSON();
         return value;
-    }
-
+    },
 });
 
 

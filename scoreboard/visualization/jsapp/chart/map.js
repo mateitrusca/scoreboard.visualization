@@ -81,9 +81,7 @@ App.chart_library['map'] = function(view, options) {
     var map_div = $('<div class="map-chart">');
     $(container).empty().append($('<p>', {
         'id': 'map-title',
-        'text': options.title_formatter([
-                    options.meta_data.indicator,
-                    options.meta_data.breakdown])
+        'text': options.titles.title
     }));
     $(container).append(map_div);
     $(container).addClass('map-chart');
@@ -122,7 +120,7 @@ App.chart_library['map'] = function(view, options) {
                             ? name = "Macedonia, FYR"
                             : feature['name']);
                 var value_text = (value
-                                  ? App.round(value, 3) + ' ' + unit
+                                  ? App.round(value, 3) + ' ' + unit.short_label
                                   : 'n/a');
                 return [name, value_text];
             }
@@ -145,11 +143,20 @@ App.chart_library['map'] = function(view, options) {
         */
         //vertical
         draw_legend(map.paper, colorscale, 10, 10, 0, max_value,
-                {text: unit, is_pc: options.unit_is_pc[0]},
+                {text: unit.short_label, is_pc: options.unit_is_pc[0]},
                 'vertical');
     });
 
-    view.trigger('chart_ready', series);
+    var metadata = {
+        'chart-title': options.titles.title,
+        'chart-subtitle': options.titles.subtitle,
+        'chart-xAxisTitle': options.titles.xAxisTitle,
+        'chart-yAxisTitle': options.titles.yAxisTitle,
+        'source-dataset': options.credits.text,
+        'chart-url': document.URL,
+        'filters-applied': _(this.model.attributes).pairs()
+    };
+    view.trigger('chart_ready', series, metadata);
 };
 
 

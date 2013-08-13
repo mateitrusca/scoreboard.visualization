@@ -113,12 +113,15 @@ App.Visualization = Backbone.View.extend({
         var chart_type = options['schema']['chart_type'];
         var el = this.$el;
         _(options['schema']['text']).forEach(function(item) {
-            var paragraph = el.find("#the-filters ." + item['position'] + " p");
-            paragraph.text(item['value']).removeClass('default-hidden');
+            if (item['value']) {
+                var paragraph = el.find("#the-filters ." + item['position'] + " p");
+                paragraph.text(item['value']).removeClass('default-hidden');
+            }
         });
 
 
         this.chart_view.on('chart_ready', this.share.chart_ready, this.share);
+        this.metadata.on('metadata_ready', this.share.metadata_ready, this.share);
         this.chart_view.on('chart_ready', this.chart_view.chart_ready);
 
         this.filters.on('change', this.update_hashcfg, this);

@@ -1,25 +1,11 @@
+<fieldset name="chart-titles">
+  <legend>Titles</legend>
+</fieldset>
+
 <fieldset>
-  <legend>Horizontal</legend>
-
-  <label>Title</label>
-  <select class="span2" name="axis-horizontal-title">
-  {{# horizontal_title_options }}
-    <option value="{{ value }}"
-      {{# if selected }}selected{{/ if }}
-      >{{ label }}</option>
-  {{/ horizontal_title_options }}
-  </select>
-
-  <br>color: <tt>#000000</tt>
-  <br>align: <tt>right</tt>
-  <br>rotated:
-    <input type="checkbox"
-           name="axis-horizontal-rotated"
-           {{# if horizontal_rotated }}checked{{/ if }}>
-
-  <br>
+  <legend>Markers</legend>
   <label>
-    Median line
+    Horizontal Median Line
     <select class="span2" name="axis-horizontal-plotline">
     {{# horizontal_plotline_options }}
     <option value="{{ value }}"
@@ -28,23 +14,9 @@
     {{/ horizontal_plotline_options }}
     </select>
   </label>
-</fieldset>
-
-<fieldset>
-  <legend>Vertical</legend>
-
-  <label>Title</label>
-  <select class="span2" name="axis-vertical-title">
-  {{# vertical_title_options }}
-    <option value="{{ value }}"
-      {{# if selected }}selected{{/ if }}
-      >{{ label }}</option>
-  {{/ vertical_title_options }}
-  </select>
-
-  <br>
+  </br>
   <label>
-    Median line
+    Vertical Median Line
     <select class="span2" name="axis-vertical-plotline">
     {{# vertical_plotline_options }}
     <option value="{{ value }}"
@@ -80,8 +52,8 @@
 
   <br>
   <label>
-    Sort each series
     <input type="checkbox" name="axis-sort-each-series"
            {{# if sort_each_series }}checked{{/ if }}>
+    Sort multiple series independently
   </label>
 </fieldset>

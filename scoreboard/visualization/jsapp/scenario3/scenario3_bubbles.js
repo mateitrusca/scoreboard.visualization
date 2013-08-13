@@ -12,8 +12,9 @@ App.scenario3_bubbles_filters_schema = {
         "label": "(X) indicator group",
         "include_wildcard": true,
         "dimension": "indicator-group",
-        "sortBy": "nosort",
+        "sortBy": "order_in_codelist",
         "sortOrder": "asc",
+        "position": "upper-left",
         "default_value": "#random",
         "constraints": {
             
@@ -26,6 +27,7 @@ App.scenario3_bubbles_filters_schema = {
         "dimension": "indicator",
         "sortBy": "inner_order",
         "sortOrder": "asc",
+        "position": "upper-left",
         "default_value": "#random",
         "constraints": {
             "indicator-group": "x-indicator-group"
@@ -36,8 +38,9 @@ App.scenario3_bubbles_filters_schema = {
         "name": "x-breakdown-group",
         "label": "(X) breakdown group",
         "dimension": "breakdown-group",
-        "sortBy": "nosort",
+        "sortBy": "order_in_codelist",
         "sortOrder": "asc",
+        "position": "upper-left",
         "constraints": {
             "indicator": "x-indicator"
         }
@@ -49,6 +52,7 @@ App.scenario3_bubbles_filters_schema = {
         "dimension": "breakdown",
         "sortBy": "inner_order",
         "sortOrder": "asc",
+        "position": "upper-left",
         "default_value": "#random",
         "constraints": {
             "indicator": "x-indicator"
@@ -60,6 +64,7 @@ App.scenario3_bubbles_filters_schema = {
         "label": "(X) unit of measure",
         "dimension": "unit-measure",
         "default_value": "#random",
+        "position": "upper-left",
         "constraints": {
             "indicator": "x-indicator",
             "breakdown": "x-breakdown"
@@ -71,7 +76,7 @@ App.scenario3_bubbles_filters_schema = {
         "label": "(Y) indicator group",
         "dimension": "indicator-group",
         "include_wildcard": true,
-        "sortBy": "nosort",
+        "sortBy": "order_in_codelist",
         "sortOrder": "asc",
         "position": "upper-right",
         "default_value": "#random",
@@ -97,7 +102,7 @@ App.scenario3_bubbles_filters_schema = {
         "name": "y-breakdown-group",
         "label": "(Y) breakdown group",
         "dimension": "breakdown-group",
-        "sortBy": "nosort",
+        "sortBy": "order_in_codelist",
         "sortOrder": "asc",
         "position": "upper-right",
         "constraints": {
@@ -135,7 +140,7 @@ App.scenario3_bubbles_filters_schema = {
         "include_wildcard": true,
         "label": "(Z) indicator group",
         "dimension": "indicator-group",
-        "sortBy": "nosort",
+        "sortBy": "order_in_codelist",
         "sortOrder": "asc",
         "position": "bottom-right",
         "default_value": "#random",
@@ -148,7 +153,7 @@ App.scenario3_bubbles_filters_schema = {
         "name": "z-indicator",
         "label": "(Z) indicator",
         "dimension": "indicator",
-        "sortBy": "nosort",
+        "sortBy": "order_in_codelist",
         "sortOrder": "asc",
         "position": "bottom-right",
         "default_value": "#random",
@@ -161,7 +166,7 @@ App.scenario3_bubbles_filters_schema = {
         "name": "z-breakdown-group",
         "label": "(Z) breakdown group",
         "dimension": "breakdown-group",
-        "sortBy": "nosort",
+        "sortBy": "order_in_codelist",
         "sortOrder": "asc",
         "position": "bottom-right",
         "constraints": {
@@ -173,7 +178,7 @@ App.scenario3_bubbles_filters_schema = {
         "name": "z-breakdown",
         "label": "(Z) breakdown",
         "dimension": "breakdown",
-        "sortBy": "nosort",
+        "sortBy": "order_in_codelist",
         "sortOrder": "asc",
         "position": "bottom-right",
         "default_value": "#random",
@@ -284,33 +289,35 @@ App.scenario3_bubbles_filters_schema = {
         "y": "values"
     },
     "labels": {
-        "title_x": {
-            "facet": "x-indicator",
-            "field": "short_label"
+        "time-period": {
+          "facet": "time-period"
         },
-        "title_y": {
-            "facet": "y-indicator",
-            "field": "short_label"
+        "x-breakdown": {
+          "facet": "x-breakdown"
         },
-        "title_z": {
-            "facet": "z-indicator",
-            "field": "short_label"
+        "x-indicator": {
+          "facet": "x-indicator"
         },
-        "period_label": {
-            "facet": "time-period",
-            "field": "label"
+        "x-unit-measure": {
+          "facet": "x-unit-measure"
         },
-        "breakdown_x": {
-            "facet": "x-breakdown",
-            "field": "label"
+        "y-breakdown": {
+          "facet": "y-breakdown"
         },
-        "breakdown_y": {
-            "facet": "y-breakdown",
-            "field": "label"
+        "y-indicator": {
+          "facet": "y-indicator"
         },
-        "breakdown_z": {
-            "facet": "z-breakdown",
-            "field": "label"
+        "y-unit-measure": {
+          "facet": "y-unit-measure"
+        },
+        "z-breakdown": {
+          "facet": "z-breakdown"
+        },
+        "z-indicator": {
+          "facet": "z-indicator"
+        },
+        "z-unit-measure": {
+          "facet": "z-unit-measure"
         }
     },
     "tooltips": {
@@ -328,7 +335,59 @@ App.scenario3_bubbles_filters_schema = {
         {"value": "Bubbles size (Z) proportional to:",
          "position": "bottom-right"
         }
-    ]
+    ],
+    "titles": {
+        "title": [
+          {
+            "prefix": null,
+            "suffix": null,
+            "facet_name": "time-period",
+            "format": "short_label"
+          }
+        ],
+        "subtitle": [
+          {
+            "prefix": "Size of bubbles (Z):",
+            "suffix": "<br>",
+            "facet_name": "z-indicator",
+            "format": "short_label"
+          },
+          {
+            "prefix": "by ",
+            "suffix": "<br>",
+            "facet_name": "z-breakdown",
+            "format": "label"
+          }
+        ],
+        "xAxisTitle": [
+          {
+            "prefix": null,
+            "suffix": "<br>",
+            "facet_name": "x-indicator",
+            "format": "short_label"
+          },
+          {
+            "prefix": "by ",
+            "suffix": "<br>",
+            "facet_name": "x-breakdown",
+            "format": "label"
+          }
+        ],
+        "yAxisTitle": [
+          {
+            "prefix": null,
+            "suffix": "<br>",
+            "facet_name": "y-indicator",
+            "format": "short_label"
+          },
+          {
+            "prefix": "by ",
+            "suffix": "<br>",
+            "facet_name": "y-breakdown",
+            "format": "label"
+          }
+        ]
+    }
 };
 
 

@@ -279,6 +279,36 @@ App.disable_legend = function(chartOptions, options){
     }
 }
 
+App.set_default_chart_options = function(chartOptions){
+    var menuItems = _.rest(Highcharts.getOptions().exporting.buttons.contextButton.menuItems, 2);
+    var options = {
+        exporting: {
+            buttons: {
+                contextButton: {
+                    enabled: false
+                },
+                exportButton: {
+                    text: 'Download',
+                    // Use only the download related menu items from the default context button
+                    menuItems: menuItems
+                },
+                printButton: {
+                    text: 'Print Chart',
+                    onclick: function () {
+                        this.print();
+                    }
+                }
+            }
+        },
+        navigation: {
+            buttonOptions: {
+            }
+        }
+    }
+    _(chartOptions).extend(options);
+}
+
+
 App.tick_labels_formatter = function(max100) {
     if (this.value < 0){
         return null;
@@ -287,6 +317,37 @@ App.tick_labels_formatter = function(max100) {
         return null;
     }
     return this.value;
+}
+
+App.title_formatter = function(parts, meta_data){
+    parts = _(parts).map(function(part){
+        if(!part.prefix){
+            part = _(part).omit('prefix');
+        }
+        if (!meta_data){
+            part.text = part.facet_name + "(" + part.format + ")";
+        }
+        else if (_(meta_data).has(part.facet_name)){
+            part.text = meta_data[part.facet_name][part.format];
+        }
+        else {
+            part.text = '';
+        }
+        return part;
+    });
+    var title = '';
+    _(parts).each(function(item, idx){
+        var prefix = item.prefix || '';
+        if (idx > 0 && !parts[idx-1].suffix && !prefix){
+            prefix = ' ';
+        }
+        var suffix = item.suffix || '';
+        var part = (item.text != 'Total')?item.text:null;
+        if (part){
+            title += (prefix + part + suffix);
+        }
+    });
+    return title;
 }
 
 

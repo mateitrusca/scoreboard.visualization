@@ -22,16 +22,21 @@ App.scenario7_filters_schema = {
     },
     "category_facet": "ref-area",
     "chart_type": "columns",
+    "credits": {
+        "text": "European Commission, Digital Agenda Scoreboard",
+        "link": "http://ec.europa.eu/digital-agenda/en/graphs/"
+    },
     "facets": [
     {
         "constraints": {},
+        "default_value": "#random",
         "dimension": "indicator-group",
         "include_wildcard": true,
         "label": "Indicator group",
         "name": "indicator-group",
-        "sortBy": "nosort",
+        "position": "upper-left",
+        "sortBy": "order_in_codelist",
         "sortOrder": "asc",
-        "default_value": "#random",
         "type": "select"
     },
     {
@@ -42,6 +47,7 @@ App.scenario7_filters_schema = {
         "dimension": "indicator",
         "label": "Indicator",
         "name": "indicator",
+        "position": "upper-left",
         "sortBy": "inner_order",
         "sortOrder": "asc",
         "type": "select"
@@ -56,7 +62,8 @@ App.scenario7_filters_schema = {
         "include_wildcard": false,
         "label": "Breakdown group",
         "name": "breakdown-group",
-        "sortBy": "nosort",
+        "position": "upper-left",
+        "sortBy": "order_in_codelist",
         "sortOrder": "asc",
         "type": "select"
     },
@@ -70,6 +77,9 @@ App.scenario7_filters_schema = {
         "dimension": "unit-measure",
         "label": "Unit of measure",
         "name": "unit-measure",
+        "position": "upper-left",
+        "sortBy": "order_in_codelist",
+        "sortOrder": "asc",
         "type": "select"
     },
     {
@@ -82,6 +92,7 @@ App.scenario7_filters_schema = {
         "dimension": "time-period",
         "label": "Period",
         "name": "time-period",
+        "position": "upper-left",
         "sortBy": "label",
         "sortOrder": "reverse",
         "type": "select"
@@ -96,8 +107,10 @@ App.scenario7_filters_schema = {
         },
         "default_value": ["EU27", "#random"],
         "dimension": "ref-area",
+        "highlights": [],
         "label": "Select the countries",
         "name": "ref-area",
+        "position": "upper-left",
         "sortBy": "label",
         "sortOrder": "asc",
         "type": "multiple_select"
@@ -113,6 +126,9 @@ App.scenario7_filters_schema = {
         "dimension": "breakdown",
         "label": "Breakdown",
         "name": "breakdown",
+        "position": "upper-left",
+        "sortBy": "order_in_codelist",
+        "sortOrder": "asc",
         "type": "all-values"
     },
     {
@@ -122,30 +138,59 @@ App.scenario7_filters_schema = {
     }
     ],
     "labels": {
-        "ordinate": {
-            "facet": "unit-measure",
-            "field": "short_label"
+        "indicator": {
+          "facet": "indicator"
         },
-        "subtitle": {
-            "facet": "time-period",
-            "field": "label"
+        "unit-measure": {
+          "facet": "unit-measure"
         },
-        "title": {
-            "facet": "indicator",
-            "field": "short_label"
+        "breakdown-group": {
+          "facet": "breakdown-group"
         },
-        "title2": {
-            "facet": "breakdown-group",
-            "field": "label"
+        "time-period": {
+          "facet": "time-period"
         }
     },
     "multiple_series": "breakdown",
     "series-legend-label": "long",
-    "series-point-label": "long",
+    "series-point-label": "none",
     "sort": {
         "by": "value",
         "each_series": false,
         "order": -1
+    },
+    "titles": {
+        "title": [
+          {
+            "facet_name": "indicator",
+            "prefix": null,
+            "suffix": null,
+            "format": "label"
+          },
+          {
+            "facet_name": "breakdown-group",
+            "prefix": ", by ",
+            "suffix": null,
+            "format": "label"
+          }
+        ],
+        "subtitle": [
+          {
+            "facet_name": "time-period",
+            "prefix": null,
+            "suffix": null,
+            "format": "label"
+          }
+        ],
+        "xAxisTitle": [],
+        "yAxisTitle": [
+          {
+            "facet_name": "unit-measure",
+            "prefix": null,
+            "suffix": null,
+            "format": "short_label"
+          }
+        ]
     },
     "tooltips": {
         "flag": true,

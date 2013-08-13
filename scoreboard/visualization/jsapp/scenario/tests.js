@@ -496,7 +496,8 @@ describe('ScenarioChartViewParameters', function() {
         var chart = new App.ScenarioChartView({
             model: this.model,
             schema: {
-                labels: {title: {facet: 'filter1', field: 'short_label'}}
+                facets: [{name: 'filter1', dimension: 'dim1', label:'Indicator'}],
+                labels: {title: {facet: 'filter1'}}
             },
             scenario_chart: this.scenario_chart,
             filters_schema: [{name: 'filter1', dimension: 'dim1'}]
@@ -527,11 +528,11 @@ describe('ScenarioChartViewParameters', function() {
         var chart = new App.ScenarioChartView({
             model: this.model,
             schema: {
-                facets: [],
+                facets: [{name: 'indicator', dimension: 'dim1', label:'Indicator'}],
                 labels: {
-                    label1: {facet: 'indicator', field: 'label'},
-                    label2: {facet: 'indicator', field: 'short_label'},
-                    label3: {facet: 'indicator', field: 'short_label'}
+                    label1: {facet: 'indicator'},
+                    label2: {facet: 'indicator'},
+                    label3: {facet: 'indicator'}
                 }
             },
             scenario_chart: this.scenario_chart
@@ -541,9 +542,49 @@ describe('ScenarioChartViewParameters', function() {
         App.respond_json(server.requests[1], label_resp);
         App.respond_json(server.requests[2], label_resp);
         App.respond_json(server.requests[3], label_resp);
-        expect(chart.data.meta_data.label1).to.equal('normal_label');
-        expect(chart.data.meta_data.label2).to.equal('short_label');
-        expect(chart.data.meta_data.label3).to.equal('short_label');
+        expect(chart.data.meta_data.label1).to.deep.equal(label_resp);
+        expect(chart.data.meta_data.label2).to.deep.equal(label_resp);
+        expect(chart.data.meta_data.label3).to.deep.equal(label_resp);
+    });
+
+
+    it('should fetch labels from the right url according to schema.multidim', function() {
+        var server = this.sandbox.server;
+        var chart = new App.ScenarioChartView({
+            model: this.model,
+            schema: {
+                facets: [{name: 'indicator', dimension: 'dim1', label:'Indicator'}],
+                multiple_series: 'country',
+                labels: {label1: {facet: 'indicator', field: 'label'}},
+                multidim: 1
+            },
+            filters_schema: [
+                {type: 'select',
+                 name: 'indicator',
+                 label: 'Select one indicator',
+                 dimension: 'indicator',
+                 constraints: { }
+                }
+            ],
+            values_schema: [
+                 {type: 'all-values', dimension: 'dimension1'},
+                 {type: 'all-values', dimension: 'value1'}
+            ],
+            scenario_chart: this.scenario_chart
+        });
+        this.model.set({
+            'indicator': 'ind1'
+        });
+        var url = server.requests[0].url;
+        expect(url.indexOf('dimension_options_x?')).to.not.eql(-1);
+        chart.schema.multidim = 2;
+        chart.load_chart();
+        var url = server.requests[2].url;
+        expect(url.indexOf('dimension_options_xy?')).to.not.eql(-1);
+        chart.schema.multidim = 3;
+        chart.load_chart();
+        var url = server.requests[4].url;
+        expect(url.indexOf('dimension_options_xyz?')).to.not.eql(-1);
     });
 
 
@@ -593,6 +634,7 @@ describe('ScenarioChartViewParameters', function() {
             model: this.model,
             schema: {
                 multidim: 3,
+                facets: [{name: 'indicator', dimension: 'dim1', label:'Indicator'}],
                 labels: {label1: {facet: 'indicator', field: 'label'}}
             },
             filters_schema: [
@@ -729,6 +771,7 @@ describe('ScenarioChartView', function() {
         this.chart = new App.ScenarioChartView({
             model: this.model,
             schema: {
+                facets: [{name: 'time-period', dimension: 'dim1', label:'period'}],
                 labels: {extra_label: {facet: 'time-period', field: 'label'}}
             },
             filters_schema: [
@@ -769,7 +812,8 @@ describe('ScenarioChartView', function() {
         App.respond_json(server.requests[3],
             {'label': 'Year 2003', 'short_label': 'lbl 2'});
         expect(this.scenario_chart.calledOnce).to.equal(true);
-        expect(this.chart.data.meta_data['extra_label']).to.equal('Year 2003');
+        expect(this.chart.data.meta_data['extra_label']).to.deep.equal(
+            {'label': 'Year 2003', 'short_label': 'lbl 2'});
     });
 
     it('should fetch data from server', function() {
@@ -836,6 +880,83 @@ describe('ScenarioChartView', function() {
         expect(series[0]['data'].length).to.equal(2);
     });
 
+    describe('title formatter', function() {
+        it('should avoid sticking parts together', function() {
+            var parts = [
+                {facet_name: 'ind', prefix: null, format: "short_label"},
+                {facet_name: 'brk', format: "label"}
+            ];
+            var meta_data = {
+                ind: {'label': 'label1', 'short_label': 'short1'},
+                brk: {'label': 'label2', 'short_label': 'short2'},
+            }
+            var title = App.title_formatter(parts, meta_data);
+            expect(title).to.equal('short1 label2');
+        });
+
+        it('should allow prefix and suffix for the first title part', function() {
+            var parts = [
+                {facet_name: 'ind', prefix: '(', suffix: ')', format: "short_label"},
+            ];
+            var meta_data = {
+                ind: {'label': 'label1', 'short_label': 'short1'}
+            }
+            var title = App.title_formatter(parts, meta_data);
+            expect(title).to.equal('(short1)');
+        });
+
+        it('should use the specified prefix', function() {
+            var parts = [
+                {facet_name: 'ind', format: 'label'},
+                {prefix: '-', facet_name: 'brk', format: 'label'}
+            ];
+            var meta_data = {
+                ind: {'label': 'label1', 'short_label': 'short1'},
+                brk: {'label': 'label2', 'short_label': 'short2'},
+            }
+            var title = App.title_formatter(parts, meta_data);
+            expect(title).to.equal('label1-label2');
+        });
+
+        it('should use the specified suffix', function() {
+            var parts = [
+                {facet_name: 'ind', format: 'label'},
+                {suffix: '-', facet_name: 'brk', format: 'label'}
+            ];
+            var meta_data = {
+                ind: {'label': 'label1', 'short_label': 'short1'},
+                brk: {'label': 'label2', 'short_label': 'short2'},
+            }
+            var title = App.title_formatter(parts, meta_data);
+            expect(title).to.equal('label1 label2-');
+        });
+
+        it('should ignore "Total" with prefix', function() {
+            var parts = [
+                {facet_name: 'ind', format: 'short_label'},
+                {prefix: '-', facet_name: 'brk'}
+            ];
+            var meta_data = {
+                ind: {'label': 'label1', 'short_label': 'short1'},
+                brk: {'label': 'label2', 'short_label': 'short2'},
+            }
+            var title = App.title_formatter(parts, meta_data);
+            expect(title).to.equal('short1');
+        });
+
+        it('should ignore "Total" without prefix', function() {
+            var parts = [
+                {facet_name: 'ind', format: 'short_label'},
+                {facet_name: 'brk'}
+            ];
+            var meta_data = {
+                ind: {'label': 'label1', 'short_label': 'short1'},
+                brk: {'label': 'label2', 'short_label': 'short2'},
+            }
+            var title = App.title_formatter(parts, meta_data);
+            expect(title).to.equal('short1');
+        });
+    })
 });
 
 

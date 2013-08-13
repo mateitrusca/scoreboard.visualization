@@ -124,7 +124,7 @@ App.SelectFilter = Backbone.View.extend({
 
             // Sort items
             var sortBy = this.sortBy;
-            if(this.sortOrder === 'nosort'){
+            if(this.sortOrder === 'order_in_codelist'){
                 this.dimension_options = data[options];
             }else{
                 this.dimension_options = _(data['options']).sortBy(function(item){
@@ -346,14 +346,6 @@ App.FiltersBox = Backbone.View.extend({
                 include_wildcard: item['include_wildcard'],
                 constraints: item['constraints']
             });
-            // TODO: temporary fix until default_value is present in the configurator
-            if (item['type'] == 'multiple_select' && filter.name == 'ref-area' && !filter.default_value) {
-                if ( filter.chart_type == 'lines' ) {
-                    filter.default_value = ['EU27'];
-                } else {
-                    filter.default_value = ['EU27', 'BE', 'BG', 'CZ', 'DK', 'DE', 'EE', 'IE', 'EL', 'ES', 'FR', 'IT', 'CY', 'LV', 'LT', 'LU', 'HU', 'MT', 'NL', 'AT', 'PL', 'PT', 'RO', 'SI', 'SK', 'FI', 'SE', 'UK'];
-                }
-            }
             this.filters.push(filter);
             if(item.position == 'upper-right' || item.type == 'multiple_select'){
                 $(filter.el).appendTo($('.upper-right', this.$el));

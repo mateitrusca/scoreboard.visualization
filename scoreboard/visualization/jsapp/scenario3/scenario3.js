@@ -47,7 +47,7 @@ App.scenario3_filters_schema = {
         "constraints": {},
         "dimension": "indicator-group",
         "include_wildcard": true,
-        "sortBy": "nosort",
+        "sortBy": "order_in_codelist",
         "sortOrder": "asc",
         "type": "select"
     },
@@ -71,7 +71,7 @@ App.scenario3_filters_schema = {
             "indicator": "x-indicator"
         },
         "dimension": "breakdown-group",
-        "sortBy": "nosort",
+        "sortBy": "order_in_codelist",
         "sortOrder": "asc",
         "type": "ignore"
     },
@@ -107,7 +107,7 @@ App.scenario3_filters_schema = {
         "default_value": "#random",
         "dimension": "indicator-group",
         "include_wildcard": true,
-        "sortBy": "nosort",
+        "sortBy": "order_in_codelist",
         "sortOrder": "asc",
         "position": "upper-right",
         "type": "select"
@@ -133,7 +133,7 @@ App.scenario3_filters_schema = {
             "indicator": "y-indicator"
         },
         "dimension": "breakdown-group",
-        "sortBy": "nosort",
+        "sortBy": "order_in_codelist",
         "sortOrder": "asc",
         "position": "upper-right",
         "type": "ignore"
@@ -217,33 +217,26 @@ App.scenario3_filters_schema = {
     }
     ],
     "labels": {
-        "breakdown_x": {
-            "facet": "x-breakdown",
-            "field": "label"
+        "time-period": {
+          "facet": "time-period"
         },
-        "breakdown_y": {
-            "facet": "y-breakdown",
-            "field": "label"
+        "x-breakdown": {
+          "facet": "x-breakdown"
         },
-        "period_label": {
-            "facet": "time-period",
-            "field": "label"
+        "x-indicator": {
+          "facet": "x-indicator"
         },
-        "title_x": {
-            "facet": "x-indicator",
-            "field": "short_label"
+        "y-breakdown": {
+          "facet": "y-breakdown"
         },
-        "title_y": {
-            "facet": "y-indicator",
-            "field": "short_label"
+        "y-indicator": {
+          "facet": "y-indicator"
         },
-        "unit_x": {
-            "facet": "x-unit-measure",
-            "field": "label"
+        "x-unit-measure": {
+          "facet": "x-unit-measure"
         },
-        "unit_y": {
-            "facet": "y-unit-measure",
-            "field": "short_label"
+        "y-unit-measure": {
+          "facet": "y-unit-measure"
         }
     },
     "multidim": 2,
@@ -253,7 +246,12 @@ App.scenario3_filters_schema = {
         "y": "values"
     },
     "series-legend-label": "long",
-    "series-point-label": "long",
+    "series-point-label": "short",
+    "sort": {
+        "by": "category",
+        "each_series": false,
+        "order": 1
+    },
     "text": [
       {
         "position": "upper-left",
@@ -262,14 +260,72 @@ App.scenario3_filters_schema = {
       {
         "position": "upper-right",
         "value": "Vertical axis"
-      }
+      },
+      {
+        "value": "",
+        "position": "bottom-left"
+      },
+      {
+        "value": "",
+        "position": "bottom-right"
+      }      
     ],
+    "titles": {
+        "title": [
+          {
+            "prefix": null,
+            "suffix": null,
+            "facet_name": "time-period",
+            "format": "short_label"
+          }
+        ],
+        "subtitle": [],
+        "xAxisTitle": [
+          {
+            "prefix": null,
+            "suffix": null,
+            "facet_name": "x-indicator",
+            "format": "label"
+          },
+          {
+            "prefix": ", by ",
+            "suffix": null,
+            "facet_name": "x-breakdown",
+            "format": "label"
+          },
+          {
+            "prefix": " (",
+            "suffix": ")",
+            "facet_name": "x-unit-measure",
+            "format": "label"
+          }
+        ],
+        "yAxisTitle": [
+          {
+            "prefix": null,
+            "suffix": null,
+            "facet_name": "y-indicator",
+            "format": "label"
+          },
+          {
+            "prefix": "<br>by ",
+            "suffix": null,
+            "facet_name": "y-breakdown",
+            "format": "label"
+          },
+          {
+            "prefix": "<br>(",
+            "suffix": ")",
+            "facet_name": "y-unit-measure",
+            "format": "label"
+          }
+        ]
+    },
     "tooltips": {
         "flag": true,
         "note": true,
         "unit-measure": true
-    },
-    "height": "500"
+    }
 };
 
 

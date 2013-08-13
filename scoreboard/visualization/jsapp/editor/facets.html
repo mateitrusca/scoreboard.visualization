@@ -1,39 +1,9 @@
-<table>
-  <thead>
-    <td></td>
-    <td>name</td>
-    <td>type</td>
-    <td>sort</td>
-    <td>"any"</td>
-    {{# if chart_is_multidim }}<td>multidim</td>{{/ if }}
-  </thead>
-
-  <tbody>
-  </tbody>
-</table>
+<div class="facets">
+</div>
 
 <div class="editor-facets-axes">
-  <label>
-    Multiple series by
-    <select name="multiple_series">
-      <option value="">--</option>
-      {{# series_options }}
-        <option value="{{ name }}"
-          {{# if selected }}selected{{/ if }}
-          >{{ label }}</option>
-      {{/ series_options }}
-    </select>
-  </label>
-
-  {{# if err_too_few }}
-    too few facets remaining for categories
-  {{/ if }}
-
-  {{# if err_too_many }}
-    too many facets remaining for categories
-  {{/ if }}
-
-  {{# if category_facet }}
-    categories by {{ category_facet.label }}
-  {{/ if }}
+  <div name="multiple-series-slot">
+  </div>
+  <div class="categories-by">
+  </div>
 </div>

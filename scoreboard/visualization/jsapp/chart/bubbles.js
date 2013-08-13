@@ -53,7 +53,7 @@ App.chart_library['bubbles'] = function(view, options) {
             }
         },
         title: {
-            text: options.meta_data['period_label'],
+            text: options.titles.title,
             align: 'center',
             style: {
                 color: '#000000',
@@ -61,9 +61,7 @@ App.chart_library['bubbles'] = function(view, options) {
             }
         },
         subtitle: {
-            text: options['title_formatter'](
-                    'Bubbles size (Z): ', options.meta_data['title_z'],
-                    '<br>', options.meta_data['breakdown_z']),
+            text: options.titles.subtitle,
             style: {
                 color: '#000000',
                 width: 600,
@@ -75,10 +73,7 @@ App.chart_library['bubbles'] = function(view, options) {
             maxPadding: 0.1,
             title: {
                 enabled: true,
-                text: options['title_formatter'](
-                        options.meta_data['title_x'],
-                        '<br>',
-                        options.meta_data['breakdown_x']),
+                text: options.titles.xAxisTitle,
                 style: {
                     color: '#000000',
                     width: 500,
@@ -101,10 +96,7 @@ App.chart_library['bubbles'] = function(view, options) {
             minPadding: 0.1,
             maxPadding: 0.1,
             title: {
-                text: options['title_formatter'](
-                        options.meta_data['title_y'],
-                        '<br>',
-                        options.meta_data['breakdown_y']),
+                text: options.titles.yAxisTitle,
                 style: {
                     color: '#000000',
                     fontWeight: 'bold',
@@ -154,13 +146,23 @@ App.chart_library['bubbles'] = function(view, options) {
         series: init_series
     };
 
+    App.set_default_chart_options(chartOptions);
     if (!options['legend']){
         App.disable_legend(chartOptions, options);
     }
 
     var chart = new Highcharts.Chart(chartOptions);
 
-    view.trigger('chart_ready', series, options['chart_type']);
+    var metadata = {
+        'chart-title': options.titles.title,
+        'chart-subtitle': options.titles.subtitle,
+        'chart-xAxisTitle': options.titles.xAxisTitle,
+        'chart-yAxisTitle': options.titles.yAxisTitle,
+        'source-dataset': options.credits.text,
+        'chart-url': document.URL,
+        'filters-applied': _(this.model.attributes).pairs()
+    };
+    view.trigger('chart_ready', series, metadata, options['chart_type']);
 
     if (options['plotlines']){
         App.add_plotLines(chart, series[0], options['plotlines']);
@@ -181,8 +183,7 @@ App.chart_library['bubbles'] = function(view, options) {
             $('#the-filters .footer').append(App.chart_controls.$el);
         }else{
             App.chart_controls.chart = chart;
-            App.chart_controls.snapshots_data = series;
-            App.chart_controls.update_chart();
+            App.chart_controls.update_data(series);
         };
     }
 

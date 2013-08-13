@@ -60,14 +60,14 @@ describe('ChartTypeEditor', function() {
 
 });
 
-
-describe('FacetsEditor', function() {
+describe('StructureEditor', function() {
     "use strict";
 
     var $ = App.jQuery;
 
     beforeEach(function() {
         this.sandbox = sinon.sandbox.create();
+        this.sandbox.useFakeServer();
     });
 
     afterEach(function () {
@@ -96,19 +96,18 @@ describe('FacetsEditor', function() {
                     {type_label: 'dimension', notation: 'time-period'}
                 ]
             });
-            var view = new App.FacetsEditor({model: model});
-
+            var view = new App.StructureEditor({model: model});
             expect(_(model.get('facets')).pluck('dimension')).to.deep.equal([
                 'indicator-group', 'indicator', 'breakdown-group', 'breakdown',
                 'unit-measure', 'ref-area', 'time-period', 'value'
             ]);
         });
 
-        it('should save filter name same as dimension', function() {
+        it('should save filter name same as dimension by default', function() {
             var model = new App.EditorConfiguration({}, {
                 dimensions: [{type_label: 'dimension', notation: 'time-period'}]
             });
-            var view = new App.FacetsEditor({model: model});
+            var view = new App.StructureEditor({model: model});
             expect(model.get('facets')[0]['name']).to.equal('time-period');
             expect(model.get('facets')[0]['dimension']).to.equal('time-period');
         });
@@ -117,7 +116,7 @@ describe('FacetsEditor', function() {
             var model = new App.EditorConfiguration({}, {
                 dimensions: [{type_label: 'dimension', notation: 'time-period'}]
             });
-            var view = new App.FacetsEditor({model: model});
+            var view = new App.StructureEditor({model: model});
             view.$el.find('select[name="type"]').val('multiple_select').change();
             expect(model.get('facets')[0]['type']).to.equal('multiple_select');
         });
@@ -133,30 +132,28 @@ describe('FacetsEditor', function() {
                     {type_label: 'dimension', notation: 'time-period'}
                 ]
             });
-            var view = new App.FacetsEditor({model: model});
+            var view = new App.StructureEditor({model: model});
             expect(_(model.get('facets')).pluck('dimension')).to.deep.equal(
-                ['time-period', 'indicator', 'value']);
+                ['indicator', 'time-period', 'value']);
         });
 
         it('should remove facets with no corresponding dimension', function() {
             var model = new App.EditorConfiguration({
                 facets: [{name: 'time-period', type: 'multiple_select'}]
             }, {dimensions: []});
-            var view = new App.FacetsEditor({model: model});
+            var view = new App.StructureEditor({model: model});
             expect(_(model.get('facets')).pluck('dimension')).to.deep.equal(
                 ['value']);
         });
 
     });
-
     describe('facet type', function() {
 
         it('should default to "select"', function() {
-            var view = new App.FacetsEditor({
-                model: new App.EditorConfiguration({}, {
+            var model = new App.EditorConfiguration({}, {
                     dimensions: [{type_label: 'dimension', notation: 'dim1'}]
-                })
-            });
+                });
+            var view = new App.StructureEditor({model: model});
             var facet0 = view.model.toJSON()['facets'][0];
             expect(facet0['type']).to.equal('select');
         });
@@ -167,17 +164,18 @@ describe('FacetsEditor', function() {
             }, {
                 dimensions: [{type_label: 'dimension', notation: 'time-period'}]
             });
-            var view = new App.FacetsEditor({model: model});
+            var view = new App.StructureEditor({model: model});
             var select = view.$el.find('select[name="type"]');
             expect(select.val()).to.equal('multiple_select');
         });
 
     });
 
+
     describe('multiple series', function() {
 
         it('should display list of series options', function() {
-            var view = new App.FacetsEditor({
+            var view = new App.StructureEditor({
                 model: new App.EditorConfiguration({
                     facets: [
                         {name: 'dim3', type: 'all-values'},
@@ -199,7 +197,7 @@ describe('FacetsEditor', function() {
                     {name: 'dim4', type: 'all-values'}
                 ]
             }, {dimensions: four_dimensions});
-            var view = new App.FacetsEditor({model: model});
+            var view = new App.StructureEditor({model: model});
             expect(model.get('multiple_series')).to.be.null;
             view.$el.find('[name="multiple_series"]').val('dim3').change();
             expect(model.get('multiple_series')).to.equal('dim3');
@@ -213,7 +211,7 @@ describe('FacetsEditor', function() {
                 ],
                 multiple_series: 'dim3'
             }, {dimensions: four_dimensions});
-            var view = new App.FacetsEditor({model: model});
+            var view = new App.StructureEditor({model: model});
             var select = view.$el.find('[name="multiple_series"]');
             expect(select.val()).to.equal('dim3');
         });
@@ -226,7 +224,7 @@ describe('FacetsEditor', function() {
             var model = new App.EditorConfiguration({
                 'facets': [{name: 'dim2', type: 'ignore'}]
             }, {dimensions: four_dimensions});
-            var view = new App.FacetsEditor({model: model});
+            var view = new App.StructureEditor({model: model});
             expect(model.get('facets')[3]['constraints']).to.deep.equal(
                 {'dim1': 'dim1', 'dim3': 'dim3'});
         });
@@ -239,10 +237,39 @@ describe('FacetsEditor', function() {
             var model = new App.EditorConfiguration({
                 facets: [{name: 'dim3', type: 'all-values'}]
             }, {dimensions: four_dimensions});
-            var view = new App.FacetsEditor({model: model});
+            var view = new App.StructureEditor({model: model});
             expect(view.facet_roles.err_too_few).to.be.false;
             view.$el.find('[name="multiple_series"]').val('dim3').change();
             expect(view.facet_roles.err_too_few).to.be.true;
+        });
+
+        it('should update category facet section', function() {
+            var model = new App.EditorConfiguration({
+                facets: [{name: 'dim3', type: 'select', label:'dimension3'}]
+            }, {dimensions: four_dimensions});
+            var view = new App.StructureEditor({model: model});
+            sinon.spy(view.categoryby, 'render');
+            expect(view.categoryby.model.get('err_too_few')).to.be.true;
+            view.$el.find('[data-name="dim3"] [name="type"]').val('all-values').change();
+            expect(view.categoryby.model.get('err_too_few')).to.be.false;
+
+            expect(view.$el.find('[name="categories-by"] .alert').text().trim()).to.equal(
+            'Categories by dim3');
+        });
+
+        it('should update category section when selecting multipleseries', function(){
+            var model = new App.EditorConfiguration({
+                facets: [{name: 'dim1', type: 'select', label: 'dimension1'},
+                         {name: 'dim3', type: 'select'}]
+            }, {dimensions: four_dimensions});
+            var view = new App.StructureEditor({model: model});
+            view.$el.find('[data-name="dim3"] [name="type"]').val('all-values').change();
+            view.$el.find('[data-name="dim4"] [name="type"]').val('all-values').change();
+            view.$el.find('[name="multiple_series"]').val('dim3').change();
+            expect(view.model.attributes.multiple_series).to.equal('dim3');
+            expect(view.model.attributes.category_facet).to.equal('dim4');
+            expect(view.categoryby.$el.find('.alert').text().trim()).to.equal(
+            'Categories by dim4');
         });
 
         it('should warn if there is more than one category', function() {
@@ -253,7 +280,7 @@ describe('FacetsEditor', function() {
                 ],
                 multiple_series: 'dim3'
             }, {dimensions: four_dimensions});
-            var view = new App.FacetsEditor({model: model});
+            var view = new App.StructureEditor({model: model});
             expect(view.facet_roles.err_too_many).to.be.false;
             view.$el.find('[name="multiple_series"]').val('').change();
             expect(view.facet_roles.err_too_many).to.be.true;
@@ -267,7 +294,7 @@ describe('FacetsEditor', function() {
                 ],
                 multiple_series: 'dim3'
             }, {dimensions: four_dimensions});
-            var view = new App.FacetsEditor({model: model});
+            var view = new App.StructureEditor({model: model});
             expect(view.facet_roles.category_facet['name']).to.equal('dim4');
         });
 
@@ -279,7 +306,7 @@ describe('FacetsEditor', function() {
                 ],
                 multiple_series: 'dim3'
             }, {dimensions: four_dimensions});
-            var view = new App.FacetsEditor({model: model});
+            var view = new App.StructureEditor({model: model});
             expect(model.get('category_facet')).to.equal('dim4');
         });
 
@@ -288,7 +315,7 @@ describe('FacetsEditor', function() {
     describe('constraints between filters', function() {
 
         it('should generate no constraints for first filter', function() {
-            var view = new App.FacetsEditor({
+            var view = new App.StructureEditor({
                 model: new App.EditorConfiguration({}, {
                     dimensions: four_dimensions})});
             var constr0 = view.model.toJSON()['facets'][0]['constraints'];
@@ -296,7 +323,7 @@ describe('FacetsEditor', function() {
         });
 
         it('should generate 3 constraints for 4th filter', function() {
-            var view = new App.FacetsEditor({
+            var view = new App.StructureEditor({
                 model: new App.EditorConfiguration({}, {
                     dimensions: four_dimensions})});
             var constr3 = view.model.toJSON()['facets'][3]['constraints'];
@@ -308,7 +335,7 @@ describe('FacetsEditor', function() {
         });
 
         it('should generate no constraints with multiple_select', function() {
-            var view = new App.FacetsEditor({
+            var view = new App.StructureEditor({
                 model: new App.EditorConfiguration({
                     facets: [{name: 'dim2', type: 'multiple_select'}]
                 }, {dimensions: four_dimensions})
@@ -317,44 +344,53 @@ describe('FacetsEditor', function() {
             expect(constr3).to.deep.equal({'dim1': 'dim1', 'dim3': 'dim3'});
         });
 
-        it('should generate no constraints with all-values', function() {
-            var view = new App.FacetsEditor({
+        it('should move all-value at the end of facets', function() {
+            var view = new App.StructureEditor({
                 model: new App.EditorConfiguration({
                     facets: [{name: 'dim2', type: 'all-values'}]
                 }, {dimensions: four_dimensions})
             });
-            var constr3 = view.model.toJSON()['facets'][3]['constraints'];
-            expect(constr3).to.deep.equal({'dim1': 'dim1', 'dim3': 'dim3'});
+            expect(_(view.model.attributes.facets).pluck('name')).to.deep.equal(
+                ['dim1', 'dim3', 'dim4', 'dim2', 'value']
+            );
         });
 
-    });
-
-    describe('include_wildcard option', function() {
-
-        it('should be controlled by checkbox', function() {
-            var view = new App.FacetsEditor({
-                model: new App.EditorConfiguration({}, {
-                    dimensions: four_dimensions})});
-            var facet0 = function() { return view.model.get('facets')[0]; };
-            view.$el.find('[name="include_wildcard"]').click().change();
-            expect(facet0()['include_wildcard']).to.be.true;
-            view.$el.find('[name="include_wildcard"]').click().change();
-            expect(facet0()['include_wildcard']).to.be.undefined;
+        it('should move facet to normal position', function() {
+            var view = new App.StructureEditor({
+                model: new App.EditorConfiguration({
+                    facets: [{name: 'dim2', type: 'all-values'}]
+                }, {dimensions: four_dimensions})
+            });
+            expect(_(view.model.attributes.facets).pluck('name')).to.deep.equal(
+                ['dim1', 'dim3', 'dim4', 'dim2', 'value']
+            );
+            var dim2_type = view.$el.find('[name="type"]:last');
+            dim2_type.val('select').change();
+            expect(_(view.model.attributes.facets).pluck('name')).to.deep.equal(
+                ['dim1', 'dim2', 'dim3', 'dim4', 'value']
+            );
         });
 
-        it('should be removed if facet is not single select', function() {
+        it('should add all qualifying facets to the constraints of all-values', function() {
             var model = new App.EditorConfiguration({
-                facets: [{name: 'dim2', type: 'select', include_wildcard: true}]
-            }, {dimensions: four_dimensions});
-            var view = new App.FacetsEditor({model: model});
-            view.$el.find('[name="type"]').val('multiple_select').change();
-            expect(model.get('facets')[0]['include_wildcard']).to.be.undefined;
+                facets: [{name: 'dim2', type: 'all-values'}]
+                },
+                {dimensions: four_dimensions}
+            );
+            var view = new App.StructureEditor({
+                model: model
+            });
+            var constr3 = view.model.toJSON()['facets'][3]['constraints'];
+            expect(view.model.attributes.facets[3]['name']).to.equal(
+                'dim2'
+            );
+            expect(constr3).to.deep.equal(
+                {'dim1': 'dim1', 'dim3': 'dim3', 'dim4': 'dim4'});
         });
 
     });
 
     describe('multidim facets', function() {
-
         var facets_by_name = function(facets) {
             return _.object(_(facets).map(function(facet) {
                 return [facet['name'], facet];
@@ -364,7 +400,7 @@ describe('FacetsEditor', function() {
         it('should generate double facets if multidim=2', function() {
             var model = new App.EditorConfiguration({multidim: 2}, {
                 dimensions: four_dimensions});
-            var view = new App.FacetsEditor({model: model});
+            var view = new App.StructureEditor({model: model});
             view.$el.find('[data-name="dim1"] [name="multidim"]').click().change();
             expect(model.get('facets')[0]['name']).to.equal('x-dim1');
             expect(model.get('facets')[1]['name']).to.equal('y-dim1');
@@ -374,7 +410,7 @@ describe('FacetsEditor', function() {
         it('multidim dimensions should depend on their axis only', function() {
             var model = new App.EditorConfiguration({multidim: 2}, {
                 dimensions: four_dimensions});
-            var view = new App.FacetsEditor({model: model});
+            var view = new App.StructureEditor({model: model});
             view.$el.find('[data-name="dim1"] [name="multidim"]').click().change();
             view.$el.find('[data-name="dim2"] [name="multidim"]').click().change();
             view.$el.find('[data-name="dim3"] [name="multidim"]').click().change();
@@ -388,7 +424,7 @@ describe('FacetsEditor', function() {
         it('subsequent dimensions depend on all multidim axes', function() {
             var model = new App.EditorConfiguration({multidim: 2}, {
                 dimensions: four_dimensions});
-            var view = new App.FacetsEditor({model: model});
+            var view = new App.StructureEditor({model: model});
             view.$el.find('[data-name="dim1"] [name="multidim"]').click().change();
             view.$el.find('[data-name="dim2"] [name="multidim"]').click().change();
             var facets = facets_by_name(model.get('facets'));
@@ -404,7 +440,7 @@ describe('FacetsEditor', function() {
         it('should set multidim_common on non-multidim facets', function() {
             var model = new App.EditorConfiguration({multidim: 2}, {
                 dimensions: four_dimensions});
-            var view = new App.FacetsEditor({model: model});
+            var view = new App.StructureEditor({model: model});
             view.$el.find('[data-name="dim1"] [name="multidim"]').click().change();
             var facets = facets_by_name(model.get('facets'));
             expect(facets['x-dim1']['multidim_common']).to.be.undefined;
@@ -414,7 +450,7 @@ describe('FacetsEditor', function() {
         it('should set multidim_value on value facet', function() {
             var model = new App.EditorConfiguration({multidim: 2}, {
                 dimensions: four_dimensions});
-            var view = new App.FacetsEditor({model: model});
+            var view = new App.StructureEditor({model: model});
             var facets = facets_by_name(model.get('facets'));
             expect(facets['value']['multidim_value']).to.be.true;
         });
@@ -431,7 +467,7 @@ describe('FacetsEditor', function() {
                     {name: 'dim4', label: 'blah dim4'}
                 ]
             }, {dimensions: four_dimensions});
-            var view = new App.FacetsEditor({model: model});
+            var view = new App.StructureEditor({model: model});
             var facets = facets_by_name(model.get('facets'));
             expect(facets['x-dim1'].label).to.equal('(X) blah dim1');
             expect(facets['y-dim1'].label).to.equal('(Y) blah dim1');
@@ -444,7 +480,7 @@ describe('FacetsEditor', function() {
         it('should order multidim facets grouped by axis', function() {
             var model = new App.EditorConfiguration({multidim: 2}, {
                 dimensions: four_dimensions});
-            var view = new App.FacetsEditor({model: model});
+            var view = new App.StructureEditor({model: model});
             view.$el.find('[data-name="dim1"] [name="multidim"]').click().change();
             view.$el.find('[data-name="dim2"] [name="multidim"]').click().change();
             expect(_(model.get('facets')).pluck('name')).to.deep.equal(
@@ -453,12 +489,699 @@ describe('FacetsEditor', function() {
         });
 
     });
+});
+
+describe('LayoutEditor', function() {
+    "use strict";
+
+    var $ = App.jQuery;
+
+    it('should display the facets and position controls', function(){
+        var model = new App.EditorConfiguration({
+                facets: [
+                        {name: 'time-period', position: 'lower-right'}]
+                }, {
+                    dimensions: [
+                        {type_label: 'dimension', notation: 'time-period'}]
+                });
+        var view = new App.LayoutEditor({model: model});
+        expect(view.$el.find('select').length).to.equal(1);
+    });
+
+    it('should display the preselected position', function(){
+        var model = new App.EditorConfiguration({
+                facets: [
+                        {name: 'time-period', position: 'bottom-right'}]
+                }, {
+                    dimensions: [
+                        {type_label: 'dimension', notation: 'time-period'}]
+                });
+        var view = new App.LayoutEditor({model: model});
+        expect(view.$el.find('select').val()).to.equal('bottom-right');
+    });
+
+    it('should init model with the default position', function() {
+        var model = new App.EditorConfiguration({
+                facets: [
+                    {name: 'time-period', dimension: 'time-period', type: 'select'}
+                ]
+            }, {
+                dimensions: [
+                    {type_label: 'dimension', notation: 'time-period'}]
+            });
+        var structureView = new App.StructureEditor({model: model});
+        var view = new App.LayoutEditor({model: model});
+        expect(model.get('facets')[0]['position']).to.equal('upper-left');
+    });
+
+    it('should update model with selected position', function() {
+        var model = new App.EditorConfiguration({
+                facets: [
+                    {name: 'dim1', type: 'select'}
+                ]
+            }, {
+                dimensions: [
+                    {type_label: 'dimension', notation: 'time-period'}]
+            });
+        var structureView = new App.StructureEditor({model: model});
+        var view = new App.LayoutEditor({model: model});
+        expect(model.get('facets')[0]['position']).to.equal('upper-left');
+        view.$el.find('[name="position"]').val('upper-right').change();
+        expect(model.get('facets')[0]['position']).to.equal('upper-right');
+    });
+
+    it('should display separate position controls for multidim facets', function() {
+        var model = new App.EditorConfiguration({
+                multidim: 2,
+                facets: [
+                    {name: 'x-indicator', type: 'select'},
+                    {name: 'y-indicator', type: 'select'}
+                ]
+            }, {
+                dimensions: [
+                    {type_label: 'dimension', notation: 'x-indicator'},
+                    {type_label: 'dimension', notation: 'y-indicator'}]
+            });
+        var structureView = new App.StructureEditor({model: model});
+        var view = new App.LayoutEditor({model: model});
+    });
+
+    it('should filter facets when building layout collection', function() {
+        var model = new App.EditorConfiguration({
+                multidim: 1,
+                facets: [
+                    {name: 'indicator', type: 'select'},
+                    {name: 'breakdown', type: 'ignore'},
+                    {name: 'unit-measure', type: 'all-values'}
+                ]
+            }, {
+                dimensions: [
+                    {type_label: 'dimension', notation: 'indicator'}]
+            });
+        var structureView = new App.StructureEditor({model: model});
+        var view = new App.LayoutEditor({model: model});
+        expect(view.model.layout_collection.length).to.equal(1);
+    });
+
+    it('should rebuild layout collection when facet multidim changes', function() {
+        var model = new App.EditorConfiguration({
+                multidim: 2,
+                facets: [
+                    {name: 'indicator', type: 'select'}
+                ]
+            }, {
+                dimensions: [
+                    {type_label: 'dimension', notation: 'indicator'}]
+            });
+        var structureView = new App.StructureEditor({model: model});
+        var view = new App.LayoutEditor({model: model});
+        expect(view.model.layout_collection.length).to.equal(1);
+        structureView.$el.find('[name="multidim"]').click().change();
+        expect(view.model.layout_collection.length).to.equal(2);
+        expect(view.model.layout_collection.models[0].get('name')).to.equal(
+            'x-indicator');
+        expect(view.model.layout_collection.models[1].get('name')).to.equal(
+            'y-indicator');
+    });
+
+    it('should rebuild layout collection when facet type changes', function() {
+        var model = new App.EditorConfiguration({
+                multidim: 1,
+                facets: [
+                    {name: 'indicator', type: 'select'}
+                ]
+            }, {
+                dimensions: [
+                    {type_label: 'dimension', notation: 'indicator'}]
+            });
+        var structureView = new App.StructureEditor({model: model});
+        var view = new App.LayoutEditor({model: model});
+        expect(view.model.layout_collection.length).to.equal(1);
+        structureView.$el.find('[name="type"]').val('ignore').change();
+        expect(view.model.layout_collection.length).to.equal(0);
+    });
+
+    it('should preserve position when changing structure', function() {
+        var model = new App.EditorConfiguration({
+                multidim: 2,
+                facets: [
+                    {constraints: {},
+                    dimension: "indicator-group",
+                    label: "(X) Indicator group",
+                    name: "x-indicator-group",
+                    position: "upper-left",
+                     multidim_common: true,
+                    sortBy: "order_in_codelist",
+                    sortOrder: "asc",
+                    type: "select"},
+                    {name: "x-indicator",
+                     label: "(X) Indicator",
+                     constraints: {},
+                     dimension: "indicator",
+                     multidim_common: true,
+                     position: "upper-left",
+                     sortBy: "inner_order",
+                     sortOrder: "asc",
+                     type: "select"},
+                    {constraints: {},
+                    dimension: "indicator-group",
+                    label: "(Y) Indicator group",
+                    name: "y-indicator-group",
+                    position: "upper-right",
+                     multidim_common: true,
+                    sortBy: "order_in_codelist",
+                    sortOrder: "asc",
+                    type: "select"},
+                    {name: "y-indicator",
+                     label: "(Y) Indicator",
+                     constraints: {},
+                     dimension: "indicator",
+                     multidim_common: true,
+                     position: "upper-right",
+                     sortBy: "inner_order",
+                     sortOrder: "asc",
+                     type: "select"}
+                ]
+            }, {
+                dimensions: [
+                    {type_label: 'dimension', notation: 'indicator-group'},
+                    {type_label: 'dimension', notation: 'indicator'}
+                ]
+            });
+        var structure_view = new App.StructureEditor({model: model});
+        var layout_view = new App.LayoutEditor({model: model});
+        var ind_gr = structure_view.$el.find('[name="type"]:first');
+        ind_gr.val('ignore').change();
+        expect(model.get('facets')[3].position).to.equal('upper-right');
+    });
+
+    it('should preserve structure changes when changing position', function() {
+        var model = new App.EditorConfiguration({
+                multidim: 2,
+                facets: [
+                    {constraints: {},
+                    dimension: "indicator-group",
+                    label: "(X) Indicator group",
+                    name: "x-indicator-group",
+                    position: "upper-left",
+                     multidim_common: true,
+                    sortBy: "order_in_codelist",
+                    sortOrder: "asc",
+                    type: "ignore"},
+                    {name: "x-indicator",
+                     label: "(X) Indicator",
+                     constraints: {},
+                     dimension: "indicator",
+                     multidim_common: true,
+                     position: "upper-left",
+                     sortBy: "inner_order",
+                     sortOrder: "asc",
+                     type: "select"},
+                    {constraints: {},
+                    dimension: "indicator-group",
+                    label: "(Y) Indicator group",
+                    name: "y-indicator-group",
+                    position: "upper-left",
+                     multidim_common: true,
+                    sortBy: "order_in_codelist",
+                    sortOrder: "asc",
+                    type: "ignore"},
+                    {name: "y-indicator",
+                     label: "(Y) Indicator",
+                     constraints: {},
+                     dimension: "indicator",
+                     multidim_common: true,
+                     position: "upper-left",
+                     sortBy: "inner_order",
+                     sortOrder: "asc",
+                     type: "select"}
+                ]
+            }, {
+                dimensions: [
+                    {type_label: 'dimension', notation: 'indicator-group'},
+                    {type_label: 'dimension', notation: 'indicator'}
+                ]
+            });
+        var structure_view = new App.StructureEditor({model: model});
+        var layout_view = new App.LayoutEditor({model: model});
+        var x_ind = layout_view.$el.find('[name="position"]:first');
+        x_ind.val('upper-right').change();
+        expect(model.get('facets')[1].position).to.equal('upper-right');
+    });
+
+    it('should put "all-values" at the bottom of facets', function() {
+        var model = new App.EditorConfiguration({
+                multidim: 2,
+                facets: [
+                    {name: 'dim1', type: 'all-values'},
+                    {name: 'dim2', type: 'select'}
+                ]
+            }, {
+                dimensions: [
+                    {type_label: 'dimension', notation: 'dim1'},
+                    {type_label: 'dimension', notation: 'dim2'}]
+            });
+        var structureView = new App.StructureEditor({model: model});
+        var view = new App.LayoutEditor({model: model});
+        expect(_(model.get('facets')).first()['name']).to.equal(
+            'dim2');
+    });
+
+});
+
+describe('FacetsEditor', function() {
+    "use strict";
+
+    var $ = App.jQuery;
+
+    beforeEach(function() {
+        this.sandbox = sinon.sandbox.create();
+        this.sandbox.useFakeServer();
+    });
+
+    afterEach(function () {
+        this.sandbox.restore();
+    });
+
+    var four_dimensions = [
+        {type_label: 'dimension', notation: 'dim1', label: "Dim 1"},
+        {type_label: 'dimension', notation: 'dim2', label: "Dim 2"},
+        {type_label: 'dimension', notation: 'dim3', label: "Dim 3"},
+        {type_label: 'dimension', notation: 'dim4', label: "Dim 4"}];
+
+    describe('facet labels', function() {
+        it('should save the provided filter label', function() {
+            var model = new App.EditorConfiguration({}, {
+                dimensions: [{type_label: 'dimension', notation: 'indicator'},
+                             {type_label: 'dimension', notation: 'time-period'}]
+            });
+            var structureView = new App.StructureEditor({model: model});
+            var view = new App.FacetsEditor({model: model});
+            view.$el.find('[name="label"]:eq(0)').val('ind').trigger('input');
+            view.$el.find('[name="label"]:eq(1)').val('period').trigger('keyup');
+            view.$el.find('[name="label"]:eq(0)').trigger('focusout');
+            view.$el.find('[name="label"]:eq(1)').trigger('focusout');
+            expect(model.get('facets')[0]['label']).to.equal('ind');
+            expect(model.get('facets')[1]['label']).to.equal('period');
+            expect(model.get('facets')[0]['dimension']).to.equal('indicator');
+            expect(model.get('facets')[1]['dimension']).to.equal('time-period');
+        });
+
+        it('should save old filter label when empty', function() {
+            var model = new App.EditorConfiguration({}, {
+                dimensions: [{type_label: 'dimension', notation: 'indicator'}]});
+            model.facets.models[0].set('label', 'Indicator');
+            var structureView = new App.StructureEditor({model: model});
+            var view = new App.FacetsEditor({model: model});
+            view.$el.find('[name="label"]:eq(0)').val('').trigger('input');
+            view.$el.find('[name="label"]:eq(0)').trigger('focusout');
+            expect(model.get('facets')[0]['label']).to.equal('Indicator');
+        });
+    });
+    
+    describe('facet ignore values', function() {
+        it('should update model with values selected', function() {
+            var model = new App.EditorConfiguration({
+                    facets: [
+                        {name: 'dim1', type: 'select'},
+                        {name: 'dim2', type: 'multiple_select'}
+                    ]
+                }, {
+                    dimensions: [
+                        {type_label: 'dimension', notation: 'dim1'},
+                        {type_label: 'dimension', notation: 'dim2'}]
+                });
+            var view = new App.FacetsEditor({model: model});
+            var server = this.sandbox.server;
+            var options = [{'label': "Option One", 'notation': 'one'},
+                           {'label': "Option Two", 'notation': 'two'}];
+            App.respond_json(server.requests[0], {'options': options});
+            expect(model.facets.models[0].get('ignore_values')).to.be.undefined;
+            App.respond_json(server.requests[1], {'options': options});
+            view.$el.find('[name="ignore_values"]:first').val(['one', 'two']).change();
+            expect(model.facets.models[0].get('ignore_values')).to.deep.equal(['one', 'two']);
+            view.$el.find('[name="ignore_values"]:eq(1)').val(['one']).change();
+            expect(model.facets.models[1].get('ignore_values')).to.deep.equal(['one']);
+        });
+    });
+
+    describe('facet default value', function() {
+        it('should have no default_value by default', function() {
+            this.sandbox.useFakeServer();
+            var model = new App.EditorConfiguration({
+                    facets: [
+                        {name: 'time-period', type: 'select'}
+                    ]
+                }, {
+                    dimensions: [
+                        {type_label: 'dimension', notation: 'time-period'}]
+                });
+            var view = new App.FacetsEditor({model: model});
+            var server = this.sandbox.server;
+            var options = [{'label': "Option One", 'notation': 'one'},
+                           {'label': "Option Two", 'notation': 'two'}];
+            App.respond_json(server.requests[0], {'options': options});
+            var facet0 = view.model.toJSON()['facets'][0];
+            expect(facet0['default_value']).to.be.undefined;
+        });
+
+        it('should select existing default_value', function() {
+            this.sandbox.useFakeServer();
+            var model = new App.EditorConfiguration({
+                    facets: [
+                        {name: 'time-period', type: 'select', default_value: ['one']}
+                    ]
+                }, {
+                    dimensions: [
+                        {type_label: 'dimension', notation: 'time-period'}]
+                });
+            var view = new App.FacetsEditor({model: model});
+            var server = this.sandbox.server;
+            var options = [{'label': "Option One", 'notation': 'one'},
+                           {'label': "Option Two", 'notation': 'two'}];
+            App.respond_json(server.requests[0], {'options': options});
+            var facet0 = view.model.toJSON()['facets'][0];
+            expect(facet0['default_value']).to.deep.equal(['one']);
+        });
+
+        it('should remove existing default_value', function() {
+            this.sandbox.useFakeServer();
+            var model = new App.EditorConfiguration({
+                    facets: [
+                        {name: 'time-period', type: 'select', default_value: ['one']}
+                    ]
+                }, {
+                    dimensions: [
+                        {type_label: 'dimension', notation: 'time-period'}]
+                });
+            var view = new App.FacetsEditor({model: model});
+            var server = this.sandbox.server;
+            var options = [{'label': "Option One", 'notation': 'one'},
+                           {'label': "Option Two", 'notation': 'two'}];
+            App.respond_json(server.requests[0], {'options': options});
+            view.$el.find('[name="default_value"]:first').val([]).change();
+        });
+
+        it('should update model with values selected', function() {
+            this.sandbox.useFakeServer();
+            var model = new App.EditorConfiguration({
+                    facets: [
+                        {name: 'dim1', type: 'select'},
+                        {name: 'dim2', type: 'multiple_select'}
+                    ]
+                }, {
+                    dimensions: [
+                        {type_label: 'dimension', notation: 'dim1'},
+                        {type_label: 'dimension', notation: 'dim2'}]
+                });
+            var view = new App.FacetsEditor({model: model});
+            var server = this.sandbox.server;
+            var options = [{'label': "Option One", 'notation': 'one'},
+                           {'label': "Option Two", 'notation': 'two'}];
+            App.respond_json(server.requests[0], {'options': options});
+            expect(model.facets.models[0].get('default_value')).to.be.undefined;
+            App.respond_json(server.requests[1], {'options': options});
+            view.$el.find('[name="default_value"]:first').val(['two']).change();
+            expect(model.facets.models[0].get('default_value')).to.deep.equal('two');
+            view.$el.find('[name="default_value"]:eq(1)').val(['one']).change();
+            expect(model.facets.models[1].get('default_value')).to.deep.equal(['one']);
+        });
+
+        it('should save default_value as string for single select', function(){
+            this.sandbox.useFakeServer();
+            var model = new App.EditorConfiguration({
+                    facets: [
+                        {name: 'dim1', type: 'select'}
+                    ]
+                }, {
+                    dimensions: [
+                        {type_label: 'dimension', notation: 'dim1'}
+                    ]
+                });
+            var view = new App.FacetsEditor({model: model});
+            var server = this.sandbox.server;
+            var options = [{'label': "Option One", 'notation': 'one'},
+                           {'label': "Option Two", 'notation': 'two'}];
+            App.respond_json(server.requests[0], {'options': options});
+            view.$el.find('[name="default_value"]:first').val(['two']).change();
+            expect(model.facets.models[0].get('default_value')).to.deep.equal('two');
+            expect(model.toJSON()['facets'][0]['default_value']).to.deep.equal('two');
+        });
+
+        it('should unset default_value from model', function(){
+            this.sandbox.useFakeServer();
+            var model = new App.EditorConfiguration({
+                    facets: [
+                        {name: 'dim1', type: 'select'}
+                    ]
+                }, {
+                    dimensions: [
+                        {type_label: 'dimension', notation: 'dim1'}
+                    ]
+                });
+            var view = new App.FacetsEditor({model: model});
+            var server = this.sandbox.server;
+            var options = [{'label': "Option One", 'notation': 'one'},
+                           {'label': "Option Two", 'notation': 'two'}];
+            App.respond_json(server.requests[0], {'options': options});
+            expect(model.facets.models[0].get('default_value')).to.be.undefined;
+            view.$el.find('[name="default_value"]:first').val(['two']).change();
+            expect(model.facets.models[0].get('default_value')).to.deep.equal('two');
+            view.$el.find('[name="default_value"]:first').val([]).change();
+            expect(model.facets.models[0].get('default_value')).to.be.undefined;
+        });
+
+        it('should have "#random" option', function(){
+            this.sandbox.useFakeServer();
+            var model = new App.EditorConfiguration({
+                    facets: [
+                        {name: 'dim1', type: 'select'}
+                    ]
+                }, {
+                    dimensions: [
+                        {type_label: 'dimension', notation: 'dim1'}
+                    ]
+                });
+            var view = new App.FacetsEditor({model: model});
+            var server = this.sandbox.server;
+            var options = [{'label': "Option One", 'notation': 'one'},
+                           {'label': "Option Two", 'notation': 'two'}];
+            App.respond_json(server.requests[0], {'options': options});
+            var select = view.$el.find('[name="default_value"]:first');
+            select.val(['#random']).change();
+            expect(model.facets.models[0].get('default_value')).to.equal('#random');
+        });
+
+        it('should have "#eu27" option for country multiple_select', function(){
+            this.sandbox.useFakeServer();
+            var model = new App.EditorConfiguration({
+                    facets: [
+                        {name: 'ref-area', type: 'multiple_select', dimension: 'ref-area'},
+                        {name: 'ref-area1', type: 'multiple_select', dimension: 'other'},
+                        {name: 'ref-area2', type: 'select', dimension: 'ref-area'},
+                    ]
+                }, {
+                    dimensions: [
+                        {type_label: 'dimension', notation: 'ref-area'},
+                        {type_label: 'dimension', notation: 'other'}
+                    ]
+                });
+            var structureView = new App.StructureEditor({model: model});
+            var view = new App.FacetsEditor({model: model});
+            var server = this.sandbox.server;
+            var options = [{'label': "Option One", 'notation': 'one'},
+                           {'label': "Option Two", 'notation': 'two'}];
+            App.respond_json(server.requests[0], {'options': options});
+            App.respond_json(server.requests[1], {'options': options});
+            var select = view.$el.find('[name="default_value"]:eq(0)');
+            select.val(['#eu27']).change();
+            expect(model.facets.models[0].get('default_value')).to.deep.equal(
+                _(App.EU27).keys());
+            var select = view.$el.find('[name="default_value"]:eq(1)');
+            expect(select.find('option[value="#eu27"]').toArray()).to.deep.equal([]);
+        });
+
+        it('should replace "#eu27" with the right countries', function(){
+            this.sandbox.useFakeServer();
+            var model = new App.EditorConfiguration({
+                    facets: [
+                        {name: 'ref-area', type: 'multiple_select', dimension: 'ref-area'},
+                        {name: 'ref-area1', type: 'multiple_select', dimension: 'other'},
+                        {name: 'ref-area2', type: 'select', dimension: 'ref-area'},
+                    ]
+                }, {
+                    dimensions: [
+                        {type_label: 'dimension', notation: 'ref-area'},
+                        {type_label: 'dimension', notation: 'other'}
+                    ]
+                });
+            var structureView = new App.StructureEditor({model: model});
+            var view = new App.FacetsEditor({model: model});
+            var server = this.sandbox.server;
+            var options = [{'label': "Option One", 'notation': 'one'},
+                           {'label': "Option Two", 'notation': 'two'}];
+            App.respond_json(server.requests[0], {'options': options});
+            App.respond_json(server.requests[1], {'options': options});
+            var select = view.$el.find('[name="default_value"]:eq(0)');
+            select.val(['#eu27']).change();
+            expect(model.facets.models[0].get('default_value')).to.deep.equal(
+                _(App.EU27).keys());
+            var select = view.$el.find('[name="default_value"]:eq(1)');
+            expect(select.find('option[value="#eu27"]').toArray()).to.deep.equal([]);
+        });
+
+        it('should not have "#eu27" option for country single select', function(){
+            this.sandbox.useFakeServer();
+            var model = new App.EditorConfiguration({
+                    facets: [
+                        {name: 'ref-area', type: 'select', dimension: 'ref-area'},
+                    ]
+                }, {
+                    dimensions: [
+                        {type_label: 'dimension', notation: 'ref-area'}
+                    ]
+                });
+            var structureView = new App.StructureEditor({model: model});
+            var view = new App.FacetsEditor({model: model});
+            var server = this.sandbox.server;
+            var options = [{'label': "Option One", 'notation': 'one'},
+                           {'label': "Option Two", 'notation': 'two'}];
+            App.respond_json(server.requests[0], {'options': options});
+            var select = view.$el.find('[name="default_value"]:eq(0)');
+            expect(select.find('option[value="#eu27"]').toArray()).to.deep.equal([]);
+        });
+
+        it('should not have "#eu27" option for non country dimension', function(){
+            this.sandbox.useFakeServer();
+            var model = new App.EditorConfiguration({
+                    facets: [
+                        {name: 'ref-area', type: 'multiple_select', dimension: 'other'}
+                    ]
+                }, {
+                    dimensions: [
+                        {type_label: 'dimension', notation: 'other'}
+                    ]
+                });
+            var structureView = new App.StructureEditor({model: model});
+            var view = new App.FacetsEditor({model: model});
+            var server = this.sandbox.server;
+            var options = [{'label': "Option One", 'notation': 'one'},
+                           {'label': "Option Two", 'notation': 'two'}];
+            App.respond_json(server.requests[0], {'options': options});
+            var select = view.$el.find('[name="default_value"]:eq(0)');
+            expect(select.find('option[value="#eu27"]').toArray()).to.deep.equal([]);
+        });
+
+        it('should drop default_value when type becomes "select"', function() {
+            this.sandbox.useFakeServer();
+            var model = new App.EditorConfiguration({
+                    facets: [
+                        {name: 'indicator',
+                         type: 'multiple_select',
+                         default_value: ['one', 'two']
+                        }
+                    ]
+                }, {
+                    dimensions: [{type_label: 'dimension', notation: 'indicator'}]
+                }
+            );
+
+            var structure_view = new App.StructureEditor({model: model});
+            var facets_view = new App.FacetsEditor({model: model});
+            var server = this.sandbox.server;
+            var options = [{'label': "Option One", 'notation': 'one'},
+                           {'label': "Option Two", 'notation': 'two'}];
+            App.respond_json(server.requests[0], {'options': options});
+
+            expect(model.toJSON()['facets'][0]['default_value']).to.deep.equal(
+                ['one', 'two']);
+            expect(facets_view.$el.find('[name="default_value"]').val()).to.deep.equal(
+                ['one', 'two']);
+
+            model.facets.first().set({type: 'select'});
+
+            expect(model.toJSON()['facets'][0]['default_value']).to.be.undefined;
+            expect(facets_view.$el.find('[name="default_value"]').val()).to.be.null;
+        });
+
+    });
+
+    describe('highlights', function() {
+
+        it('should display existing highlights', function() {
+            this.sandbox.useFakeServer();
+            var view = new App.FacetsEditor({
+                model: new App.EditorConfiguration({
+                    category_facet: 'dim1',
+                    facets: [
+                        {name: 'dim1', type: 'multiple_select', highlights: ['two']},
+                    ],
+                }, {
+                    dimensions: [
+                        {type_label: 'dimension', notation: 'dim1'}
+                    ]
+                })
+            });
+            var server = this.sandbox.server;
+            var options = [{'label': "Option One", 'notation': 'one'},
+                           {'label': "Option Two", 'notation': 'two'}];
+            App.respond_json(server.requests[0], {'options': options});
+            var select = view.$el.find('[name="highlights"]');
+            expect(select.val()).to.deep.equal(['two']);
+        }),
+
+        it('should update model with values selected', function() {
+            this.sandbox.useFakeServer();
+            var view = new App.FacetsEditor({
+                model: new App.EditorConfiguration({
+                    category_facet: 'dim1',
+                    facets: [
+                        {name: 'dim1', type: 'multiple_select'},
+                    ],
+                }, {
+                    dimensions: [
+                        {type_label: 'dimension', notation: 'dim1'}
+                    ]
+                })
+            });
+            var server = this.sandbox.server;
+            var options = [{'label': "Option One", 'notation': 'one'},
+                           {'label': "Option Two", 'notation': 'two'}];
+            App.respond_json(server.requests[0], {'options': options});
+            var select = view.$el.find('[name="highlights"]');
+            select.val(['two']).change();
+            expect(view.model.facets.models[0].get('highlights')).to.deep.equal(['two']);
+        });
+    });
+
+    describe('include_wildcard option', function() {
+        it('should be controlled by checkbox', function() {
+            var model = new App.EditorConfiguration({}, {dimensions: four_dimensions});
+            var structureView = new App.StructureEditor({model: model});
+            var view = new App.FacetsEditor({model:model});
+            var facet0 = function() { return view.model.get('facets')[0]; };
+            view.$el.find('[name="include_wildcard"]').click().change();
+            expect(facet0()['include_wildcard']).to.be.true;
+            view.$el.find('[name="include_wildcard"]').click().change();
+            expect(facet0()['include_wildcard']).to.be.undefined;
+        });
+
+        it('should be removed if facet is not single select', function() {
+            var model = new App.EditorConfiguration({
+                facets: [{name: 'dim2', type: 'select', include_wildcard: true}]
+            }, {dimensions: four_dimensions});
+            var view = new App.StructureEditor({model: model});
+            view.$el.find('[name="type"]').val('multiple_select').change();
+            expect(model.get('facets')[0]['include_wildcard']).to.be.undefined;
+        });
+    });
 
     describe('sort facet options', function() {
 
         it('should save selected values', function() {
             var model = new App.EditorConfiguration({}, {
                 dimensions: four_dimensions});
+            var structureView = new App.StructureEditor({model: model});
             var view = new App.FacetsEditor({model: model});
             var $dim2_el = view.$el.find('[data-name="dim2"]');
             $dim2_el.find('[name="sort-by"]').val('notation').change();
@@ -473,12 +1196,12 @@ describe('FacetsEditor', function() {
                 facets: [
                     {name: 'dim2', sortBy: 'notation', sortOrder: 'reverse'}]
             }, {dimensions: four_dimensions});
+            var structureView = new App.StructureEditor({model: model});
             var view = new App.FacetsEditor({model: model});
             var $dim2_el = view.$el.find('[data-name="dim2"]');
             expect($dim2_el.find('[name="sort-by"]').val()).to.equal('notation');
             expect($dim2_el.find('[name="sort-order"]').val()).to.equal('reverse');
         });
-
     });
 
 });
@@ -486,14 +1209,496 @@ describe('FacetsEditor', function() {
 
 describe('AxesEditor', function() {
 
-    it('should set vertical title in model', function() {
-        var model = new Backbone.Model({
-            facets: [{name: 'unit-measure', type: 'select'}]
+    describe('TitleComposer', function(){
+        it('should present title choices to user', function(){
+            var model = new Backbone.Model({
+                facets: [
+                    {name: 'breakdown', type: 'select'},
+                    {name: 'indicator', type: 'select', dimension: 'indicator'},
+                    {name: 'ref-area', type: 'multiple_select'}
+                ],
+                titles:{
+                    title: [
+                        {facet_name: 'indicator'}
+                    ]
+                }
+            });
+            var view = new App.AxesEditor({model: model});
+            var select = view.composers_views.title.$el.find('[name="title-part"]');
+            var options = select.find('option', '[name="title"]');
+            expect(select.val()).to.equal('indicator');
+            expect(options.length).to.equal(3);
         });
-        var view = new App.AxesEditor({model: model});
-        var ordinate_label = model.get('labels')['ordinate'];
-        expect(ordinate_label['facet']).to.equal('unit-measure');
-        expect(ordinate_label['field']).to.equal('short_label');
+
+        it('should have xAxisTitle only for scatter or bubble', function(){
+            var model = new Backbone.Model({
+                multidim: 2
+            });
+            var view = new App.AxesEditor({model: model});
+            expect(view.composers.length).to.equal(4);
+            var model = new Backbone.Model();
+            var view = new App.AxesEditor({model: model});
+            expect(view.composers.length).to.equal(3);
+        });
+
+        it('should update title composers section when chart type changes', function(){
+            var model = new Backbone.Model({
+                multidim: 2
+            });
+            var view = new App.AxesEditor({model: model});
+            expect(view.composers.length).to.equal(4);
+            model.set('multidim', 1);
+            expect(view.composers.length).to.equal(3);
+        });
+
+        it('should not present title choices to user', function(){
+            var model = new Backbone.Model({
+                facets: [
+                    {name: 'ref-area', type: 'multiple_select'}
+                ]
+            });
+            var view = new App.AxesEditor({model: model});
+            var select = view.composers_views.title.$el.find('[name="title-part"]');
+            expect(select.val()).to.equal(undefined);
+        });
+
+        it('should save default title to model', function(){
+            var model = new Backbone.Model({
+                facets: [
+                    {name: 'ind', type: 'select', value: 'indicator'},
+                    {name: 'brk', type: 'select', value: 'breakdown'},
+                    {name: 'ref-area', type: 'multiple_select', value: 'ref-area'}
+                ]
+            });
+            var view = new App.AxesEditor({model: model});
+            var select = view.composers_views.title.$el.find('[name="title-part"]');
+            expect(view.model.get('titles')['title']).to.deep.equal([ ]);
+        });
+
+        it('should save selected title to model', function(){
+            var model = new Backbone.Model({
+                facets: [
+                    {name: 'ind', type: 'select', value: 'indicator'},
+                    {name: 'brk', type: 'select', value: 'breakdown'},
+                    {name: 'ref-area', type: 'multiple_select', value: 'ref-area'}
+                ],
+                titles:{
+                    title: [
+                        {facet_name: 'ind'}
+                    ]
+                }
+            });
+            var view = new App.AxesEditor({model: model});
+            var select = view.composers_views.title.$el.find('[name="title-part"]');
+            select.val('brk').change();
+            expect(view.model.get('titles')['title']).to.deep.equal([
+                {facet_name: 'brk', prefix: null, suffix: null, format: 'short_label'}
+            ]);
+        });
+
+        it('should render a new title part', function(){
+            var model = new Backbone.Model({
+                facets: [
+                    {name: 'ind', type: 'select', value: 'indicator'},
+                    {name: 'brk', type: 'select', value: 'breakdown'},
+                ],
+                titles:{
+                    title: [
+                        {facet_name: 'ind'}
+                    ]
+                }
+            });
+            var view = new App.AxesEditor({model: model});
+            var models = view.composers_views.title.parts.models;
+            var views = view.composers_views.title.part_views;
+            expect(_(models).pluck('cid')).to.deep.equal(_(views).keys());
+            var add_button = view.composers_views.title.$el.find('[name="add-title-part"]');
+            add_button.click();
+            var select = view.composers_views.title.$el.find('[name="title-part"]');
+            expect(select.length).to.deep.equal(2);
+        });
+
+        it('should save all title parts to model', function(){
+            var model = new Backbone.Model({
+                facets: [
+                    {name: 'ind', type: 'select', value: 'indicator'},
+                    {name: 'brk', type: 'select', value: 'breakdown'},
+                ],
+                titles:{
+                    title: [
+                        {facet_name: 'ind'}
+                    ]
+                }
+            });
+            var view = new App.AxesEditor({model: model});
+            var select = view.composers_views.title.$el.find('[name="title-part"]:eq(0)');
+            select.val('ind').change();
+            var add_button = view.composers_views.title.$el.find('[name="add-title-part"]');
+            add_button.click();
+            var models = view.composers_views.title.parts.models;
+            var views = view.composers_views.title.part_views;
+            expect(_(models).pluck('cid')).to.deep.equal(_(views).keys());
+            var select = view.composers_views.title.$el.find('[name="title-part"]:eq(1)');
+            select.val('brk').change();
+            expect(view.model.get('titles')['title']).to.deep.equal(
+                [{facet_name: 'ind', prefix: null, suffix: null, format: 'short_label'},
+                 {facet_name: 'brk', prefix: null, suffix: null, format: 'short_label'}]);
+        });
+
+        it('should render prefix options', function(){
+            var model = new Backbone.Model({
+                facets: [
+                    {name: 'ind', type: 'select', value: 'indicator'}
+                ],
+                titles:{
+                    title: [
+                        {facet_name: 'ind'}
+                    ]
+                }
+            });
+            var view = new App.AxesEditor({model: model});
+            var prefix = view.composers_views.title.$el.find(
+                '[name="title-part-prefix"]');
+            expect(prefix.val()).to.equal("");
+        });
+
+        it('should render suffix options', function(){
+            var model = new Backbone.Model({
+                facets: [
+                    {name: 'ind', type: 'select', value: 'indicator'}
+                ],
+                titles:{
+                    title: [
+                        {facet_name: 'ind'}
+                    ]
+                }
+            });
+            var view = new App.AxesEditor({model: model});
+            var suffix = view.composers_views.title.$el.find(
+                '[name="title-part-suffix"]');
+            expect(suffix.val()).to.equal("");
+        });
+
+        it('should save selected prefixes and suffixes', function(){
+            var model = new Backbone.Model({
+                facets: [
+                    {name: 'ind', type: 'select', value: 'indicator'},
+                    {name: 'brk', type: 'select', value: 'breakdown'},
+                ],
+                titles:{
+                    title: [
+                        {facet_name: 'ind'}
+                    ]
+                }
+            });
+            var view = new App.AxesEditor({model: model});
+
+            var select = view.composers_views.title.$el.find('[name="title-part"]:eq(0)');
+            select.val('ind').change();
+
+            var selectFormat = view.composers_views.title.$el.find(
+                '[name="title-part-format"]:eq(0)');
+            selectFormat.val('label').change();
+
+            var prefix = view.composers_views.title.$el.find(
+                '[name="title-part-prefix"]:eq(0)');
+            prefix.val(' ( ').change();
+
+            expect(view.model.get('titles')['title']).to.deep.equal(
+                [ {facet_name: 'ind', prefix: ' ( ', suffix: null, format: 'label'}]);
+
+            var add_button = view.composers_views.title.$el.find('[name="add-title-part"]');
+            add_button.click();
+
+            var select = view.composers_views.title.$el.find('[name="title-part"]:eq(1)');
+            select.val('brk').change();
+
+            var selectFormat = view.composers_views.title.$el.find(
+                '[name="title-part-format"]:eq(1)');
+            selectFormat.val('short-label').change();
+
+            var suffix = view.composers_views.title.$el.find(
+                '[name="title-part-suffix"]:eq(1)');
+            suffix.val(' ) ').change();
+
+            expect(view.model.get('titles')['title']).to.deep.equal(
+                [ {facet_name: 'ind', prefix: ' ( ', suffix: null, format: 'label'},
+                  {prefix: null, suffix: ' ) ', facet_name: 'brk', format: 'short_label'}]);
+        });
+
+        it('should add a new title part when clicking the add button', function(){
+            var model = new Backbone.Model({
+                facets: [
+                    {name: 'ind', type: 'select', value: 'indicator'},
+                    {name: 'brk', type: 'select', value: 'breakdown'},
+                ]
+            });
+            var view = new App.AxesEditor({model: model});
+            var add_button = view.composers_views.title.$el.find('[name="add-title-part"]');
+            add_button.click();
+            var select = view.composers_views.title.$el.find('[name="title-part"]:eq(0)');
+            select.val('brk').change();
+            expect(view.composers_views['title'].model.get('parts').length).to.equal(1);
+            expect(view.model.get('titles')['title']).to.deep.equal(
+                [ {prefix: null, suffix: null, facet_name: 'brk', format: 'short_label'}]);
+        });
+
+        it('should display existing title parts', function(){
+            var model = new Backbone.Model({
+                facets: [
+                    {name: 'ind', type: 'select', value: 'indicator'},
+                    {name: 'brk', type: 'select', value: 'breakdown'},
+                ],
+                titles: {
+                    title: [{facet_name: "ind", format: "label"},
+                            {prefix: ', ', suffix: ' - ', facet_name: "brk"} ]
+                }
+            });
+            var view = new App.AxesEditor({model: model});
+            var select1 = view.composers_views.title.$el.find('[name="title-part"]:eq(0)');
+            var select1format = view.composers_views.title.$el.find('[name="title-part-format"]:eq(0)');
+            var prefix = view.composers_views.title.$el.find(
+                '[name="title-part-prefix"]:eq(1)');
+            var suffix = view.composers_views.title.$el.find(
+                '[name="title-part-suffix"]:eq(1)');
+            var select2 = view.composers_views.title.$el.find('[name="title-part"]:eq(1)');
+            expect(select1.val()).to.equal('ind');
+            expect(select1format.val()).to.equal('label');
+            expect(prefix.val()).to.equal(', ');
+            expect(suffix.val()).to.equal(' - ');
+            expect(select2.val()).to.equal('brk');
+        });
+
+        it('should validate existing title parts', function(){
+            var model = new Backbone.Model({
+                facets: [
+                    {name: 'ind', type: 'select', value: 'indicator'},
+                    {name: 'brk', type: 'multiple_select', value: 'breakdown'},
+                ],
+                titles: {
+                    title: [{facet_name: "ind"},
+                            {prefix: ',', suffix: ' - ', facet_name: "brk"} ]
+                }
+            });
+            var view = new App.AxesEditor({model: model});
+            var select1 = view.composers_views.title.$el.find('[name="title-part"]:eq(0)');
+            var prefix = view.composers_views.title.$el.find(
+                '[name="title-part-prefix"]:eq(1)');
+            var suffix = view.composers_views.title.$el.find(
+                '[name="title-part-suffix"]:eq(1)');
+            var select2 = view.composers_views.title.$el.find('[name="title-part"]:eq(1)');
+            expect(select1.val()).to.equal('ind');
+            expect(prefix.length).to.equal(0);
+            expect(suffix.length).to.equal(0);
+            expect(select2.length).to.equal(0);
+            expect(view.model.get('titles')['title']).to.deep.equal(
+                [{facet_name: 'ind', prefix: null, suffix: null, format: 'short_label'}]);
+        })
+
+        it('should remove title part when empty facet name', function(){
+            var model = new Backbone.Model({
+                facets: [
+                    {name: 'ind', type: 'select', value: 'indicator'},
+                    {name: 'brk', type: 'select', value: 'breakdown'},
+                    {name: 'area', type: 'select', value: 'ref-area'}
+                ],
+                titles: {
+                    title: [{facet_name: "ind"},
+                            {prefix: ',', suffix: null, facet_name: "brk"} ],
+                }
+            });
+            var view = new App.AxesEditor({model: model});
+            var select2 = view.composers_views.title.$el.find(
+                                '[name="title-part"]:eq(1)');
+            var select3 = view.composers_views.title.$el.find(
+                                '[name="title-part"]:eq(2)');
+            select2.val("").change();
+            select3.val("").change();
+            expect(view.model.get('titles')['title']).to.deep.equal(
+                [{facet_name: 'ind', prefix: null, suffix: null, format: 'short_label'}]);
+        });
+
+        it('should remove title part when clicking remove button', function(){
+            var model = new Backbone.Model({
+                facets: [
+                    {name: 'ind', type: 'select', value: 'indicator'},
+                    {name: 'brk', type: 'select', value: 'breakdown'}
+                ],
+                titles: {
+                    title: [{facet_name: "ind"},
+                            {prefix: ',', suffix: null, facet_name: "brk"} ]
+                }
+            });
+            var view = new App.AxesEditor({model: model});
+            var remove_button = view.composers_views.title.$el.find(
+                                '[name="remove-title-part"]:eq(1)');
+            remove_button.click();
+            expect(view.model.get('titles')['title']).to.deep.equal(
+                [{facet_name: 'ind', prefix: null, suffix: null, format: 'short_label'}]);
+        });
+
+        it('should update labels section on model', function(){
+            var model = new Backbone.Model({
+                facets: [
+                    {name: 'ind', type: 'select', value: 'indicator'},
+                    {name: 'brk', type: 'select', value: 'breakdown'},
+                    {name: 'area', type: 'select', value: 'ref-area'}
+                ],
+                titles:{
+                    title: [
+                        {facet_name: 'ind'}
+                    ]
+                }
+            });
+            var view = new App.AxesEditor({model: model});
+
+            var select = view.composers_views.title.$el.find(
+                                    '[name="title-part"]:eq(0)');
+            select.val('ind').change();
+
+            var format_select = view.composers_views.title.$el.find(
+                                    '[name="title-part-format"]');
+            format_select.val('label').change();
+
+            var add_button = view.composers_views.title.$el.find(
+                                    '[name="add-title-part"]');
+            add_button.click();
+
+
+            var select = view.composers_views.title.$el.find(
+                                    '[name="title-part"]:eq(1)');
+            select.val('brk').change();
+
+            var prefix = view.composers_views.title.$el.find(
+                '[name="title-part-prefix"]:eq(1)');
+            prefix.val(' by ').change();
+
+            expect(view.model.get('titles').title).to.deep.equal([
+                {facet_name: 'ind', prefix: null, suffix: null, format: 'label'},
+                {facet_name: 'brk', prefix: ' by ', suffix: null, format: 'short_label'}
+            ]);
+            expect(view.model.get('labels')).to.deep.equal({
+                "ind": {
+                  "facet": "ind"
+                },
+                "brk": {
+                  "facet": "brk"
+                },
+            })
+        });
+
+        it('should remove own labels in labels section on model', function(){
+            var model = new Backbone.Model({
+                facets: [
+                    {name: 'ind', type: 'select', value: 'indicator'},
+                    {name: 'brk', type: 'select', value: 'breakdown'},
+                    {name: 'area', type: 'select', value: 'ref-area'}
+                ],
+                titles:{
+                    title: [
+                        {facet_name: 'ind'}
+                    ]
+                },
+                labels: { ind: { facet: 'ind' } }
+            });
+            var view = new App.AxesEditor({model: model});
+
+            var select = view.composers_views.title.$el.find(
+                                    '[name="title-part"]:eq(0)');
+            select.val('ind').change();
+
+            var format_select = view.composers_views.title.$el.find(
+                                    '[name="title-part-format"]');
+            format_select.val('label').change();
+
+            var add_button = view.composers_views.title.$el.find(
+                                    '[name="add-title-part"]');
+            add_button.click();
+
+            var select = view.composers_views.title.$el.find(
+                                    '[name="title-part"]:eq(1)');
+            select.val('brk').change();
+
+            var parts = view.composers_views['title'].parts;
+            parts.remove(parts.last().cid).trigger('remove');
+
+            expect(view.model.get('titles').title).to.deep.equal([
+                {facet_name: 'ind', prefix: null, suffix: null, format: 'label'}
+            ]);
+            expect(view.model.get('labels')).to.deep.equal({
+                "ind": {
+                  "facet": "ind"
+                }
+            })
+        });
+
+        it('should not remove existing labels in labels section on model', function(){
+            var model = new Backbone.Model({
+                facets: [
+                    {name: 'ind', type: 'select', value: 'indicator'},
+                    {name: 'brk', type: 'select', value: 'breakdown'},
+                    {name: 'area', type: 'select', value: 'ref-area'}
+                ],
+                titles:{
+                    title: [
+                        {facet_name: 'ind'}
+                    ]
+                },
+                labels: {
+                    ind: { facet: 'ind' },
+                    brk: { facet: 'brk' }
+                }
+            });
+            var view = new App.AxesEditor({model: model});
+            var select = view.composers_views.title.$el.find(
+                                    '[name="title-part"]:eq(0)');
+            select.val('ind').change();
+
+            var format_select = view.composers_views.title.$el.find(
+                                    '[name="title-part-format"]');
+            format_select.val('label').change();
+
+            var add_button = view.composers_views.title.$el.find(
+                                    '[name="add-title-part"]');
+            add_button.click();
+
+            var select = view.composers_views.title.$el.find(
+                                    '[name="title-part"]:eq(1)');
+            select.val('brk').change();
+            var parts = view.composers_views['title'].parts;
+
+            parts.remove(parts.last().cid);
+            expect(view.model.get('titles').title).to.deep.equal([
+                {facet_name: 'ind', prefix: null, suffix: null, format: 'label'}
+            ]);
+            expect(view.model.get('labels')).to.deep.equal({
+                "ind": {
+                  "facet": "ind"
+                },
+                "brk": {
+                  "facet": "brk"
+                },
+            })
+        });
+
+        it('should save parts with default format', function(){
+            var model = new Backbone.Model({
+                facets: [
+                    {name: 'ind', type: 'select', value: 'indicator'}
+                ],
+                titles:{
+                    title: [
+                        {facet_name: 'ind'}
+                    ]
+                }
+            });
+            var view = new App.AxesEditor({model: model});
+            var select = view.composers_views.title.$el.find('[name="title-part"]:eq(0)');
+            select.val('ind').change();
+            expect(view.model.get('titles').title).to.deep.equal([
+                {facet_name: 'ind', format: 'short_label', prefix: null, suffix: null}
+            ]);
+        });
     });
 
     it('should save axes sort criteria choice', function() {
@@ -533,45 +1738,6 @@ describe('AxesEditor', function() {
         var view = new App.AxesEditor({model: model});
         expect(view.$el.find('[name="axis-sort-each-series"]').is(':checked')
             ).to.be.true;
-    });
-
-    it('should save axes horizontal title choice', function() {
-        var view = new App.AxesEditor({model: new Backbone.Model()});
-        view.$el.find('[name="axis-horizontal-title"]').val('short').change();
-        expect(view.model.get('axis-horizontal-title')).to.equal('short');
-    });
-
-    it('should show existing axes horizontal title choice', function() {
-        var model = new Backbone.Model({'axis-horizontal-title': 'short'});
-        var view = new App.AxesEditor({model: model});
-        expect(view.$el.find('[name="axis-horizontal-title"]').val()
-            ).to.equal('short');
-    });
-
-    it('should save axes horizontal rotated choice', function() {
-        var view = new App.AxesEditor({model: new Backbone.Model()});
-        view.$el.find('[name="axis-horizontal-rotated"]').click().change();
-        expect(view.model.get('axis-horizontal-rotated')).to.be.true;
-    });
-
-    it('should show existing axes horizontal rotated choice', function() {
-        var model = new Backbone.Model({'axis-horizontal-rotated': true});
-        var view = new App.AxesEditor({model: model});
-        expect(view.$el.find('[name="axis-horizontal-rotated"]').is(':checked')
-            ).to.be.true;
-    });
-
-    it('should save axes vertical title choice', function() {
-        var view = new App.AxesEditor({model: new Backbone.Model()});
-        view.$el.find('[name="axis-vertical-title"]').val('short').change();
-        expect(view.model.get('axis-vertical-title')).to.equal('short');
-    });
-
-    it('should show existing axes vertical title choice', function() {
-        var model = new Backbone.Model({'axis-vertical-title': 'short'});
-        var view = new App.AxesEditor({model: model});
-        expect(view.$el.find('[name="axis-vertical-title"]').val()
-            ).to.equal('short');
     });
 
     it('should save horizontal plotlines choice', function() {
@@ -636,6 +1802,7 @@ describe('SeriesEditor', function() {
     });
 
     it('should save value from checkboxes', function() {
+        this.model.set('tooltips', {note: false});
         var view = new App.SeriesEditor({model: this.model});
         view.$el.find('[value="note"]').click().change();
         expect(this.model.get('tooltips')['note']).to.be.true;
@@ -645,6 +1812,28 @@ describe('SeriesEditor', function() {
         this.model.set('tooltips', {note: true});
         var view = new App.SeriesEditor({model: this.model});
         expect(view.$el.find('[value="note"]').is(':checked')).to.be.true;
+        expect(view.$el.find('[value="flag"]').is(':checked')).to.be.false;
+    });
+
+    it('should precheck all checkboxes at first', function() {
+        var view = new App.SeriesEditor({model: this.model});
+        expect(view.$el.find('[value="unit-measure"]').is(':checked')).to.be.true;
+        expect(view.$el.find('[value="note"]').is(':checked')).to.be.true;
+        expect(view.$el.find('[value="flag"]').is(':checked')).to.be.true;
+    });
+
+    it('should set tooltips to an empty dict when uncheching all', function() {
+        this.model.set('tooltips', {note: true});
+        var view = new App.SeriesEditor({model: this.model});
+        view.$el.find('[value="note"]').click().change();
+        expect(this.model.toJSON()['tooltips']).to.deep.equal(_.object());
+    });
+
+    it('should leave checkboxes unchanged if previously unchecked', function() {
+        this.model.set('tooltips', {});
+        var view = new App.SeriesEditor({model: this.model});
+        expect(view.$el.find('[value="unit-measure"]').is(':checked')).to.be.false;
+        expect(view.$el.find('[value="note"]').is(':checked')).to.be.false;
         expect(view.$el.find('[value="flag"]').is(':checked')).to.be.false;
     });
 
@@ -662,14 +1851,26 @@ describe('SeriesEditor', function() {
 
     it('should save point label choice', function() {
         var view = new App.SeriesEditor({model: this.model});
-        view.$el.find('[name="point-label"]').val('long').change();
-        expect(this.model.get('series-point-label')).to.equal('long');
+        view.$el.find('[name="point-label"]').val('short').change();
+        expect(this.model.get('series-point-label')).to.equal('short');
     });
 
     it('should show existing point label choice', function() {
-        this.model.set('series-point-label', 'long');
+        this.model.set('series-point-label', 'short');
         var view = new App.SeriesEditor({model: this.model});
-        expect(view.$el.find('[name="point-label"]').val()).to.equal('long');
+        expect(view.$el.find('[name="point-label"]').val()).to.equal('short');
+    });
+
+    it('should save ending label choice', function() {
+        var view = new App.SeriesEditor({model: this.model});
+        view.$el.find('[name="ending-label"]').val('long').change();
+        expect(this.model.get('series-ending-label')).to.equal('long');
+    });
+
+    it('should show existing ending label choice', function() {
+        this.model.set('series-ending-label', 'long');
+        var view = new App.SeriesEditor({model: this.model});
+        expect(view.$el.find('[name="ending-label"]').val()).to.equal('long');
     });
 
 });
@@ -677,47 +1878,7 @@ describe('SeriesEditor', function() {
 
 describe('FormatEditor', function() {
 
-    it('should set title and subtitle in model', function() {
-        var model = new Backbone.Model({
-            facets: [{name: 'dim1', type: 'select'},
-                     {name: 'dim2', type: 'select'},
-                     {name: 'dim3', type: 'select'}]
-        });
-        var view = new App.FormatEditor({model: model});
-        var $title_el = view.$el.find('[data-label="title"]');
-        $title_el.find('[name="facet"]').val('dim2').change();
-        $title_el.find('[name="field"]').val('short_label').change();
-        var $subtitle_el = view.$el.find('[data-label="subtitle"]');
-        $subtitle_el.find('[name="facet"]').val('dim3').change();
-        $subtitle_el.find('[name="field"]').val('short_label').change();
-        var title_label = model.get('labels')['title'];
-        expect(title_label['facet']).to.equal('dim2');
-        expect(title_label['field']).to.equal('short_label');
-        var subtitle_label = model.get('labels')['subtitle'];
-        expect(subtitle_label['facet']).to.equal('dim3');
-        expect(subtitle_label['field']).to.equal('short_label');
-    });
-
-    it('should display current title and subtitle values', function() {
-        var model = new Backbone.Model({
-            facets: [{name: 'dim1', type: 'select'},
-                     {name: 'dim2', type: 'select'},
-                     {name: 'dim3', type: 'select'}],
-            labels: {title: {facet: 'dim2', field: 'short_label'},
-                     subtitle: {facet: 'dim3', field: 'short_label'}}
-        });
-        var view = new App.FormatEditor({model: model});
-        var $title_el = view.$el.find('[data-label="title"]');
-        expect($title_el.find('[name="facet"]').val()).to.equal('dim2');
-        expect($title_el.find('[name="field"]').val())
-            .to.equal('short_label');
-        var $subtitle_el = view.$el.find('[data-label="subtitle"]');
-        expect($subtitle_el.find('[name="facet"]').val()).to.equal('dim3');
-        expect($subtitle_el.find('[name="field"]').val())
-            .to.equal('short_label');
-    });
-
-    it('should save chart height', function() {
+    /*it('should save chart height', function() {
         var view = new App.FormatEditor({model: new Backbone.Model()});
         view.$el.find('[name="height"]').val('123').change();
         expect(view.model.get('height')).to.equal('123');
@@ -728,6 +1889,33 @@ describe('FormatEditor', function() {
             height: '123'
         })});
         expect(view.$el.find('[name="height"]').val()).to.equal('123');
+    });
+    */
+
+    it('should display 4 textareas', function() {
+        var view = new App.FormatEditor({model: new Backbone.Model()});
+        var textareas = view.$el.find('textarea[name$="text"]');
+        expect(textareas.length).to.equal(4);
+    });
+
+    it('should save filters area text', function() {
+        var view = new App.FormatEditor({model: new Backbone.Model()});
+        var textarea = view.$el.find('textarea[id="upper-left"]:eq(0)')
+        textarea.val('blah').trigger('change');
+        var text = view.model.get('text');
+        expect(text[0]).to.deep.equal(
+            {value: "blah",
+             position: "upper-left"}
+        );
+    });
+
+    it('should load filters area text', function() {
+        var view = new App.FormatEditor({model: new Backbone.Model({
+            text: [{value: "blah",
+                    position: "upper-left"}]
+        })});
+        var textarea = view.$el.find('textarea[id="upper-left"]:eq(0)')
+        expect(textarea.val()).to.deep.equal("blah");
     });
 
     it('should save chart credits', function() {
@@ -764,6 +1952,39 @@ describe('AnnotationsEditor', function() {
         var names = _(model.get('annotations')['filters']).pluck('name');
         expect(names).to.not.contain('dim1');
         expect(names).to.contain('dim2');
+    });
+
+    it('should preselect defaults', function() {
+        var model = new Backbone.Model({
+            facets: [{name: 'dim1', type: 'select', dimension: 'indicator'},
+                     {name: 'dim2', type: 'select', dimension: 'breakdown'},
+                     {name: 'dim3', type: 'select', dimension: 'unit-measure'},
+                     {name: 'dim4', type: 'select', dimension: 'breakdown'},
+                     {name: 'dim5', type: 'select', dimension: 'other'}]
+        });
+        var view = new App.AnnotationsEditor({model: model});
+        var get_checkbox = function(name) {
+            return view.$el.find('[name="annotation"][value="' + name + '"]');
+        }
+        expect(get_checkbox('dim1').is(':checked')).to.be.true;
+        expect(get_checkbox('dim2').is(':checked')).to.be.true;
+        expect(get_checkbox('dim3').is(':checked')).to.be.true;
+        expect(get_checkbox('dim4').is(':checked')).to.be.true;
+        expect(get_checkbox('dim5').is(':checked')).to.be.false;
+    });
+
+    it('should not preselect defaults', function() {
+        var model = new Backbone.Model({
+            facets: [{name: 'dim1', type: 'select', dimension: 'indicator'},
+                     {name: 'dim2', type: 'select', dimension: 'breakdown'}],
+            annotations: {filters: [{name: 'dim2'}]}
+        });
+        var view = new App.AnnotationsEditor({model: model});
+        var get_checkbox = function(name) {
+            return view.$el.find('[name="annotation"][value="' + name + '"]');
+        }
+        expect(get_checkbox('dim1').is(':checked')).to.be.false;
+        expect(get_checkbox('dim2').is(':checked')).to.be.true;
     });
 
     it('should preselect checkboxes with current value', function() {

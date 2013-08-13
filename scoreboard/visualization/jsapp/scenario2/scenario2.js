@@ -21,9 +21,6 @@ App.scenario2_filters_schema = {
     ],
     "title": "Definitions and scopes"
   },
-  "axis-horizontal-rotated": false,
-  "axis-horizontal-title": "none",
-  "axis-vertical-title": "long",
   "category_facet": "time-period",
   "chart_type": "lines",
   "credits": {
@@ -33,25 +30,27 @@ App.scenario2_filters_schema = {
   "facets": [
     {
       "constraints": {},
+      "default_value": "#random",
       "dimension": "indicator-group",
       "include_wildcard": true,
       "label": "Indicator group",
       "name": "indicator-group",
-      "sortBy": "nosort",
+      "position": "upper-left",
+      "sortBy": "order_in_codelist",
       "sortOrder": "asc",
-      "default_value": "#random",
       "type": "select"
     },
     {
       "constraints": {
         "indicator-group": "indicator-group"
       },
+      "default_value": "#random",
       "dimension": "indicator",
       "label": "Indicator",
       "name": "indicator",
+      "position": "upper-left",
       "sortBy": "inner_order",
       "sortOrder": "asc",
-      "default_value": "#random",
       "type": "select"
     },
     {
@@ -59,13 +58,14 @@ App.scenario2_filters_schema = {
         "indicator-group": "indicator-group",
         "indicator": "indicator"
       },
+      "default_value": "#random",
       "dimension": "breakdown-group",
       "include_wildcard": true,
       "label": "Breakdown group",
       "name": "breakdown-group",
-      "sortBy": "nosort",
+      "position": "upper-left",
+      "sortBy": "order_in_codelist",
       "sortOrder": "asc",
-      "default_value": "#random",
       "type": "select"
     },
     {
@@ -74,12 +74,13 @@ App.scenario2_filters_schema = {
         "indicator": "indicator",
         "breakdown-group": "breakdown-group"
       },
+      "default_value": "#random",
       "dimension": "breakdown",
       "label": "Breakdown",
       "name": "breakdown",
+      "position": "upper-left",
       "sortBy": "inner_order",
       "sortOrder": "asc",
-      "default_value": "#random",
       "type": "select"
     },
     {
@@ -89,10 +90,13 @@ App.scenario2_filters_schema = {
         "breakdown-group": "breakdown-group",
         "breakdown": "breakdown"
       },
+      "default_value": "#random",
       "dimension": "unit-measure",
       "label": "Unit of measure",
       "name": "unit-measure",
-      "default_value": "#random",
+      "position": "upper-left",
+      "sortBy": "order_in_codelist",
+      "sortOrder": "asc",
       "type": "select"
     },
     {
@@ -107,6 +111,7 @@ App.scenario2_filters_schema = {
       "default_value": ["EU27", "#random"],
       "label": "Select the countries",
       "name": "ref-area",
+      "position": "upper-left",
       "sortBy": "label",
       "sortOrder": "asc",
       "type": "multiple_select"
@@ -130,26 +135,19 @@ App.scenario2_filters_schema = {
       "dimension": "value"
     }
   ],
-  "height": 500,
   "labels": {
-    "ordinate": {
-      "facet": "unit-measure",
-      "field": "short_label"
+    "breakdown": {
+      "facet": "breakdown"
     },
-    "title2": {
-      "facet": "breakdown",
-      "field": "label"
-    },
-    "title": {
-      "facet": "indicator",
-      "field": "label"
+    "indicator": {
+      "facet": "indicator"
     },
     "unit-measure": {
-      "facet": "unit-measure",
-      "field": "short_label"
+      "facet": "unit-measure"
     }
   },
   "multiple_series": "ref-area",
+  "plotlines": {},
   "series-legend-label": "none",
   "series-ending-label": "long",
   "series-point-label": "long",
@@ -157,6 +155,32 @@ App.scenario2_filters_schema = {
     "by": "category",
     "order": -1,
     "each_series": true
+  },
+  "titles": {
+    "title": [
+      {
+        "prefix": null,
+        "suffix": null,
+        "facet_name": "indicator",
+        "format": "label"
+      },
+      {
+        "facet_name": "breakdown",
+        "prefix": ", by ",
+        "suffix": null,
+        "format": "label"
+      }
+    ],
+    "subtitle": [],
+    "xAxisTitle": [],
+    "yAxisTitle": [
+      {
+        "prefix": null,
+        "suffix": null,
+        "facet_name": "unit-measure",
+        "format": "short_label"
+      }
+    ]
   },
   "tooltips": {
     "flag": true,

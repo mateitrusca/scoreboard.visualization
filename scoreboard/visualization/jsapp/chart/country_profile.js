@@ -136,12 +136,6 @@ App.chart_library['country_profile'] = function(view, options) {
             }
         });
 
-        var title = options.meta_data['title'];
-        if(options.meta_data['ref-area'] && options.meta_data['indicator-group']){
-            title = [options.meta_data['ref-area'], options.meta_data['indicator-group'] + ' indicators'].join(', ');
-        }
-        title = 'Country profile for ' + title;
-
         var chartOptions = {
             chart: {
                 renderTo: container,
@@ -164,7 +158,7 @@ App.chart_library['country_profile'] = function(view, options) {
                 }
             },
             title: {
-                text: title,
+                text: options.titles.title,
                 align: 'center',
                 style: {
                     color: '#000000',
@@ -176,7 +170,7 @@ App.chart_library['country_profile'] = function(view, options) {
             },
             subtitle: {
                 y:50,
-                text: options.meta_data['subtitle'],
+                text: options.titles.subtitle,
                 style: {
                     fontFamily: 'Arial',
                     fontWeight: 'bold',
@@ -205,7 +199,7 @@ App.chart_library['country_profile'] = function(view, options) {
                     }
                 },
                 title: {
-                    text: options.meta_data['ordinate'],
+                    text: options.titles.yAxisTitle,
                     style: {
                         color: '#000000',
                         fontWeight: 'bold'
@@ -261,6 +255,7 @@ App.chart_library['country_profile'] = function(view, options) {
             series: stack_series
         };
 
+        App.set_default_chart_options(chartOptions);
         if (!options['legend']){
             App.disable_legend(chartOptions, options);
         }
@@ -279,7 +274,16 @@ App.chart_library['country_profile'] = function(view, options) {
             x_formatter: x_formatter
         });
     }
-    view.trigger('chart_ready', series,
+    var metadata = {
+        'chart-title': options.titles.title,
+        'chart-subtitle': options.titles.subtitle,
+        'chart-xAxisTitle': options.titles.xAxisTitle,
+        'chart-yAxisTitle': options.titles.yAxisTitle,
+        'source-dataset': options.credits.text,
+        'chart-url': document.URL,
+        'filters-applied': _(this.model.attributes).pairs()
+    };
+    view.trigger('chart_ready', series, metadata,
         options['chart_type'] + '_' + options.subtype)
 };
 

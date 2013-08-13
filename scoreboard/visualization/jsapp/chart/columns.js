@@ -28,7 +28,7 @@ App.chart_library['columns'] = function(view, options) {
             zoomType: 'y',
             marginLeft: 100,
             marginRight: 170,
-            marginTop: 50,
+            marginTop: 80,
             marginBottom: 100,
             height: 450,
             width: 1100
@@ -45,10 +45,8 @@ App.chart_library['columns'] = function(view, options) {
             }
         },
         title: {
-            text: options['title_formatter'](
-                        options.meta_data['title'],
-                        ', ',
-                        options.meta_data['title2']), 
+            useHTML:true,
+            text: options.titles.title,
             style: {
                 color: '#000000',
                 fontWeight: 'bold',
@@ -57,7 +55,7 @@ App.chart_library['columns'] = function(view, options) {
             }
         },
         subtitle: {
-            text: options.meta_data['subtitle'],
+            text: options.titles.subtitle,
             style: {
                 fontWeight: 'bold',
                 fontSize: '16px'
@@ -81,7 +79,7 @@ App.chart_library['columns'] = function(view, options) {
             min: 0,
             max: options['unit_is_pc'][0]?100:null,
             title: {
-                text: options.meta_data['ordinate'],
+                text: options.titles.yAxisTitle,
                 style: {
                     color: '#000000',
                     fontWeight: 'bold'
@@ -108,13 +106,22 @@ App.chart_library['columns'] = function(view, options) {
         series: init_series
     };
 
+    App.set_default_chart_options(chartOptions);
     if (!options['legend']){
         App.disable_legend(chartOptions, options);
     }
 
     var chart = new Highcharts.Chart(chartOptions);
-
-    view.trigger('chart_ready', series);
+    var metadata = {
+        'chart-title': options.titles.title,
+        'chart-subtitle': options.titles.subtitle,
+        'chart-xAxisTitle': options.titles.xAxisTitle,
+        'chart-yAxisTitle': options.titles.yAxisTitle,
+        'source-dataset': options.credits.text,
+        'chart-url': document.URL,
+        'filters-applied': _(this.model.attributes).pairs()
+    };
+    view.trigger('chart_ready', series, metadata);
 
     if (options['plotlines']){
         App.add_plotLines(chart, init_series, options['plotlines']);
@@ -134,8 +141,7 @@ App.chart_library['columns'] = function(view, options) {
             $('#the-filters .footer').append(App.chart_controls.$el);
         }else{
             App.chart_controls.chart = chart;
-            App.chart_controls.snapshots_data = series;
-            App.chart_controls.update_chart();
+            App.chart_controls.update_data(series);
         };
     }
 };

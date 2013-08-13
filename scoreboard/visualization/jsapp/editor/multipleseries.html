@@ -1,0 +1,11 @@
+<label>
+  Multiple series by:
+</label>
+<select name="multiple_series">
+<option value="">--</option>
+{{# series_options }}
+  <option value="{{ name }}"
+    {{# if selected }}selected{{/ if }}
+    >{{ name }}</option>
+{{/ series_options }}
+</select>

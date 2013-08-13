@@ -7,31 +7,38 @@
 
 App.FacetEditorField = Backbone.View.extend({
 
-    tagName: 'tr',
+    tagName: 'div',
     className: 'editor-facets',
     template: App.get_template('editor/facet-field.html'),
 
     events: {
+        'input [name="label"]': 'on_input_label',
+        'keyup [name="label"]': 'on_input_label',
+        'focusout [name="label"]': 'on_focusout_label',
         'change [name="type"]': 'on_change_type',
         'click .facet-sort': 'on_click_sort',
         'change [name="include_wildcard"]': 'on_change_wildcard',
-        'change [name="multidim"]': 'on_change_multidim',
         'change [name="sort-by"]': 'on_change_sorting',
-        'change [name="sort-order"]': 'on_change_sorting'
+        'change [name="sort-order"]': 'on_change_sorting',
+        'change [name="default_value"]': 'on_change_default_value',
+        'change [name="ignore_values"]': 'on_change_ignore_values',
+        'change [name="highlights"]': 'on_change_highlights',
     },
 
-    type_options: [
-        {value: 'select', label: "single selection"},
-        {value: 'multiple_select', label: "multiple selection"},
-        {value: 'all-values', label: "all values"},
-        {value: 'ignore', label: "ignore"}
-    ],
+    fetch_options: function(){
+        var args = {};
+        args['dimension'] = this.model.get('dimension');
+        args['rev'] = App.DATA_REVISION;
+        var view_name = 'dimension_options';
+        return $.getJSON(App.URL + '/' + view_name, args);
+    },
 
     sort_by_options: [
-        {value: 'nosort', label: "order field"},
-        {value: 'label', label: "label"},
-        {value: 'short_label', label: "short label"},
-        {value: 'notation', label: "code"}
+        {value: 'order_in_codelist', label: "by order within the code list"},
+        {value: 'inner_order', label: "by order within the group"},
+        {value: 'label', label: "by value - long label"},
+        {value: 'short_label', label: "by value - short label"},
+        {value: 'notation', label: "by value - notation"}
     ],
 
     sort_order_options: [
@@ -43,37 +50,181 @@ App.FacetEditorField = Backbone.View.extend({
         if(! this.model.has('type')) {
             this.model.set('type', this.type_options[0]['value']);
         }
+        if (! this.model.has('sortBy')) {
+            this.model.set('sortBy', this.sort_by_options[0]['value']);
+        }
+        if (! this.model.has('sortOrder')) {
+            this.model.set('sortOrder', this.sort_order_options[0]['value']);
+        }
         this.facets_editor = options['facets_editor'];
-        this.render();
+        var ajax = this.fetch_options();
+
+        ajax.done(_.bind(function(data){
+            options = [];
+            _(data.options).each(function(item){
+                options.push({
+                    label: item['label'],
+                    value: item['notation']
+                });
+            });
+            this.facet_options = options;
+            this.trigger('options_received', this);
+            this.options_received = true;
+            this.render();
+        },this));
     },
 
     render: function() {
+        var facet_options = _.chain(this.facet_options)
+            .map(function(opt, idx, list) {
+                    opt['default'] = false;
+                    if (_(this.model.get('default_value')).contains(opt['value']) ||
+                        this.model.get('default_value') == opt['value']) {
+                        opt['default'] = true;
+                    }
+                    if (_(this.model.get('ignore_values')).contains(opt['value']) ||
+                        this.model.get('ignore_values') == opt['value']) {
+                        opt['ignore'] = true;
+                    }
+                    if (_(this.model.get('highlights')).contains(opt['value']) ||
+                        this.model.get('highlights') == opt['value']) {
+                        opt['highlight'] = true;
+                    }
+                    return opt;
+                }, this)
+            .tap(_.bind(function(object, interceptor){
+                    var random = { 'label': '#random',
+                                   'value': '#random' };
+                    if (this.model.get('default_value') == '#random'){
+                        random['default'] = true;
+                    }
+                    object.push(random);
+                    if (this.model.get('type') == 'multiple_select' &&
+                        this.model.get('dimension') == 'ref-area'){
+                        var eu27 = { 'label': '#eu27',
+                                     'value': '#eu27' };
+                        object.push(eu27);
+                    }
+                }, this))
+            .value();
+        var highlights_options = _(facet_options).reject(function(item){
+            return item.value == '#random'
+        });
         var context = _({
-            type_options: _(this.type_options).map(function(opt) {
-                var selected = this.model.get('type') == opt['value'];
-                return _({
-                    selected: selected
-                }).extend(opt);
-            }, this),
+            is_refarea: (this.model.get('dimension') == 'ref-area')?true:false,
+            options_received: this.options_received || false,
+            facet_label: this.model.get('label'),
+            facet_options: facet_options,
+            highlights_options: highlights_options,
+            is_all_values: this.model.get('type') == 'all-values',
             sort_by_options: _(this.sort_by_options).map(function(spec) {
-                var opt = _({}).extend(spec);
-                if(spec['value'] == this.model.get('sortBy')) {
-                    opt['selected'] = true;
-                }
-                return opt;
-            }, this),
+                    var opt = _({}).extend(spec);
+                    if(spec['value'] == this.model.get('sortBy')) {
+                        opt['selected'] = true;
+                    }
+                    return opt;
+                }, this),
             sort_order_options: _(this.sort_order_options).map(function(spec) {
-                var opt = _({}).extend(spec);
-                if(spec['value'] == this.model.get('sortOrder')) {
-                    opt['selected'] = true;
-                }
-                return opt;
-            }, this),
+                    var opt = _({}).extend(spec);
+                    if(spec['value'] == this.model.get('sortOrder')) {
+                        opt['selected'] = true;
+                    }
+                    return opt;
+                }, this),
             is_single_select: (this.model.get('type') == 'select'),
+            is_category_facet: (this.facets_editor.model.get('category_facet') == this.model.get('name')),
             chart_is_multidim: this.facets_editor.chart_is_multidim()
         }).extend(this.model.toJSON());
         this.$el.html(this.template(context));
         this.$el.attr('data-name', this.model.get('name'));
+        var params = {
+            placeholder: "Click to select values",
+            allowClear: true
+        }
+        var category_highlights = this.$el.find('[name="highlights"]');
+        if (category_highlights) {
+            category_highlights.select2(params);
+        }
+        this.$el.find('[name="ignore_values"]').select2(params);
+        if (this.model.get('type') == 'select'){
+            params['maximumSelectionSize'] = 1;
+        }
+        this.$el.find('[name="default_value"]').select2(params);
+    },
+
+    on_input_label: function(evt) {
+        if (this.facet_label == this.$el.find('[name="label"]').val()){
+            return;
+        }
+        this.facet_label = this.$el.find('[name="label"]').val() ||
+                          this.model.get('label');
+    },
+
+    on_focusout_label: function(evt) {
+        this.model.set({
+            label: this.facet_label || this.model.get('label')
+        });
+    },
+
+    on_change_default_value: function(evt) {
+        var value = this.$el.find('[name="default_value"]').val();
+        var result = [];
+        _(this.facet_options).each(function(opt){
+            opt['default'] = false;
+            if (_(value).contains(opt.value)){
+                opt['default'] = true;
+                result.push(opt.value);
+            }
+        });
+        if (_(value).contains('#random')){
+            result.push('#random');
+        }
+        if (_(value).contains('#eu27')){
+            result = _.union(result, _(App.EU27).keys());
+        }
+        if (result.length > 0){
+            if (this.model.get('type') == 'select'){
+                this.model.set({default_value: result[0]});
+            }
+            else{
+                this.model.set({default_value: result});
+            }
+        }
+        else if (this.model.has('default_value')){
+            this.model.unset('default_value');
+        }
+    },
+
+
+    on_change_ignore_values: function(evt) {
+        var value = this.$el.find('[name="ignore_values"]').val();
+        var result = []
+        _(this.facet_options).each(function(opt){
+            opt['ignore'] = false;
+            if (_(value).contains(opt.value)){
+                opt['ignore'] = true;
+                result.push(opt.value);
+            }
+        })
+        if (result.length > 0){
+            this.model.set({ignore_values: result});
+        }
+        else if (this.model.has('ignore_values')){
+            this.model.unset('ignore_values');
+        }
+    },
+
+    on_change_highlights: function(){
+        var values = this.$el.find('[name="highlights"]').val();
+        var result = []
+        _(this.facet_options).each(function(opt){
+            opt['highlight'] = false;
+            if (_(values).contains(opt.value)){
+                opt['highlight'] = true;
+                result.push(opt.value);
+            }
+        })
+        this.model.set({highlights: result});
     },
 
     on_change_type: function(evt) {
@@ -102,15 +253,6 @@ App.FacetEditorField = Backbone.View.extend({
         this.check_constraints();
     },
 
-    on_change_multidim: function(evt) {
-        if($(evt.target).is(':checked')) {
-            this.model.set('multidim', true);
-        }
-        else {
-            this.model.unset('multidim');
-        }
-    },
-
     check_constraints: function() {
         if(this.model.get('type') != 'select') {
             this.model.unset('include_wildcard');
@@ -126,12 +268,37 @@ App.FacetEditorField = Backbone.View.extend({
 
 });
 
+App.FacetModel = Backbone.Model.extend({
+    initialize: function(options){
+        this.name = options.name;
+        this.on('change:type', this.drop_default_value, this);
+    },
+
+    drop_default_value: function(){
+        if (this.get('type') == 'select'){
+            this.unset('default_value');
+        }
+    }
+})
+
 
 App.FacetCollection = Backbone.Collection.extend({
 
-    constructor: function(value, dimensions) {
-        Backbone.Collection.apply(this, [value]);
+    model: App.FacetModel,
 
+    comparator: function(val){
+        var idx = this.order.indexOf(
+            val.attributes.dimension||val.attributes.name);
+        var value = (val.attributes.type == 'all-values')?
+                    this.order.length+idx:idx;
+        return value;
+    },
+
+    constructor: function(value, dimensions) {
+        this.order = _.chain(dimensions).reject(function(dim){
+            return !_(['dimension group', 'dimension']).contains(dim.type_label);
+        }).pluck('notation').value();
+        Backbone.Collection.apply(this, [value]);
         var facets_to_keep = {};
         var add_model = _.bind(function(name, defaults) {
             var facet_model = this.findWhere({name: name});
@@ -149,7 +316,7 @@ App.FacetCollection = Backbone.Collection.extend({
                     });
                 }
                 else {
-                    facet_model = new Backbone.Model({'name': name});
+                    facet_model = new App.FacetModel({'name': name});
                     facet_model.set(defaults);
                 }
             }
@@ -176,7 +343,8 @@ App.FacetCollection = Backbone.Collection.extend({
         this.remove(to_remove);
     },
 
-    get_value: function(chart_multidim) {
+    get_value: function(chart_multidim, presets) {
+        this.sort();
         var multidim_facets = {};
         var all_multidim = _.range(chart_multidim);
         var facets_by_axis = {'all': []};
@@ -200,6 +368,10 @@ App.FacetCollection = Backbone.Collection.extend({
                     });
                     var label = '(' + letter.toUpperCase() + ') '
                               + facet['label'];
+                    var key = facet.dimension + '/' + prefix + facet['name'];
+                    if (presets && _(presets).has(key)){
+                        facet.position = presets[key]
+                    }
                     facets_by_axis[letter].push(_({
                         name: prefix + facet['name'],
                         label: label,
@@ -226,6 +398,10 @@ App.FacetCollection = Backbone.Collection.extend({
                     facet['multidim_common'] = true;
                 } else {
                     delete facet['multidim_common'];
+                }
+                var key = facet.dimension + '/' + facet.name;
+                if (presets && _(presets).has(key)){
+                    facet.position = presets[key]
                 }
                 facets_by_axis['all'].push(facet);
             }
@@ -258,10 +434,17 @@ App.FacetsEditor = Backbone.View.extend({
 
     template: App.get_template('editor/facets.html'),
 
-    title: "Facets",
+    title: "Filter settings",
 
     events: {
         'change [name="multiple_series"]': 'on_multiple_series_change'
+    },
+
+    update_model: function(){
+        var values = {};
+        this.model.set(values);
+        _(values).extend(this.categoryby.get_values());
+        this.apply_changes();
     },
 
     initialize: function(options) {
@@ -276,65 +459,29 @@ App.FacetsEditor = Backbone.View.extend({
             return [facet_model.cid, facet_view];
         }, this));
         this.apply_changes();
-        this.model.facets.on('change sort', this.apply_changes, this);
-    },
-
-    compute_facet_roles: function() {
-        var series_options = [];
-        var no_multiple_series = true;
-        var free_dimensions = [];
-        this.model.facets.forEach(function(facet_model) {
-            var facet = facet_model.toJSON();
-            var name = facet['name'];
-            if(facet['type'] == 'multiple_select' ||
-               facet['type'] == 'all-values') {
-                var option = _({}).extend(facet);
-                if(name == this.model.get('multiple_series')) {
-                    option['selected'] = true;
-                    no_multiple_series = false;
-                }
-                else {
-                    free_dimensions.push(option);
-                }
-                series_options.push(option);
-            }
-        }, this);
-        if(no_multiple_series) {
-            this.model.set('multiple_series', null);
-        }
-        var category_facet = (free_dimensions.length == 1
-                             ? free_dimensions[0]
-                             : null);
-        if(category_facet) {
-            this.model.set('category_facet', category_facet['name']);
-        }
-        this.facet_roles = {
-            series_options: series_options,
-            err_too_few: (free_dimensions.length < 1),
-            err_too_many: (free_dimensions.length > 1),
-            category_facet: category_facet
-        }
+        this.render();
+        this.model.facets.on(
+            'change:include_wildcard change:label change:sortBy change:sortOrder change:default_value',
+            this.apply_changes, this);
+        this.model.facets.on('change:type', this.render, this);
     },
 
     render: function() {
-        var context = {
-            series_options: this.facet_roles.series_options,
-            err_too_few: this.facet_roles.err_too_few,
-            err_too_many: this.facet_roles.err_too_many,
-            category_facet: this.facet_roles.category_facet,
-            chart_is_multidim: this.chart_is_multidim()
-        };
-        this.$el.html(this.template(context));
+        this.$el.html(this.template());
         this.model.facets.forEach(function(facet_model) {
-            var facet_view = this.facet_views[facet_model.cid];
-            facet_view.render();
-            this.$el.find('tbody').append(facet_view.el);
-            facet_view.delegateEvents();
+            if(facet_model.get('type') != 'ignore'){
+                var facet_view = this.facet_views[facet_model.cid];
+                facet_view.render();
+                this.$el.find('div.facets').append(facet_view.el);
+                facet_view.delegateEvents();
+            }
         }, this);
     },
 
     save_value: function() {
-        var value = this.model.facets.get_value(this.model.get('multidim'));
+        var value = this.model.facets.get_value(
+                this.model.get('multidim'),
+                this.model.layout_collection.presets());
         this.model.set('facets', value);
     },
 
@@ -343,16 +490,8 @@ App.FacetsEditor = Backbone.View.extend({
     },
 
     apply_changes: function() {
-        this.compute_facet_roles();
         this.save_value();
-        this.render();
     },
-
-    on_multiple_series_change: function() {
-        var select = this.$el.find('[name="multiple_series"]');
-        this.model.set('multiple_series', select.val() || null);
-        this.apply_changes();
-    }
 
 });
 
