@@ -645,6 +645,7 @@ App.ShareOptionsView = Backbone.View.extend({
 
     request_excel: function(ev){
         ev.preventDefault();
+        App.jQuery('input[name="format"]', this.form).remove();
         App.jQuery(this.$el.find('form')).append(
             App.jQuery('<input>', {
                 'name': 'format',
