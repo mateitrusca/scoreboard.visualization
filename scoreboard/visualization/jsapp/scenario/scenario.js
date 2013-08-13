@@ -621,7 +621,8 @@ App.AnnotationsView = Backbone.View.extend({
 App.ShareOptionsView = Backbone.View.extend({
 
     events: {
-        'click #csv': 'request_csv'
+        'click #csv': 'request_csv',
+        'click #excel': 'request_excel'
     },
 
     template: App.get_template('scenario/share.html'),
@@ -640,6 +641,17 @@ App.ShareOptionsView = Backbone.View.extend({
     request_csv: function(ev){
         ev.preventDefault();
         this.$el.find('form').submit();
+    },
+
+    request_excel: function(ev){
+        ev.preventDefault();
+        App.jQuery(this.$el.find('form')).append(
+            App.jQuery('<input>', {
+                'name': 'format',
+                'value': 'xls',
+                'type': 'hidden'
+            }
+        )).submit();
     },
 
     metadata_ready: function(annotations){
