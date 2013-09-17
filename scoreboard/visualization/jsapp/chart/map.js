@@ -85,6 +85,7 @@ App.chart_library['map'] = function(view, options) {
     }));
     $(container).append(map_div);
     $(container).addClass('map-chart');
+    $(container).append($("<a/>").addClass("imageExportTest").attr("href", "#").text("Export as PNG"));
 
     var series = App.format_series(
                     options['series'],
@@ -158,6 +159,11 @@ App.chart_library['map'] = function(view, options) {
     };
     view.trigger('chart_ready', series, metadata);
 };
+
+$(".imageExportTest").live("click", function(event){
+    event.preventDefault();
+    console.log('image export test');
+});
 
 
 })(App.jQuery);

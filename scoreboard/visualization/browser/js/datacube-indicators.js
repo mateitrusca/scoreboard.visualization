@@ -52,12 +52,14 @@ scoreboard.visualization.datacube.indicators = {
         var table = jQuery('table.list_indicators');
         var tbody = jQuery('tbody', table);
         jQuery.each(data, function(idx, indicator){
-            var groupId = self.escapeString(indicator.groupName);
-            var caption = jQuery('tr#' + groupId, table);
-            if(!caption.length){
-                self.addTableCaption(groupId, indicator, tbody);
+            if ( typeof(indicator.groupName) != 'undefined' ){
+                var groupId = self.escapeString(indicator.groupName);
+                var caption = jQuery('tr#' + groupId, table);
+                if(!caption.length){
+                    self.addTableCaption(groupId, indicator, tbody);
+                }
+                self.addTableRow(table, indicator, groupId);
             }
-            self.addTableRow(table, indicator, groupId);
         });
         return tbody;
     },
@@ -87,7 +89,11 @@ scoreboard.visualization.datacube.indicators = {
     },
     addTableRow: function(table, indicator, groupId){
         var tr = jQuery('<tr>');
-        tr.append('<td class="even">' + indicator.altlabel + '</td>');
+        //tr.append('<td class="even">' + indicator.altlabel + '</td>');
+        tr.append(
+            $('<td/>').addClass('even').css('text-align', 'center')
+            .text(indicator.minYear + ' - ' + indicator.maxYear)
+        );
         tr.append('<td class="odd">' + indicator.longlabel + '</td>');
         var definition = '<td class="even">';
         if ( indicator.definition) {
