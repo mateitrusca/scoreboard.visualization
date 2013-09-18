@@ -80,8 +80,8 @@ App.chart_library['bubbles'] = function(view, options) {
                     fontWeight: 'bold'
                 }
             },
-            startOnTick: true,
-            endOnTick: true,
+            startOnTick: false,
+            endOnTick: false,
             showLastLabel: true,
             labels: {
                 formatter: _.partial(App.tick_labels_formatter,
@@ -95,6 +95,8 @@ App.chart_library['bubbles'] = function(view, options) {
         yAxis: {
             minPadding: 0.1,
             maxPadding: 0.1,
+            startOnTick: false,
+            endOnTick: false,
             title: {
                 text: options.titles.yAxisTitle,
                 style: {
@@ -147,6 +149,7 @@ App.chart_library['bubbles'] = function(view, options) {
     };
 
     App.set_default_chart_options(chartOptions);
+    App.override_zoom();
     if (!options['legend']){
         App.disable_legend(chartOptions, options);
     }
