@@ -110,7 +110,7 @@ App.chart_library['columns'] = function(view, options) {
     if (!options['legend']){
         App.disable_legend(chartOptions, options);
     }
-
+    App.override_zoom();
     var chart = new Highcharts.Chart(chartOptions);
     var metadata = {
         'chart-title': options.titles.title,

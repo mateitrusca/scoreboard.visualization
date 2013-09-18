@@ -78,8 +78,8 @@ App.chart_library['lines'] = function(view, options) {
         },
         xAxis: {
             type: 'datetime',
-            tickInterval: 3600 * 24 * 1000 * 7 * 4 * 12,
-            maxZoom: 3600 * 24 * 1000 * 7 * 4 * 12,
+            tickInterval: 3600 * 24 * 1000 * 182,
+            minRange: 3600 * 100 * 24 * 365,
             labels: {
                 style: {
                     color: '#000000'
@@ -89,6 +89,7 @@ App.chart_library['lines'] = function(view, options) {
         yAxis: {
             min:0,
             max: options['unit_is_pc'][0]?100:null,
+            minRange: 1,
             title: {
                 text: options.titles.yAxisTitle,
                 style: {
@@ -134,7 +135,7 @@ App.chart_library['lines'] = function(view, options) {
 
     App.set_default_chart_options(chartOptions);
     App.disable_legend(chartOptions, options);
-
+    App.override_zoom();
     var chart = new Highcharts.Chart(chartOptions);
 
     var metadata = {
