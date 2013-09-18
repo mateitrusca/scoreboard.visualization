@@ -85,7 +85,22 @@ App.chart_library['map'] = function(view, options) {
     }));
     $(container).append(map_div);
     $(container).addClass('map-chart');
-    $(container).append($("<a/>").addClass("imageExportTest").attr("href", "#").text("Export as PNG"));
+
+    // add a form to request a png download
+    $(container).css('position', 'relative');
+    $(container).append(
+        $('<form method="POST" action="' + App.URL + '/svg2png"></form>').append(
+            $("<input/>").attr("type", "hidden").attr("name", "svg")
+        ).append(
+            $("<input/>").attr("type", "submit").attr("value", "Export PNG").css({
+                'position': 'absolute',
+                'top': '0',
+                'right': '0',
+                'z-index': '10',
+                'font-size': '13px',
+            })
+        )
+    );
 
     var series = App.format_series(
                     options['series'],
@@ -146,6 +161,9 @@ App.chart_library['map'] = function(view, options) {
         draw_legend(map.paper, colorscale, 10, 10, 0, max_value,
                 {text: unit.short_label, is_pc: options.unit_is_pc[0]},
                 'vertical');
+
+        // load svg html into the form for png download
+        $("input[name='svg']").val($(".kartograph").html());
     });
 
     var metadata = {
@@ -159,11 +177,5 @@ App.chart_library['map'] = function(view, options) {
     };
     view.trigger('chart_ready', series, metadata);
 };
-
-$(".imageExportTest").live("click", function(event){
-    event.preventDefault();
-    console.log('image export test');
-});
-
 
 })(App.jQuery);
