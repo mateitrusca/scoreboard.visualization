@@ -59,8 +59,8 @@ App.chart_library['scatter'] = function(view, options) {
             }
         },
         xAxis: [{
-            startOnTick: true,
-            endOnTick: true,
+            startOnTick: false,
+            endOnTick: false,
             title: {
                 enabled: true,
                 text: options.titles.xAxisTitle,
@@ -81,8 +81,8 @@ App.chart_library['scatter'] = function(view, options) {
 
         }],
         yAxis: {
-            startOnTick: true,
-            endOnTick: true,
+            startOnTick: false,
+            endOnTick: false,
             title: {
                 text: options.titles.yAxisTitle,
                 style: {
@@ -129,6 +129,7 @@ App.chart_library['scatter'] = function(view, options) {
     };
 
     App.set_default_chart_options(chartOptions);
+    App.override_zoom();
     if (!options['legend']){
         App.disable_legend(chartOptions, options);
     }
