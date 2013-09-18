@@ -279,6 +279,16 @@ App.disable_legend = function(chartOptions, options){
     }
 }
 
+App.override_zoom = function() {
+    Highcharts.Axis.prototype.zoom = function (newMin, newMax) {
+        // override default zoom function in order to disable pinch zoom check
+        // see this thread http://stackoverflow.com/questions/16796405/how-to-avoid-bad-behavior-zooming-to-areas-outside-the-data-range
+		this.displayBtn = newMin !== undefined || newMax !== undefined;
+		this.setExtremes( newMin, newMax, false,  undefined,  { trigger: 'zoom' });
+		return true;
+   };
+}
+
 App.set_default_chart_options = function(chartOptions){
     var menuItems = _.rest(Highcharts.getOptions().exporting.buttons.contextButton.menuItems, 2);
     var options = {
