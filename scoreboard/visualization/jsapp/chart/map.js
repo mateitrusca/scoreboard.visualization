@@ -94,7 +94,7 @@ App.chart_library['map'] = function(view, options) {
         ).append(
             $("<input/>").attr("type", "submit").attr("value", "Export PNG").css({
                 'position': 'absolute',
-                'top': '0',
+                'top': '45px',
                 'right': '0',
                 'z-index': '10',
                 'font-size': '13px',
