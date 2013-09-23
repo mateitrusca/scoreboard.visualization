@@ -51,7 +51,7 @@ App.chart_library['lines'] = function(view, options) {
             zoomType: 'y',
             marginLeft: 100,
             marginRight: 170,
-            marginTop: 60,
+            marginTop: 100,
             marginBottom: 50,
             height: 450,
             width: 1100
@@ -69,11 +69,12 @@ App.chart_library['lines'] = function(view, options) {
         },
         title: {
             text: options.titles.title,
+            align: "left",
+            x: 40,
+            y: 40,
             style: {
                 color: '#000000',
                 fontWeight: 'bold',
-                fontSize:'1.2em',
-                width: '800'
             }
         },
         xAxis: {
@@ -129,7 +130,7 @@ App.chart_library['lines'] = function(view, options) {
                 }
             }
         },
-        series: series
+        series: series,
     };
 
     App.set_default_chart_options(chartOptions);
