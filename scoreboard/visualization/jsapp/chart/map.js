@@ -86,6 +86,22 @@ App.chart_library['map'] = function(view, options) {
     $(container).append(map_div);
     $(container).addClass('map-chart');
 
+    // add a form to request a png download
+    $(container).css('position', 'relative');
+    $(container).append(
+        $('<form method="POST" action="' + App.URL + '/svg2png"></form>').append(
+            $("<input/>").attr("type", "hidden").attr("name", "svg")
+        ).append(
+            $("<input/>").attr("type", "submit").attr("value", "Export PNG").css({
+                'position': 'absolute',
+                'top': '45px',
+                'right': '0',
+                'z-index': '10',
+                'font-size': '13px',
+            })
+        )
+    );
+
     var series = App.format_series(
                     options['series'],
                     options['sort'],
@@ -145,6 +161,9 @@ App.chart_library['map'] = function(view, options) {
         draw_legend(map.paper, colorscale, 10, 10, 0, max_value,
                 {text: unit.short_label, is_pc: options.unit_is_pc[0]},
                 'vertical');
+
+        // load svg html into the form for png download
+        $("input[name='svg']").val($(".kartograph").html());
     });
 
     var metadata = {
@@ -158,6 +177,5 @@ App.chart_library['map'] = function(view, options) {
     };
     view.trigger('chart_ready', series, metadata);
 };
-
 
 })(App.jQuery);

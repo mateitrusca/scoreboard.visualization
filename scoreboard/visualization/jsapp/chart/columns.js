@@ -28,7 +28,7 @@ App.chart_library['columns'] = function(view, options) {
             zoomType: 'y',
             marginLeft: 100,
             marginRight: 170,
-            marginTop: 80,
+            marginTop: 100,
             marginBottom: 100,
             height: 450,
             width: 1100
@@ -47,11 +47,12 @@ App.chart_library['columns'] = function(view, options) {
         title: {
             useHTML:true,
             text: options.titles.title,
+            align: "left",
+            x: 40,
+            y: 40,
             style: {
                 color: '#000000',
                 fontWeight: 'bold',
-                fontSize:'1.2em',
-                width: '700'
             }
         },
         subtitle: {
@@ -61,7 +62,8 @@ App.chart_library['columns'] = function(view, options) {
                 fontSize: '16px'
             },
             align: 'left',
-            x: 70
+            x: 70,
+            y: 80,
         },
         xAxis: {
             type: 'category',

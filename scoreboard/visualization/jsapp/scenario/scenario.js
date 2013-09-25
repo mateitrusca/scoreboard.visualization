@@ -622,7 +622,7 @@ App.ShareOptionsView = Backbone.View.extend({
 
     events: {
         'click #csv': 'request_csv',
-        'click #excel': 'request_excel'
+        'click #excel': 'request_excel',
     },
 
     template: App.get_template('scenario/share.html'),
