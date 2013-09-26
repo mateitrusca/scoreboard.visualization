@@ -92,7 +92,7 @@ App.chart_library['map'] = function(view, options) {
         $('<form method="POST" action="' + App.URL + '/svg2png"></form>').append(
             $("<input/>").attr("type", "hidden").attr("name", "svg")
         ).append(
-            $("<input/>").attr("type", "submit").attr("value", "Export PNG").css({
+            $("<input/>").attr("type", "submit").attr("value", "Download").css({
                 'position': 'absolute',
                 'top': '45px',
                 'right': '0',
