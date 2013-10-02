@@ -275,6 +275,9 @@ App.ScenarioChartView = Backbone.View.extend({
             requests.push(this.request_datapoints(datapoints_url, args));
         } else {
             if ( this.multiple_series == 2 ) {
+                multiseries_values = ['x', 'y',]
+                this.client_filter = null;
+
                 var xpairs = _.filter(_.pairs(args), function(pair) {return pair[0].substr(0,2) != 'y-'}); 
                 var ypairs = _.filter(_.pairs(args), function(pair) {return pair[0].substr(0,2) != 'x-'}); 
 

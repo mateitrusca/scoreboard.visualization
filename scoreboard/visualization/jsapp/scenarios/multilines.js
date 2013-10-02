@@ -216,7 +216,13 @@ App.multilines_filters_schema = {
     "xAxisTitle": [],
     "yAxisTitle": [
       {
-        "facet_name": "unit-measure",
+        "facet_name": "x-unit-measure",
+        "prefix": null,
+        "suffix": null,
+        "format": "short_label"
+      },
+      {
+        "facet_name": "y-unit-measure",
         "prefix": null,
         "suffix": null,
         "format": "short_label"
