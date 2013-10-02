@@ -118,7 +118,10 @@ App.ScenarioChartView = Backbone.View.extend({
             var units = [this.model.get('x-unit-measure') || '',
                          this.model.get('y-unit-measure') || '']
         }
-        else{
+        else if(this.schema['multiple_series'] == 2){
+            var units = [this.model.get('x-unit-measure') || '',
+                         this.model.get('y-unit-measure') || '']
+        } else {
             var units = [this.model.get('unit-measure') || ''];
         }
         _(units).each(function(unit){
