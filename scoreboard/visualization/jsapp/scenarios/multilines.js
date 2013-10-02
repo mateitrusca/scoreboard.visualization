@@ -9,13 +9,22 @@ App.multilines_filters_schema = {
   "annotations": {
     "filters": [
       {
-        "name": "indicator"
+        "name": "x-indicator"
       },
       {
-        "name": "breakdown"
+        "name": "x-breakdown"
       },
       {
-        "name": "unit-measure"
+        "name": "x-unit-measure"
+      },
+      {
+        "name": "y-indicator"
+      },
+      {
+        "name": "y-breakdown"
+      },
+      {
+        "name": "y-unit-measure"
       }
     ]
   },
@@ -202,13 +211,25 @@ App.multilines_filters_schema = {
   "titles": {
     "title": [
       {
-        "facet_name": "indicator",
+        "facet_name": "x-indicator",
         "prefix": null,
         "suffix": null,
         "format": "label"
       },
       {
-        "facet_name": "breakdown",
+        "facet_name": "x-breakdown",
+        "prefix": ", by ",
+        "suffix": null,
+        "format": "label"
+      },
+      {
+        "facet_name": "y-indicator",
+        "prefix": ' and ',
+        "suffix": null,
+        "format": "label"
+      },
+      {
+        "facet_name": "y-breakdown",
         "prefix": ", by ",
         "suffix": null,
         "format": "label"
@@ -216,7 +237,7 @@ App.multilines_filters_schema = {
     ],
     "subtitle": [
       {
-        "facet_name": "time-period",
+        "facet_name": "ref-area",
         "prefix": null,
         "suffix": null,
         "format": "label"
