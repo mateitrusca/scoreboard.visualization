@@ -358,7 +358,6 @@ App.ScenarioChartView = Backbone.View.extend({
         });
 
         this.requests_in_flight = requests;
-        console.log(requests);
 
         var ajax_calls = $.when.apply($, requests);
         ajax_calls.done(_.bind(function() {

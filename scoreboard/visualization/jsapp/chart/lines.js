@@ -43,6 +43,60 @@ App.chart_library['lines'] = function(view, options) {
             });
         }
     });
+    
+    if ( this.multiple_series == 2 ) {
+        var yAxis = [{
+            min:0,
+            max: options['unit_is_pc'][0]?100:null,
+            title: {
+                //text: options.titles.yAxisTitle,
+                text: 'first series',
+                style: {
+                    color: '#000000',
+                    fontWeight: 'bold'
+                }
+            },
+            labels: {
+                style: {
+                    color: '#000000'
+                }
+            }
+        }, {
+            min:0,
+            max: options['unit_is_pc'][1]?100:null,
+            title: {
+                //text: options.titles.yAxisTitle,
+                text: 'second series',
+                style: {
+                    color: '#000000',
+                    fontWeight: 'bold'
+                }
+            },
+            labels: {
+                style: {
+                    color: '#000000'
+                }
+            }
+        }
+    ];
+    } else {
+        var yAxis = {
+            min:0,
+            max: options['unit_is_pc'][0]?100:null,
+            title: {
+                text: options.titles.yAxisTitle,
+                style: {
+                    color: '#000000',
+                    fontWeight: 'bold'
+                }
+            },
+            labels: {
+                style: {
+                    color: '#000000'
+                }
+            }
+        };
+    }
 
     var chartOptions = {
         chart: {
@@ -87,22 +141,7 @@ App.chart_library['lines'] = function(view, options) {
                 }
              }
         },
-        yAxis: {
-            min:0,
-            max: options['unit_is_pc'][0]?100:null,
-            title: {
-                text: options.titles.yAxisTitle,
-                style: {
-                    color: '#000000',
-                    fontWeight: 'bold'
-                }
-            },
-            labels: {
-                style: {
-                    color: '#000000'
-                }
-            }
-        },
+        yAxis: yAxis,
         tooltip: {
             formatter: options['tooltip_formatter'],
             style: {
