@@ -171,14 +171,23 @@ App.multilines_filters_schema = {
   ],
   "height": 450,
   "labels": {
-    "indicator": {
-        "facet": "indicator"
+    "x-indicator": {
+        "facet": "x-indicator"
     },
-    "unit-measure": {
-        "facet": "unit-measure"
+    "x-unit-measure": {
+        "facet": "x-unit-measure"
     },
-    "breakdown": {
-        "facet": "breakdown"
+    "x-breakdown": {
+        "facet": "x-breakdown"
+    },
+    "y-indicator": {
+        "facet": "y-indicator"
+    },
+    "y-unit-measure": {
+        "facet": "y-unit-measure"
+    },
+    "y-breakdown": {
+        "facet": "y-breakdown"
     }
   },
   "multiple_series": 2,
