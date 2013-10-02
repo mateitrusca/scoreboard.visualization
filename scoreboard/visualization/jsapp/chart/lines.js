@@ -48,7 +48,7 @@ App.chart_library['lines'] = function(view, options) {
         min:0,
         max: options['unit_is_pc'][0]?100:null,
         title: {
-            text: options.titles.yAxisTitle,
+            text: typeof(options.titles.yAxisTitle) == 'string'?options.titles.yAxisTitle:options.titles.yAxisTitle[0],
             style: {
                 color: '#000000',
                 fontWeight: 'bold'
@@ -68,7 +68,7 @@ App.chart_library['lines'] = function(view, options) {
             max: options['unit_is_pc'][1]?100:null,
             opposite: true,
             title: {
-                text: options.titles.yAxisTitle,
+                text: options.titles.yAxisTitle[1],
                 //text: 'second series',
                 style: {
                     color: '#000',

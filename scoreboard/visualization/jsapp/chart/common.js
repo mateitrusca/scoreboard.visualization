@@ -335,7 +335,9 @@ App.title_formatter = function(parts, meta_data){
         }
         return part;
     });
+
     var title = '';
+    var titleAsArray = []
     _(parts).each(function(item, idx){
         var prefix = item.prefix || '';
         if (idx > 0 && !parts[idx-1].suffix && !prefix){
@@ -343,10 +345,17 @@ App.title_formatter = function(parts, meta_data){
         }
         var suffix = item.suffix || '';
         var part = (item.text != 'Total')?item.text:null;
-        if (part){
-            title += (prefix + part + suffix);
+        if ( item.asArray ) {
+            titleAsArray.push(part);
+        } else {
+            if (part){
+                title += (prefix + part + suffix);
+            }
         }
     });
+
+    if ( titleAsArray != [] ) { title = titleAsArray };
+    
     return title;
 }
 
