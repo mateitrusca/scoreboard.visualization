@@ -337,7 +337,8 @@ App.title_formatter = function(parts, meta_data){
     });
 
     var title = '';
-    var titleAsArray = []
+    var titleAsArray = [];
+
     _(parts).each(function(item, idx){
         var prefix = item.prefix || '';
         if (idx > 0 && !parts[idx-1].suffix && !prefix){
@@ -354,7 +355,7 @@ App.title_formatter = function(parts, meta_data){
         }
     });
 
-    if ( titleAsArray != [] ) { title = titleAsArray };
+    if ( titleAsArray.length != 0 ) { title = titleAsArray };
     
     return title;
 }
