@@ -267,59 +267,85 @@ App.ScenarioChartView = Backbone.View.extend({
         }
         var datapoints_url = this.cube_url + data_method;
 
-        if (this.multiple_series) {
-            var groupby_dimension = this.dimensions_mapping[
-                this.multiple_series];
-            multiseries_values = this.model.get(this.multiple_series);
-            requests = _(multiseries_values).map(function(value) {
-                args[groupby_dimension] = value;
-                return this.request_datapoints(datapoints_url, args);
-            }, this);
-            var groupby_facet = _(this.schema.facets).find(function(facet, idx){
-                return facet['name'] == groupby_dimension;
-            });
-            var labels_args = {
-                'dimension': groupby_dimension,
-                'rev': this.data_revision
-            };
-            if (groupby_facet){
-                _.chain(groupby_facet.constraints)
-                 .values()
-                 .each(function(facet){
-                    if ( this.model.get(facet) != 'any' ) {
-                        _(labels_args).extend(
-                            _.object([
-                                [facet, this.model.get(facet)]
-                            ])
-                        );
-                    }
-                }, this);
-            }
-            var labels_url = '/dimension_options_' + 'xyz'.slice(0, this.schema.multidim);
-            var labels_request = $.getJSON(this.cube_url + labels_url, labels_args);
-            var dict = {'short': 'short_label', 'long': 'label', 'none': 'notation'};
-            var series_names = 'notation';
-            if ( this.schema['series-legend-label'] ) {
-                series_names = dict[this.schema['series-legend-label']] || 'notation';
-            }
-            var series_ending_labels = 'notation';
-            if ( this.schema['series-ending-label'] ) {
-                series_ending_labels = dict[this.schema['series-ending-label']] || 'notation';
-            }
-            labels_request.done(function(data) {
-                var results = data['options'];
-                chart_data['series_names'] = _.object(
-                    _(results).pluck('notation'),
-                    _(results).pluck(series_names));
-                chart_data['series_ending_labels'] = _.object(
-                    _(results).pluck('notation'),
-                    _(results).pluck(series_ending_labels));
-            });
-            requests.push(labels_request);
-        }
-        else {
+        if (!this.multiple_series) {
             multiseries_values = [null];
             requests.push(this.request_datapoints(datapoints_url, args));
+        } else {
+            if ( this.multiple_series == 2 ) {
+                var xpairs = _.filter(_.pairs(args), function(pair) {return pair[0].substr(0,2) != 'y-'}); 
+                var ypairs = _.filter(_.pairs(args), function(pair) {return pair[0].substr(0,2) != 'x-'}); 
+
+                _(xpairs).map(function(pair) { 
+                    if ( pair[0].substr(0,2) == 'x-' ) { 
+                        pair[0] = pair[0].substr(2) 
+                    }; 
+                    return;
+                });
+
+                _(ypairs).map(function(pair) { 
+                    if ( pair[0].substr(0,2) == 'y-' ) { 
+                        pair[0] = pair[0].substr(2) 
+                    }; 
+                    return;
+                });
+
+                var xargs = _.object(xpairs);
+                var yargs = _.object(ypairs);
+
+                requests.push(this.request_datapoints(datapoints_url, xargs));
+                requests.push(this.request_datapoints(datapoints_url, yargs));
+
+            } else { 
+                var groupby_dimension = this.dimensions_mapping[
+                    this.multiple_series];
+                multiseries_values = this.model.get(this.multiple_series);
+                requests = _(multiseries_values).map(function(value) {
+                    args[groupby_dimension] = value;
+                    return this.request_datapoints(datapoints_url, args);
+                }, this);
+
+                var groupby_facet = _(this.schema.facets).find(function(facet, idx){
+                    return facet['name'] == groupby_dimension;
+                });
+                var labels_args = {
+                    'dimension': groupby_dimension,
+                    'rev': this.data_revision
+                };
+                if (groupby_facet){
+                    _.chain(groupby_facet.constraints)
+                     .values()
+                     .each(function(facet){
+                        if ( this.model.get(facet) != 'any' ) {
+                            _(labels_args).extend(
+                                _.object([
+                                    [facet, this.model.get(facet)]
+                                ])
+                            );
+                        }
+                    }, this);
+                }
+                var labels_url = '/dimension_options_' + 'xyz'.slice(0, this.schema.multidim);
+                var labels_request = $.getJSON(this.cube_url + labels_url, labels_args);
+                var dict = {'short': 'short_label', 'long': 'label', 'none': 'notation'};
+                var series_names = 'notation';
+                if ( this.schema['series-legend-label'] ) {
+                    series_names = dict[this.schema['series-legend-label']] || 'notation';
+                }
+                var series_ending_labels = 'notation';
+                if ( this.schema['series-ending-label'] ) {
+                    series_ending_labels = dict[this.schema['series-ending-label']] || 'notation';
+                }
+                labels_request.done(function(data) {
+                    var results = data['options'];
+                    chart_data['series_names'] = _.object(
+                        _(results).pluck('notation'),
+                        _(results).pluck(series_names));
+                    chart_data['series_ending_labels'] = _.object(
+                        _(results).pluck('notation'),
+                        _(results).pluck(series_ending_labels));
+                });
+                requests.push(labels_request);
+            }
         }
 
         var client_filter_options = [];
@@ -332,6 +358,7 @@ App.ScenarioChartView = Backbone.View.extend({
         });
 
         this.requests_in_flight = requests;
+        console.log(requests);
 
         var ajax_calls = $.when.apply($, requests);
         ajax_calls.done(_.bind(function() {

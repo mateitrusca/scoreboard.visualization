@@ -128,12 +128,14 @@ App.multilines_filters_schema = {
       "type": "select"
     },
     {
-      "constraints": {
+      "constraints": {},
+        /*
         "x-indicator": "x-indicator",
         "x-unit-measure": "x-unit-measure",
         "y-indicator": "y-indicator",
         "y-unit-measure": "y-unit-measure"
       },
+        */
       "dimension": "ref-area",
       "default_value": "EU27",
       "label": "Country",
@@ -144,7 +146,8 @@ App.multilines_filters_schema = {
       "type": "select"
     },
     {
-      "constraints": {
+      "constraints": {},
+        /*
         "x-indicator": "x-indicator",
         "x-unit-measure": "x-unit-measure",
         "x-breakdown": "x-breakdown",
@@ -153,6 +156,7 @@ App.multilines_filters_schema = {
         "y-breakdown": "y-breakdown",
         "ref-area": "ref-area"
       },
+        */
       "dimension": "time-period",
       "label": "Time period",
       "name": "time-period",
@@ -177,7 +181,7 @@ App.multilines_filters_schema = {
         "facet": "breakdown"
     }
   },
-  "multiple_series": "multidim",
+  "multiple_series": 2,
   "series-legend-label": "long",
   "series-ending-label": "none",
   "series-point-label": "none",
