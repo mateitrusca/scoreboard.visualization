@@ -228,13 +228,15 @@ App.multilines_filters_schema = {
         "facet_name": "x-unit-measure",
         "prefix": null,
         "suffix": null,
-        "format": "short_label"
+        "format": "short_label",
+        "asArray": true
       },
       {
         "facet_name": "y-unit-measure",
         "prefix": null,
         "suffix": null,
-        "format": "short_label"
+        "format": "short_label",
+        "asArray": true
       }
     ]
   },
