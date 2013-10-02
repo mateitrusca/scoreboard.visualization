@@ -145,6 +145,7 @@ App.ScenarioChartView = Backbone.View.extend({
         if ( category_facet ) {
             var highlights = category_facet.highlights;
         }
+        var multiple_series = this.multiple_series;
         var chart_data = {
             'tooltip_formatter': function() {
                 var attrs = this.point.attributes;
@@ -167,7 +168,7 @@ App.ScenarioChartView = Backbone.View.extend({
                     if ( multidim ) {
                         if (unit_is_pc[1]) out += '%';
                     } else {
-                        if (unit_is_pc[0]) out += '%';
+                        if (unit_is_pc[this.series.index]) out += '%';
                     }
                     out += ' ';
                     if (_.contains(tooltip_attributes, 'unit-measure')) {
@@ -275,8 +276,8 @@ App.ScenarioChartView = Backbone.View.extend({
             requests.push(this.request_datapoints(datapoints_url, args));
         } else {
             if ( this.multiple_series == 2 ) {
-                multiseries_values = ['x', 'y',]
-                this.client_filter = null;
+                multiseries_values = ['x', 'y'];
+                //this.client_filter = null;
 
                 var xpairs = _.filter(_.pairs(args), function(pair) {return pair[0].substr(0,2) != 'y-'}); 
                 var ypairs = _.filter(_.pairs(args), function(pair) {return pair[0].substr(0,2) != 'x-'}); 
@@ -355,7 +356,7 @@ App.ScenarioChartView = Backbone.View.extend({
         }
 
         var client_filter_options = [];
-        if(this.client_filter) {
+        if ( this.client_filter ) {
             client_filter_options = this.model.get(this.client_filter);
         }
 
@@ -373,7 +374,7 @@ App.ScenarioChartView = Backbone.View.extend({
             chart_data['series'] = _(multiseries_values).map(function(value, n) {
                 var resp = responses[n];
                 var datapoints = resp[0]['datapoints'];
-                if(this.client_filter && (this.schema['chart_type'] !== 'country_profile')) {
+                if(this.client_filter && (this.schema['chart_type'] !== 'country_profile') && this.multiple_series != 2 ) {
                     var dimension = this.dimensions_mapping[this.client_filter];
                     datapoints = _(datapoints).filter(function(item) {
                         return _(client_filter_options).contains(

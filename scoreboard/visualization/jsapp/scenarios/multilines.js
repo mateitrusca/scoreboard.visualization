@@ -137,14 +137,14 @@ App.multilines_filters_schema = {
       "type": "select"
     },
     {
-      "constraints": {},
-        /*
+      "constraints": {
         "x-indicator": "x-indicator",
         "x-unit-measure": "x-unit-measure",
         "y-indicator": "y-indicator",
-        "y-unit-measure": "y-unit-measure"
+        "y-unit-measure": "y-unit-measure",
+        "x-breakdown": "x-breakdown",
+        "y-breakdown": "y-breakdown"
       },
-        */
       "dimension": "ref-area",
       "default_value": "EU27",
       "label": "Country",
@@ -197,6 +197,9 @@ App.multilines_filters_schema = {
     },
     "y-breakdown": {
         "facet": "y-breakdown"
+    },
+    "ref-area": {
+        "facet": "ref-area"
     }
   },
   "multiple_series": 2,

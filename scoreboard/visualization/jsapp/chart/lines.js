@@ -119,6 +119,16 @@ App.chart_library['lines'] = function(view, options) {
                 fontWeight: 'bold',
             }
         },
+        subtitle: {
+            text: options.titles.subtitle,
+            align: "left",
+            x: 40,
+            y: 80,
+            style: {
+                color: '#000000',
+                fontWeight: 'bold',
+            }
+        },
         xAxis: {
             type: 'datetime',
             tickInterval: 3600 * 24 * 1000 * 7 * 4 * 12,
