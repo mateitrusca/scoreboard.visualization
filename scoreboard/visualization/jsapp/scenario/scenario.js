@@ -301,7 +301,12 @@ App.ScenarioChartView = Backbone.View.extend({
 
                 requests.push(this.request_datapoints(datapoints_url, xargs));
                 requests.push(this.request_datapoints(datapoints_url, yargs));
-
+                 
+                var theFilters = this.$el.closest("#scenario-box").find("#the-filters");
+                chart_data['series_names'] = {
+                    'x': theFilters.find("option[value='" + xargs['indicator'] + "']").text().trim(),
+                    'y': theFilters.find("option[value='" + yargs['indicator'] + "']").text().trim()
+                }
             } else { 
                 var groupby_dimension = this.dimensions_mapping[
                     this.multiple_series];
