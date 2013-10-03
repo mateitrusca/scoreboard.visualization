@@ -21,7 +21,11 @@ function sort_serie(serie, sort){
                 return sort.order * value;
             }
             if (sort.by == 'category'){
-                return item['name'];
+                if (sort.category_facet == 'time-period'){
+                    return item['code'];
+                } else {
+                    return item['name'];
+                }
             }
             if (sort.by == 'order'){
                 if ( typeof(item['order']) == "string" ) {

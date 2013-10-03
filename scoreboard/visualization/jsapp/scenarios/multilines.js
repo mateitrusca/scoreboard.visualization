@@ -155,8 +155,7 @@ App.multilines_filters_schema = {
       "type": "select"
     },
     {
-      "constraints": {},
-        /*
+      "constraints": {
         "x-indicator": "x-indicator",
         "x-unit-measure": "x-unit-measure",
         "x-breakdown": "x-breakdown",
@@ -165,7 +164,6 @@ App.multilines_filters_schema = {
         "y-breakdown": "y-breakdown",
         "ref-area": "ref-area"
       },
-        */
       "dimension": "time-period",
       "label": "Time period",
       "name": "time-period",
@@ -209,7 +207,8 @@ App.multilines_filters_schema = {
   "sort": {
     "by": "category",
     "order": 1,
-    "each_series": true
+    "each_series": true,
+    "category_facet": "time-period"
   },
   "titles": {
     "title": [
