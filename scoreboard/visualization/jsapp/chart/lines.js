@@ -92,7 +92,7 @@ App.chart_library['lines'] = function(view, options) {
             type: 'spline',
             zoomType: 'y',
             marginLeft: 100,
-            marginRight: 170,
+            marginRight: 270,
             marginTop: 100,
             marginBottom: 50,
             height: 450,
@@ -151,10 +151,10 @@ App.chart_library['lines'] = function(view, options) {
             align: 'right',
             verticalAlign: 'top',
             x: 10,
-            y: 30,
+            y: 80,
             borderWidth: 0,
             itemStyle: {
-                width: 150
+                width: 270
             }
         },
         plotOptions: {
