@@ -131,10 +131,12 @@ App.chart_library['lines'] = function(view, options) {
         },
         xAxis: {
             type: 'datetime',
-            maxZoom: 3600 * 24 * 1000 * 182,
+            maxZoom: 3600 * 24 * 1000 * 365,
             dateTimeLabelFormats: {
                 month: '%Y-%m'
             },
+            startOnTick: false,
+            minPadding: 0.1,
             labels: {
                 style: {
                     color: '#000000'
