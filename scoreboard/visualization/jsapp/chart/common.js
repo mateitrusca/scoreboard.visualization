@@ -5,7 +5,7 @@
 (function() {
 "use strict";
 
-function sort_serie(serie, sort){
+function sort_serie(serie, sort, category_facet){
     serie = _(serie).sortBy( function(item){
         if (sort.first_serie){
             return _.chain(sort.first_serie)
@@ -21,8 +21,8 @@ function sort_serie(serie, sort){
                 return sort.order * value;
             }
             if (sort.by == 'category'){
-                if (sort.category_facet == 'time-period'){
-                    return item['code'];
+                if (category_facet == 'time-period'){
+                    return item['x'];
                 } else {
                     return item['name'];
                 }
@@ -183,19 +183,7 @@ App.format_series = function (data, sort, multidim, percent, category, highlight
                                 ['y', null]])
                   );
               });
-            if (sort && !first_serie){
-                if ( sort.first_serie ) {
-                    sort.first_serie = null;
-                }
-                serie = sort_serie(serie, sort);
-                if(!sort.each_series){
-                    first_serie = serie;
-                }
-            }
-            else if (sort){
-                    _(sort).extend({'first_serie': first_serie});
-                    serie = sort_serie(serie, sort);
-            }
+
             if (category == 'time-period'){
                 var date_pattern = /^([0-9]{4})(?:-(?:([0-9]{2})|(?:Q([0-9]){1})))*$/;
                 _(serie).each(function(item){
@@ -212,12 +200,32 @@ App.format_series = function (data, sort, multidim, percent, category, highlight
                     item['x'] = Date.UTC(year, month);
                 })
             }
+
+            if (sort && !first_serie){
+                if ( sort.first_serie ) {
+                    sort.first_serie = null;
+                }
+                serie = sort_serie(serie, sort, category);
+                if(!sort.each_series){
+                    first_serie = serie;
+                }
+            }
+            else if (sort){
+                    _(sort).extend({'first_serie': first_serie});
+                    serie = sort_serie(serie, sort, category);
+            }
+
             return _.object(
                     ['name', 'ending_label', 'notation', 'order', 'color', 'data'],
                     [item['name'], item['ending_label'], item['notation'], item['order'], countrycolor(item['notation']), serie]);
         }).value();
     }
-    return _(series).sortBy('name');
+
+    if ( category == 'time-period'){
+        return series
+    } else {
+        return _(series).sortBy('name');
+    }
 
 }
 

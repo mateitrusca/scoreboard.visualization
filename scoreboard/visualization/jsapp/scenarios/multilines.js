@@ -208,7 +208,6 @@ App.multilines_filters_schema = {
     "by": "category",
     "order": 1,
     "each_series": true,
-    "category_facet": "time-period"
   },
   "titles": {
     "title": [
