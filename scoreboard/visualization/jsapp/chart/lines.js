@@ -93,7 +93,7 @@ App.chart_library['lines'] = function(view, options) {
             zoomType: 'y',
             marginLeft: 100,
             marginRight: 270,
-            marginTop: 100,
+            marginTop: 120,
             marginBottom: 50,
             height: 450,
             width: 1100
@@ -123,7 +123,7 @@ App.chart_library['lines'] = function(view, options) {
             text: options.titles.subtitle,
             align: "left",
             x: 40,
-            y: 80,
+            y: 90,
             style: {
                 color: '#000000',
                 fontWeight: 'bold',
@@ -131,9 +131,10 @@ App.chart_library['lines'] = function(view, options) {
         },
         xAxis: {
             type: 'datetime',
-            tickInterval: 3600 * 24 * 1000 * 365,
-            maxZoom: 3600 * 24 * 1000 * 365,
-            startOnTick: false,
+            maxZoom: 3600 * 24 * 1000 * 182,
+            dateTimeLabelFormats: {
+                month: '%Y-%m'
+            },
             labels: {
                 style: {
                     color: '#000000'
