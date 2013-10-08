@@ -131,8 +131,9 @@ App.chart_library['lines'] = function(view, options) {
         },
         xAxis: {
             type: 'datetime',
-            tickInterval: 3600 * 24 * 1000 * 7 * 4 * 12,
-            maxZoom: 3600 * 24 * 1000 * 7 * 4 * 12,
+            tickInterval: 3600 * 24 * 1000 * 365,
+            maxZoom: 3600 * 24 * 1000 * 365,
+            startOnTick: false,
             labels: {
                 style: {
                     color: '#000000'
@@ -154,7 +155,7 @@ App.chart_library['lines'] = function(view, options) {
             y: 80,
             borderWidth: 0,
             itemStyle: {
-                width: 270
+                width: 200
             }
         },
         plotOptions: {
